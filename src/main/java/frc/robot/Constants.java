@@ -16,5 +16,9 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int TRANS_JOYSTICK_PORT = 0;
     public static final int ROT_JOYSTICK_PORT = 1;
+    public static final int frontLeftSpark=1;
+    public static final int frontRightSpark=2;
+    public static final int backLeftSpark=3;
+    public static final int backRightSpark=4;
   }
 }
