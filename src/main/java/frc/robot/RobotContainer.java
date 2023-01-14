@@ -1,57 +1,76 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+/*----------------------------------------------------------------------------*/
+/* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
+/* Open Source Software - may be modified and shared by FRC teams. The code   */
+/* must be accompanied by the FIRST BSD license file in the root directory of */
+/* the project.                                                               */
+/*----------------------------------------------------------------------------*/
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.DriveWithJoySticks;
-import frc.robot.subsystems.WestCoastDrive;
-
-
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutonomousDrive;
+import frc.robot.commands.DefaultDriveCmd;
+import frc.robot.commands.PIDtuning;
+import frc.robot.commands.SinglePID;
+import frc.robot.subsystems.Camera;
+import frc.robot.subsystems.Joysticks;
+import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.pnumatics;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
+ * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
+ * periodic methods (other than the scheduler calls).  Instead, the structure of the robot
+ * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // DriveTrain
-  private final WestCoastDrive westCoastDrive = new WestCoastDrive();
+  // The robot's subsystems and commands are defined here...
+  public final Joysticks joys = new Joysticks();
+  public final SwerveSubsystem swerve = new SwerveSubsystem(joys);
+  public final DefaultDriveCmd npc = new DefaultDriveCmd(joys, swerve);
+  public final PIDtuning pud = new PIDtuning(joys,swerve);
 
-  // Controllers - One joystick for the Translation and Rotation 
-  private final CommandJoystick joystickTrans = new CommandJoystick(OperatorConstants.TRANS_JOYSTICK_PORT);
-  private final CommandJoystick joystickRot = new CommandJoystick(OperatorConstants.ROT_JOYSTICK_PORT);
+  public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
-  //Drive Command
-  private final DriveWithJoySticks driveCommand = new DriveWithJoySticks(joystickTrans, joystickRot, westCoastDrive);
+  public SwerveModule [] allModules = swerve.getRawModules(); 
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  //public final pnumatics pnu = new pnumatics();
+  //public final Camera cam = new Camera();
+  /**
+   * The container for the robot.  Contains subsystems, OI devices, and commands.
+   */
   public RobotContainer() {
-    // Configure the trigger bindings
-    //configureBindings();
+    // Configure the button bindings
+    moduleSelector.addOption("Front Left", allModules[0]);
+    moduleSelector.addOption("Front Right", allModules[1]);
+    moduleSelector.addOption("Back Left", allModules[2]);
+    moduleSelector.addOption("Back Right", allModules[3]);
 
-    //This sets the drive command as the default for the westCoastDrive - https://docs.wpilib.org/en/stable/docs/software/commandbased/subsystems.html#default-commands
-    westCoastDrive.setDefaultCommand(driveCommand);
+    if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
+    else{new SinglePID(moduleSelector.getSelected()).schedule();}
+    
+    SmartDashboard.putData("CHOOOSE", moduleSelector);
+    configureButtonBindings();
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
+   * Use this method to define your button->command mappings.  Buttons can be created by
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a
+   * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureBindings() {
-   
+  private void configureButtonBindings() {
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -59,7 +78,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    // An ExampleCommand will run in autonomous
+    return new AutonomousDrive(swerve);//m_autoCommand;
   }
 }
