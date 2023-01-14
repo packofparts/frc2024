@@ -5,7 +5,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-
+import frc.robot.Constants;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,12 +27,12 @@ public class WestCoastDrive extends SubsystemBase {
 
   public WestCoastDrive() {
     //Left motors & group
-    frontLeftSparkMax = new CANSparkMax(0, null);
-    backLeftSparkMax = new CANSparkMax(0, null);
+    frontLeftSparkMax = new CANSparkMax(Constants.OperatorConstants.frontLeftSpark, null);
+    backLeftSparkMax = new CANSparkMax(Constants.OperatorConstants.backLeftSpark, null);
     leftMotorGroup = new MotorControllerGroup(backLeftSparkMax, frontLeftSparkMax);
     //Right motors & group
-    frontRightSparkMax = new CANSparkMax(0, null);
-    backRightSparkMax = new CANSparkMax(0, null);
+    frontRightSparkMax = new CANSparkMax(Constants.OperatorConstants.frontRightSpark, null);
+    backRightSparkMax = new CANSparkMax(Constants.OperatorConstants.backRightSpark, null);
     rightMotorGroup = new MotorControllerGroup(backRightSparkMax, frontRightSparkMax);
 
     driveBase = new DifferentialDrive(leftMotorGroup, rightMotorGroup);
