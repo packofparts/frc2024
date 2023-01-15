@@ -42,6 +42,7 @@ public class RobotContainer {
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
   public SwerveModule [] allModules = swerve.getRawModules(); 
+  
 
   //public final pnumatics pnu = new pnumatics();
   //public final Camera cam = new Camera();
@@ -50,6 +51,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     // Configure the button bindings
+    
     moduleSelector.addOption("Front Left", allModules[0]);
     moduleSelector.addOption("Front Right", allModules[1]);
     moduleSelector.addOption("Back Left", allModules[2]);

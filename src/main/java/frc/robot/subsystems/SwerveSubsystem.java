@@ -70,6 +70,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+  
     m_odometry.update(getRotation2d(), getModuleStates());
     if(joy.resetGyro()){resetGyro();}
   }

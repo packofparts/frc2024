@@ -118,6 +118,7 @@ public class SwerveModule {
         //System.out.println("setPoint is: "+ getRotPosition());
     }
     public void updatePositions(Double setPoint){
+        System.out.println("Hewwo");
         rotationPIDTest.setPID(Constants.kP, Constants.kI, Constants.kD);
         rotationPIDTest.disableContinuousInput();
         double sp = rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);

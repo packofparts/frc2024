@@ -21,22 +21,26 @@ public class SinglePID extends CommandBase {
   Joysticks joys;
   Double sp;
   public SinglePID(SwerveModule module) {
+    System.out.println("in the commanfd :)");
     this.selectedModule = module;
+    SmartDashboard.putNumber("kP", Constants.kP);
+    SmartDashboard.putNumber("kI", Constants.kI);
+    SmartDashboard.putNumber("kD", Constants.kD);
+    SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
     
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("kP", Constants.kP);
-    SmartDashboard.putNumber("kI", Constants.kI);
-    SmartDashboard.putNumber("kD", Constants.kD);
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    System.out.println("in the execute");
+
     Constants.kP = SmartDashboard.getNumber("kP", 0);
     Constants.kI = SmartDashboard.getNumber("kI", 0);
     Constants.kD = SmartDashboard.getNumber("kD", 0);
@@ -47,12 +51,16 @@ public class SinglePID extends CommandBase {
     sp = SmartDashboard.getNumber("setPointReal", 0);
   
     SmartDashboard.putNumber("Module1CurrentROT",this.selectedModule.getRotPosition());
+    
     selectedModule.updatePositions(sp);
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+  }
 
   // Returns true when the command should end.
   @Override

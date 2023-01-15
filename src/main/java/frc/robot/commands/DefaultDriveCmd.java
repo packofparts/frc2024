@@ -40,7 +40,7 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    System.out.println("HI");
     double x= this.joyee.getX();
     double y = this.joyee.getY();
     double rot = this.joyee.getRot();
