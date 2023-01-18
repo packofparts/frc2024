@@ -8,23 +8,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
-import frc.robot.subsystems.Camera;
 import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.pnumatics;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -80,7 +73,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
     return new AutonomousDrive(swerve);//m_autoCommand;
   }
 }
