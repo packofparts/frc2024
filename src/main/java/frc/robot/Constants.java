@@ -72,4 +72,8 @@ public final class Constants {
     public static double kD = 0;
     public static int intakeSolenoid1ID;
     public static int compressorID;
+
+
+    public static double deadZone = 0.25;
+    public static double radDeadZone = 0.05;
 }
