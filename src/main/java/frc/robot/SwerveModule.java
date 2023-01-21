@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,18 +17,20 @@ public class SwerveModule {
     private int m_MotorTransID;
     private int m_MotorRotID;
     private int m_UniversalEncoderID;
-    private CANSparkMax transMotor;
+    public CANSparkMax transMotor;
     private CANSparkMax rotMotor;
     private RelativeEncoder transEncoder;
     private RelativeEncoder rotEncoder;
     private AnalogInput universalEncoder;
     public SparkMaxPIDController rotPID;
     public PIDController rotationPIDTest;
+    public PIDController transController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     private Boolean isAbsoluteEncoder;
     private double universalEncoderOffset;
     private Boolean m_transInverted;
     private Boolean m_rotInverted;
     private Boolean encoderInverted;
+    private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
     
 
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
@@ -60,12 +63,24 @@ public class SwerveModule {
         resetEncoders();
         rotPID = rotMotor.getPIDController();
         rotationPIDTest = new PIDController(0.1, 0, 0);
-        rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);
-        
+        rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);        
     }
+    
     public double getTransPosition(){
         return transEncoder.getPosition(); 
     }
+
+
+    public void doFeedforward(double distanceMeters) {
+        transController.setSetpoint(distanceMeters);
+        double voltage = feedforwardController.calculate(5);
+        transMotor.setVoltage(voltage);
+        while (transController.atSetpoint()) {
+            transMotor.setVoltage(0);
+        }
+
+    }
+
     public double getRotPosition(){
         return rotEncoder.getPosition();
     
@@ -145,6 +160,9 @@ public class SwerveModule {
         rotationPIDTest.setP(p);
         rotationPIDTest.setI(i);
         rotationPIDTest.setD(d);
+        transController.setP(p);
+        transController.setI(i);
+        transController.setD(d);
     }
 
 

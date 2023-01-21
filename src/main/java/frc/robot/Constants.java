@@ -76,4 +76,8 @@ public final class Constants {
 
     public static double deadZone = 0.25;
     public static double radDeadZone = 0.05;
+
+    public static double kS = 0;
+    public static double kV = 0;
+    public static double kA = 0;
 }
