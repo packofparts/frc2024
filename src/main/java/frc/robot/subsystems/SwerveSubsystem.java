@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,12 +26,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
 
+
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
   private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,0,false, false);
   private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,0,true,true,0,false, false);
   private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,0,false,true,0,false, false);
   private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,0,true,true,0,false, false); 
+
+  private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
   public SwerveDriveKinematics m_kinematics;
   private ChassisSpeeds chassisSpeeds1;
@@ -104,6 +108,21 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("ChassisSpeed X", chassisSpeeds1.vxMetersPerSecond);
     SmartDashboard.putNumber("ChassisSpeed Y", chassisSpeeds1.vyMetersPerSecond);
     SmartDashboard.putNumber("Heading", getHeading());
+  }
+
+  public void doFeedforwardAllMotors(double distanceMeters) {
+    frontLeft.transController.setSetpoint(distanceMeters);
+    double voltage = feedforwardController.calculate(5);
+    frontLeft.transMotor.setVoltage(voltage);
+    frontRight.transMotor.setVoltage(voltage);
+    backLeft.transMotor.setVoltage(voltage);
+    backRight.transMotor.setVoltage(voltage);
+    while (frontLeft.transController.atSetpoint()) {
+      frontLeft.transMotor.setVoltage(0);
+      frontRight.transMotor.setVoltage(0);
+      backLeft.transMotor.setVoltage(0);
+      backRight.transMotor.setVoltage(0);
+    }
   }
 
   public void resetRobotPose(){
