@@ -33,8 +33,10 @@ public class RobotContainer {
   public final PIDtuning pud = new PIDtuning(joys,swerve);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
-
   public SwerveModule [] allModules = swerve.getRawModules(); 
+  public SwerveModule selecModule = allModules[1];
+
+
   
 
   //public final pnumatics pnu = new pnumatics();
@@ -51,8 +53,8 @@ public class RobotContainer {
     moduleSelector.addOption("Back Right", allModules[3]);
 
     if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
-    else{new SinglePID(moduleSelector.getSelected()).schedule();}
-    
+    else{swerve.setDefaultCommand(new SinglePID(selecModule, swerve));}
+  
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     configureButtonBindings();
   }

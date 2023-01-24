@@ -17,19 +17,21 @@ public class SinglePID extends CommandBase {
   SwerveModule selectedModule;
   Joysticks joys;
   Double sp;
-  public SinglePID(SwerveModule module) {
+  public SinglePID(SwerveModule module, SwerveSubsystem swervee) {
     System.out.println("in the commanfd :)");
     this.selectedModule = module;
     SmartDashboard.putNumber("kP", Constants.kP);
     SmartDashboard.putNumber("kI", Constants.kI);
     SmartDashboard.putNumber("kD", Constants.kD);
     SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
-    
+    addRequirements(swervee);
+
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
     
   }
 
@@ -44,10 +46,10 @@ public class SinglePID extends CommandBase {
 
     SmartDashboard.putNumber("Setpoint", 0);
     
-    SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
-    sp = SmartDashboard.getNumber("setPointReal", 0);
+
+    sp = SmartDashboard.getNumber("setPointReal", 0)/Constants.rad2Deg;
   
-    SmartDashboard.putNumber("Module1CurrentROT",this.selectedModule.getRotPosition());
+    SmartDashboard.putNumber("Module1CurrentROT",this.selectedModule.getRotPosition()*Constants.rad2Deg);
     
     selectedModule.updatePositions(sp);
     

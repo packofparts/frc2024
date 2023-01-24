@@ -23,6 +23,7 @@ public final class Constants {
 
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
+    public static final double rad2Deg = 180/Math.PI;
     public static final double kTeleDriveMaxSpeedMetersPerSecond = 1;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
@@ -50,17 +51,17 @@ public final class Constants {
     public static final Boolean tuningPID = true;
     
     //SPARK ids
-    public static final int frontLeftSteer = 14;//
-    public static final int frontLeftDrive = 13;//
+    public static final int frontLeftSteer = 3;//
+    public static final int frontLeftDrive = 2;//
     
-    public static final int frontRightSteer = 2;//
+    public static final int frontRightSteer = 5;//
     public static final int frontRightDrive = 4;//
 
-    public static final int rearLeftSteer = 3;//
-    public static final int rearLeftDrive = 12;//
+    public static final int rearLeftSteer = 7;//
+    public static final int rearLeftDrive = 6;//
 
-    public static final int rearRightSteer = 1;//
-    public static final int rearRightDrive = 5; // 
+    public static final int rearRightSteer = 9;//
+    public static final int rearRightDrive = 8; // 
 
     //TEJA IS COOL
 
