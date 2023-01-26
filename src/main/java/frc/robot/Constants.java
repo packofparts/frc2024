@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -37,9 +38,12 @@ public final class Constants {
     public static final double driveEncoderConversionFactor = 1;
 
     //PID
-    public static final Gains anglePID = new Gains(0.005, 0, 0, 0.0, 0.0, -0.5, 0.5, 0);
-    public static final Gains anglePIDFast = new Gains(0.005, 0, 0, 0.0, 0.0, -1, 1, 1);
-    public static final Gains fastPID = new Gains(0.05, 0.00001, 0.7, 0.0, 0.0, -1, 1, 1);
+    public static final PIDController frPID = new PIDController(0.771, 0.025, 0.015);
+    //FL not finished
+    public static final PIDController flPID = new PIDController(0.771, 0.025, 0.015);
+    public static final PIDController brPID = new PIDController(0.771, 0, 0.015);
+    public static final PIDController blPID = new PIDController(0.771, 0, 0.01);
+
 
     // Distance between right and left wheels
     public static final double kTrackWidth = Units.inchesToMeters(25.5);

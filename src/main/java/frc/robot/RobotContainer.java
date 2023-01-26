@@ -34,7 +34,7 @@ public class RobotContainer {
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
   public SwerveModule [] allModules = swerve.getRawModules(); 
-  public SwerveModule selecModule = allModules[1];
+  public SwerveModule selecModule = allModules[2];
 
 
   

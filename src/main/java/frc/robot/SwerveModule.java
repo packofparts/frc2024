@@ -2,6 +2,8 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.math.controller.PIDController;
@@ -21,7 +23,7 @@ public class SwerveModule {
     private CANSparkMax rotMotor;
     private RelativeEncoder transEncoder;
     private RelativeEncoder rotEncoder;
-    private AnalogInput universalEncoder;
+    private AnalogEncoder universalEncoder;
     public SparkMaxPIDController rotPID;
     public PIDController rotationPIDTest;
     public PIDController transController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
@@ -35,7 +37,7 @@ public class SwerveModule {
 
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
      Boolean transInverted, Boolean rotInverted, double universalEncoderOffsetinit,
-     Boolean universalEncoderInverted, boolean isAbsEncoder){
+     Boolean universalEncoderInverted, boolean isAbsEncoder,PIDController pidController){
         this.encoderInverted = universalEncoderInverted;
         this.isAbsoluteEncoder=isAbsEncoder;
         this.m_MotorTransID = motorTransID;
@@ -49,7 +51,7 @@ public class SwerveModule {
         
         rotMotor = new CANSparkMax(this.m_MotorRotID, MotorType.kBrushless);
         if (isAbsEncoder){
-            universalEncoder = new AnalogInput(this.m_UniversalEncoderID); //basically does shit
+            universalEncoder = new AnalogEncoder(this.m_UniversalEncoderID); //basically does shit
         }
 
 
@@ -62,7 +64,7 @@ public class SwerveModule {
         
         resetEncoders();
         rotPID = rotMotor.getPIDController();
-        rotationPIDTest = new PIDController(0.1, 0, 0);
+        rotationPIDTest = pidController;
         rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);        
     }
     
@@ -92,18 +94,6 @@ public class SwerveModule {
         return rotEncoder.getVelocity();
     }
     public double getUniversalEncoderRad(){
-        if (isAbsoluteEncoder) {
-            double angle = universalEncoder.getVoltage()/RobotController.getVoltage5V();
-            angle*=2.0 * Math.PI;
-            angle-= universalEncoderOffset;
-            if (this.encoderInverted){
-                return angle*-1;
-            }
-            else{
-                return angle;
-             }
-            
-        }
         return 0;
         
     }
@@ -139,6 +129,11 @@ public class SwerveModule {
         double sp = rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
         //System.out.println(sp);
         rotMotor.set(sp);
+        if (isAbsoluteEncoder){
+            SmartDashboard.putNumber("TruePos", universalEncoder.getAbsolutePosition());
+            SmartDashboard.putNumber("GenericPos",universalEncoder.get());
+            SmartDashboard.putNumber("Offset", universalEncoder.getPositionOffset());
+        }
     }
     public void returnToOrigin(){
         System.out.println("In PID loop");
