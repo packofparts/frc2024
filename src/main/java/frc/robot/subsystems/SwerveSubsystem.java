@@ -29,10 +29,10 @@ import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
-  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,0,false, false,Constants.flPID);
-  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,0,true,true,0,false, false,Constants.frPID);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,0,false,true,0,false, false,Constants.blPID);
-  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,0,true,true,0,false, false, Constants.brPID); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,1,false, false,Constants.flPID);
+  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.805,false, false,Constants.frPID);
+  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.514,false, false,Constants.blPID);
+  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.801,false, false, Constants.brPID); 
 
   private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
@@ -60,6 +60,9 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("d", 0);
     this.joy = joys;
     resetGyro();
+    for(SwerveModule mod : getRawModules()){
+      mod.resetEncoders();
+    }
     resetRobotPose();
     rawMods = getRawModules();
 

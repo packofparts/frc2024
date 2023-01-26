@@ -18,7 +18,6 @@ public class SinglePID extends CommandBase {
   Joysticks joys;
   Double sp;
   public SinglePID(SwerveModule module, SwerveSubsystem swervee) {
-    System.out.println("in the commanfd :)");
     this.selectedModule = module;
     SmartDashboard.putNumber("kP", Constants.kP);
     SmartDashboard.putNumber("kI", Constants.kI);
@@ -38,7 +37,6 @@ public class SinglePID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("in the execute");
 
     Constants.kP = SmartDashboard.getNumber("kP", 0);
     Constants.kI = SmartDashboard.getNumber("kI", 0);

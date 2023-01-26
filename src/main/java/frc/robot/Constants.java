@@ -40,7 +40,7 @@ public final class Constants {
     //PID
     public static final PIDController frPID = new PIDController(0.771, 0.025, 0.015);
     //FL not finished
-    public static final PIDController flPID = new PIDController(0.771, 0.025, 0.015);
+    public static final PIDController flPID = new PIDController(0.56, 0.025, 0.01);
     public static final PIDController brPID = new PIDController(0.771, 0, 0.015);
     public static final PIDController blPID = new PIDController(0.771, 0, 0.01);
 
@@ -52,20 +52,20 @@ public final class Constants {
     // // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
-    public static final Boolean tuningPID = true;
+    public static final Boolean tuningPID = false;
     
     //SPARK ids
     public static final int frontLeftSteer = 3;//
     public static final int frontLeftDrive = 2;//
-    
+        
     public static final int frontRightSteer = 5;//
     public static final int frontRightDrive = 4;//
 
-    public static final int rearLeftSteer = 7;//
-    public static final int rearLeftDrive = 6;//
+    public static final int rearLeftSteer = 6;//
+    public static final int rearLeftDrive = 7;//
 
-    public static final int rearRightSteer = 9;//
-    public static final int rearRightDrive = 8; // 
+    public static final int rearRightSteer = 8;//
+    public static final int rearRightDrive = 9; // 
 
     //TEJA IS COOL
 

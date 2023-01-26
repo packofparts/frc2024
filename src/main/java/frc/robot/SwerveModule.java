@@ -1,4 +1,5 @@
 package frc.robot;
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -49,9 +50,14 @@ public class SwerveModule {
         
         transMotor = new CANSparkMax(this.m_MotorTransID, MotorType.kBrushless);
         
+        
         rotMotor = new CANSparkMax(this.m_MotorRotID, MotorType.kBrushless);
         if (isAbsEncoder){
             universalEncoder = new AnalogEncoder(this.m_UniversalEncoderID); //basically does shit
+            universalEncoder.setPositionOffset(universalEncoderOffsetinit);
+            SmartDashboard.putNumber("TruePos", universalEncoder.getAbsolutePosition());
+            SmartDashboard.putNumber("GenericPos",universalEncoder.get());
+            SmartDashboard.putNumber("Offset", universalEncoder.getPositionOffset());
         }
 
 
@@ -63,9 +69,9 @@ public class SwerveModule {
         rotEncoder = rotMotor.getEncoder();
         
         resetEncoders();
-        rotPID = rotMotor.getPIDController();
         rotationPIDTest = pidController;
         rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);        
+
     }
     
     public double getTransPosition(){
@@ -84,6 +90,9 @@ public class SwerveModule {
     }
 
     public double getRotPosition(){
+        if (isAbsoluteEncoder){
+            return rotEncoder.getPosition();
+        }
         return rotEncoder.getPosition();
     
     }
@@ -98,8 +107,13 @@ public class SwerveModule {
         
     }
     public void resetEncoders(){
-        transEncoder.setPosition(0);
-        rotEncoder.setPosition(0);// 
+        if (isAbsoluteEncoder){
+            rotEncoder.setPosition(universalEncoder.getAbsolutePosition()-universalEncoder.getPositionOffset());
+        }else{
+            transEncoder.setPosition(0);
+            rotEncoder.setPosition(0);
+        }
+
 
         //hello - 8/3/22
     }
@@ -123,11 +137,10 @@ public class SwerveModule {
         //System.out.println("setPoint is: "+ getRotPosition());
     }
     public void updatePositions(Double setPoint){
-        System.out.println("Hewwo");
+
         rotationPIDTest.setPID(Constants.kP, Constants.kI, Constants.kD);
         rotationPIDTest.disableContinuousInput();
-        double sp = rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, setPoint);
-        //System.out.println(sp);
+        double sp = rotationPIDTest.calculate(getRotPosition()*2*Math.PI/18, setPoint);
         rotMotor.set(sp);
         if (isAbsoluteEncoder){
             SmartDashboard.putNumber("TruePos", universalEncoder.getAbsolutePosition());
@@ -137,7 +150,7 @@ public class SwerveModule {
     }
     public void returnToOrigin(){
         System.out.println("In PID loop");
-        rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*2*Math.PI/18, 0));
+        rotMotor.set(rotationPIDTest.calculate(getRotPosition()*2*Math.PI/18, 0));
         rotationPIDTest.setTolerance(0);
     }
     public SwerveModulePosition getModulePos(){
