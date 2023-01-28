@@ -51,7 +51,6 @@ public class AutonTrajectory extends CommandBase {
     this.desiredEndHeading = desiredEndHeading;
 
     for(int i = 0; i < path.getStates().size(); i++){
-      
       Transform2d a = path.getStates().get(i).poseMeters.minus(path.getStates().get(0).poseMeters);
       
       path.getStates().get(i).poseMeters = new Pose2d(a.getX()/15, a.getY()/15, a.getRotation());

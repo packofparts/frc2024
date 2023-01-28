@@ -55,7 +55,7 @@ public final class Constants {
     // // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
-    public static final Boolean tuningPID = false;
+    public static final boolean tuningPID = false;
     
     //SPARK ids
     public static final int frontLeftSteer = 3;//
@@ -84,7 +84,7 @@ public final class Constants {
     public static int compressorID;
 
 
-    public static double deadZone = 0.25;
+    public static double deadZone = 0.2;
     public static double radDeadZone = 0.05;
 
     public static double kS = 0;

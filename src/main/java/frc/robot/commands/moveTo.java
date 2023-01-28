@@ -20,13 +20,12 @@ public class moveTo extends CommandBase {
   public Rotation2d rotation;
   public PIDController transController;
   public PIDController angleController;
+  public PIDController velocityController;
   public SwerveSubsystem swerve;
-  public Pose2d initPose;
-
+  public Pose2d desiredPose;
 
   public SwerveDriveKinematics m_kinematics;
   
-
   public double xPoint;
   public double yPoint;
   public double rotPoint;
@@ -37,14 +36,15 @@ public class moveTo extends CommandBase {
 
     transController = new PIDController(0.5, 0, 0);
     angleController = new PIDController(0.5, 0, 0);
-    swerve = swervesub;
     
 
-    initPose = swerve.getRobotPose().transformBy(transform);
+    swerve = swervesub;
+    
+    desiredPose = swerve.getRobotPose().transformBy(transform);
 
-    xPoint = initPose.getX();
-    yPoint = initPose.getY();
-    rotPoint = initPose.getRotation().getRadians();
+    xPoint = desiredPose.getX();
+    yPoint = desiredPose.getY();
+    rotPoint = desiredPose.getRotation().getRadians();
 
     addRequirements(swerve);
   }
@@ -59,13 +59,15 @@ public class moveTo extends CommandBase {
   public void execute() {
     Pose2d pose = swerve.getRobotPose();
 
-    double magnitude = Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(),2));
+    // double xSpeed = transController.calculate(pose.getX(), xPoint);
+    // double ySpeed = transController.calculate(pose.getY(), yPoint);
+    double magnitude = Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2));
+    double xSpeed = pose.getX() / magnitude * .35;
+    double ySpeed = pose.getY() / magnitude * .35;
 
-    double xSpeed = transController.calculate(pose.getX(), xPoint);
-    double ySpeed = transController.calculate(pose.getY(), yPoint);
     double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
 
-    swerve.setMotors(xSpeed*3, ySpeed*3, rot);
+    swerve.setMotors(xSpeed, ySpeed, rot);
 
   }
 
@@ -76,7 +78,7 @@ public class moveTo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Transform2d difference = initPose.minus(swerve.getRobotPose());
+    Transform2d difference = desiredPose.minus(swerve.getRobotPose());
 
     if (Math.abs(difference.getX())<Constants.deadZone && Math.abs(difference.getY())<Constants.deadZone && Math.abs(difference.getRotation().getRadians())<Constants.radDeadZone) {
       return true;

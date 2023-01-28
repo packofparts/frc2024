@@ -87,7 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
     m_odometry.update(getRotation2d(), getModuleStates());
     if(joy.resetGyro()){resetGyro();}
     if(joy.trajectoryRun()){
-      at = new AutonTrajectory(this, 90);
+      at = new AutonTrajectory(this, 0);
       at.schedule();
     }
   }
