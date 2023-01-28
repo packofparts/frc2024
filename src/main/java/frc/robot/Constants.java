@@ -41,7 +41,7 @@ public final class Constants {
     public static final PIDController frPID = new PIDController(0.771, 0.025, 0.015);
     public static final PIDController flPID = new PIDController(0.56, 0.025, 0.01);
     public static final PIDController brPID = new PIDController(0.771, 0, 0.015);
-    public static final PIDController blPID = new PIDController(0.771, 0, 0.01);
+    public static final PIDController blPID = new PIDController(0.56, 0, 0.01);
 
     public static final PIDController frPIDTrans = new PIDController(0.5, 0, 0);
     public static final PIDController flPIDTrans = new PIDController(0.5, 0, 0);
@@ -70,6 +70,8 @@ public final class Constants {
     public static final int rearRightSteer = 8;//
     public static final int rearRightDrive = 9; // 
 
+    public static final boolean gyroHold = false;
+
     //TEJA IS COOL
 
     //Change this
@@ -88,4 +90,8 @@ public final class Constants {
     public static double kS = 0;
     public static double kV = 0;
     public static double kA = 0;
+
+
+    //Gyro Adjustments
+    public static double priorGyroAngle = 0;
 }

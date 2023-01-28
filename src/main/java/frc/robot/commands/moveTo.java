@@ -13,13 +13,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class moveTo extends CommandBase {
+public class MoveTo extends CommandBase {
   /** Creates a new moveTo. */
   
   public Transform2d transform;
   public Rotation2d rotation;
-  public PIDController xController;
-  public PIDController yController;
+  public PIDController transController;
   public PIDController angleController;
   public SwerveSubsystem swerve;
   public Pose2d initPose;
@@ -31,13 +30,13 @@ public class moveTo extends CommandBase {
   public double xPoint;
   public double yPoint;
   public double rotPoint;
-  public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
+
+  public MoveTo(Transform2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 
-    xController = new PIDController(0.5, 0, 0);
-    yController = new PIDController(0.5, 0, 0);
-    angleController = new PIDController(0.5, 0, 0);
+    transController = new PIDController(0.07, 0, 0);
+    angleController = new PIDController(0.07, 0, 0);
     swerve = swervesub;
     addRequirements(swerve);
 
@@ -57,8 +56,9 @@ public class moveTo extends CommandBase {
   @Override
   public void execute() {
     Pose2d pose = swerve.getRobotPose();
-    double xSpeed = xController.calculate(pose.getX(), xPoint);
-    double ySpeed = yController.calculate(pose.getY(), yPoint);
+
+    double xSpeed = transController.calculate(pose.getX(), xPoint);
+    double ySpeed = transController.calculate(pose.getY(), yPoint);
     double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
 
     swerve.setMotors(xSpeed, ySpeed, rot);
@@ -74,7 +74,7 @@ public class moveTo extends CommandBase {
   public boolean isFinished() {
     Transform2d difference = initPose.minus(swerve.getRobotPose());
 
-    if (difference.getX()<Constants.deadZone && difference.getY()<Constants.deadZone && difference.getRotation().getRadians()<Constants.radDeadZone) {
+    if (Math.abs(difference.getX())<Constants.deadZone && Math.abs(difference.getY())<Constants.deadZone && Math.abs(difference.getRotation().getRadians())<Constants.radDeadZone) {
       return true;
     }
 
