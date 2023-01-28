@@ -34,13 +34,15 @@ public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
   private final PIDController headingController;
-  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,1,false, true,Constants.flPID, Constants.flPIDTrans);
-  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.864,false, true,Constants.frPID, Constants.frPIDTrans);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.477,false, true,Constants.blPID, Constants.blPIDTrans);
-  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.804,false, true, Constants.brPID, Constants.brPIDTrans); 
+  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,.997,false, true,Constants.flPID, Constants.flPIDTrans);
+  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.875,false, true,Constants.frPID, Constants.frPIDTrans);
+  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.350,false, true,Constants.blPID, Constants.blPIDTrans);
+  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.803,false, true, Constants.brPID, Constants.brPIDTrans); 
 
   private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
+
+  AutonTrajectory at;
 
   public SwerveDriveKinematics m_kinematics;
   private ChassisSpeeds chassisSpeeds1;
@@ -85,7 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
     m_odometry.update(getRotation2d(), getModuleStates());
     if(joy.resetGyro()){resetGyro();}
     if(joy.trajectoryRun()){
-      AutonTrajectory at = new AutonTrajectory(this, 90);
+      at = new AutonTrajectory(this, 90);
       at.schedule();
     }
   }

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MoveTo extends CommandBase {
+public class moveTo extends CommandBase {
   /** Creates a new moveTo. */
   
   public Transform2d transform;
@@ -31,20 +31,22 @@ public class MoveTo extends CommandBase {
   public double yPoint;
   public double rotPoint;
 
-  public MoveTo(Transform2d transform, SwerveSubsystem swervesub) {
+  public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 
-    transController = new PIDController(0.07, 0, 0);
-    angleController = new PIDController(0.07, 0, 0);
+    transController = new PIDController(0.5, 0, 0);
+    angleController = new PIDController(0.5, 0, 0);
     swerve = swervesub;
-    addRequirements(swerve);
+    
 
-    initPose = swerve.getRobotPose();
+    initPose = swerve.getRobotPose().transformBy(transform);
 
-    xPoint = initPose.getX() + transform.getX();
-    yPoint = initPose.getY() + transform.getY();
+    xPoint = initPose.getX();
+    yPoint = initPose.getY();
     rotPoint = initPose.getRotation().getRadians();
+
+    addRequirements(swerve);
   }
 
   // Called when the command is initially scheduled.
@@ -57,11 +59,13 @@ public class MoveTo extends CommandBase {
   public void execute() {
     Pose2d pose = swerve.getRobotPose();
 
+    double magnitude = Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(),2));
+
     double xSpeed = transController.calculate(pose.getX(), xPoint);
     double ySpeed = transController.calculate(pose.getY(), yPoint);
     double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
 
-    swerve.setMotors(xSpeed, ySpeed, rot);
+    swerve.setMotors(xSpeed*3, ySpeed*3, rot);
 
   }
 

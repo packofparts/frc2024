@@ -31,8 +31,8 @@ public class AutonTrajectory extends CommandBase {
   public int idx;
   public double deadZone, desiredEndHeading;
   public ChassisSpeeds speeds;
-  public MoveTo move;
-  public static String curvePath = "paths/sussybakacurve.wpilib.json";
+  public moveTo move;
+  public String curvePath = "paths/sussybakacurve.wpilib.json";
   
 
 
@@ -44,8 +44,7 @@ public class AutonTrajectory extends CommandBase {
     path = TrajectoryUtil.fromPathweaverJson(trajPath);
     } catch (IOException e) {}
 
-    initPose = swerve.getRobotPose();
-    transform = path.getInitialPose().minus(initPose);
+    
     idx = 0;
 
     deadZone = Constants.deadZone;
@@ -54,14 +53,18 @@ public class AutonTrajectory extends CommandBase {
     for(int i = 0; i < path.getStates().size(); i++){
       
       Transform2d a = path.getStates().get(i).poseMeters.minus(path.getStates().get(0).poseMeters);
-      path.getStates().get(i).poseMeters = new Pose2d(a.getX(), a.getY(), a.getRotation());
+      
+      path.getStates().get(i).poseMeters = new Pose2d(a.getX()/15, a.getY()/15, a.getRotation());
     }
+
+    initPose = swerve.getRobotPose();
+    transform = path.getInitialPose().minus(initPose);
     addRequirements(swerve);
   }
 
     public Pose2d getPose(int idx, double heading) {
         //Getting pose and applying transformation
-        Pose2d desiredPose = path.getStates().get(idx).poseMeters.plus(transform);
+        Pose2d desiredPose = path.getStates().get(idx).poseMeters;
 
 
         //double totalTime = path.getState().get(path.getStates().size()-1).timeSeconds;
@@ -81,20 +84,21 @@ public class AutonTrajectory extends CommandBase {
 
         Transform2d distance = desiredPose.minus(currentPose);
     
-        move = new MoveTo(distance, swerve);
+        move = new moveTo(distance, swerve);
         move.schedule();
+       
     }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    getSpeeds();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (move.isFinished()){
+    if(move.isFinished()){
       getSpeeds();
     }
 
@@ -107,7 +111,7 @@ public class AutonTrajectory extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-  if (idx>=path.getStates().size()-1) {return true;}
+    if (idx>=path.getStates().size()-1) {return true;}
     return false;
   }
 }
