@@ -19,8 +19,10 @@ public class AutoAlign extends CommandBase {
   public Limelight lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
-  public moveTo move;
+  public MoveTo move;
   public final double yOffset = 0.36;
+
+  public Transform2d moveby;
 
 
   public AutoAlign(SwerveSubsystem swerve, Limelight lime) {
@@ -32,13 +34,7 @@ public class AutoAlign extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    target = lime.getBestTarget();
-    Transform3d transformation = target.getBestCameraToTarget();
-    Transform2d transform2d = new Transform2d(new Translation2d(transformation.getX(), transformation.getY()), new Rotation2d(transformation.getRotation().getAngle()));
-
-
-    move = new moveTo(transform2d.inverse(), swerve);
-    move.schedule();
+    
   }
 
 
