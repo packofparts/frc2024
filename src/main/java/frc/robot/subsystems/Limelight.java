@@ -4,11 +4,15 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Limelight.Pipeline;
 
@@ -18,6 +22,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import java.util.HashMap;
 import java.util.function.Supplier;
 import org.photonvision.PhotonUtils;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Limelight extends SubsystemBase {
@@ -34,12 +40,22 @@ public class Limelight extends SubsystemBase {
   }
   HashMap <String, Integer> pipelineVals = new HashMap<>();
   HashMap <String, Pose2d> fiducialHashMap = new HashMap<>();
+  public AprilTagFieldLayout layout;
+  
 
   public Limelight() {
     photonCamera = new PhotonCamera(net, "gloworm");
     pipelineVals.put("TAG", 0);
     pipelineVals.put("REFLECTION", 1);
     pipelineVals.put("DRIVE", 2);
+
+
+    try {
+      layout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("biggestbird.json"));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
 
   @Override
@@ -79,4 +95,15 @@ public class Limelight extends SubsystemBase {
   public PhotonTrackedTarget getBestTarget() {
     return img.getBestTarget();
   }
+
+  public Pose3d estimatePose() {
+    PhotonTrackedTarget target = getBestTarget();
+    Transform3d transform = target.getBestCameraToTarget().inverse();
+
+    return null;
+
+    
+  }
+
+
 }
