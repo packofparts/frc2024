@@ -29,7 +29,7 @@ public final class Constants {
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
-    public static final double kDriveEncoderRot2Meter = Math.PI * Units.inchesToMeters(4);
+    public static final double kDriveEncoderRot2Meter = 2*Math.PI * Units.inchesToMeters(4)/10;
     public static final double kDriveGearRation = 1/10;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 

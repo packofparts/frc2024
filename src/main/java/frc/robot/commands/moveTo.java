@@ -34,7 +34,6 @@ public class moveTo extends CommandBase {
   public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
-    this.rotation = rotation;
 
     xController = new PIDController(0.5, 0, 0);
     yController = new PIDController(0.5, 0, 0);

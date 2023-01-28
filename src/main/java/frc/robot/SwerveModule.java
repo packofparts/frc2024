@@ -128,6 +128,7 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
        // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
+        transMotor.set(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond));
         transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
         rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
