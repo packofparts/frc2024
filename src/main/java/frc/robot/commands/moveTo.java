@@ -31,7 +31,7 @@ public class moveTo extends CommandBase {
   public double xPoint;
   public double yPoint;
   public double rotPoint;
-  public moveTo(Transform2d transform, Rotation2d rotation, SwerveSubsystem swervesub) {
+  public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
     this.rotation = rotation;
