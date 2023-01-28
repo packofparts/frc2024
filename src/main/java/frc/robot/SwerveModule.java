@@ -38,7 +38,7 @@ public class SwerveModule {
 
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
      Boolean transInverted, Boolean rotInverted, double universalEncoderOffsetinit,
-     Boolean universalEncoderInverted, boolean isAbsEncoder,PIDController pidController){
+     Boolean universalEncoderInverted, boolean isAbsEncoder,PIDController pidController,PIDController transController){
         this.encoderInverted = universalEncoderInverted;
         this.isAbsoluteEncoder=isAbsEncoder;
         this.m_MotorTransID = motorTransID;
@@ -163,6 +163,5 @@ public class SwerveModule {
         transController.setI(i);
         transController.setD(d);
     }
-
 
 }
