@@ -8,7 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SPI.Port;
-
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
@@ -31,11 +31,13 @@ import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
-  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,1,false, true,Constants.flPID,Constants.flPIDTrans);
-  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.805,false, true,Constants.frPID,Constants.frPIDTrans);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,true,true,0.156,false, true,Constants.blPID,Constants.flPIDTrans);
-  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.801,false, true, Constants.brPID,Constants.brPIDTrans); 
+
   private final PIDController headingController;
+  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,1,false, true,Constants.flPID, Constants.flPIDTrans);
+  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.864,false, true,Constants.frPID, Constants.frPIDTrans);
+  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.477,false, true,Constants.blPID, Constants.blPIDTrans);
+  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.804,false, true, Constants.brPID, Constants.brPIDTrans); 
+
   private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
 
@@ -64,11 +66,14 @@ public class SwerveSubsystem extends SubsystemBase {
 
     resetRobotPose();
     rawMods = getRawModules();
+    navx.calibrate();
 
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Calibration", navx.isCalibrating());
+    SmartDashboard.putBoolean("DoneCalibration",navx.isMagnetometerCalibrated());
     for(int i = 0; i<getRawModules().length;i++){
       SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
       SmartDashboard.putNumber("TruePos"+i, getRawModules()[i].universalEncoder.getAbsolutePosition());
@@ -82,6 +87,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void resetGyro(){
     navx.reset();
   }
+
   public double getHeading(){
     return Math.IEEEremainder(navx.getAngle(), 360);
   }
@@ -89,28 +95,34 @@ public class SwerveSubsystem extends SubsystemBase {
     return Rotation2d.fromDegrees(getHeading());
   }
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kTeleDriveMaxSpeedMetersPerSecond*10);
-    SmartDashboard.putNumber("Module1ROT", desiredStates[0].angle.getRadians());
-    SmartDashboard.putNumber("Module2ROT", desiredStates[1].angle.getRadians());
-    SmartDashboard.putNumber("Module3ROT", desiredStates[2].angle.getRadians());
-    SmartDashboard.putNumber("Module4ROT", desiredStates[3].angle.getRadians());
-    frontLeft.setDesiredState(desiredStates[0]);
-    frontRight.setDesiredState(desiredStates[1]);
-    backLeft.setDesiredState(desiredStates[2]);
-    backRight.setDesiredState(desiredStates[3]);
+
+    if(true){
+      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kTeleDriveMaxSpeedMetersPerSecond*10);
+      SmartDashboard.putNumber("Module1ROT", desiredStates[0].angle.getRadians());
+      SmartDashboard.putNumber("Module2ROT", desiredStates[1].angle.getRadians());
+      SmartDashboard.putNumber("Module3ROT", desiredStates[2].angle.getRadians());
+      SmartDashboard.putNumber("Module4ROT", desiredStates[3].angle.getRadians());
+      frontLeft.setDesiredState(desiredStates[0]);
+      frontRight.setDesiredState(desiredStates[1]);
+      backLeft.setDesiredState(desiredStates[2]);
+      backRight.setDesiredState(desiredStates[3]);
+    }
 }
   public SwerveModulePosition[] getModuleStates(){
     return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
   }
   public void setMotors(double x,double y, double rot){
-
-    rot = headingController.calculate(navx.getRate(), rot);
+    if (navx.getRate() == 0 & rot == 0 & Constants.gyroHold == true){
+      rot = Constants.brPID.calculate(navx.getAngle(),Constants.priorGyroAngle);
+    }
 
     if (!joy.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
+
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
     this.setModuleStates(moduleStates);
+    Constants.priorGyroAngle = navx.getAngle();
     SmartDashboard.putNumber("Module1CurrentROT",frontLeft.getRotPosition());
     SmartDashboard.putNumber("Module2CurrentROT", frontRight.getRotPosition());
     SmartDashboard.putNumber("Module3CurrentROT", backLeft.getRotPosition());
@@ -136,6 +148,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
+
+
   public void resetRobotPose(){
     m_odometry.resetPosition(getRotation2d(), getModuleStates(), getRobotPose());
   }
@@ -143,6 +157,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public Pose2d getRobotPose(){
     return m_odometry.getPoseMeters();
   }
+
   public void goToOrigin(){
     System.out.println("executed");
     frontRight.returnToOrigin();

@@ -129,6 +129,7 @@ public class SwerveModule {
 
        // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
         transMotor.set(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond));
+        SmartDashboard.putNumber("desiredStateRange", desiredState.angle.getDegrees());
         transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
         rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
@@ -137,12 +138,13 @@ public class SwerveModule {
 
         rotationPIDTest.setPID(Constants.kP, Constants.kI, Constants.kD);
         rotationPIDTest.disableContinuousInput();
-        double sp = rotationPIDTest.calculate(getRotPosition()*2*Math.PI/18, setPoint);
+        double sp = rotationPIDTest.calculate((getRotPosition()-0.5)*2*Math.PI/18, setPoint);
         rotMotor.set(sp);
     }
+    
     public void returnToOrigin(){
         System.out.println("In PID loop");
-        rotMotor.set(rotationPIDTest.calculate(getRotPosition()*2*Math.PI/18, 0));
+        rotMotor.set(rotationPIDTest.calculate(((getRotPosition()%18)*2*Math.PI/18), 0));
         rotationPIDTest.setTolerance(0);
     }
     public SwerveModulePosition getModulePos(){
