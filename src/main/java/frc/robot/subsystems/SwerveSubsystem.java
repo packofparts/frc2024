@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -33,7 +34,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.805,false, true,Constants.frPID);
   private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,true,true,0.156,false, true,Constants.blPID);
   private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.801,false, true, Constants.brPID); 
-
+  private final PIDController headingController;
   private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
 
   public SwerveDriveKinematics m_kinematics;
@@ -56,6 +57,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("d", 0);
     this.joy = joys;
     resetGyro();
+
+    headingController = new PIDController(0.5, 0, 0);
 
     resetRobotPose();
     rawMods = getRawModules();
@@ -98,6 +101,9 @@ public class SwerveSubsystem extends SubsystemBase {
     return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
   }
   public void setMotors(double x,double y, double rot){
+
+    rot = headingController.calculate(navx.getRate(), rot);
+
     if (!joy.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
