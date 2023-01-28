@@ -27,6 +27,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
+import frc.robot.commands.AutonTrajectory;
 
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -83,6 +84,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     m_odometry.update(getRotation2d(), getModuleStates());
     if(joy.resetGyro()){resetGyro();}
+    if(joy.trajectoryRun()){
+      AutonTrajectory at = new AutonTrajectory(this, 90);
+      at.schedule();
+    }
   }
   public void resetGyro(){
     navx.reset();
