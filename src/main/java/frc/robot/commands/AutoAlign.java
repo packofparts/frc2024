@@ -24,21 +24,20 @@ public class AutoAlign extends CommandBase {
   public Limelight lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
-  public moveTo move;
+  public MoveTo move;
   public final double yOffset = 0.36;
 
   public Transform2d moveby;
 
   public PoseEstimation pose;
 
-  public boolean aligning;
   Optional<Pose3d> desiredPose3d;
 
   public AutoAlign(PoseEstimation pose, Limelight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;
-    aligning = false;
+    
   }
 
   // Called when the command is initially scheduled.
@@ -56,12 +55,10 @@ public class AutoAlign extends CommandBase {
     if (desiredPose3d.isPresent()) {
       Pose2d desiredPose = new Pose2d(desiredPose3d.get().getX(), desiredPose3d.get().getY()+yOffset, new Rotation2d(desiredPose3d.get().getRotation().getAngle()));
       Transform2d transform = desiredPose.minus(pose.getPosition());
-      aligning = true;
       move = new MoveTo(transform, swerve);
       move.schedule();
-      } else {
-        move = new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve);
-        move.schedule();
+    } else {
+        swerve.setMotors(0, 0, 5);
       }
   }
   
@@ -80,7 +77,7 @@ public class AutoAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (move.isFinished() && aligning);
+    return (move.isFinished());
   }
 
 

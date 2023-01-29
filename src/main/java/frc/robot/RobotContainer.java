@@ -11,11 +11,14 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.Joysticks;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -29,8 +32,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final Joysticks joys = new Joysticks();
   public final SwerveSubsystem swerve = new SwerveSubsystem(joys);
+  public final Limelight lime = new Limelight();
+  public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   public final DefaultDriveCmd npc = new DefaultDriveCmd(joys, swerve);
   public final PIDtuning pud = new PIDtuning(joys,swerve);
+  public final AutoAlign align = new AutoAlign(pose, lime);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
   public SwerveModule [] allModules = swerve.getRawModules(); 

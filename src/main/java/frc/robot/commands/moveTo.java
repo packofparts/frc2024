@@ -13,40 +13,38 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class moveTo extends CommandBase {
+public class MoveTo extends CommandBase {
   /** Creates a new moveTo. */
   
-  public Pose2d transform;
+  public Transform2d transform;
   public Rotation2d rotation;
   public PIDController transController;
   public PIDController angleController;
-  public PIDController velocityController;
   public SwerveSubsystem swerve;
-  public Pose2d desiredPose;
+  public Pose2d initPose;
+
 
   public SwerveDriveKinematics m_kinematics;
   
+
   public double xPoint;
   public double yPoint;
   public double rotPoint;
 
-  public moveTo(Pose2d transform, SwerveSubsystem swervesub) {
+  public MoveTo(Transform2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 
-    transController = new PIDController(0.5, 0, 0);
-    angleController = new PIDController(0.5, 0, 0);
-    
-
+    transController = new PIDController(0.07, 0, 0);
+    angleController = new PIDController(0.07, 0, 0);
     swerve = swervesub;
-    
-    //desiredPose = swerve.getRobotPose().transformBy(transform);
-
-    xPoint = desiredPose.getX();
-    yPoint = desiredPose.getY();
-    rotPoint = desiredPose.getRotation().getRadians();
-
     addRequirements(swerve);
+
+    initPose = swerve.getRobotPose();
+
+    xPoint = initPose.getX() + transform.getX();
+    yPoint = initPose.getY() + transform.getY();
+    rotPoint = initPose.getRotation().getRadians();
   }
 
   // Called when the command is initially scheduled.
@@ -59,15 +57,11 @@ public class moveTo extends CommandBase {
   public void execute() {
     Pose2d pose = swerve.getRobotPose();
 
-    // double xSpeed = transController.calculate(pose.getX(), xPoint);
-    // double ySpeed = transController.calculate(pose.getY(), yPoint);
-    double magnitude = Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2));
-    double xSpeed = pose.getX() / magnitude * .1;
-    double ySpeed = pose.getY() / magnitude * .1;
-
+    double xSpeed = transController.calculate(pose.getX(), xPoint);
+    double ySpeed = transController.calculate(pose.getY(), yPoint);
     double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
 
-    swerve.setMotors(xSpeed, ySpeed, 0);
+    swerve.setMotors(xSpeed, ySpeed, rot);
 
   }
 
@@ -78,7 +72,7 @@ public class moveTo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Transform2d difference = desiredPose.minus(swerve.getRobotPose());
+    Transform2d difference = initPose.plus(transform).minus(swerve.getRobotPose());
 
     if (Math.abs(difference.getX())<Constants.deadZone && Math.abs(difference.getY())<Constants.deadZone && Math.abs(difference.getRotation().getRadians())<Constants.radDeadZone) {
       return true;

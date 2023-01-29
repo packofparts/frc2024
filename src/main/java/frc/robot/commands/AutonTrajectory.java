@@ -31,7 +31,7 @@ public class AutonTrajectory extends CommandBase {
   public int idx;
   public double deadZone, desiredEndHeading;
   public ChassisSpeeds speeds;
-  public moveTo move;
+  public MoveTo move;
   public String curvePath = "paths/sussybakacurve.wpilib.json";
   
 
@@ -83,7 +83,7 @@ public class AutonTrajectory extends CommandBase {
 
 
     
-        move = new moveTo(desiredPose, swerve);
+        move = new MoveTo(desiredPose.minus(currentPose), swerve);
         move.schedule();
        
     }
