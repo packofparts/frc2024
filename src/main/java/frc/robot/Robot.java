@@ -81,7 +81,11 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    if (m_robotContainer.joys.aprilAlign()) {
+      m_robotContainer.align.schedule();
+    }
+  }
 
   @Override
   public void testInit() {

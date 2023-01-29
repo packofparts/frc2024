@@ -4,14 +4,19 @@
 
 package frc.robot.commands;
 
+import java.util.Optional;
+
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoAlign extends CommandBase {
@@ -24,23 +29,48 @@ public class AutoAlign extends CommandBase {
 
   public Transform2d moveby;
 
+  public PoseEstimation pose;
 
-  public AutoAlign(SwerveSubsystem swerve, Limelight lime) {
+  public boolean aligning;
+  Optional<Pose3d> desiredPose3d;
+
+  public AutoAlign(PoseEstimation pose, Limelight limelight) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.lime = lime;
-    this.swerve = swerve;
+    this.pose = pose;
+    lime = limelight;
+    aligning = false;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    target = lime.getBestTarget();
+    desiredPose3d = pose.layout.getTagPose(target.getFiducialId());
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    desiredPose3d = getDesiredPose();
+    if (desiredPose3d.isPresent()) {
+      Pose2d desiredPose = new Pose2d(desiredPose3d.get().getX(), desiredPose3d.get().getY()+yOffset, new Rotation2d(desiredPose3d.get().getRotation().getAngle()));
+      Transform2d transform = desiredPose.minus(pose.getPosition());
+      aligning = true;
+      move = new MoveTo(transform, swerve);
+      move.schedule();
+      } else {
+        move = new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve);
+        move.schedule();
+      }
+  }
+  
+  public Optional<Pose3d> getDesiredPose() {
+    if (desiredPose3d.isPresent()){
+      target = lime.getBestTarget();
+    }
+    return pose.layout.getTagPose(target.getFiducialId());
+
   }
 
   // Called once the command ends or is interrupted.
@@ -50,7 +80,7 @@ public class AutoAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return move.isFinished();
+    return (move.isFinished() && aligning);
   }
 
 

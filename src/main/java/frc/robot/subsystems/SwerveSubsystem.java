@@ -26,7 +26,9 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.SwerveModule;
+import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutonTrajectory;
 
 
@@ -90,6 +92,7 @@ public class SwerveSubsystem extends SubsystemBase {
       at = new AutonTrajectory(this, 0);
       at.schedule();
     }
+
   }
   public void resetGyro(){
     navx.reset();
