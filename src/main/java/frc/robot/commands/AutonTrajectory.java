@@ -27,11 +27,11 @@ public class AutonTrajectory extends CommandBase {
   public Trajectory path = new Trajectory();
   public SwerveSubsystem swerve;
   public Pose2d initPose;
-  public Transform2d transform;
+  public Transform2d transform, desired;
   public int idx;
   public double deadZone, desiredEndHeading;
   public ChassisSpeeds speeds;
-  public MoveTo move;
+  public moveTo move;
   public String curvePath = "paths/sussybakacurve.wpilib.json";
   
 
@@ -83,7 +83,7 @@ public class AutonTrajectory extends CommandBase {
 
 
     
-        move = new MoveTo(desiredPose.minus(currentPose), swerve);
+        move = new moveTo(desiredPose.minus(currentPose), swerve);
         move.schedule();
        
     }
@@ -91,15 +91,31 @@ public class AutonTrajectory extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    getSpeeds();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(move.isFinished()){
-      getSpeeds();
+    // if(move.isFinished()){
+    //   getSpeeds();
+    // }
+    
+    desired = this.path.getStates().get(this.idx).poseMeters.minus(this.swerve.getRobotPose());
+    if(Math.abs(desired.getX()) < Constants.deadZone && Math.abs(desired.getY()) < Constants.deadZone){
+      idx++;
+      desired = this.path.getStates().get(this.idx).poseMeters.minus(this.swerve.getRobotPose());
     }
+
+    double xSpeed = desired.getX();
+    double ySpeed = desired.getY();
+    double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+
+    xSpeed /= magnitude * .35;
+    ySpeed /= magnitude * .35;
+
+
+    this.swerve.setMotors(xSpeed, ySpeed, 0);
 
   }
 
