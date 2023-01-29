@@ -16,7 +16,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class moveTo extends CommandBase {
   /** Creates a new moveTo. */
   
-  public Transform2d transform;
+  public Pose2d transform;
   public Rotation2d rotation;
   public PIDController transController;
   public PIDController angleController;
@@ -30,7 +30,7 @@ public class moveTo extends CommandBase {
   public double yPoint;
   public double rotPoint;
 
-  public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
+  public moveTo(Pose2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 
@@ -40,7 +40,7 @@ public class moveTo extends CommandBase {
 
     swerve = swervesub;
     
-    desiredPose = swerve.getRobotPose().transformBy(transform);
+    //desiredPose = swerve.getRobotPose().transformBy(transform);
 
     xPoint = desiredPose.getX();
     yPoint = desiredPose.getY();
@@ -62,12 +62,12 @@ public class moveTo extends CommandBase {
     // double xSpeed = transController.calculate(pose.getX(), xPoint);
     // double ySpeed = transController.calculate(pose.getY(), yPoint);
     double magnitude = Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2));
-    double xSpeed = pose.getX() / magnitude * .35;
-    double ySpeed = pose.getY() / magnitude * .35;
+    double xSpeed = pose.getX() / magnitude * .1;
+    double ySpeed = pose.getY() / magnitude * .1;
 
     double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
 
-    swerve.setMotors(xSpeed, ySpeed, rot);
+    swerve.setMotors(xSpeed, ySpeed, 0);
 
   }
 

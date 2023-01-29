@@ -53,7 +53,7 @@ public class AutonTrajectory extends CommandBase {
     for(int i = 0; i < path.getStates().size(); i++){
       Transform2d a = path.getStates().get(i).poseMeters.minus(path.getStates().get(0).poseMeters);
       
-      path.getStates().get(i).poseMeters = new Pose2d(a.getX()/15, a.getY()/15, a.getRotation());
+      path.getStates().get(i).poseMeters = new Pose2d(a.getX()/2, a.getY()/2, a.getRotation());
     }
 
     initPose = swerve.getRobotPose();
@@ -81,9 +81,9 @@ public class AutonTrajectory extends CommandBase {
         Pose2d currentPose = swerve.getRobotPose();
         Pose2d desiredPose = getPose(idx, currentPose.getRotation().getDegrees());        
 
-        Transform2d distance = desiredPose.minus(currentPose);
+
     
-        move = new moveTo(distance, swerve);
+        move = new moveTo(desiredPose, swerve);
         move.schedule();
        
     }

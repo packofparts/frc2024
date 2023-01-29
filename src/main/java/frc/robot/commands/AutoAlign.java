@@ -19,7 +19,7 @@ public class AutoAlign extends CommandBase {
   public Limelight lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
-  public MoveTo move;
+  public moveTo move;
   public final double yOffset = 0.36;
 
   public Transform2d moveby;
