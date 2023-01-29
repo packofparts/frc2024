@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -31,10 +32,10 @@ public class AutonTrajectory extends CommandBase {
   public int idx;
   public double deadZone, desiredEndHeading;
   public ChassisSpeeds speeds;
-  public moveTo move;
+  public MoveTo move;
   public String curvePath = "paths/sussybakacurve.wpilib.json";
   
-
+  PIDController velocityController;
 
   public AutonTrajectory(SwerveSubsystem swerve, double desiredEndHeading) {
     this.swerve = swerve;
@@ -58,6 +59,9 @@ public class AutonTrajectory extends CommandBase {
 
     initPose = swerve.getRobotPose();
     transform = path.getInitialPose().minus(initPose);
+
+    velocityController = new PIDController(.5, 0, 0);
+
     addRequirements(swerve);
   }
 
@@ -83,7 +87,7 @@ public class AutonTrajectory extends CommandBase {
 
 
     
-        move = new moveTo(desiredPose.minus(currentPose), swerve);
+        move = new MoveTo(desiredPose.minus(currentPose), swerve);
         move.schedule();
        
     }
