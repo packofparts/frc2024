@@ -54,6 +54,7 @@ public class AutonTrajectory extends CommandBase {
       path = TrajectoryUtil.fromPathweaverJson(trajPath);
     } catch (IOException e) {}
 
+    initPose = swerve.getRobotPose();
     
     idx = 0;
 
@@ -61,24 +62,27 @@ public class AutonTrajectory extends CommandBase {
     this.desiredEndHeading = desiredEndHeading;
 
 
-    TrajectoryConfig tc = new TrajectoryConfig(1, .5);
-    path = TrajectoryGenerator.generateTrajectory(initPose, 
-    List.of(
-      new Translation2d(1, 0),
-      new Translation2d(0, -1),
-      new Translation2d(-1, 0)
-    ), new Pose2d(initPose.getX(), initPose.getY(), Rotation2d.fromDegrees(initPose.getRotation().getDegrees()+180)), tc);
+    // TrajectoryConfig tc = new TrajectoryConfig(.5, .5);
+    // this.path = TrajectoryGenerator.generateTrajectory(initPose, 
+    // List.of(
+    //   new Translation2d(.1, 0),
+    //   new Translation2d(0, -.1),
+    //   new Translation2d(-.1, 0)
+    // ), new Pose2d(initPose.getX(), initPose.getY(), Rotation2d.fromDegrees(initPose.getRotation().getDegrees()+0)), tc);
 
     for(int i = 0; i < path.getStates().size(); i++){
       Transform2d a = path.getStates().get(i).poseMeters.minus(path.getStates().get(0).poseMeters);
-      path.getStates().get(i).poseMeters = new Pose2d(a.getX(), a.getY(), a.getRotation());
+
+
+      path.getStates().get(i).poseMeters = new Pose2d(a.getX()/2, a.getY()/2, a.getRotation());
     }
 
-    initPose = swerve.getRobotPose();
+    
     transform = path.getInitialPose().minus(initPose); //not used
 
     velocityController = new PIDController(.5, 0, 0);
     angleController = new PIDController(0.2, 0, 0);
+  
     
 
     addRequirements(swerve);
@@ -125,12 +129,13 @@ public class AutonTrajectory extends CommandBase {
       idx++;
       difference = this.path.getStates().get(this.idx).poseMeters.minus(this.swerve.getRobotPose());
     }
-
+    SmartDashboard.putNumber("Size", this.path.getStates().get(0).poseMeters.getX());
     SmartDashboard.putNumber("Trajectory Desired State", idx);
     SmartDashboard.putNumber("differencePoseX", difference.getX());
     SmartDashboard.putNumber("differencePoseY", difference.getY());
     SmartDashboard.putNumber("currentPoseX", this.swerve.getRobotPose().getX());
     SmartDashboard.putNumber("currentPoseY", this.swerve.getRobotPose().getY());
+
 
     double xSpeed = difference.getX();
     double ySpeed = difference.getY();
@@ -138,11 +143,14 @@ public class AutonTrajectory extends CommandBase {
 
     double rot = angleController.calculate(this.swerve.getRobotPose().getRotation().getRadians(), this.swerve.getRobotPose().getRotation().getRadians() + difference.getRotation().getRadians());
 
-    xSpeed /= magnitude * .35;
-    ySpeed /= magnitude * .35;
+    xSpeed /= magnitude ;
+    ySpeed /= magnitude ;
+
+    xSpeed *= 1;
+    ySpeed *= 1;
 
 
-    this.swerve.setMotors(xSpeed, ySpeed, rot);
+    this.swerve.setMotors(xSpeed, ySpeed, 0);
   }
 
   // Called once the command ends or is interrupted.

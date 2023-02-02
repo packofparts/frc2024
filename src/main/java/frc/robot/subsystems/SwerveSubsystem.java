@@ -38,7 +38,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final PIDController headingController;
   private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,.997,false, true,Constants.flPID, Constants.flPIDTrans);
   private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.875,false, true,Constants.frPID, Constants.frPIDTrans);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.350,false, true,Constants.blPID, Constants.blPIDTrans);
+  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,false,true,0.300,false, true,Constants.blPID, Constants.blPIDTrans);
   private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.803,false, true, Constants.brPID, Constants.brPIDTrans); 
 
   private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
@@ -86,6 +86,7 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Offset"+i, getRawModules()[i].universalEncoder.getPositionOffset());
     }
 
+    SmartDashboard.putNumber("odometryx", getRobotPose().getX());
     m_odometry.update(getRotation2d(), getModuleStates());
     if(joy.resetGyro()){resetGyro();}
     if(joy.trajectoryRun()){

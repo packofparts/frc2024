@@ -148,7 +148,7 @@ public class SwerveModule {
         rotationPIDTest.setTolerance(0);
     }
     public SwerveModulePosition getModulePos(){
-        return new SwerveModulePosition(transEncoder.getPosition()*Constants.kDriveEncoderRPM2MeterPerSec,new Rotation2d(getRotPosition()));
+        return new SwerveModulePosition(transEncoder.getPosition()*7*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()));
     }
     public void stop() {
         transMotor.set(0);
