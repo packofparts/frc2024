@@ -29,7 +29,7 @@ public final class Constants {
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
-    public static final double kDriveEncoderRot2Meter = 2*Math.PI * Units.inchesToMeters(2);
+    public static final double kDriveEncoderRot2Meter = 2*Math.PI * Units.inchesToMeters(2); //multiply by gearratio check gear ratio for trans encoder
     public static final double kDriveGearRation = 1/10;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
 
@@ -84,7 +84,7 @@ public final class Constants {
     public static int compressorID;
 
 
-    public static double deadZone = 0.1;
+    public static double deadZone = 0.25;
     public static double radDeadZone = 0.05;
 
     public static double kS = 0;

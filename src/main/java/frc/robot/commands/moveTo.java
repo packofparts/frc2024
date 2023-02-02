@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MoveTo extends CommandBase {
+public class moveTo extends CommandBase {
   /** Creates a new moveTo. */
   
   public Transform2d transform;
@@ -31,7 +31,7 @@ public class MoveTo extends CommandBase {
   public double yPoint;
   public double rotPoint;
 
-  public MoveTo(Transform2d transform, SwerveSubsystem swervesub) {
+  public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 

@@ -27,22 +27,19 @@ import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutonTrajectory extends CommandBase {
-  /** Creates a new Trajectory. */
-
-;
-  public Trajectory path = new Trajectory();
+  
   public SwerveSubsystem swerve;
   public Pose2d initPose;
   public Transform2d transform, difference;
-  public int idx;
+  public int desiredStateID;
   public double deadZone, desiredEndHeading;
   public ChassisSpeeds speeds;
-  public MoveTo move;
-  public String curvePath = "paths/sussybakacurve.wpilib.json";
+  public moveTo move;
+  public String curvePath = "paths/scurvetest.wpilib.json";
   
   PIDController velocityController, angleController;
 
-  Trajectory testPath;
+  Trajectory testPath, path;
 
 
 
@@ -56,7 +53,7 @@ public class AutonTrajectory extends CommandBase {
 
     initPose = swerve.getRobotPose();
     
-    idx = 0;
+    desiredStateID = 0;
 
     deadZone = Constants.deadZone;
     this.desiredEndHeading = desiredEndHeading;
@@ -69,6 +66,7 @@ public class AutonTrajectory extends CommandBase {
     //   new Translation2d(0, -.1),
     //   new Translation2d(-.1, 0)
     // ), new Pose2d(initPose.getX(), initPose.getY(), Rotation2d.fromDegrees(initPose.getRotation().getDegrees()+0)), tc);
+
 
     for(int i = 0; i < path.getStates().size(); i++){
       Transform2d a = path.getStates().get(i).poseMeters.minus(path.getStates().get(0).poseMeters);
@@ -103,11 +101,11 @@ public class AutonTrajectory extends CommandBase {
     }
 
     public void getSpeeds() {
-        idx ++;
+        desiredStateID ++;
         Pose2d currentPose = swerve.getRobotPose();
-        Pose2d desiredPose = getPose(idx, currentPose.getRotation().getDegrees());        
+        Pose2d desiredPose = getPose(desiredStateID, currentPose.getRotation().getDegrees());        
     
-        move = new MoveTo(desiredPose.minus(currentPose), swerve);
+        move = new moveTo(desiredPose.minus(currentPose), swerve);
         move.schedule();
     }
 
@@ -117,20 +115,18 @@ public class AutonTrajectory extends CommandBase {
 
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+  void trackMethod1(){
     // if(move.isFinished()){
     //   getSpeeds();
     // }
     
-    difference = this.path.getStates().get(this.idx).poseMeters.minus(this.swerve.getRobotPose());
+    difference = this.path.getStates().get(this.desiredStateID).poseMeters.minus(this.swerve.getRobotPose());
     if(Math.abs(difference.getX()) < Constants.deadZone && Math.abs(difference.getY()) < Constants.deadZone){
-      idx++;
-      difference = this.path.getStates().get(this.idx).poseMeters.minus(this.swerve.getRobotPose());
+      desiredStateID++;
+      difference = this.path.getStates().get(this.desiredStateID).poseMeters.minus(this.swerve.getRobotPose());
     }
     SmartDashboard.putNumber("Size", this.path.getStates().get(0).poseMeters.getX());
-    SmartDashboard.putNumber("Trajectory Desired State", idx);
+    SmartDashboard.putNumber("Trajectory Desired State", desiredStateID);
     SmartDashboard.putNumber("differencePoseX", difference.getX());
     SmartDashboard.putNumber("differencePoseY", difference.getY());
     SmartDashboard.putNumber("currentPoseX", this.swerve.getRobotPose().getX());
@@ -152,6 +148,38 @@ public class AutonTrajectory extends CommandBase {
 
     this.swerve.setMotors(xSpeed, ySpeed, 0);
   }
+  void trackMethod2(){
+      State desiredState = this.path.getStates().get(desiredStateID);
+      
+
+      Pose2d desiredPose = this.path.getStates().get(desiredStateID).poseMeters;        
+      double desiredVelocity = Math.abs(desiredState.velocityMetersPerSecond);
+      //double deltaTime = trajectoryPath.get(idx).timeSeconds - trajectoryPath.get(idx-1).timeSeconds;
+  
+      difference = this.path.getStates().get(this.desiredStateID).poseMeters.minus(this.swerve.getRobotPose());
+      if(Math.abs(difference.getX()) < Constants.deadZone && Math.abs(difference.getY()) < Constants.deadZone){
+        desiredStateID++;
+        difference = this.path.getStates().get(this.desiredStateID).poseMeters.minus(this.swerve.getRobotPose());
+      }
+
+      
+      double magnitude = Math.sqrt(Math.pow(difference.getX(), 2) + Math.pow(difference.getY(), 2));
+
+      double xSpeed = difference.getX() / magnitude * desiredVelocity;
+      double ySpeed = difference.getY() / magnitude * desiredVelocity;
+      
+      
+      double rotation = difference.getRotation().getRadians();
+
+      ChassisSpeeds desiredSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, 0, this.swerve.getRobotPose().getRotation());
+
+      this.swerve.setMotors(xSpeed, ySpeed, 0);
+  }
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+    trackMethod2();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -160,7 +188,7 @@ public class AutonTrajectory extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (idx>=path.getStates().size()-1) {return true;}
+    if (desiredStateID>=path.getStates().size()-1) {return true;}
     return false;
   }
 }

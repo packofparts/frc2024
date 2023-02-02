@@ -91,17 +91,18 @@ public class SwerveModule {
             return rotEncoder.getPosition();
         }
         return rotEncoder.getPosition();
-    
     }
+
     public double getTransVelocity(){
-        return transEncoder.getVelocity();
+        return transEncoder.getVelocity(); 
     }
+
     public double getRotVelocity(){
         return rotEncoder.getVelocity();
     }
+
     public double getUniversalEncoderRad(){
         return 0;
-        
     }
     public void resetEncoders(){
         if (isAbsoluteEncoder){
@@ -134,7 +135,7 @@ public class SwerveModule {
         rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
         //System.out.println("setPoint is: "+ getRotPosition());
     }
-    public void updatePositions(Double setPoint){
+    public void updatePositions(double setPoint){
 
         rotationPIDTest.setPID(Constants.kP, Constants.kI, Constants.kD);
         rotationPIDTest.disableContinuousInput();
@@ -147,17 +148,21 @@ public class SwerveModule {
         rotMotor.set(rotationPIDTest.calculate(((getRotPosition()%18)*2*Math.PI/18), 0));
         rotationPIDTest.setTolerance(0);
     }
+
     public SwerveModulePosition getModulePos(){
-        return new SwerveModulePosition(transEncoder.getPosition()*7*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()));
+        return new SwerveModulePosition(transEncoder.getPosition()/10*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactor));
     }
+
     public void stop() {
         transMotor.set(0);
         rotMotor.set(0);
 
     }
+
     public PIDController getPIDController(){
         return this.rotationPIDTest;
     }
+
     public void setPidController(double p, double i, double d){
         rotationPIDTest.setP(p);
         rotationPIDTest.setI(i);

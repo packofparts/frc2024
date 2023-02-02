@@ -24,7 +24,7 @@ public class AutoAlign extends CommandBase {
   public Limelight lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
-  public MoveTo move;
+  public moveTo move;
   public final double yOffset = 0.36;
 
   public Transform2d moveby;
@@ -55,7 +55,7 @@ public class AutoAlign extends CommandBase {
     if (desiredPose3d.isPresent()) {
       Pose2d desiredPose = new Pose2d(desiredPose3d.get().getX(), desiredPose3d.get().getY()+yOffset, new Rotation2d(desiredPose3d.get().getRotation().getAngle()));
       Transform2d transform = desiredPose.minus(pose.getPosition());
-      move = new MoveTo(transform, swerve);
+      move = new moveTo(transform, swerve);
       move.schedule();
     } else {
         swerve.setMotors(0, 0, 5);

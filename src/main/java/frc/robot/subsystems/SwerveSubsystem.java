@@ -159,10 +159,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
-  public double[] getVelocity(){
-    return null;
-  }
-
   public void resetRobotPose(){
     m_odometry.resetPosition(getRotation2d(), getModuleStates(), getRobotPose());
   }
