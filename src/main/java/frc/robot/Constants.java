@@ -84,7 +84,7 @@ public final class Constants {
     public static int compressorID;
 
 
-    public static double deadZone = 0.25;
+    public static double deadZone = 0.2;
     public static double radDeadZone = 0.05;
 
     public static double kS = 0;

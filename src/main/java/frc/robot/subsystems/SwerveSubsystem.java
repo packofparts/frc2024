@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
@@ -48,10 +49,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveDriveKinematics m_kinematics;
   private ChassisSpeeds chassisSpeeds1;
-  private SwerveDriveOdometry m_odometry;
+  public SwerveDriveOdometry m_odometry;
   AHRS navx = new AHRS(Port.kMXP);
   private Joysticks joy;
   SwerveModule [] rawMods;
+
+  public Field2d field = new Field2d();
 
   public SwerveSubsystem(Joysticks joys) {
     m_kinematics = new SwerveDriveKinematics(
@@ -70,6 +73,9 @@ public class SwerveSubsystem extends SubsystemBase {
     headingController = new PIDController(0.5, 0, 0);
 
     resetRobotPose();
+
+    SmartDashboard.putData("Field", field);
+
     rawMods = getRawModules();
     navx.calibrate();
 
@@ -77,17 +83,19 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Calibration", navx.isCalibrating());
-    SmartDashboard.putBoolean("DoneCalibration",navx.isMagnetometerCalibrated());
-    for(int i = 0; i<getRawModules().length;i++){
-      SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
-      SmartDashboard.putNumber("TruePos"+i, getRawModules()[i].universalEncoder.getAbsolutePosition());
-      SmartDashboard.putNumber("Generic"+i, getRawModules()[i].universalEncoder.getAbsolutePosition()-getRawModules()[i].universalEncoder.getPositionOffset());
-      SmartDashboard.putNumber("Offset"+i, getRawModules()[i].universalEncoder.getPositionOffset());
-    }
+    // SmartDashboard.putBoolean("Calibration", navx.isCalibrating());
+    // SmartDashboard.putBoolean("DoneCalibration",navx.isMagnetometerCalibrated());
+    // for(int i = 0; i<getRawModules().length;i++){
+    //   SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
+    //   SmartDashboard.putNumber("TruePos"+i, getRawModules()[i].universalEncoder.getAbsolutePosition());
+    //   SmartDashboard.putNumber("Generic"+i, getRawModules()[i].universalEncoder.getAbsolutePosition()-getRawModules()[i].universalEncoder.getPositionOffset());
+    //   SmartDashboard.putNumber("Offset"+i, getRawModules()[i].universalEncoder.getPositionOffset());
+    // }
 
     SmartDashboard.putNumber("odometryx", getRobotPose().getX());
+    SmartDashboard.putNumber("odometryy", getRobotPose().getY());
     m_odometry.update(getRotation2d(), getModuleStates());
+    this.field.setRobotPose(getRobotPose());
     if(joy.resetGyro()){resetGyro();}
     if(joy.trajectoryRun()){
       at = new AutonTrajectory(this, 0);
@@ -122,25 +130,33 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveModulePosition[] getModuleStates(){
     return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
   }
+
+  public SwerveModulePosition[] zeroStates(){
+    return(new SwerveModulePosition[]{new SwerveModulePosition(),
+      new SwerveModulePosition(),new SwerveModulePosition(),new SwerveModulePosition()});
+  }
+
   public void setMotors(double x,double y, double rot){
     if (navx.getRate() == 0 & rot == 0 & Constants.gyroHold == true){
       rot = Constants.brPID.calculate(navx.getAngle(),Constants.priorGyroAngle);
     }
 
-    if (!joy.getRobotOriented()){
-      chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
-    } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
+    // if (!joy.getRobotOriented()){
+    //   chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
+    // } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
+
+    chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
 
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
     this.setModuleStates(moduleStates);
     Constants.priorGyroAngle = navx.getAngle();
-    SmartDashboard.putNumber("Module1CurrentROT",frontLeft.getRotPosition());
-    SmartDashboard.putNumber("Module2CurrentROT", frontRight.getRotPosition());
-    SmartDashboard.putNumber("Module3CurrentROT", backLeft.getRotPosition());
-    SmartDashboard.putNumber("Module4CurrentROT", backRight.getRotPosition());
-    SmartDashboard.putNumber("ChassisSpeeds POT", chassisSpeeds1.omegaRadiansPerSecond);
-    SmartDashboard.putNumber("ChassisSpeed X", chassisSpeeds1.vxMetersPerSecond);
-    SmartDashboard.putNumber("ChassisSpeed Y", chassisSpeeds1.vyMetersPerSecond);
+    // SmartDashboard.putNumber("Module1CurrentROT",frontLeft.getRotPosition());
+    // SmartDashboard.putNumber("Module2CurrentROT", frontRight.getRotPosition());
+    // SmartDashboard.putNumber("Module3CurrentROT", backLeft.getRotPosition());
+    // SmartDashboard.putNumber("Module4CurrentROT", backRight.getRotPosition());
+    // SmartDashboard.putNumber("ChassisSpeeds POT", chassisSpeeds1.omegaRadiansPerSecond);
+    // SmartDashboard.putNumber("ChassisSpeed X", chassisSpeeds1.vxMetersPerSecond);
+    // SmartDashboard.putNumber("ChassisSpeed Y", chassisSpeeds1.vyMetersPerSecond);
     SmartDashboard.putNumber("Heading", getHeading());
   }
 

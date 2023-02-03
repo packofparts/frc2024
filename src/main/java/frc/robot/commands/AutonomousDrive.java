@@ -21,55 +21,58 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutonomousDrive extends CommandBase {
   /** Creates a new AutonomousDrive. */
-//   SwerveSubsystem swerve;
-//   SwerveControllerCommand yeet;
-//   Boolean done = false;
+  SwerveSubsystem swerve;
+  SwerveControllerCommand yeet;
+  Boolean done = false;
   public AutonomousDrive(SwerveSubsystem s) {
 //     // Use addRequirements() here to declare subsystem dependencies.
-//     this.swerve = s;
-//     addRequirements(swerve);
-//     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-//       3,
-//       1) .setKinematics(this.swerve.m_kinematics);
+    this.swerve = s;
+    addRequirements(swerve);
+    this.swerve.resetRobotPose();
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+      5,
+      5) .setKinematics(this.swerve.m_kinematics);
 
-// // 2. Generate trajectory
-//     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-//           new Pose2d(0, 0, new Rotation2d(0)),
-//           List.of(
-//                   new Translation2d(1, 15),
-//                   new Translation2d(1, -7)),
-//           new Pose2d(12, -1, Rotation2d.fromDegrees(90)),
-//           trajectoryConfig);
+// 2. Generate trajectory
+    Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+          new Pose2d(0, 0, new Rotation2d(0)),
+          List.of(
+                  new Translation2d(1, 5),
+                  new Translation2d(1, -2)),
+          new Pose2d(3, -1, Rotation2d.fromDegrees(90)),
+          trajectoryConfig);
 
-//     // 3. Define PID controllers for tracking trajectory
-//     PIDController xController = new PIDController(0.01, 0, 0);
-//     PIDController yController = new PIDController(0.01, 0, 0);
-//     ProfiledPIDController thetaController = new ProfiledPIDController(
-//           0.01, 0, 0, new Constraints(5/4, Math.PI/4));
-//     thetaController.enableContinuousInput(-Math.PI, Math.PI);
-//     yeet = new SwerveControllerCommand(
-//       trajectory,
-//       this.swerve::getRobotPose,
-//       this.swerve.m_kinematics,
-//       xController,
-//       yController,
-//       thetaController,
-//       this.swerve::setModuleStates,
-//       this.swerve);
+    // 3. Define PID controllers for tracking trajectory
+    PIDController xController = new PIDController(0.01, 0, 0);
+    PIDController yController = new PIDController(0.01, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+          0.07, 0, 0, new Constraints(999, 999));
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    yeet = new SwerveControllerCommand(
+      trajectory,
+      this.swerve::getRobotPose,
+      this.swerve.m_kinematics,
+      xController,
+      yController,
+      thetaController,
+      this.swerve::getRotation2d,
+      this.swerve::setModuleStates,
+      this.swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //this.swerve.resetRobotPose();
-    //yeet.schedule();
+  
+    yeet.schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //if (yeet.isFinished()){
-      //done=true;
+    if (yeet.isFinished()){
+      done=true;
+    }
   }
   
 

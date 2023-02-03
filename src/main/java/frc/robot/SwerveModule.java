@@ -150,7 +150,7 @@ public class SwerveModule {
     }
 
     public SwerveModulePosition getModulePos(){
-        return new SwerveModulePosition(transEncoder.getPosition()/10*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactor));
+        return new SwerveModulePosition(transEncoder.getPosition()*10*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactor));
     }
 
     public void stop() {
