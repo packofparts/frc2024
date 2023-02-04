@@ -10,7 +10,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight.Pipeline;
 
 
-public class CubeAlign extends CommandBase {
+public class LimelightAlign extends CommandBase {
   /** Creates a new CubeAlign. */
   public SwerveSubsystem swerve;
   public Limelight lime;
@@ -19,7 +19,7 @@ public class CubeAlign extends CommandBase {
   public double offset;
 
 
-  public CubeAlign(SwerveSubsystem swervesub, Limelight limelightsub, int PipelineIndex, double Xoffset) {
+  public LimelightAlign(SwerveSubsystem swervesub, Limelight limelightsub, int PipelineIndex, double Xoffset) {
     // Use addRequirements() here to declare subsystem dependencies.
     swerve = swervesub;
     lime = limelightsub;
