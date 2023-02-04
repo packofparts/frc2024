@@ -51,6 +51,7 @@ public final class Constants {
     // Distance between right and left wheels
     public static final double kTrackWidth = Units.inchesToMeters(25.5);
     public static double tuningSetpoint = 0;
+    public static final double weirdAssOdVal = 0.266807902319739;
     
     // // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);

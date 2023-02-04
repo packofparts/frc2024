@@ -79,7 +79,6 @@ public class AutonTrajectory extends CommandBase {
     for(int i = 0; i < path.getStates().size(); i++){
       
       
-
       path.getStates().get(i).poseMeters = path.getStates().get(i).poseMeters.times(1.5);
       //path.getStates().set(i, new Pose2d(a.getX()*1, a.getY()*1, a.getRotation()));
     }

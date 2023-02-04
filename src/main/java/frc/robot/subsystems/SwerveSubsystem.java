@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -31,6 +32,7 @@ import frc.robot.RobotContainer;
 import frc.robot.SwerveModule;
 import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutonTrajectory;
+import frc.robot.commands.moveTo;
 
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -72,7 +74,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     headingController = new PIDController(0.5, 0, 0);
 
-    resetRobotPose();
+    resetRobotPose(new Pose2d());
 
     SmartDashboard.putData("Field", field);
 
@@ -100,6 +102,10 @@ public class SwerveSubsystem extends SubsystemBase {
     if(joy.trajectoryRun()){
       at = new AutonTrajectory(this, 0);
       at.schedule();
+    }
+    if (joy.moveTo()) {
+      moveTo moveTo = new moveTo(new Transform2d(new Translation2d(2, 0), new Rotation2d(180)), this);
+      moveTo.schedule();
     }
 
   }
@@ -175,8 +181,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
   }
 
-  public void resetRobotPose(){
-    m_odometry.resetPosition(getRotation2d(), getModuleStates(), getRobotPose());
+  public void resetRobotPose(Pose2d poe){
+    m_odometry.resetPosition(this.getRotation2d(),getModuleStates(),poe);
   }
 
   public Pose2d getRobotPose(){

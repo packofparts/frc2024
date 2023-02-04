@@ -28,7 +28,7 @@ public class AutonomousDrive extends CommandBase {
 //     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = s;
     addRequirements(swerve);
-    this.swerve.resetRobotPose();
+    this.swerve.resetRobotPose(new Pose2d());
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
       5,
       5) .setKinematics(this.swerve.m_kinematics);
@@ -39,7 +39,7 @@ public class AutonomousDrive extends CommandBase {
           List.of(
                   new Translation2d(1, 5),
                   new Translation2d(1, -2)),
-          new Pose2d(3, -1, Rotation2d.fromDegrees(90)),
+          new Pose2d(3, -1, Rotation2d.fromDegrees(180)),
           trajectoryConfig);
 
     // 3. Define PID controllers for tracking trajectory
@@ -55,7 +55,7 @@ public class AutonomousDrive extends CommandBase {
       xController,
       yController,
       thetaController,
-      this.swerve::getRotation2d,
+      
       this.swerve::setModuleStates,
       this.swerve);
   }

@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -35,16 +37,19 @@ public class moveTo extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 
-    transController = new PIDController(0.07, 0, 0);
-    angleController = new PIDController(0.07, 0, 0);
+    transController = new PIDController(0.2, 0, 0);
+    angleController = new PIDController(0.02, 0, 0);
+    transController.setTolerance(0.1);
+    angleController.setTolerance(0.2);
     swerve = swervesub;
     addRequirements(swerve);
 
     initPose = swerve.getRobotPose();
+    Pose2d second = initPose.plus(transform);
 
     xPoint = initPose.getX() + transform.getX();
     yPoint = initPose.getY() + transform.getY();
-    rotPoint = initPose.getRotation().getRadians();
+    rotPoint = initPose.getRotation().getRadians() + transform.getRotation().getRadians();
   }
 
   // Called when the command is initially scheduled.
@@ -60,8 +65,26 @@ public class moveTo extends CommandBase {
     double xSpeed = transController.calculate(pose.getX(), xPoint);
     double ySpeed = transController.calculate(pose.getY(), yPoint);
     double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
+    SmartDashboard.putNumber("xSpeedCalc", xSpeed);
+    SmartDashboard.putNumber("ySpeedCalc", ySpeed);
+    SmartDashboard.putNumber("rotSpeedCalc", rot);
+    SmartDashboard.putNumber("rotErr", angleController.getPositionError());
+    SmartDashboard.putNumber("rotSetpoint", rotPoint);
+
+
+
+    double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
+
+    if(magnitude < Constants.maxSpeed*.4){
+      xSpeed /= magnitude;
+      ySpeed /= magnitude;
+      xSpeed *= Constants.maxSpeed*magnitude;
+      ySpeed *= Constants.maxSpeed*magnitude;
+    }
 
     swerve.setMotors(xSpeed, ySpeed, rot);
+
+    
 
   }
 
@@ -73,11 +96,8 @@ public class moveTo extends CommandBase {
   @Override
   public boolean isFinished() {
     Transform2d difference = initPose.plus(transform).minus(swerve.getRobotPose());
-
-    if (Math.abs(difference.getX())<Constants.deadZone && Math.abs(difference.getY())<Constants.deadZone && Math.abs(difference.getRotation().getRadians())<Constants.radDeadZone) {
+    if (transController.atSetpoint() && angleController.atSetpoint())
       return true;
-    }
-
     return false;
   }
 }

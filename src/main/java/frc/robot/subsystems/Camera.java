@@ -40,6 +40,7 @@ public class Camera extends SubsystemBase {
    update();
   }
   private void setup(){
+
     CameraServer.startAutomaticCapture();
     cvSink = CameraServer.getVideo();
     outputStream = CameraServer.putVideo("Blur", 640, 480);

@@ -150,7 +150,7 @@ public class SwerveModule {
     }
 
     public SwerveModulePosition getModulePos(){
-        return new SwerveModulePosition(transEncoder.getPosition()*10*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactor));
+        return new SwerveModulePosition(transEncoder.getPosition()/Constants.weirdAssOdVal*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactor));
     }
 
     public void stop() {
@@ -162,6 +162,8 @@ public class SwerveModule {
     public PIDController getPIDController(){
         return this.rotationPIDTest;
     }
+    // 0.003665908944166
+    // 0.266807902319739
 
     public void setPidController(double p, double i, double d){
         rotationPIDTest.setP(p);

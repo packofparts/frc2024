@@ -20,4 +20,5 @@ public class Joysticks {
     public boolean getRobotOriented(){return tJoystick.getTrigger();}
     public boolean trajectoryRun(){return tJoystick.getRawButton(3);}
     public boolean aprilAlign(){return rJoystick.getRawButton(11);}
+    public boolean moveTo() {return tJoystick.getRawButton(7);}
 }

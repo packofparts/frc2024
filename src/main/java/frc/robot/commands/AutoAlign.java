@@ -44,6 +44,7 @@ public class AutoAlign extends CommandBase {
   @Override
   public void initialize() {
     target = lime.getBestTarget();
+
     desiredPose3d = pose.layout.getTagPose(target.getFiducialId());
   }
 
