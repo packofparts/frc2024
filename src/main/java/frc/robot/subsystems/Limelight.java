@@ -36,11 +36,12 @@ public class Limelight extends SubsystemBase {
   PhotonCamera photonCamera;
   NetworkTableInstance net =  NetworkTableInstance.getDefault();
   NetworkTable lime = net.getTable("photonvision");
-  PhotonPipelineResult img;
+  public PhotonPipelineResult img;
   public static enum Pipeline{
     TAG,
     REFLECTION,
-    DRIVE
+    DRIVE,
+    CUBE
   }
   HashMap <String, Integer> pipelineVals = new HashMap<>();
   HashMap <String, Pose2d> fiducialHashMap = new HashMap<>();
@@ -53,11 +54,12 @@ public class Limelight extends SubsystemBase {
 
   public Limelight() {
     photonCamera = new PhotonCamera(net, "gloworm");
-    pipelineVals.put("TAG", 0);
-    pipelineVals.put("REFLECTION", 1);
-    pipelineVals.put("DRIVE", 2);
+    pipelineVals.put("TAG", 1);
+    pipelineVals.put("REFLECTION", 2);
+    pipelineVals.put("DRIVE", 3);
+    pipelineVals.put("CUBE", 0);
 
-
+                
 
   }
 
@@ -78,8 +80,8 @@ public class Limelight extends SubsystemBase {
     return PhotonUtils.calculateDistanceToTargetMeters(0.05, 0.05, 0, targ.getPitch());
   }
 
-  public void setPipeline(Pipeline p){
-    photonCamera.setPipelineIndex(pipelineVals.get(p.name()));;
+  public void setPipeline(int PipelineIndex){
+    photonCamera.setPipelineIndex(PipelineIndex);;
   }
 
   public void addAprilTag(HashMap<String,Object>[]Tags){
@@ -87,6 +89,7 @@ public class Limelight extends SubsystemBase {
       fiducialHashMap.put((String)object.get("ID"),(Pose2d)object.get("POSE"));
     }
   }
+
 
   public Object hasTarg(Supplier<Object> Func){
     if (img.hasTargets()){
