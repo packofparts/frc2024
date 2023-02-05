@@ -8,6 +8,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -20,22 +23,25 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     //SWERVE constants    
-    public static final double maxSpeed = 12.0;
+    public static final double maxSpeedMPS = 12.0;
 
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2.0 * 2.0 * Math.PI;
 
     public static final double rad2Deg = 180/Math.PI;
-    public static final double kTeleDriveMaxSpeedMetersPerSecond = 1;
+    public static final double kTeleDriveMaxSpeedMetersPerSecond = 1.0;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
     public static final double kDriveEncoderRot2Meter = 2*Math.PI * Units.inchesToMeters(2); //multiply by gearratio check gear ratio for trans encoder
-    public static final double kDriveGearRation = 1/10;
-    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*kDriveGearRation / 60;
+    public static final double RPMtoMPS = kDriveEncoderRot2Meter/60;
+
 
     //Encoders
-    public static final double angleEncoderConversionFactor = 2*Math.PI/18;
-    public static final double driveEncoderConversionFactor = 1;
+    public static final double angleEncoderConversionFactortoRad = 2*Math.PI/18;
+    public static final double driveEncoderConversionFactortoRotations = 1.0/10;
+
+    public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*driveEncoderConversionFactortoRotations/ 60.0;
+
 
     //PID
     public static final PIDController frPID = new PIDController(0.771, 0.025, 0.015);
@@ -95,4 +101,7 @@ public final class Constants {
 
     //Gyro Adjustments
     public static double priorGyroAngle = 0;
+
+    public final static Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
+
 }

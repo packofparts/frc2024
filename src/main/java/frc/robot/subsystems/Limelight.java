@@ -53,7 +53,7 @@ public class Limelight extends SubsystemBase {
   
 
   public Limelight() {
-    photonCamera = new PhotonCamera(net, "gloworm");
+    photonCamera = new PhotonCamera(net, "skype");
     pipelineVals.put("TAG", 1);
     pipelineVals.put("REFLECTION", 2);
     pipelineVals.put("DRIVE", 3);

@@ -26,34 +26,28 @@ public class SwerveModule {
     private RelativeEncoder rotEncoder;
     public AnalogEncoder universalEncoder;
     public SparkMaxPIDController rotPID;
-    public PIDController rotationPIDTest;
+    public PIDController rotationPIDController;
     public PIDController transController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
     private Boolean isAbsoluteEncoder;
-    private double universalEncoderOffset;
     private Boolean m_transInverted;
-    private Boolean m_rotInverted;
-    private Boolean encoderInverted;
-    private SimpleMotorFeedforward feedforwardController = new SimpleMotorFeedforward(Constants.kS, Constants.kV, Constants.kA);
-    
+    private Boolean m_rotInverted;    
 
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
      Boolean transInverted, Boolean rotInverted, double universalEncoderOffsetinit,
      Boolean universalEncoderInverted, boolean isAbsEncoder,PIDController pidController,PIDController transController){
-        this.encoderInverted = universalEncoderInverted;
         this.isAbsoluteEncoder=isAbsEncoder;
         this.m_MotorTransID = motorTransID;
         this.m_UniversalEncoderID = universalEncoderID;
         this.m_MotorRotID = motorRotID;
         this.m_transInverted = transInverted;
         this.m_rotInverted = rotInverted;
-        this.universalEncoderOffset = universalEncoderOffsetinit;
-        
+
         transMotor = new CANSparkMax(this.m_MotorTransID, MotorType.kBrushless);
         
-        
         rotMotor = new CANSparkMax(this.m_MotorRotID, MotorType.kBrushless);
+
         if (isAbsEncoder){
-            universalEncoder = new AnalogEncoder(this.m_UniversalEncoderID); //basically does shit
+            universalEncoder = new AnalogEncoder(this.m_UniversalEncoderID);
             universalEncoder.setPositionOffset(universalEncoderOffsetinit);
             SmartDashboard.putNumber("Offset", universalEncoder.getPositionOffset());
         }
@@ -65,92 +59,116 @@ public class SwerveModule {
 
         transEncoder = transMotor.getEncoder();
         rotEncoder = rotMotor.getEncoder();
-        rotationPIDTest = pidController;
-        rotationPIDTest.enableContinuousInput(-Math.PI,Math.PI);       
+        rotationPIDController = pidController;
+        rotationPIDController.enableContinuousInput(-Math.PI,Math.PI);       
         resetEncoders(); 
 
     }
     
     public double getTransPosition(){
+
+        //Returns rotations of translation motor BEFORE GEAR RATIO
+
         return transEncoder.getPosition(); 
     }
 
 
-    public void doFeedforward(double distanceMeters) {
-        transController.setSetpoint(distanceMeters);
-        double voltage = feedforwardController.calculate(5);
-        transMotor.setVoltage(voltage);
-        while (transController.atSetpoint()) {
-            transMotor.setVoltage(0);
-        }
-
-    }
-
     public double getRotPosition(){
-        if (isAbsoluteEncoder){
-            return rotEncoder.getPosition();
-        }
+
+        //returns rotations of rotation motor BEFORE GEAR RATIO
+
         return rotEncoder.getPosition();
+
     }
 
     public double getTransVelocity(){
+
+        //returns RPM of Translation BEFORE GEAR RATIO
+
         return transEncoder.getVelocity(); 
     }
 
     public double getRotVelocity(){
+
+        //returns RPM of Rotation BEFORE GEAR RATIO
+
         return rotEncoder.getVelocity();
+
     }
 
-    public double getUniversalEncoderRad(){
-        return 0;
-    }
     public void resetEncoders(){
-        if (isAbsoluteEncoder){
-            rotEncoder.setPosition((universalEncoder.getAbsolutePosition()-universalEncoder.getPositionOffset())*18);
-        }else{
-            transEncoder.setPosition(0);
-            rotEncoder.setPosition(0);
-        }
+
+        //Resets Relative encoder to Abs encoder position
+
+        rotEncoder.setPosition((universalEncoder.getAbsolutePosition()-universalEncoder.getPositionOffset())*18);
 
 
-        //hello - 8/3/22
     }
+
     public SwerveModuleState getState(){
-        return new SwerveModuleState(getTransVelocity(),new Rotation2d(getRotPosition()*2*Math.PI/18));
+
+        // Returns SwerveModuleState
+
+        return new SwerveModuleState(getTransVelocity()*Constants.RPMtoMPS*Constants.driveEncoderConversionFactortoRotations,
+            new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
+    
     }
+
     public void setDesiredState(SwerveModuleState desiredState){
         
+        //Stops returning to original rotation
+
         if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) 
         {
             stop();
             return;
         }
 
+        //No turning motors over 90 degrees
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
-       // if (this.m_transInverted){transMotor.set(-desiredState.speedMetersPerSecond/Constants.maxSpeed);}
-        transMotor.set(transController.calculate(transEncoder.getVelocity()*Constants.driveEncoderConversionFactor, desiredState.speedMetersPerSecond));
-        SmartDashboard.putNumber("desiredStateRange", desiredState.angle.getDegrees());
-        transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
-        rotMotor.set(rotationPIDTest.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactor, desiredState.angle.getRadians()));
-        //System.out.println("setPoint is: "+ getRotPosition());
+        //PID Controller for both translation and rotation
+        transMotor.set(transController.calculate(
+            transEncoder.getVelocity()*Constants.driveEncoderConversionFactortoRotations*Constants.RPMtoMPS,
+            desiredState.speedMetersPerSecond)/Constants.maxSpeedMPS);
+        
+        //transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
+        //Keep this
+        
+        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactortoRad,
+            desiredState.angle.getRadians()));
+
+
     }
+
     public void updatePositions(double setPoint){
 
-        rotationPIDTest.setPID(Constants.kP, Constants.kI, Constants.kD);
-        rotationPIDTest.disableContinuousInput();
-        double sp = rotationPIDTest.calculate((getRotPosition()-0.5)*2*Math.PI/18, setPoint);
+        //FOR PID TUNING ONLY
+
+        rotationPIDController.setPID(Constants.kP, Constants.kI, Constants.kD);
+        rotationPIDController.disableContinuousInput();
+        double sp = rotationPIDController.calculate((getRotPosition()-0.5)*2*Math.PI/18, setPoint);
         rotMotor.set(sp);
     }
-    
+
     public void returnToOrigin(){
+
+        //Sets wheel rot to original state
+
         System.out.println("In PID loop");
-        rotMotor.set(rotationPIDTest.calculate(((getRotPosition()%18)*2*Math.PI/18), 0));
-        rotationPIDTest.setTolerance(0);
+        rotMotor.set(rotationPIDController.calculate(((getRotPosition()%18)*2*Math.PI/18), 0));
+        rotationPIDController.setTolerance(0);
     }
 
+    /**
+     * 
+     * @return 
+     */
     public SwerveModulePosition getModulePos(){
-        return new SwerveModulePosition(transEncoder.getPosition()/Constants.weirdAssOdVal*Constants.kDriveEncoderRot2Meter,new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactor));
+
+        return new SwerveModulePosition(transEncoder.getPosition()/Constants.weirdAssOdVal*Constants.kDriveEncoderRot2Meter,
+            new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
+    
     }
 
     public void stop() {
@@ -160,18 +178,8 @@ public class SwerveModule {
     }
 
     public PIDController getPIDController(){
-        return this.rotationPIDTest;
+        return this.rotationPIDController;
     }
     // 0.003665908944166
     // 0.266807902319739
-
-    public void setPidController(double p, double i, double d){
-        rotationPIDTest.setP(p);
-        rotationPIDTest.setI(i);
-        rotationPIDTest.setD(d);
-        transController.setP(p);
-        transController.setI(i);
-        transController.setD(d);
-    }
-
 }
