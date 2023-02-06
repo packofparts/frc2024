@@ -46,7 +46,7 @@ public class PoseEstimation extends SubsystemBase {
 
     estimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limelight.photonCamera, Constants.robotToCam);
 
-    poseEstimator = new SwerveDrivePoseEstimator(swerve.m_kinematics, swerve.getRotation2d(), swerve.getModuleStates(), getOdometry());
+    poseEstimator = new SwerveDrivePoseEstimator(swerve.m_kinematics, swerve.getRotation2d(), swerve.getModulePositions(), getOdometry());
 
   }
 
@@ -65,7 +65,7 @@ public class PoseEstimation extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
      
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModuleStates());
+    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
 
     Optional<EstimatedRobotPose> result = getVision(poseEstimator.getEstimatedPosition());
 

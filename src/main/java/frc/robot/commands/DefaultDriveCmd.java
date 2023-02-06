@@ -8,23 +8,21 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
-import frc.robot.subsystems.Joysticks;
+import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCmd extends CommandBase {
   /** Creates a new DefaultDriveCmd. */
   SwerveSubsystem swerveee;
-  Joysticks joyee;
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
-  public DefaultDriveCmd(Joysticks joys, SwerveSubsystem swerve) {
+  public DefaultDriveCmd(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.joyee = joys;
     this.swerveee = swerve;
-    xLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond*10);
-    yLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond*10);
-    turningLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAngularAccelerationUnitsPerSecond*30);
+    xLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond);
+    yLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond);
+    turningLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
     addRequirements(swerve);
   }
 
@@ -35,17 +33,17 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x= this.joyee.getX();
-    double y = this.joyee.getY();
-    double rot = this.joyee.getRot();
+    double x= Input.getJoystickX();
+    double y = Input.getJoystickX();
+    double rot = Input.getRot();
   
     x = Math.abs(x) > 0.15 ? x : 0.0;
     y = Math.abs(y) > 0.15 ? y : 0.0;
     rot = Math.abs(rot) > 0.05 ? rot : 0.0;
       
-      // 3. Make the driving smoother
-    x = xLimiter.calculate(x) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond*1.4;
-    y = yLimiter.calculate(y) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond*1.4;
+    // 3. Make the driving smoother
+    x = xLimiter.calculate(x) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond;
+    y = yLimiter.calculate(y) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond;
     rot= turningLimiter.calculate(rot)
           * Constants.kTeleDriveMaxAngularSpeedRadiansPerSecond*3;
     swerveee.setMotors(x, y, rot);

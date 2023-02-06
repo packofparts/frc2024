@@ -9,13 +9,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
 import frc.robot.subsystems.Input;
-import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class PIDtuning extends CommandBase {
   /** Creates a new PIDtuning. */
   SwerveSubsystem swerveee;
-  Joysticks joyseee;
   public PIDtuning(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveee = swerve;

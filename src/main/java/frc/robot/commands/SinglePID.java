@@ -8,14 +8,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
-import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class SinglePID extends CommandBase {
   /** Creates a new SinglePID. */
   SwerveSubsystem swerve;
   SwerveModule selectedModule;
-  Joysticks joys;
   Double sp;
   public SinglePID(SwerveModule module, SwerveSubsystem swervee) {
     this.selectedModule = module;

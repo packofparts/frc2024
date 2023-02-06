@@ -4,9 +4,16 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutonomousCommand extends CommandBase {
+  private static final Transform2d Transform2d = null;
+  private static final SwerveSubsystem SwerveSubsystem = null;
   /** Creates a new AutonomousCommand. */
   public Limelight lime;
   public SwerveSubsystem swerve;
@@ -36,8 +43,8 @@ public class AutonomousCommand extends CommandBase {
     // Turning 180 degrees
     if (!turned) {
       Transform2d transform = new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI));
-      if (!move) {
-        move = new moveTo(Transform2d transform, SwerveSubsystem swervesub);
+      if (move == null) {
+        move = new moveTo(transform, this.swerve);
         move.schedule();
       }
       else if (move.isFinished()) {
@@ -45,15 +52,15 @@ public class AutonomousCommand extends CommandBase {
       }
     }
     else if (!gotOffset) {
-      double offset = lime.getXoffset()
-      double difference = desiredOffset - offset
-      swerve.setMotors(0, 0, difference)
+      double offset = lime.getXoffset();
+      double difference = desiredOffset - offset;
+      swerve.setMotors(0, 0, difference);
       if (difference<0.2) {
         gotOffset = true;
       }
     }
     else if (!movedForward) {
-      transform = new Transform2d(new Translation2d(0, lime.getForwardDistance()), new Rotation2d(0));
+      Transform2d transform = new Transform2d(new Translation2d(0, lime.getForwardDistance()), new Rotation2d(0));
       move = new moveTo(transform, swerve);
     }
 
@@ -73,8 +80,6 @@ public class AutonomousCommand extends CommandBase {
 
     // If Balancing, Balance
     // ---- Balance
-
-
 
   }
 

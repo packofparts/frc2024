@@ -126,4 +126,10 @@ public final class Constants {
 
     public final static Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
 
+
+    //Constants For Charge Station:
+    public static final double kChargeStationFullLengthCm = 193;
+    public static final double kChargeStationBalanceBeamLengthCm = 122;
+    public static final double kChargeStationMountLengthCm = 35.5; 
+    public static final double kAngleDeadZoneDeg = 0.5;
 }

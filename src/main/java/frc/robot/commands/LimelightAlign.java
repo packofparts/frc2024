@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -17,15 +19,23 @@ public class LimelightAlign extends CommandBase {
   public double yaw;
   public int index;
   public double offset;
-
-
+  public PIDController rotPID;
+/**
+ * 
+ * @param swervesub
+ * @param limelightsub
+ * @param PipelineIndex Check pipeline enums in limelight sub
+ * @param Xoffset THIS SHOULD BE IN METERS
+ */
   public LimelightAlign(SwerveSubsystem swervesub, Limelight limelightsub, int PipelineIndex, double Xoffset) {
     // Use addRequirements() here to declare subsystem dependencies.
     swerve = swervesub;
     lime = limelightsub;
     addRequirements(swerve);
     addRequirements(lime);
-    int index = PipelineIndex;
+    index = PipelineIndex;
+    rotPID = new PIDController(0.5, 0, 0);
+    rotPID.setTolerance(0.1);
     offset = Xoffset;
     
   }
@@ -39,8 +49,8 @@ public class LimelightAlign extends CommandBase {
   public void execute() {
     lime.setPipeline(index);
     if (lime.img.hasTargets()) {
-      yaw = -lime.getXoffset();
-      swerve.setMotors(0, 0, yaw*(Math.PI/180)+offset);
+      yaw = lime.getXoffset();
+      swerve.setMotors(0,rotPID.calculate(yaw,offset),0);
     }
   }
 
