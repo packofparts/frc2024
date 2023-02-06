@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.SwerveModule;
+import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Joysticks;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -15,10 +16,9 @@ public class PIDtuning extends CommandBase {
   /** Creates a new PIDtuning. */
   SwerveSubsystem swerveee;
   Joysticks joyseee;
-  public PIDtuning( Joysticks joys,SwerveSubsystem swerve) {
+  public PIDtuning(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveee = swerve;
-    this.joyseee = joys;
     addRequirements(swerveee);
   }
 
@@ -33,9 +33,9 @@ public class PIDtuning extends CommandBase {
       Constants.kP = SmartDashboard.getNumber("p", 0);
       Constants.kI = SmartDashboard.getNumber("i", 0);
       Constants.kD = SmartDashboard.getNumber("d", 0);
-      if (this.joyseee.getIncPID()){
+      if (Input.getIncPID()){
         Constants.tuningSetpoint+=0.1;
-      }else if(this.joyseee.getDecPID()){
+      }else if(Input.getDecPID()){
         Constants.tuningSetpoint-=0.1;
       }
       SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
