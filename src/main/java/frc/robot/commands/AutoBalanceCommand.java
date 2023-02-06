@@ -25,12 +25,10 @@ public class AutoBalanceCommand extends CommandBase {
   //reseting the gyro does not reset the axis of the robot
   //which means pitch and roll will always be relative
 
-  float roll, pitch, yaw, displacement;
+  float pitch, yaw, displacement;
   Pose2d initialPose;
   Transform2d displacementTransform;
-
   Translation2d tilt;
-
   //arbritrary - fix later with dynamic speed control :)
   float[] speeds = {.25f, .35f, 5f};
 
@@ -59,7 +57,6 @@ public class AutoBalanceCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    roll = swervee.getRoll();
     pitch = swervee.getPitch();
     yaw = swervee.getYaw();
 
@@ -69,8 +66,6 @@ public class AutoBalanceCommand extends CommandBase {
   
   @Override
   public void execute() {
-    
-    roll = swervee.getRoll();
     pitch = swervee.getPitch();
     yaw = swervee.getYaw();
 
@@ -118,7 +113,6 @@ public class AutoBalanceCommand extends CommandBase {
   }
 
   void putDashboard(){
-    SmartDashboard.putNumber("Roll", roll);
     SmartDashboard.putNumber("Pitch", pitch);
     SmartDashboard.putNumber("Yaw", yaw);
     SmartDashboard.putBoolean("IsOnDashboard", isOnChargingStation);

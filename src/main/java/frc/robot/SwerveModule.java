@@ -13,6 +13,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class SwerveModule {
@@ -64,47 +66,54 @@ public class SwerveModule {
         resetEncoders(); 
 
     }
-    
+    /**
+     * 
+     * @return Returns rotations of translation motor BEFORE GEAR RATIO
+     */
     public double getTransPosition(){
 
-        //Returns rotations of translation motor BEFORE GEAR RATIO
-
         return transEncoder.getPosition(); 
+
     }
 
-
+    /**
+     * @return Returns rotations of rotation motor BEFORE GEAR RATIO
+     */
     public double getRotPosition(){
-
-        //returns rotations of rotation motor BEFORE GEAR RATIO
 
         return rotEncoder.getPosition();
 
     }
-
+    /**
+     * @return returns RPM of Translation BEFORE GEAR RATIO
+     */
     public double getTransVelocity(){
-
-        //returns RPM of Translation BEFORE GEAR RATIO
-
+        
         return transEncoder.getVelocity(); 
+
     }
-
+    /**
+     * 
+     * @return returns RPM of Rotation BEFORE GEAR RATIO
+     */
     public double getRotVelocity(){
-
-        //returns RPM of Rotation BEFORE GEAR RATIO
 
         return rotEncoder.getVelocity();
 
     }
-
+    /**
+     * Resets Relative encoder to Abs encoder position
+     */
     public void resetEncoders(){
-
-        //Resets Relative encoder to Abs encoder position
 
         rotEncoder.setPosition((universalEncoder.getAbsolutePosition()-universalEncoder.getPositionOffset())*18);
 
-
     }
-
+    /**
+     * 
+     * @return a swerve module state object describing the current speed of the translation and rotation motors
+     * @see SwerveModuleState
+     */
     public SwerveModuleState getState(){
 
         // Returns SwerveModuleState
@@ -113,7 +122,11 @@ public class SwerveModule {
             new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
     
     }
-
+    /**
+     * Sets the motor speeds passed into constructor
+     * @param desiredState takes in SwerveModule state
+     * @see SwerveModuleState
+     */
     public void setDesiredState(SwerveModuleState desiredState){
         
         //Stops returning to original rotation
@@ -140,7 +153,10 @@ public class SwerveModule {
 
 
     }
-
+    /**
+     * This is only for PID tuning
+     * @param setPoint PID setpoint
+     */
     public void updatePositions(double setPoint){
 
         //FOR PID TUNING ONLY
@@ -151,6 +167,10 @@ public class SwerveModule {
         rotMotor.set(sp);
     }
 
+
+    /**
+     * Call this in execute as it uses a PID controller
+     */
     public void returnToOrigin(){
 
         //Sets wheel rot to original state
@@ -162,15 +182,18 @@ public class SwerveModule {
 
     /**
      * 
-     * @return 
+     * @return the total distance traveled by the module (Meters) and Rotation value (Rad) in the form of a SwerveModulePostion object
+     * @see SwerveModulePosition
      */
     public SwerveModulePosition getModulePos(){
 
-        return new SwerveModulePosition(transEncoder.getPosition()/Constants.weirdAssOdVal*Constants.kDriveEncoderRot2Meter,
+        return new SwerveModulePosition(transEncoder.getPosition()*Constants.driveEncoderConversionFactortoRotations*Constants.kDriveEncoderRot2Meter,
             new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
     
     }
-
+    /**
+     * Stops the both motors
+     */
     public void stop() {
         transMotor.set(0);
         rotMotor.set(0);
@@ -180,6 +203,20 @@ public class SwerveModule {
     public PIDController getPIDController(){
         return this.rotationPIDController;
     }
-    // 0.003665908944166
-    // 0.266807902319739
+    /**
+     * Sets the mode of the translation motor
+     * @param mode use a spark max idle mode (brake or coast)
+     * @see IdleMode
+     */
+    public void setModeTrans(IdleMode mode){
+        transMotor.setIdleMode(mode);
+    }
+    /**
+     * Sets the mode of the rotation motor
+     * @param mode use a spark max idle mode (brake or coast)
+     * @see IdleMode
+     */
+    public void setModeRot(IdleMode mode){
+        rotMotor.setIdleMode(mode);
+    }
 }
