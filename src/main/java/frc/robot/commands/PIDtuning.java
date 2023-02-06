@@ -30,7 +30,6 @@ public class PIDtuning extends CommandBase {
   @Override
   public void execute() {
     if(Constants.kP != SmartDashboard.getNumber("p", 0) || Constants.kI != SmartDashboard.getNumber("i", 0) ||  Constants.kI != SmartDashboard.getNumber("i", 0)){
-      swerveee.setAllPIDControllers(SmartDashboard.getNumber("p",0), SmartDashboard.getNumber("i", 0), SmartDashboard.getNumber("d", 0));
       Constants.kP = SmartDashboard.getNumber("p", 0);
       Constants.kI = SmartDashboard.getNumber("i", 0);
       Constants.kD = SmartDashboard.getNumber("d", 0);

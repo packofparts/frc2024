@@ -25,7 +25,6 @@ public class AutonomousDrive extends CommandBase {
   SwerveControllerCommand yeet;
   Boolean done = false;
   public AutonomousDrive(SwerveSubsystem s) {
-//     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = s;
     addRequirements(swerve);
     this.swerve.resetRobotPose(new Pose2d());
@@ -33,7 +32,7 @@ public class AutonomousDrive extends CommandBase {
       5,
       5) .setKinematics(this.swerve.m_kinematics);
 
-// 2. Generate trajectory
+  // 2. Generate trajectory
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
           new Pose2d(0, 0, new Rotation2d(0)),
           List.of(
@@ -63,7 +62,6 @@ public class AutonomousDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-  
     yeet.schedule();
   }
 
@@ -78,7 +76,7 @@ public class AutonomousDrive extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrsupted) {}
 
   // Returns true when the command should end.
   @Override

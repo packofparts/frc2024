@@ -44,7 +44,7 @@ public class SinglePID extends CommandBase {
 
     SmartDashboard.putNumber("Setpoint", 0);
     sp = SmartDashboard.getNumber("setPointReal", 0)/Constants.rad2Deg;
-    SmartDashboard.putNumber("Module1CurrentROT",this.selectedModule.getRotPosition()*Constants.rad2Deg*Constants.angleEncoderConversionFactor);
+    SmartDashboard.putNumber("Module1CurrentROT",this.selectedModule.getRotPosition()*Constants.rad2Deg*Constants.angleEncoderConversionFactortoRad);
     
     selectedModule.updatePositions(sp);
     
