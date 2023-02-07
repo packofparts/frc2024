@@ -7,13 +7,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoAlign;
+import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DefaultDriveCmd;
+import frc.robot.commands.MoveByWithTarjectoryController;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.Limelight;
@@ -37,6 +43,7 @@ public class RobotContainer {
   //public final AutoAlign align = new AutoAlign(pose, lime);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
+
   public SwerveModule [] allModules = swerve.getRawModules(); 
   public SwerveModule selecModule = allModules[3];
 
@@ -56,10 +63,12 @@ public class RobotContainer {
     moduleSelector.addOption("Back Left", allModules[2]);
     moduleSelector.addOption("Back Right", allModules[3]);
 
+
     if (!Constants.tuningPID){swerve.setDefaultCommand(npc);}
     else{swerve.setDefaultCommand(new SinglePID(selecModule, swerve));}
   
     SmartDashboard.putData("CHOOOSE", moduleSelector);
+    
     configureButtonBindings();
   }
 
@@ -79,6 +88,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutonomousDrive(swerve);//m_autoCommand;
+    return null;//m_autoCommand;
   }
 }
