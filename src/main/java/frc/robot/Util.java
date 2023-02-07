@@ -14,4 +14,7 @@ public class Util {
     public static double degreesToOffsettedRadians(double degrees, double absEncoderOffset){
         return Units.degreesToRadians(degrees) - Units.rotationsToRadians(absEncoderOffset);
     }
+    public static double getMagnitude(double x, double y){
+        return(Math.sqrt(Math.pow(x, 2)+Math.pow(y, 2)));
+    }
 }
