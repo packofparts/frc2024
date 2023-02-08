@@ -34,13 +34,9 @@ public class TGWithPPlib extends CommandBase {
     this.swerve = swervee;
     addRequirements(this.swerve);
     this.swerve.resetRobotPose(new Pose2d());
-
-
-  // 2. Generate trajectory
     
   }
-
-  // Called when the command is initially scheduled.
+  
   @Override
   public void initialize() {
     
