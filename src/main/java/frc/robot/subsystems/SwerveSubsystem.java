@@ -49,10 +49,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveSubsystem() {
     m_kinematics = new SwerveDriveKinematics(
-      new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
       new Translation2d(Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
-      new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
-      new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2));
+      new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
+      new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
+      new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2));
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModulePositions());
     SmartDashboard.putNumber("p", 0);
     SmartDashboard.putNumber("i", 0);
