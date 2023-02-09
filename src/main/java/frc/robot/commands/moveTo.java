@@ -45,7 +45,6 @@ public class moveTo extends CommandBase {
     addRequirements(swerve);
 
     initPose = swerve.getRobotPose();
-    Pose2d second = initPose.plus(transform);
 
     xPoint = initPose.getX() + transform.getX();
     yPoint = initPose.getY() + transform.getY();
@@ -95,7 +94,7 @@ public class moveTo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    Transform2d difference = initPose.plus(transform).minus(swerve.getRobotPose());
+    //Transform2d difference = initPose.plus(transform).minus(swerve.getRobotPose());
     if (transController.atSetpoint() && angleController.atSetpoint())
       return true;
     return false;
