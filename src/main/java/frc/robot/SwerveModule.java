@@ -209,7 +209,17 @@ public class SwerveModule {
      * @see IdleMode
      */
     public void setModeTrans(IdleMode mode){
+        
         transMotor.setIdleMode(mode);
+    }
+    /**
+     * Permanently burns settings into the sparks
+     * @see setModeRot
+     * @see setModeTrans
+     */
+    public void burnSparks(){
+        rotMotor.burnFlash();
+        transMotor.burnFlash();
     }
     /**
      * Sets the mode of the rotation motor
