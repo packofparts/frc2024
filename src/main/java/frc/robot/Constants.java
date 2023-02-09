@@ -7,11 +7,14 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -26,7 +29,6 @@ public final class Constants {
     public static final double maxSpeedMPS = 12.0;
 
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2.0 * 2.0 * Math.PI;
-
     public static final double rad2Deg = 180/Math.PI;
     public static final double kTeleDriveMaxSpeedMetersPerSecond = 1.0;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
@@ -132,4 +134,9 @@ public final class Constants {
     public static final double kChargeStationBalanceBeamLengthCm = 122;
     public static final double kChargeStationMountLengthCm = 35.5; 
     public static final double kAngleDeadZoneDeg = 0.5;
+
+
+    //Constants for TGWithPPlib following:
+    public static final HashMap <String,Command> eventMap = new HashMap<>();
+    //empty for now
 }

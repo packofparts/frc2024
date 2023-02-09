@@ -38,8 +38,8 @@ public class MoveByWithTarjectoryController extends CommandBase {
   @Override
   public void initialize() {
     TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-      5,
-      5).setKinematics(this.swervee.m_kinematics);
+      4,
+      3).setKinematics(this.swervee.m_kinematics);
     
   // 2. Generate trajectory
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
