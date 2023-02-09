@@ -8,7 +8,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SPI.Port;
-
+import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
@@ -63,6 +63,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     resetRobotPose(new Pose2d());
     rawMods = getRawModules();
+    setIdleModeForAll(IdleMode.kCoast, IdleMode.kBrake);
 
   }
 
@@ -189,6 +190,7 @@ public class SwerveSubsystem extends SubsystemBase {
     for (SwerveModule mod : rawMods){
       mod.setModeRot(rotMode);
       mod.setModeTrans(transMode);
+      mod.burnSparks();
     }
   }
   /**
