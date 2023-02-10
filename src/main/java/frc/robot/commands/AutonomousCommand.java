@@ -4,16 +4,18 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutonomousCommand extends CommandBase {
-  private static final Transform2d Transform2d = null;
-  private static final SwerveSubsystem SwerveSubsystem = null;
+
   /** Creates a new AutonomousCommand. */
   public Limelight lime;
   public SwerveSubsystem swerve;
@@ -22,17 +24,45 @@ public class AutonomousCommand extends CommandBase {
   public boolean gotOffset;
   public boolean movedForward;
   public boolean turned;
-  public AutonomousCommand(Limelight lime, SwerveSubsystem swerve) {
+  public PoseEstimation poseEstimator;
+  public Pose2d firstPiece;
+  public SequentialCommandGroup command;
+  // UPDATE WITH POSES OF PIECES
+  public Pose2d leftPiece = new Pose2d();
+  public Pose2d rightPiece = new Pose2d();
+  public AutonomousCommand(Limelight lime, SwerveSubsystem swerve, PoseEstimation poseEstimator, boolean left, boolean middle) {
     this.lime = lime;
     this.swerve = swerve;
+    this.poseEstimator = poseEstimator;
     gotOffset = false;
     movedForward = false;
+    if (left) {
+      firstPiece = leftPiece;
+    } else {
+      firstPiece = rightPiece;
+    }
+    if (!middle){
+      command = new SequentialCommandGroup(
+        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
+        new AutoAlign(poseEstimator, lime),
+        new moveTo(firstPiece.minus(poseEstimator.getPosition()), swerve),
+        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
+        new AutoAlign(poseEstimator, lime),
+        new AutoBalanceCommand(swerve)
+      );
+    }
+    else {
+      command = new SequentialCommandGroup(
+        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
+        new AutoAlign(poseEstimator, lime)
+      );
+    }
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    command.schedule();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -40,31 +70,6 @@ public class AutonomousCommand extends CommandBase {
   public void execute() {
     // Move to Desired Station
     // ---- MoveTo, AutoAlign
-    // Turning 180 degrees
-    if (!turned) {
-      Transform2d transform = new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI));
-      if (move == null) {
-        move = new moveTo(transform, this.swerve);
-        move.schedule();
-      }
-      else if (move.isFinished()) {
-        turned = true;
-      }
-    }
-    else if (!gotOffset) {
-      double offset = lime.getXoffset();
-      double difference = desiredOffset - offset;
-      swerve.setMotors(0, 0, difference);
-      if (difference<0.2) {
-        gotOffset = true;
-      }
-    }
-    else if (!movedForward) {
-      Transform2d transform = new Transform2d(new Translation2d(0, lime.getForwardDistance()), new Rotation2d(0));
-      move = new moveTo(transform, swerve);
-    }
-
-
 
     // Place Piece(Save for later)
     // ---- Needs Arm Commands
@@ -80,7 +85,6 @@ public class AutonomousCommand extends CommandBase {
 
     // If Balancing, Balance
     // ---- Balance
-
   }
 
   // Called once the command ends or is interrupted.
@@ -90,6 +94,6 @@ public class AutonomousCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return command.isFinished();
   }
 }

@@ -84,7 +84,7 @@ public class Limelight extends SubsystemBase {
     photonCamera.setPipelineIndex(PipelineIndex);;
   }
 
-  public void addAprilTag(HashMap<String,Object>[]Tags){
+public void addAprilTag(HashMap<String,Object>[]Tags){
     for (HashMap<String,Object> object : Tags) {
       fiducialHashMap.put((String)object.get("ID"),(Pose2d)object.get("POSE"));
     }
@@ -101,6 +101,11 @@ public class Limelight extends SubsystemBase {
   public PhotonTrackedTarget getBestTarget() {
     return img.getBestTarget();
   }
+  public double getTimestamp() {
+    return img.getTimestampSeconds();
+  }
+
+
 
 
 
