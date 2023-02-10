@@ -54,6 +54,7 @@ public class SwerveModule {
             SmartDashboard.putNumber("Offset", universalEncoder.getPositionOffset());
         }
 
+        
 
         transMotor.setInverted(this.m_transInverted);
         rotMotor.setInverted(this.m_rotInverted);
@@ -143,7 +144,9 @@ public class SwerveModule {
         //PID Controller for both translation and rotation
         transMotor.set(transController.calculate(
             transEncoder.getVelocity()*Constants.driveEncoderConversionFactortoRotations*Constants.RPMtoMPS,
-            desiredState.speedMetersPerSecond)/Constants.maxSpeedMPS);
+            desiredState.speedMetersPerSecond)/Constants.kMaxSpeedMPS);
+
+        //^setting max speed doesn't work well this way
         
         //transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
         //Keep this
@@ -187,7 +190,11 @@ public class SwerveModule {
      */
     public SwerveModulePosition getModulePos(){
 
-        return new SwerveModulePosition(transEncoder.getPosition()*Constants.driveEncoderConversionFactortoRotations*Constants.kDriveEncoderRot2Meter,
+        //shit dont work for some reason. conversions are fuqued
+        // return new SwerveModulePosition(transEncoder.getPosition()*Constants.driveEncoderConversionFactortoRotations*Constants.kDriveEncoderRot2Meter,
+        //     new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
+
+        return new SwerveModulePosition(transEncoder.getPosition()/Constants.weirdAssOdVal,
             new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
     
     }
@@ -197,7 +204,6 @@ public class SwerveModule {
     public void stop() {
         transMotor.set(0);
         rotMotor.set(0);
-
     }
 
     public PIDController getPIDController(){

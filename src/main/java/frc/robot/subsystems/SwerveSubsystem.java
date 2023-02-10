@@ -82,6 +82,10 @@ public class SwerveSubsystem extends SubsystemBase {
       AutoBalanceCommand autoBalanceCommand = new AutoBalanceCommand(this);
       autoBalanceCommand.schedule();
     }
+
+    
+
+
   }
   /**
    * Sets the current YAW heading as the 0'd heading
@@ -112,7 +116,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param desiredStates requires a SwerveModuleState array
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.maxSpeedMPS);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kMaxSpeedMPS);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);
@@ -142,6 +146,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
     this.setModuleStates(moduleStates);
   }
+
+
 
   /**
    * This method resets the pose of the robot to the desired robot pose
@@ -193,6 +199,14 @@ public class SwerveSubsystem extends SubsystemBase {
       mod.burnSparks();
     }
   }
+
+  /**
+   * forms an X shape with the wheels for grip
+   */
+  public void setXShape(){
+    
+  }
+
   /**
    * 
    * @return returns roll in degrees (180,-180)

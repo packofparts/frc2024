@@ -33,7 +33,7 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x= Input.getJoystickX();
+    double x = Input.getJoystickX();
     double y = Input.getJoystickX();
     double rot = Input.getRot();
   
@@ -42,8 +42,8 @@ public class DefaultDriveCmd extends CommandBase {
     rot = Math.abs(rot) > 0.05 ? rot : 0.0;
       
     // 3. Make the driving smoother
-    x = xLimiter.calculate(x) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond;
-    y = yLimiter.calculate(y) * Constants.kTeleDriveMaxAccelerationUnitsPerSecond;
+    x = xLimiter.calculate(x) * Constants.kMaxSpeedMPS;
+    y = yLimiter.calculate(y) * Constants.kMaxSpeedMPS;
     rot= turningLimiter.calculate(rot)
           * Constants.kTeleDriveMaxAngularSpeedRadiansPerSecond*3;
     swerveee.setMotors(x, y, rot);

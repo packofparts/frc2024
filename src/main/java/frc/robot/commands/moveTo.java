@@ -74,11 +74,11 @@ public class moveTo extends CommandBase {
 
     double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
-    if(magnitude < Constants.maxSpeedMPS*.4){
+    if(magnitude < Constants.kMaxSpeedMPS*.8){
       xSpeed /= magnitude;
       ySpeed /= magnitude;
-      xSpeed *= Constants.maxSpeedMPS*magnitude;
-      ySpeed *= Constants.maxSpeedMPS*magnitude;
+      xSpeed *= Constants.kMaxSpeedMPS;
+      ySpeed *= Constants.kMaxSpeedMPS;
     }
 
     swerve.setMotors(xSpeed, ySpeed, rot);

@@ -7,117 +7,148 @@ package frc.robot.commands;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoBalanceCommand extends CommandBase {
- 
-  //after starting command we continue forward until gyro detects roll of 15 degrees
-  //then we start tracking the displacement in order to avoid overshooting.
 
-  //reseting the gyro does not reset the axis of the robot
-  //which means pitch and roll will always be relative
+  //detect angle, angular velocity, and position
+  //go forward until angle is about 11 degrees (which means it is on the charging station)
 
-  float pitch, yaw, displacement;
-  Pose2d initialPose;
-  Transform2d displacementTransform;
-  Translation2d tilt;
-  //arbritrary - fix later with dynamic speed control :)
-  float[] speeds = {.25f, .35f, 5f};
-
-  Input joyee;
-  SwerveSubsystem swervee;
-
-  AHRS navx;
-
-  float percentagePower;
-
-  float deadzone = 2.5f;
-
-  boolean isOnChargingStation = false;
+  //IDEAS:
+  //feed angle into pid and output position 
+  //maybe use feedforward to beat gravity to make the pid more accurate
+  //if angular velocity increases drastically, slow down
+  
+  private SwerveSubsystem swerveSubsystem;
 
   
+  private boolean isOnChargingStation = false;
+  private boolean isAtEnd = false;
 
-  //as of right now this command is not toggleable
+  private float prevPitch, pitch, roll, yaw, pitchSpeed;
+  private double initXPos, currentXPos;
+  
+  private PIDController velocityController, velocityController2, positionController;
+  private SimpleMotorFeedforward xXGravityDestroyer420Xx;
+
+  private double lasttime, currenttime, deltatime;
+  private Timer timer;
+  
+
+
   public AutoBalanceCommand(SwerveSubsystem swervee) {
-    this.swervee = swervee;
+    this.swerveSubsystem = swervee;
 
-    tilt = new Translation2d();
+    velocityController = new PIDController(.05, 0, 0);
+    velocityController.setTolerance(Constants.kAngleDeadZoneDeg);
+    
+
+    positionController = new PIDController(0, 0, 0);
+
+    xXGravityDestroyer420Xx = new SimpleMotorFeedforward(0, 0, 0);
+
+    timer = new Timer();
 
     addRequirements(swervee);
   }
 
-  // Called when the command is initially scheduled.
+
   @Override
   public void initialize() {
-    pitch = swervee.getPitch();
-    yaw = swervee.getYaw();
+    this.swerveSubsystem.resetGyro();
 
-    this.swervee.setIdleModeForAll(IdleMode.kBrake,IdleMode.kBrake);
+    this.initXPos = this.swerveSubsystem.getRobotPose().getX();
+    this.currentXPos = this.initXPos;
+
+
+    timer.start();
+
+    //maybe rotate it 90 degrees or just rotate it so that it
+    //so that the center of gravity is closer to the balance point
   }
 
   
   @Override
   public void execute() {
-    pitch = swervee.getPitch();
-    yaw = swervee.getYaw();
+    this.lasttime = this.currenttime;
+    this.currenttime = timer.get();
+    this.deltatime = this.currenttime - this.lasttime;
 
-    goForwardSlowly();
 
+    this.prevPitch = this.pitch;
+    this.pitch = this.swerveSubsystem.getPitch();
+    this.roll = this.swerveSubsystem.getRoll();
+    this.yaw = this.swerveSubsystem.getYaw();
+    this.pitchSpeed = (this.pitch - this.prevPitch) / (float) this.deltatime;
 
-    putDashboard();
+    this.checkFallOff();
 
+    if (!this.isOnChargingStation){
+      this.goForwardUntilOnChargeStation();
+    }else if (!this.isAtEnd){
+      this.doBalanceMethod1();
+      //this.doBalanceMethod2();
+    }else{
+      //brake
+      this.swerveSubsystem.stopAllAndBrake();
+      //turn wheels to X positions
+    }
   }
 
-  void goForwardSlowly(){
-    
-    if(Math.abs(pitch) <= deadzone && isOnChargingStation){
-      //robot is stable and on the carpet ground not charge station
-      swervee.setMotors(0, speeds[0], 0);
-    }
-    else if(Math.abs(pitch) - 15 <= deadzone && !isOnChargingStation){
-      isOnChargingStation = true;
-      initialPose = this.swervee.getRobotPose();
-    }
-
-
-    if (isOnChargingStation){
-      displacementTransform = this.swervee.getRobotPose().minus(initialPose);
-      if(Math.abs(pitch) > 15){
-        if(pitch < 0){
-          percentagePower = -1;
-        }else if(pitch > 0){
-          percentagePower = 1;
-        }
-      }else{
-        percentagePower = pitch / 15;
-      }
-
-      if(Math.abs(pitch) > 2.5){
-        swervee.setMotors(0, percentagePower * speeds[0], 0);
-      }else{
-        //we dont
-        swervee.stopAllAndBrake();
-      }
-    }
-
-
-
+  //only uses PID control
+  private void doBalanceMethod1(){
+    double pidOutput = velocityController.calculate(this.pitch, 0);
+    this.swerveSubsystem.setMotors(pidOutput, 0, 0);
   }
 
-  void putDashboard(){
-    SmartDashboard.putNumber("Pitch", pitch);
-    SmartDashboard.putNumber("Yaw", yaw);
-    SmartDashboard.putBoolean("IsOnDashboard", isOnChargingStation);
+  //incorporates angular velocity
+  //if angular velocity is too high, then the station must be turning
+  
+  private void doBalanceMethod2(){
+    float threshold = 35; //change later
+    double pidOutput = velocityController.calculate(this.pitch, 0);
+    pidOutput = Math.pow(pidOutput, 2);
+    if(this.pitchSpeed > threshold){
+      //move back briefly
+      this.swerveSubsystem.setMotors(-pidOutput*.5, 0, 0);
+    }else{
+      this.swerveSubsystem.setMotors(pidOutput, 0, 0);
+    }
   }
 
+  private void goForwardUntilOnChargeStation(){
+    if(Math.abs(this.pitch) >= 15){
+      this.isOnChargingStation = true;
+      return;
+    }
+
+    this.swerveSubsystem.setMotors(.75, 0, 0);
+  }
+
+
+  private void checkFallOff(){
+    this.currentXPos = this.swerveSubsystem.getRobotPose().getX();
+    double difference = (this.currentXPos - this.initXPos) * 100; //to centimeters
+
+    if(difference >= Constants.kChargeStationBalanceBeamLengthCm - Constants.kTrackWidth - .5){
+      this.isAtEnd = true;
+    }else{
+      this.isAtEnd = false;
+    }
+  }
   
   @Override
   public void end(boolean interrupted) {

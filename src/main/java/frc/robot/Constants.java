@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public final class Constants {
     //SWERVE constants    
-    public static final double maxSpeedMPS = 12.0;
+    public static final double kMaxSpeedMPS = 4.0;
 
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2.0 * 2.0 * Math.PI;
     public static final double rad2Deg = 180/Math.PI;
@@ -40,7 +40,7 @@ public final class Constants {
 
     //Encoders
     public static final double angleEncoderConversionFactortoRad = 2*Math.PI/18;
-    public static final double driveEncoderConversionFactortoRotations = 1.0/10;
+    public static final double driveEncoderConversionFactortoRotations = 1.0/10; 
 
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*driveEncoderConversionFactortoRotations/ 60.0;
 
@@ -64,7 +64,7 @@ public final class Constants {
     // // Distance between front and back wheels
     public static final double kWheelBase = Units.inchesToMeters(25.5);
 
-    public static final boolean tuningPID = false;
+    public static boolean tuningPID = false;
     
     //SPARK ids
     public static final int frontLeftSteer = 3;//
@@ -81,7 +81,7 @@ public final class Constants {
 
     public static final boolean gyroHold = false;
 
-    //TEJA IS COOL
+    //TEJA IS THE BIGGEST BIRD
 
     //Change this
     public static int rotJoystickPort = 0;
@@ -126,13 +126,13 @@ public final class Constants {
     //Gyro Adjustments
     public static double priorGyroAngle = 0;
 
-    public final static Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
+    public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
 
 
     //Constants For Charge Station:
     public static final double kChargeStationFullLengthCm = 193;
     public static final double kChargeStationBalanceBeamLengthCm = 122;
-    public static final double kChargeStationMountLengthCm = 35.5; 
+    public static final double kChargeStationMountLengthCm = 42.2995271841; 
     public static final double kAngleDeadZoneDeg = 0.5;
 
 
