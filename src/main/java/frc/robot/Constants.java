@@ -62,7 +62,7 @@ public final class Constants {
     public static final PIDController blPIDTrans = new PIDController(0.5, 0, 0);
 
     // Distance between right and left wheels
-    public static final double kTrackWidth = Units.inchesToMeters(25.5);
+    public static final double kTrackWidth = Units.inchesToMeters(19.8819);
     public static double tuningSetpoint = 0;
     public static final double weirdAssOdVal = 0.266807902319739;
     
