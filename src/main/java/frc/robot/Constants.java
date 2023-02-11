@@ -44,6 +44,11 @@ public final class Constants {
 
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*driveEncoderConversionFactortoRotations/ 60.0;
 
+    //Limelight Pipelines
+    public static final int CubePipelineID = 0;
+    public static final int TagPiplineID = 1;
+    public static final int ReflectivePipelineID = 2;
+
 
     //PID
     public static final PIDController frPID = new PIDController(0.771, 0.025, 0.015);
