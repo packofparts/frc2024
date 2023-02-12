@@ -72,17 +72,17 @@ public final class Constants {
     public static boolean tuningPID = false;
     
     //SPARK ids
-    public static final int frontLeftSteer = 3;//
-    public static final int frontLeftDrive = 2;//
+    public static final int frontLeftSteer = 2;//
+    public static final int frontLeftDrive = 3;//
         
-    public static final int frontRightSteer = 5;//
-    public static final int frontRightDrive = 4;//
+    public static final int frontRightSteer = 6;//
+    public static final int frontRightDrive = 7;//
 
-    public static final int rearLeftSteer = 6;//
-    public static final int rearLeftDrive = 7;//
+    public static final int rearLeftSteer = 5;//
+    public static final int rearLeftDrive = 4;//
 
-    public static final int rearRightSteer = 8;//
-    public static final int rearRightDrive = 9; // 
+    public static final int rearRightSteer = 9;//
+    public static final int rearRightDrive = 8; // 
 
     public static final boolean gyroHold = false;
 
