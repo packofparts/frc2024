@@ -62,17 +62,16 @@ public final class Constants {
     public static final PIDController blPIDTrans = new PIDController(0.5, 0, 0);
 
     // Distance between right and left wheels
-    public static final double kTrackWidth = Units.inchesToMeters(19.8819);
+    public static final double kTrackWidth = 0.54;
     public static double tuningSetpoint = 0;
     public static final double weirdAssOdVal = 0.266807902319739;
     
     // // Distance between front and back wheels
-    public static final double kWheelBase = Units.inchesToMeters(25.5);
-
+    public static final double kWheelBase = 0.54;
     public static boolean tuningPID = false;
     
     //SPARK ids
-    public static final int frontLeftSteer = 2;//
+    public static final int frontLeftSteer = 1;//
     public static final int frontLeftDrive = 3;//
         
     public static final int frontRightSteer = 6;//
