@@ -12,7 +12,8 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class TGWithPPlib extends CommandBase {
   cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose,this.swerve.m_kinematics,
    new PIDConstants(0.5, 0, 0),
     new PIDConstants(0.5, 0, 0),
-    this.swerve::setModuleStates, Constants.eventMap, true, this.swerve);
+    this.swerve::setModuleStates, FieldConstants.eventMap, true, this.swerve);
     finalCMD = cmd.fullAuto(traj);
     finalCMD.schedule();
   }

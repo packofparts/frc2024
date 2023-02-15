@@ -4,22 +4,12 @@
 
 package frc.robot.commands;
 
-import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.SPI.Port;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.subsystems.Input;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoBalanceCommand extends CommandBase {
@@ -53,7 +43,7 @@ public class AutoBalanceCommand extends CommandBase {
     this.swerveSubsystem = swervee;
 
     velocityController = new PIDController(.05, 0, 0);
-    velocityController.setTolerance(Constants.kAngleDeadZoneDeg);
+    velocityController.setTolerance(FieldConstants.kAngleDeadZoneDeg);
     
 
     positionController = new PIDController(0, 0, 0);
@@ -143,7 +133,7 @@ public class AutoBalanceCommand extends CommandBase {
     this.currentXPos = this.swerveSubsystem.getRobotPose().getX();
     double difference = (this.currentXPos - this.initXPos) * 100; //to centimeters
 
-    if(difference >= Constants.kChargeStationBalanceBeamLengthCm - Constants.kTrackWidth - .5){
+    if(difference >= FieldConstants.kChargeStationBalanceBeamLengthCm - DriveConstants.kTrackWidth - .5){
       this.isAtEnd = true;
     }else{
       this.isAtEnd = false;

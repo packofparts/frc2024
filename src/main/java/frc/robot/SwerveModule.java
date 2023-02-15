@@ -14,7 +14,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
-
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PIDConstants;
+import frc.robot.Constants.MiscNonConstants;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 public class SwerveModule {
@@ -29,7 +31,7 @@ public class SwerveModule {
     public AnalogEncoder universalEncoder;
     public SparkMaxPIDController rotPID;
     public PIDController rotationPIDController;
-    public PIDController transController = new PIDController(Constants.kP, Constants.kI, Constants.kD);
+    public PIDController transController;
     private Boolean isAbsoluteEncoder;
     private Boolean m_transInverted;
     private Boolean m_rotInverted;    
@@ -43,7 +45,7 @@ public class SwerveModule {
         this.m_MotorRotID = motorRotID;
         this.m_transInverted = transInverted;
         this.m_rotInverted = rotInverted;
-
+        this.transController = transController;
         transMotor = new CANSparkMax(this.m_MotorTransID, MotorType.kBrushless);
         
         rotMotor = new CANSparkMax(this.m_MotorRotID, MotorType.kBrushless);
@@ -119,8 +121,8 @@ public class SwerveModule {
 
         // Returns SwerveModuleState
 
-        return new SwerveModuleState(getTransVelocity()*Constants.RPMtoMPS*Constants.driveEncoderConversionFactortoRotations,
-            new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
+        return new SwerveModuleState(getTransVelocity()*DriveConstants.RPMtoMPS*DriveConstants.driveEncoderConversionFactortoRotations,
+            new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
     
     }
     /**
@@ -142,16 +144,16 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         //PID Controller for both translation and rotation
-        transMotor.set(transController.calculate(
-            transEncoder.getVelocity()*Constants.driveEncoderConversionFactortoRotations*Constants.RPMtoMPS,
-            desiredState.speedMetersPerSecond)/Constants.kMaxSpeedMPS);
+        transMotor.set(this.transController.calculate(
+            transEncoder.getVelocity()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.RPMtoMPS,
+            desiredState.speedMetersPerSecond)/DriveConstants.kMaxSpeedMPS);
 
         //^setting max speed doesn't work well this way
         
-        //transMotor.set(desiredState.speedMetersPerSecond/Constants.maxSpeed);
+        //transMotor.set(desiredState.speedMetersPerSecond/DriveConstants.maxSpeed);
         //Keep this
         
-        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*Constants.angleEncoderConversionFactortoRad,
+        rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*DriveConstants.angleEncoderConversionFactortoRad,
             desiredState.angle.getRadians()));
 
 
@@ -164,7 +166,7 @@ public class SwerveModule {
 
         //FOR PID TUNING ONLY
 
-        rotationPIDController.setPID(Constants.kP, Constants.kI, Constants.kD);
+        rotationPIDController.setPID(MiscNonConstants.kP, MiscNonConstants.kI, MiscNonConstants.kD);
         rotationPIDController.disableContinuousInput();
         double sp = rotationPIDController.calculate((getRotPosition()-0.5)*2*Math.PI/18, setPoint);
         rotMotor.set(sp);
@@ -191,11 +193,11 @@ public class SwerveModule {
     public SwerveModulePosition getModulePos(){
 
         //shit dont work for some reason. conversions are fuqued
-        // return new SwerveModulePosition(transEncoder.getPosition()*Constants.driveEncoderConversionFactortoRotations*Constants.kDriveEncoderRot2Meter,
-        //     new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
+        // return new SwerveModulePosition(transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
+        //     new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
 
-        return new SwerveModulePosition(transEncoder.getPosition()/Constants.weirdAssOdVal,
-            new Rotation2d(getRotPosition()*Constants.angleEncoderConversionFactortoRad));
+        return new SwerveModulePosition(transEncoder.getPosition()/DriveConstants.weirdAssOdVal,
+            new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
     
     }
     /**

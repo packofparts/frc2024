@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.MiscNonConstants;
 
 public class pnumatics extends SubsystemBase {
   /** Creates a new pnumatics. */
@@ -20,8 +20,8 @@ public class pnumatics extends SubsystemBase {
     AnalogPotentiometer pressureSensor;
     PneumaticHub hub;
   public pnumatics() {
-    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, Constants.intakeSolenoid1ID);
-    phCompressor = new Compressor(Constants.compressorID, PneumaticsModuleType.REVPH);
+    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, MiscNonConstants.intakeSolenoid1ID);
+    phCompressor = new Compressor(MiscNonConstants.compressorID, PneumaticsModuleType.REVPH);
     pressureSensor = new AnalogPotentiometer(0, 250, -13);
     hub = new PneumaticHub();
   }

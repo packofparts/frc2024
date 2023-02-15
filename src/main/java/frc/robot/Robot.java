@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.MoveByWithTarjectoryController;
+import frc.robot.commands.TGWithPPlib;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -42,6 +43,7 @@ public class Robot extends TimedRobot {
     autoSelector.addOption("Move By with Traj",
       new MoveByWithTarjectoryController(m_robotContainer.swerve, 
       new Transform2d(new Translation2d(5, 0), new Rotation2d(Math.PI/2))));
+    autoSelector.addOption("PPlib trajectory", new TGWithPPlib(m_robotContainer.swerve));
     SmartDashboard.putData("auto path", autoSelector);
   }
 

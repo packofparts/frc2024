@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.SwerveModule;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -20,9 +20,9 @@ public class DefaultDriveCmd extends CommandBase {
   public DefaultDriveCmd(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveee = swerve;
-    xLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond);
-    yLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAccelerationUnitsPerSecond);
-    turningLimiter = new SlewRateLimiter(Constants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
+    xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+    yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
+    turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
     addRequirements(swerve);
   }
 
@@ -42,10 +42,10 @@ public class DefaultDriveCmd extends CommandBase {
     rot = Math.abs(rot) > 0.05 ? rot : 0.0;
       
     // 3. Make the driving smoother
-    x = xLimiter.calculate(x) * Constants.kMaxSpeedMPS;
-    y = yLimiter.calculate(y) * Constants.kMaxSpeedMPS;
+    x = xLimiter.calculate(x) * DriveConstants.kMaxSpeedMPS;
+    y = yLimiter.calculate(y) * DriveConstants.kMaxSpeedMPS;
     rot= turningLimiter.calculate(rot)
-          * Constants.kTeleDriveMaxAngularSpeedRadiansPerSecond*3;
+          * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond*3;
     swerveee.setMotors(x, y, rot);
   }
 

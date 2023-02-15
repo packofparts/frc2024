@@ -25,20 +25,36 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.CANSparkMax.IdleMode;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PIDConstants;
 import frc.robot.SwerveModule;
 import frc.robot.commands.AutoBalanceCommand;
 
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
-  private final SwerveModule frontLeft = new SwerveModule(Constants.frontLeftDrive, Constants.frontLeftSteer, 0,false, true,1,false, true,Constants.flPID,Constants.flPIDTrans);
-  private final SwerveModule frontRight = new SwerveModule(Constants.frontRightDrive, Constants.frontRightSteer,1,true,true,0.805,false, true,Constants.frPID,Constants.frPIDTrans);
-  private final SwerveModule backLeft = new SwerveModule(Constants.rearLeftDrive, Constants.rearLeftSteer,2,true,true,0.156,false, true,Constants.blPID,Constants.flPIDTrans);
-  private final SwerveModule backRight = new SwerveModule(Constants.rearRightDrive, Constants.rearRightSteer,3,true,true,0.801,false, true, Constants.brPID,Constants.brPIDTrans); 
+  
+  private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
+   0,false, true,1,false, true,
+   PIDConstants.flPID, PIDConstants.flPIDTrans);
+
+  
+   private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
+   1,true,true,0.805,false, true,
+   PIDConstants.frPID,PIDConstants.frPIDTrans);
+
+
+  private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
+  2,true,true,0.156,false, true,
+  PIDConstants.blPID,PIDConstants.flPIDTrans);
+
+
+  private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
+  3,true,true,0.801,false, true,
+   PIDConstants.brPID,PIDConstants.brPIDTrans); 
+
+
   private final PIDController headingController;
 
   public SwerveDriveKinematics m_kinematics;
@@ -49,10 +65,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveSubsystem() {
     m_kinematics = new SwerveDriveKinematics(
-      new Translation2d(Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
-      new Translation2d(Constants.kWheelBase / 2, -Constants.kTrackWidth / 2),
-      new Translation2d(-Constants.kWheelBase / 2, Constants.kTrackWidth / 2),
-      new Translation2d(-Constants.kWheelBase / 2, -Constants.kTrackWidth / 2));
+      new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidth / 2),
+      new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidth / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2));
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModulePositions());
     SmartDashboard.putNumber("p", 0);
     SmartDashboard.putNumber("i", 0);
@@ -82,10 +98,6 @@ public class SwerveSubsystem extends SubsystemBase {
       AutoBalanceCommand autoBalanceCommand = new AutoBalanceCommand(this);
       autoBalanceCommand.schedule();
     }
-
-    
-
-
   }
   /**
    * Sets the current YAW heading as the 0'd heading
@@ -116,7 +128,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @param desiredStates requires a SwerveModuleState array
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kMaxSpeedMPS);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMPS);
     frontLeft.setDesiredState(desiredStates[0]);
     frontRight.setDesiredState(desiredStates[1]);
     backLeft.setDesiredState(desiredStates[2]);
@@ -146,8 +158,6 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
     this.setModuleStates(moduleStates);
   }
-
-
 
   /**
    * This method resets the pose of the robot to the desired robot pose

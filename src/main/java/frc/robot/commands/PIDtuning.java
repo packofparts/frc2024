@@ -6,7 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.MiscNonConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.SwerveModule;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -27,18 +28,18 @@ public class PIDtuning extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Constants.kP != SmartDashboard.getNumber("p", 0) || Constants.kI != SmartDashboard.getNumber("i", 0) ||  Constants.kI != SmartDashboard.getNumber("i", 0)){
-      Constants.kP = SmartDashboard.getNumber("p", 0);
-      Constants.kI = SmartDashboard.getNumber("i", 0);
-      Constants.kD = SmartDashboard.getNumber("d", 0);
+    if(MiscNonConstants.kP != SmartDashboard.getNumber("p", 0) || MiscNonConstants.kI != SmartDashboard.getNumber("i", 0) ||  MiscNonConstants.kI != SmartDashboard.getNumber("i", 0)){
+      MiscNonConstants.kP = SmartDashboard.getNumber("p", 0);
+      MiscNonConstants.kI = SmartDashboard.getNumber("i", 0);
+      MiscNonConstants.kD = SmartDashboard.getNumber("d", 0);
       if (Input.getIncPID()){
-        Constants.tuningSetpoint+=0.1;
+        DriveConstants.tuningSetpoint+=0.1;
       }else if(Input.getDecPID()){
-        Constants.tuningSetpoint-=0.1;
+        DriveConstants.tuningSetpoint-=0.1;
       }
-      SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
+      SmartDashboard.putNumber("setPointReal", DriveConstants.tuningSetpoint);
       for (SwerveModule mod: swerveee.getRawModules()){
-        mod.updatePositions(Constants.tuningSetpoint);
+        mod.updatePositions(DriveConstants.tuningSetpoint);
       }
       
       SmartDashboard.putNumber("Module1CurrentROT",swerveee.getRawModules()[0].getRotPosition());

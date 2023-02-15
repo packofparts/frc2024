@@ -4,9 +4,11 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.MiscNonConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -17,10 +19,10 @@ public class SinglePID extends CommandBase {
   Double sp;
   public SinglePID(SwerveModule module, SwerveSubsystem swervee) {
     this.selectedModule = module;
-    SmartDashboard.putNumber("kP", Constants.kP);
-    SmartDashboard.putNumber("kI", Constants.kI);
-    SmartDashboard.putNumber("kD", Constants.kD);
-    SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
+    SmartDashboard.putNumber("kP", MiscNonConstants.kP);
+    SmartDashboard.putNumber("kI", MiscNonConstants.kI);
+    SmartDashboard.putNumber("kD", MiscNonConstants.kD);
+    SmartDashboard.putNumber("setPointReal", DriveConstants.tuningSetpoint);
     addRequirements(swervee);
 
   }
@@ -28,7 +30,7 @@ public class SinglePID extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SmartDashboard.putNumber("setPointReal", Constants.tuningSetpoint);
+    SmartDashboard.putNumber("setPointReal", DriveConstants.tuningSetpoint);
     
   }
 
@@ -36,13 +38,13 @@ public class SinglePID extends CommandBase {
   @Override
   public void execute() {
 
-    Constants.kP = SmartDashboard.getNumber("kP", 0);
-    Constants.kI = SmartDashboard.getNumber("kI", 0);
-    Constants.kD = SmartDashboard.getNumber("kD", 0);
+    MiscNonConstants.kP = SmartDashboard.getNumber("kP", 0);
+    MiscNonConstants.kI = SmartDashboard.getNumber("kI", 0);
+    MiscNonConstants.kD = SmartDashboard.getNumber("kD", 0);
 
     SmartDashboard.putNumber("Setpoint", 0);
-    sp = SmartDashboard.getNumber("setPointReal", 0)/Constants.rad2Deg;
-    SmartDashboard.putNumber("Module1CurrentROT",this.selectedModule.getRotPosition()*Constants.rad2Deg*Constants.angleEncoderConversionFactortoRad);
+    sp = Units.degreesToRadians(SmartDashboard.getNumber("setPointReal", 0));
+    SmartDashboard.putNumber("Module1CurrentROT",Units.radiansToDegrees(this.selectedModule.getRotPosition())*DriveConstants.angleEncoderConversionFactortoRad);
     
     selectedModule.updatePositions(sp);
     

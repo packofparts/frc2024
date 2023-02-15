@@ -27,8 +27,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Util;
+import frc.robot.Constants.VisionConstants;
 
 
 public class ManualPoseEstimation extends SubsystemBase {
@@ -61,10 +61,8 @@ public class ManualPoseEstimation extends SubsystemBase {
     visionTimestamp = lime.getTimestamp();
     if (target != null) {
       if (target.getPoseAmbiguity()<=.2) {
-        Pose3d pose = layout.getTagPose(target.getFiducialId()).get().plus(target.getBestCameraToTarget().plus(Constants.robotToCam));
+        Pose3d pose = layout.getTagPose(target.getFiducialId()).get().plus(target.getBestCameraToTarget().plus(VisionConstants.robotToCam));
         Pose2d pose3disdumb = new Pose2d(pose.getX(), pose.getY(), new Rotation2d(pose.getRotation().getAngle()));
-
-
         return pose3disdumb;
       }
       else {

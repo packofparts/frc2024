@@ -12,7 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class moveTo extends CommandBase {
@@ -74,11 +74,11 @@ public class moveTo extends CommandBase {
 
     double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
-    if(magnitude < Constants.kMaxSpeedMPS*.8){
+    if(magnitude < DriveConstants.kMaxSpeedMPS*.8){
       xSpeed /= magnitude;
       ySpeed /= magnitude;
-      xSpeed *= Constants.kMaxSpeedMPS;
-      ySpeed *= Constants.kMaxSpeedMPS;
+      xSpeed *= DriveConstants.kMaxSpeedMPS;
+      ySpeed *= DriveConstants.kMaxSpeedMPS;
     }
 
     swerve.setMotors(xSpeed, ySpeed, rot);

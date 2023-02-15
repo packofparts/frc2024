@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PIDConstants;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
@@ -57,7 +59,7 @@ public class RobotContainer {
     moduleSelector.addOption("Back Right", allModules[3]);
 
 
-    if (!Constants.tuningPID){swerve.setDefaultCommand(defaultDrive);}
+    if (!DriveConstants.tuningPID){swerve.setDefaultCommand(defaultDrive);}
     else{swerve.setDefaultCommand(new SinglePID(selecModule, swerve));}
   
     armControl.setDefaultCommand(new DefaultArmCommand(armControl));

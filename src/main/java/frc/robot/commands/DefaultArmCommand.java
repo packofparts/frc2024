@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Util;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
@@ -36,17 +36,17 @@ public class DefaultArmCommand extends CommandBase {
     }else if(Input.getDPad() == Input.DPADDOWN){
       armControlSubsystem.changeDesiredPivotRotation(-.5);
     }else if(Input.getA()){
-      armControlSubsystem.setDesiredExtension(Constants.extensionLevels[0]); // have to subtract the initial
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(Constants.angleLevels[0]));
+      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevels[0]); // have to subtract the initial
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevels[0]));
     }else if(Input.getB()){
-      armControlSubsystem.setDesiredExtension(Constants.extensionLevels[1]);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(Constants.angleLevels[1]));
+      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevels[1]);
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevels[1]));
     }else if(Input.getX()){
-      armControlSubsystem.setDesiredExtension(Constants.extensionLevels[2]);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(Constants.angleLevels[2]));
+      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevels[2]);
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevels[2]));
     }else if(Input.getY()){
-      armControlSubsystem.setDesiredExtension(Constants.minExtension);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(Constants.minAngle));
+      armControlSubsystem.setDesiredExtension(ArmConstants.minExtension);
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.minAngle));
     }
 
   }
