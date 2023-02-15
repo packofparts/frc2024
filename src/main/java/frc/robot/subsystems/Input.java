@@ -3,7 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants;
+import frc.robot.Constants.JoystickConstants;
 
 /** Add your docs here. */
 public class Input {
@@ -17,8 +17,8 @@ public class Input {
     public static int DPADLEFT = 270;
 
     public Input(){
-        rJoystick = new Joystick (Constants.rotJoystickPort);
-        tJoystick = new Joystick (Constants.transJoystickPort);
+        rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
+        tJoystick = new Joystick (JoystickConstants.transJoystickPort);
         xboxController = new XboxController(2);
     }
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}
