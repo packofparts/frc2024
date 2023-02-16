@@ -134,7 +134,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see SwerveModuleState
    * @param desiredStates requires a SwerveModuleState array
    */
-  public void setModuleStates(SwerveModuleState[] desiredStates,DriveMode mode) {
+  public void setModuleStates(SwerveModuleState[] desiredStates, DriveMode mode) {
     switch(mode){
       case AUTO:
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kAutoMaxSpeedMPS);
