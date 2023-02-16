@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem swerve = new SwerveSubsystem();
-  public final ArmControlSubsystem armControl = new ArmControlSubsystem();
+  //public final ArmControlSubsystem armControl = new ArmControlSubsystem();
   //public final Limelight lime = new Limelight();
   //public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(swerve);
@@ -62,7 +62,7 @@ public class RobotContainer {
     if (!DriveConstants.tuningPID){swerve.setDefaultCommand(defaultDrive);}
     else{swerve.setDefaultCommand(new SinglePID(selecModule, swerve));}
   
-    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    //armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     
@@ -78,6 +78,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
   }
 
+  //-0.025281577083338
+  //0.000147419232276
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

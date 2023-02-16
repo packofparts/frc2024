@@ -35,11 +35,11 @@ public class DefaultDriveCmd extends CommandBase {
   @Override
   public void execute() {
     double x = Input.getJoystickX();
-    double y = Input.getJoystickX();
+    double y = Input.getJoystickY();
     double rot = Input.getRot();
   
-    x = Math.abs(x) > 0.15 ? x : 0.0;
-    y = Math.abs(y) > 0.15 ? y : 0.0;
+    x = Math.abs(x) > 0.1 ? x : 0.0;
+    y = Math.abs(y) > 0.1 ? y : 0.0;
     rot = Math.abs(rot) > 0.05 ? rot : 0.0;
       
     // 3. Make the driving smoother

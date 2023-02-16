@@ -7,24 +7,33 @@ import frc.robot.Constants.JoystickConstants;
 
 /** Add your docs here. */
 public class Input {
-    private static Joystick rJoystick, tJoystick;
 
-    private static XboxController xboxController;
+    private static boolean useXbox = false; 
+
+    private static Joystick rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
+    private static Joystick tJoystick = new Joystick (JoystickConstants.transJoystickPort);
+
+
+    private static XboxController xboxController = new XboxController(2);
 
     public static int DPADUP = 0;
     public static int DPADRIGHT = 90;
     public static int DPADDOWN = 180;
     public static int DPADLEFT = 270;
 
-    public Input(){
-        rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
-        tJoystick = new Joystick (JoystickConstants.transJoystickPort);
-        xboxController = new XboxController(2);
-    }
+
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}
-    public static double getJoystickX(){return tJoystick.getY();}
-    public static double getJoystickY(){return -tJoystick.getX();}
-    public static double getRot(){return -rJoystick.getX();}
+    public static double getJoystickX(){
+        return useXbox ? xboxController.getLeftY() : tJoystick.getY();
+    }
+    public static double getJoystickY(){
+        
+        return useXbox ? -xboxController.getLeftX() : -tJoystick.getX();
+    
+    }
+    public static double getRot(){
+        return useXbox ? -xboxController.getRightX() : -rJoystick.getX();
+    }
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}

@@ -196,11 +196,11 @@ public class SwerveModule {
     public SwerveModulePosition getModulePos(){
 
         //shit dont work for some reason. conversions are fuqued
-        // return new SwerveModulePosition(transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
-        //     new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
-
-        return new SwerveModulePosition(transEncoder.getPosition()/DriveConstants.weirdAssOdVal,
+        return new SwerveModulePosition(transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
             new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
+
+        // return new SwerveModulePosition(transEncoder.getPosition()/DriveConstants.weirdAssOdVal,
+        //     new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
     
     }
     /**
