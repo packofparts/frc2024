@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class moveTo extends CommandBase {
   /** Creates a new moveTo. */
@@ -74,14 +75,14 @@ public class moveTo extends CommandBase {
 
     double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
-    if(magnitude < DriveConstants.kMaxSpeedMPS*.8){
+    if(magnitude < DriveConstants.kPhysicalMaxSpeedMPS*.8){
       xSpeed /= magnitude;
       ySpeed /= magnitude;
-      xSpeed *= DriveConstants.kMaxSpeedMPS;
-      ySpeed *= DriveConstants.kMaxSpeedMPS;
+      xSpeed *= DriveConstants.kPhysicalMaxSpeedMPS;
+      ySpeed *= DriveConstants.kPhysicalMaxSpeedMPS;
     }
 
-    swerve.setMotors(xSpeed, ySpeed, rot);
+    swerve.setMotors(xSpeed, ySpeed, rot, DriveMode.AUTO);
 
     
 

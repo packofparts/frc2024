@@ -8,14 +8,23 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class DriveConstants {
-    public static final double kMaxSpeedMPS = 4.0;
+    
+    public static final double kPhysicalMaxSpeedMPS = 4.0;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2*Math.PI;
+    public static final double kAutoMaxSpeedMPS = 3.0;
+    public static final double kTeleMaxSpeedMPS = 4.0;
 
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2.0 * 2.0 * Math.PI;
-    public static final double rad2Deg = 180/Math.PI;
-    public static final double kTeleDriveMaxSpeedMetersPerSecond = 1.0;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
-    public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 4;
-    public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 4;
+
+    public static double kTeleDriveMaxAccMPS = 3.0;
+    public static double kTeleDriveMaxAngularAccRadPS = 2*Math.PI;
+    public static double kTeleDriveMaxAngularSpeedRadiansPerSecond = 2;
+
+
+    public static double kAutoDriveMaxAccMPS = 3.0;
+    public static double kAutoDriveMaxAngularAccRadPS = 2*Math.PI;
+    public static double kAutoDriveMaxAngularSpeedRadiansPerSecond = 2;
+
+
     public static final double kDriveEncoderRot2Meter = 2*Math.PI * Units.inchesToMeters(2); //multiply by gearratio check gear ratio for trans encoder
     public static final double RPMtoMPS = kDriveEncoderRot2Meter/60;
 
@@ -26,13 +35,14 @@ public class DriveConstants {
 
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*driveEncoderConversionFactortoRotations/ 60.0;
 
-    public static final double kTrackWidth = 0.54;
+    public static final double kTrackWidthMeters = 0.54;
     public static double tuningSetpoint = 0;
     public static final double weirdAssOdVal = 0.266807902319739;
     
     // Distance between front and back wheels
     public static final double kWheelBase = 0.54;
     public static boolean tuningPID = false;
+
     
     //SPARK ids
     public static final int frontLeftSteer = 1;//

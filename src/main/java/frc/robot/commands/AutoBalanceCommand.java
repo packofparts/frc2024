@@ -133,7 +133,7 @@ public class AutoBalanceCommand extends CommandBase {
     this.currentXPos = this.swerveSubsystem.getRobotPose().getX();
     double difference = (this.currentXPos - this.initXPos) * 100; //to centimeters
 
-    if(difference >= FieldConstants.kChargeStationBalanceBeamLengthCm - DriveConstants.kTrackWidth - .5){
+    if(difference >= FieldConstants.kChargeStationBalanceBeamLengthCm - DriveConstants.kTrackWidthMeters - .5){
       this.isAtEnd = true;
     }else{
       this.isAtEnd = false;

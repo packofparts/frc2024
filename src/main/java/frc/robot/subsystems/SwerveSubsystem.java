@@ -34,7 +34,7 @@ import frc.robot.commands.AutoBalanceCommand;
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
-  
+
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
    0,false, true,1,false, true,
    PIDConstants.flPID, PIDConstants.flPIDTrans);
@@ -62,13 +62,20 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveDriveOdometry m_odometry;
   AHRS navx = new AHRS(Port.kMXP);
   SwerveModule [] rawMods;
+  
+
+  public static enum DriveMode{
+    AUTO,
+    TELEOP
+  }
+
 
   public SwerveSubsystem() {
     m_kinematics = new SwerveDriveKinematics(
-      new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidth / 2),
-      new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2),
-      new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidth / 2),
-      new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidth / 2));
+      new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
+      new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2));
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModulePositions());
     SmartDashboard.putNumber("p", 0);
     SmartDashboard.putNumber("i", 0);
@@ -127,13 +134,30 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see SwerveModuleState
    * @param desiredStates requires a SwerveModuleState array
    */
+  public void setModuleStates(SwerveModuleState[] desiredStates,DriveMode mode) {
+    switch(mode){
+      case AUTO:
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kAutoMaxSpeedMPS);
+        break;
+      
+      case TELEOP:
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kTeleMaxSpeedMPS);
+        break;
+      }
+
+    frontLeft.setDesiredState(desiredStates[0],mode);
+    frontRight.setDesiredState(desiredStates[1],mode);
+    backLeft.setDesiredState(desiredStates[2],mode);
+    backRight.setDesiredState(desiredStates[3],mode);
+  }
+
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kMaxSpeedMPS);
-    frontLeft.setDesiredState(desiredStates[0]);
-    frontRight.setDesiredState(desiredStates[1]);
-    backLeft.setDesiredState(desiredStates[2]);
-    backRight.setDesiredState(desiredStates[3]);
-}
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kAutoMaxSpeedMPS);
+    frontLeft.setDesiredState(desiredStates[0],DriveMode.AUTO);
+    frontRight.setDesiredState(desiredStates[1],DriveMode.AUTO);
+    backLeft.setDesiredState(desiredStates[2],DriveMode.AUTO);
+    backRight.setDesiredState(desiredStates[3],DriveMode.AUTO);
+  }
   /**
    * 
    * @return an array of SwerveModulePosition objects as [frontleft, frontright, backleft, backright]
@@ -150,15 +174,23 @@ public class SwerveSubsystem extends SubsystemBase {
    * 
    * @apiNote Keep in mind all of this is field relative so resetting the gyro midmatch will also reset these params
    */
+  public void setMotors(double x,double y, double rot, DriveMode dMode){
+    rot = headingController.calculate(navx.getRate(), rot);
+    if (!Input.getRobotOriented()){
+      chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
+    } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
+    SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
+    this.setModuleStates(moduleStates, dMode);
+  }
+
   public void setMotors(double x,double y, double rot){
     rot = headingController.calculate(navx.getRate(), rot);
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
-    this.setModuleStates(moduleStates);
+    this.setModuleStates(moduleStates, DriveMode.AUTO);
   }
-
   /**
    * This method resets the pose of the robot to the desired robot pose
    * @param pose provide the new desired pose of the robot

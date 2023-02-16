@@ -16,6 +16,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
+import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 import frc.robot.Constants.MiscNonConstants;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
@@ -130,7 +131,7 @@ public class SwerveModule {
      * @param desiredState takes in SwerveModule state
      * @see SwerveModuleState
      */
-    public void setDesiredState(SwerveModuleState desiredState){
+    public void setDesiredState(SwerveModuleState desiredState, DriveMode dMode){
         
         //Stops returning to original rotation
 
@@ -144,14 +145,16 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         //PID Controller for both translation and rotation
-        transMotor.set(this.transController.calculate(
-            transEncoder.getVelocity()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.RPMtoMPS,
-            desiredState.speedMetersPerSecond)/DriveConstants.kMaxSpeedMPS);
-
-        //^setting max speed doesn't work well this way
-        
-        //transMotor.set(desiredState.speedMetersPerSecond/DriveConstants.maxSpeed);
-        //Keep this
+        switch(dMode){
+            case AUTO:
+            transMotor.set(this.transController.calculate(
+                transEncoder.getVelocity()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.RPMtoMPS,
+                desiredState.speedMetersPerSecond)/DriveConstants.kPhysicalMaxSpeedMPS);
+                break;
+            case TELEOP:
+                transMotor.set(desiredState.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMPS);
+                break;
+        }
         
         rotMotor.set(rotationPIDController.calculate(rotEncoder.getPosition()*DriveConstants.angleEncoderConversionFactortoRad,
             desiredState.angle.getRadians()));
