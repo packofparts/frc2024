@@ -36,22 +36,22 @@ public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
-   0,false, true,1,false, true,
+   0,false, true,0.889,false, true,
    PIDConstants.flPID, PIDConstants.flPIDTrans);
 
   
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-   1,true,true,0.805,false, true,
+   1,true,true,0.352,false, true,
    PIDConstants.frPID,PIDConstants.frPIDTrans);
 
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
-  2,true,true,0.156,false, true,
+  2,false,true,0.288,false, true,
   PIDConstants.blPID,PIDConstants.flPIDTrans);
 
 
   private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
-  3,true,true,0.801,false, true,
+  3,true,true,0.952,false, true,
    PIDConstants.brPID,PIDConstants.brPIDTrans); 
 
 
@@ -86,7 +86,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     resetRobotPose(new Pose2d());
     rawMods = getRawModules();
-    setIdleModeForAll(IdleMode.kCoast, IdleMode.kBrake);
+    setIdleModeForAll(IdleMode.kBrake, IdleMode.kBrake);
 
   }
 
@@ -100,6 +100,8 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     m_odometry.update(getRotation2d(), getModulePositions());
+    SmartDashboard.putNumber("OdometryX", m_odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("OdometryY", m_odometry.getPoseMeters().getY());
     if(Input.resetGyro()){resetGyro();}
     if(Input.runAutoBalance()){
       AutoBalanceCommand autoBalanceCommand = new AutoBalanceCommand(this);
@@ -175,7 +177,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @apiNote Keep in mind all of this is field relative so resetting the gyro midmatch will also reset these params
    */
   public void setMotors(double x,double y, double rot, DriveMode dMode){
-    rot = headingController.calculate(navx.getRate(), rot);
+    //rot = headingController.calculate(navx.getRate(), rot);
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
@@ -184,7 +186,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setMotors(double x,double y, double rot){
-    rot = headingController.calculate(navx.getRate(), rot);
+    //rot = headingController.calculate(navx.getRate(), rot);
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
@@ -254,7 +256,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return returns roll in degrees (180,-180)
    */
   public float getRoll(){
-    return this.navx.getRoll();
+    return this.navx.getRoll(); 
   }
   /**
    * 

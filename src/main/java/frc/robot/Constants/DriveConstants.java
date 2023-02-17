@@ -45,8 +45,8 @@ public class DriveConstants {
 
     
     //SPARK ids
-    public static final int frontLeftSteer = 1;//
-    public static final int frontLeftDrive = 3;//
+    public static final int frontLeftSteer = 3;//
+    public static final int frontLeftDrive = 1;//
         
     public static final int frontRightSteer = 6;//
     public static final int frontRightDrive = 7;//
