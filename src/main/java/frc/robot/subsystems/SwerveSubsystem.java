@@ -94,9 +94,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     for(int i = 0; i<getRawModules().length;i++){
       SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
-      SmartDashboard.putNumber("TruePos"+i, getRawModules()[i].universalEncoder.getAbsolutePosition());
-      SmartDashboard.putNumber("Generic"+i, getRawModules()[i].universalEncoder.getAbsolutePosition()-getRawModules()[i].universalEncoder.getPositionOffset());
-      SmartDashboard.putNumber("Offset"+i, getRawModules()[i].universalEncoder.getPositionOffset());
+      SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
+      SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
+      SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
     }
 
     m_odometry.update(getRotation2d(), getModulePositions());
