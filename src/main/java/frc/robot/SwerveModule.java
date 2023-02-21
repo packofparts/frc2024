@@ -92,7 +92,7 @@ public class SwerveModule {
      * Resets Relative encoder to Abs encoder position
      */
     public void resetEncoders(){
-        _rotEncoder.setPosition((
+        _rotEncoder.setPosition(-(
             _universalEncoder.getAbsolutePosition() - _universalEncoder.getPositionOffset()) * 18);
     }
 
@@ -105,7 +105,7 @@ public class SwerveModule {
 
         // Returns SwerveModuleState
         return new SwerveModuleState(getTransVelocity()*DriveConstants.RPMtoMPS*DriveConstants.driveEncoderConversionFactortoRotations,
-            new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));    
+            new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));  
     }
 
     /**
@@ -127,9 +127,10 @@ public class SwerveModule {
         //PID Controller for both translation and rotation
         switch(dMode){
             case AUTO:
-            _transMotor.set(this._transController.calculate(
-                _transEncoder.getVelocity()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.RPMtoMPS,
-                desiredState.speedMetersPerSecond)/DriveConstants.kPhysicalMaxSpeedMPS);
+            // _transMotor.set(this._transController.calculate(
+            //     _transEncoder.getVelocity()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.RPMtoMPS,
+            //     desiredState.speedMetersPerSecond)/DriveConstants.kPhysicalMaxSpeedMPS);
+                _transMotor.set(desiredState.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMPS);
                 break;
             case TELEOP:
                 _transMotor.set(desiredState.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMPS);

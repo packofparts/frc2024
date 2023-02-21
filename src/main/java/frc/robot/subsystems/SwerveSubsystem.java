@@ -36,23 +36,38 @@ public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
-   0,false, true,0.889,false, true,
+   0,false, false,0.889,false, true,
    PIDConstants.flPID, PIDConstants.flPIDTrans);
-
-  
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-   1,true,true,0.352,false, true,
+   1,true,false,0.352,false, true,
    PIDConstants.frPID,PIDConstants.frPIDTrans);
 
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
-  2,false,true,0.288,false, true,
+  2,false,false,0.288,false, true,
   PIDConstants.blPID,PIDConstants.flPIDTrans);
 
 
   private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
-  3,true,true,0.952,false, true,
+  3,true,false,0.952,false, true,
    PIDConstants.brPID,PIDConstants.brPIDTrans); 
+
+  // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
+  //  0,false, false,0.889,false, true,
+  //  PIDConstants.flPID, PIDConstants.flPIDTrans);
+  //  private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
+  //  1,true,false,0.351,false, true,
+  //  PIDConstants.frPID,PIDConstants.frPIDTrans);
+
+
+  // private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
+  // 2,false,false,0.288,false, true,
+  // PIDConstants.blPID,PIDConstants.flPIDTrans);
+
+
+  // private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
+  // 3,true,false,0.952,false, true,
+  //  PIDConstants.brPID,PIDConstants.brPIDTrans); 
 
 
   private final PIDController headingController;
@@ -72,10 +87,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public SwerveSubsystem() {
     m_kinematics = new SwerveDriveKinematics(
-      new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
       new Translation2d(DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2),
-      new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
-      new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2));
+      new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2),
+      new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2));
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModulePositions());
     SmartDashboard.putNumber("p", 0);
     SmartDashboard.putNumber("i", 0);

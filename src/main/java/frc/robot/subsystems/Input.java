@@ -28,11 +28,11 @@ public class Input {
     }
     public static double getJoystickY(){
         
-        return useXbox ? -xboxController.getLeftX() : -tJoystick.getX();
+        return useXbox ? xboxController.getLeftX() : tJoystick.getX();
     
     }
     public static double getRot(){
-        return useXbox ? -xboxController.getRightX() : -rJoystick.getX();
+        return useXbox ? xboxController.getRightX() : rJoystick.getX();
     }
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
