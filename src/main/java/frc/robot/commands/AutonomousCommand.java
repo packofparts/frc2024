@@ -15,6 +15,21 @@ import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutonomousCommand extends CommandBase {
+  // UPDATE WITH POSES OF PIECES
+  public Pose2d redLeftPiece = new Pose2d();
+  public Pose2d redRightPiece = new Pose2d();
+  public Pose2d blueLeftPiece = new Pose2d();
+  public Pose2d blueRightPiece = new Pose2d();
+
+
+  public static enum paths {
+    REDLEFT,
+    REDRIGHT,
+    REDMIDDLE,
+    BLUELEFT,
+    BLUERIGHT,
+    BLUEMIDDLE
+  }
 
   /** Creates a new AutonomousCommand. */
   public Limelight lime;
@@ -27,34 +42,51 @@ public class AutonomousCommand extends CommandBase {
   public PoseEstimation poseEstimator;
   public Pose2d firstPiece;
   public SequentialCommandGroup command;
-  // UPDATE WITH POSES OF PIECES
-  public Pose2d leftPiece = new Pose2d();
-  public Pose2d rightPiece = new Pose2d();
-  public AutonomousCommand(Limelight lime, SwerveSubsystem swerve, PoseEstimation poseEstimator, boolean left, boolean middle) {
+
+
+  public AutonomousCommand(Limelight lime, SwerveSubsystem swerve, PoseEstimation poseEstimator, paths path) {
     this.lime = lime;
     this.swerve = swerve;
     this.poseEstimator = poseEstimator;
     gotOffset = false;
     movedForward = false;
-    if (left) {
-      firstPiece = leftPiece;
-    } else {
-      firstPiece = rightPiece;
+
+    boolean middle = false;
+    switch(path) {
+      case REDLEFT:
+        firstPiece = redLeftPiece;
+        break;
+      case REDRIGHT:
+        firstPiece = redRightPiece;
+        break;
+      case REDMIDDLE:
+        middle = true;
+        break;
+      case BLUELEFT:
+        firstPiece = blueLeftPiece;
+        break;
+      case BLUEMIDDLE:
+        middle = true;
+        break;
+      case BLUERIGHT:
+        firstPiece = blueLeftPiece;
+        break;
     }
+
     if (!middle){
       command = new SequentialCommandGroup(
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
-        new AutoAlign(poseEstimator, lime),
+        new AutoAlign(poseEstimator, lime, swerve),
         new moveTo(firstPiece.minus(poseEstimator.getPosition()), swerve),
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
-        new AutoAlign(poseEstimator, lime),
+        new AutoAlign(poseEstimator, lime, swerve),
         new AutoBalanceCommand(swerve)
       );
     }
     else {
       command = new SequentialCommandGroup(
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
-        new AutoAlign(poseEstimator, lime)
+        new AutoAlign(poseEstimator, lime, swerve)
       );
     }
   }

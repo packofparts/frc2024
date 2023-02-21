@@ -26,49 +26,50 @@ public class AutoAlign extends CommandBase {
   public PhotonTrackedTarget target;
   public moveTo move;
   public final double yOffset = 0.36;
-
+  public Transform2d offset = new Transform2d();
   public Transform2d moveby;
 
   public PoseEstimation pose;
 
   Optional<Pose3d> desiredPose3d;
 
-  public AutoAlign(PoseEstimation pose, Limelight limelight) {
+  public AutoAlign(PoseEstimation pose, Limelight limelight, SwerveSubsystem swerve, Transform2d offset) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;
-    
+    this.swerve = swerve;
+    this.offset = offset;
   }
 
+  public AutoAlign(PoseEstimation pose, Limelight limelight, SwerveSubsystem swerve) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.pose = pose;
+    lime = limelight;
+    this.swerve = swerve;
+  }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    target = lime.getBestTarget();
-
-    desiredPose3d = pose.layout.getTagPose(target.getFiducialId());
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    desiredPose3d = getDesiredPose();
-    if (desiredPose3d.isPresent()) {
-      Pose2d desiredPose = new Pose2d(desiredPose3d.get().getX(), desiredPose3d.get().getY()+yOffset, new Rotation2d(desiredPose3d.get().getRotation().getAngle()));
-      Transform2d transform = desiredPose.minus(pose.getPosition());
-      move = new moveTo(transform, swerve);
-      move.schedule();
-    } else {
-        swerve.setMotors(0, 0, 5);
-      }
-  }
-  
-  public Optional<Pose3d> getDesiredPose() {
-    if (desiredPose3d.isPresent()){
+    if (move == null) {
       target = lime.getBestTarget();
-    }
-    return pose.layout.getTagPose(target.getFiducialId());
+      if (target != null) {
+        swerve.stopAllAndBrake();
+        desiredPose3d = pose.layout.getTagPose(target.getFiducialId());
 
+        Pose2d desiredPose = new Pose2d(desiredPose3d.get().getX(), desiredPose3d.get().getY()+yOffset, new Rotation2d(desiredPose3d.get().getRotation().getAngle()));
+        moveby = pose.getPosition().minus(desiredPose.plus(offset));
+        move = new moveTo(moveby, swerve);
+        move.schedule();
+      } else {
+        swerve.setMotors(0, 0, 0.1);
+      }
+    } 
   }
 
   // Called once the command ends or is interrupted.
@@ -78,7 +79,7 @@ public class AutoAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (move.isFinished());
+    return move.isFinished();
   }
 
 
