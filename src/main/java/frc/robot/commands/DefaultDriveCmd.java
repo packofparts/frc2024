@@ -34,8 +34,8 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x = Input.getJoystickX();
-    double y = Input.getJoystickY();
+    double x = Input.getJoystickY();
+    double y = Input.getJoystickX();
     double rot = Input.getRot();
   
     x = Math.abs(x) > 0.1 ? x : 0.0;

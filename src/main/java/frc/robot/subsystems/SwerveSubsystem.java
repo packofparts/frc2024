@@ -39,7 +39,7 @@ public class SwerveSubsystem extends SubsystemBase {
    0,false, false,0.889,false, true,
    PIDConstants.flPID, PIDConstants.flPIDTrans);
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-   1,true,false,0.352,false, true,
+   1,true,false,0.828,false, true,
    PIDConstants.frPID,PIDConstants.frPIDTrans);
 
 
@@ -112,6 +112,7 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
       SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
       SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
+      SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
     }
 
     m_odometry.update(getRotation2d(), getModulePositions());
@@ -135,7 +136,10 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the degrees at which the gyro is at
    */
   public double getHeading(){
-    return Math.IEEEremainder(navx.getAngle(), 360);
+    // SmartDashboard.putNumber("Gyro Heading",Math.IEEEremainder(navx.getAngle(), 360));
+    // return Math.IEEEremainder(navx.getAngle(), 360);
+    SmartDashboard.putNumber("Gyro Heading",-navx.getAngle());
+    return -navx.getAngle();
   }
   /**
    * This gets the Rotation2d of the gyro (which is in continuous input)
@@ -196,7 +200,12 @@ public class SwerveSubsystem extends SubsystemBase {
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
+    SmartDashboard.putNumber("ChassispeedsX",chassisSpeeds1.vxMetersPerSecond);
+    SmartDashboard.putNumber("Chassispeedsy",chassisSpeeds1.vyMetersPerSecond);
+    SmartDashboard.putNumber("ChassispeedsRadians",chassisSpeeds1.omegaRadiansPerSecond);
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
+
+
     this.setModuleStates(moduleStates, dMode);
   }
 
@@ -255,6 +264,7 @@ public class SwerveSubsystem extends SubsystemBase {
     for (SwerveModule mod : rawMods){
       mod.setModeRot(rotMode);
       mod.setModeTrans(transMode);
+      mod.applySettings();
       mod.burnSparks();
     }
   }

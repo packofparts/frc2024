@@ -1,6 +1,7 @@
 package frc.robot;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -94,6 +95,7 @@ public class SwerveModule {
     public void resetEncoders(){
         _rotEncoder.setPosition(-(
             _universalEncoder.getAbsolutePosition() - _universalEncoder.getPositionOffset()) * 18);
+        _transEncoder.setPosition(0);
     }
 
     /**
@@ -173,7 +175,7 @@ public class SwerveModule {
     public SwerveModulePosition getModulePos(){
 
         //shit dont work for some reason. conversions are fuqued
-        return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
+        return new SwerveModulePosition(-_transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
             new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
 
         // return new SwerveModulePosition(transEncoder.getPosition()/DriveConstants.weirdAssOdVal,
@@ -224,5 +226,11 @@ public class SwerveModule {
      */
     public void setModeRot(IdleMode mode){
         _rotMotor.setIdleMode(mode);
+    }
+
+    public void applySettings(){
+
+        _transEncoder.setPositionConversionFactor(1.12195122);
+
     }
 }

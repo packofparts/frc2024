@@ -24,11 +24,11 @@ public class Input {
 
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}
     public static double getJoystickX(){
-        return useXbox ? xboxController.getLeftY() : tJoystick.getY();
+        return useXbox ? xboxController.getLeftX() : tJoystick.getX();
     }
     public static double getJoystickY(){
         
-        return useXbox ? xboxController.getLeftX() : tJoystick.getX();
+        return useXbox ? xboxController.getLeftY() : tJoystick.getY();
     
     }
     public static double getRot(){

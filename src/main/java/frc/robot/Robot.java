@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
     autoSelector.addOption("Auto Balance", new AutoBalanceCommand(m_robotContainer.swerve));
     autoSelector.addOption("Move By with Traj",
       new MoveByWithTarjectoryController(m_robotContainer.swerve, 
-      new Transform2d(new Translation2d(5, 0), new Rotation2d(Math.PI/2))));
+      new Transform2d(new Translation2d(2.5, 0), new Rotation2d(Math.PI/2))));
     autoSelector.addOption("PPlib trajectory", new TGWithPPlib(m_robotContainer.swerve));
     
     SmartDashboard.putData("auto path", autoSelector);

@@ -29,7 +29,7 @@ public class TGWithPPlib extends CommandBase {
   SwerveSubsystem swerve;
   SwerveAutoBuilder cmd;
   Command finalCMD;
-  PathPlannerTrajectory traj = PathPlanner.loadPath("Test Path", new PathConstraints(4, 3));
+  PathPlannerTrajectory traj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
   public TGWithPPlib(SwerveSubsystem swervee) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swervee;

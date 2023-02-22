@@ -18,6 +18,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator.ControlVectorList;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -37,25 +38,31 @@ public class MoveByWithTarjectoryController extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-      4,
-      3).setKinematics(this.swervee.m_kinematics);
     
+    SmartDashboard.putNumber("Xtrans", this.trans.getTranslation().times(1.0/2).getX());
+    SmartDashboard.putNumber("Ytrans", this.trans.getTranslation().times(1.0/2).getY());
+    
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+      1,
+      1).setKinematics(this.swervee.m_kinematics);
+    
+    
+
   // 2. Generate trajectory
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
           this.swervee.getRobotPose(),
           List.of(
                   this.trans.getTranslation().times(1.0/2)
           ),
-          this.swervee.getRobotPose().plus(this.trans),
+          this.swervee.getRobotPose(),
           trajectoryConfig);
 
     // 3. Define PID controllers for tracking trajectory
-    PIDController xController = new PIDController(0.01, 0, 0);
-    PIDController yController = new PIDController(0.01, 0, 0);
+    PIDController xController = new PIDController(0.1, 0, 0);
+    PIDController yController = new PIDController(0.1, 0, 0);
 
     ProfiledPIDController thetaController = new ProfiledPIDController(
-          0.07, 0, 0, new Constraints(999, 999));
+          0.1, 0, 0, new Constraints(5, 3));
 
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
