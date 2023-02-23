@@ -118,10 +118,10 @@ public class SwerveSubsystem extends SubsystemBase {
     m_odometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("OdometryX", m_odometry.getPoseMeters().getX());
     SmartDashboard.putNumber("OdometryY", m_odometry.getPoseMeters().getY());
+    SmartDashboard.putNumber("RotationDegrees", this.getRobotPose().getRotation().getRadians());
     if(Input.resetGyro()){resetGyro();}
-    if(Input.runAutoBalance()){
-      AutoBalanceCommand autoBalanceCommand = new AutoBalanceCommand(this);
-      autoBalanceCommand.schedule();
+    if(Input.resetPose()){
+      this.resetRobotPose(new Pose2d());
     }
   }
   /**

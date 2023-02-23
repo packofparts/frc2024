@@ -49,17 +49,25 @@ public class MoveByWithTarjectoryController extends CommandBase {
     
 
   // 2. Generate trajectory
+    // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+    //       this.swervee.getRobotPose(),
+    //       List.of(
+    //               this.trans.getTranslation().times(1.0/4)
+    //       ),
+    //       new Pose2d(this.trans.getTranslation().times(1.0/2), this.swervee.getRobotPose().getRotation()),
+    //       trajectoryConfig);
+
     Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-          this.swervee.getRobotPose(),
-          List.of(
-                  this.trans.getTranslation().times(1.0/2)
-          ),
-          this.swervee.getRobotPose(),
-          trajectoryConfig);
+      List.of(
+          new Pose2d(this.swervee.getRobotPose().getTranslation(), this.swervee.getRotation2d()),
+          new Pose2d(0, 0, new Rotation2d())
+      ),
+      trajectoryConfig
+    );
 
     // 3. Define PID controllers for tracking trajectory
-    PIDController xController = new PIDController(0.1, 0, 0);
-    PIDController yController = new PIDController(0.1, 0, 0);
+    PIDController xController = new PIDController(0.5, 0, 0);
+    PIDController yController = new PIDController(0.5, 0, 0);
 
     ProfiledPIDController thetaController = new ProfiledPIDController(
           0.1, 0, 0, new Constraints(5, 3));

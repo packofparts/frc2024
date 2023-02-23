@@ -15,9 +15,9 @@ public class DriveConstants {
     public static final double kTeleMaxSpeedMPS = 4.0;
 
 
-    public static double kTeleDriveMaxAccMPS = 3.0;
-    public static double kTeleDriveMaxAngularAccRadPS = 2*Math.PI;
-    public static double kTeleDriveMaxAngularSpeedRadiansPerSecond = 2;
+    public static double kTeleDriveMaxAccMPS = 5.0;
+    public static double kTeleDriveMaxAngularAccRadPS = 4*Math.PI;
+    public static double kTeleDriveMaxAngularSpeedRadiansPerSecond = 8;
 
 
     public static double kAutoDriveMaxAccMPS = 3.0;

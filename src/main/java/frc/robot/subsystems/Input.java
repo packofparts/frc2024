@@ -23,6 +23,7 @@ public class Input {
 
 
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}
+   
     public static double getJoystickX(){
         return useXbox ? xboxController.getLeftX() : tJoystick.getX();
     }
@@ -37,7 +38,7 @@ public class Input {
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
-    public static boolean runAutoBalance(){return tJoystick.getRawButton(3);}
+    public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
 
     //xbox controller 
     public static boolean getA(){return xboxController.getAButtonPressed();}
