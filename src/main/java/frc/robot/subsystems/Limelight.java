@@ -75,9 +75,9 @@ public class Limelight extends SubsystemBase {
     
   }
 
-  public double getForwardDistance(){
+  public double getForwardDistance(double targetHeightMeters){
     PhotonTrackedTarget targ = img.getBestTarget();
-    return PhotonUtils.calculateDistanceToTargetMeters(0.05, 0.05, 0, targ.getPitch());
+    return PhotonUtils.calculateDistanceToTargetMeters(0.05, targetHeightMeters, 0, targ.getPitch());
   }
 
   public void setPipeline(int PipelineIndex){

@@ -22,6 +22,8 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
@@ -33,12 +35,13 @@ public class PoseEstimation extends SubsystemBase {
  SwerveSubsystem swerve;
  Limelight lime;
  SwerveDrivePoseEstimator poseEstimator;
+ Field2d field;
  
   public PoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
     this.swerve = swerve;
     lime = limelight;
     try {
-      layout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("biggestbird.json"));
+      layout = new AprilTagFieldLayout("C:\\Users\\Akyea\\Documents\\frc2023\\src\\main\\deploy\\biggestbird.json");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -47,7 +50,8 @@ public class PoseEstimation extends SubsystemBase {
     estimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limelight.photonCamera, VisionConstants.robotToCam);
 
     poseEstimator = new SwerveDrivePoseEstimator(swerve.m_kinematics, swerve.getRotation2d(), swerve.getModulePositions(), getOdometry());
-
+    field = new Field2d();
+    SmartDashboard.putData("Field", field);
   }
 
   public Optional<EstimatedRobotPose> getVision(Pose2d prevPose) {
@@ -73,6 +77,7 @@ public class PoseEstimation extends SubsystemBase {
       EstimatedRobotPose pose = result.get();
       poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
     }
+    field.setRobotPose(getPosition());
   }
 
   public Pose2d getPosition() {
