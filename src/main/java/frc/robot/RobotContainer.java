@@ -13,15 +13,18 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
+import frc.robot.commands.AimbotDriveCmd;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -36,6 +39,7 @@ public class RobotContainer {
   public final Limelight lime = new Limelight();
   public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(swerve);
+  public final AimbotDriveCmd aimbot = new AimbotDriveCmd(swerve, lime);
   public final PIDtuning pid = new PIDtuning(swerve);
   //public final AutoAlign align = new AutoAlign(pose, lime);
 
@@ -78,10 +82,9 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    new JoystickButton(Input.getTJoystick(), 2).toggleOnTrue(aimbot);
   }
 
-  //-0.025281577083338
-  //0.000147419232276
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

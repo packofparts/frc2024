@@ -10,8 +10,11 @@ public class Input {
 
     private static boolean useXbox = false; 
 
+    
     private static Joystick rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
     private static Joystick tJoystick = new Joystick (JoystickConstants.transJoystickPort);
+    
+
 
 
     private static XboxController xboxController = new XboxController(2);
@@ -24,21 +27,19 @@ public class Input {
 
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}
    
-    public static double getJoystickX(){
-        return useXbox ? xboxController.getLeftX() : tJoystick.getX();
-    }
-    public static double getJoystickY(){
-        
-        return useXbox ? xboxController.getLeftY() : tJoystick.getY();
-    
-    }
-    public static double getRot(){
-        return useXbox ? xboxController.getRightX() : rJoystick.getX();
-    }
+    public static Joystick getTJoystick(){return tJoystick;}
+
+    public static double getJoystickX(){return useXbox ? xboxController.getLeftX() : tJoystick.getX();}
+
+    public static double getJoystickY(){return useXbox ? xboxController.getLeftY() : tJoystick.getY();}
+
+    public static double getRot(){return useXbox ? xboxController.getRightX() : rJoystick.getX();}
+
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
     public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
+    public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
 
     //xbox controller 
     public static boolean getA(){return xboxController.getAButtonPressed();}
