@@ -24,7 +24,7 @@ public class moveTo extends CommandBase {
   public PIDController yController, xController;
   public PIDController angleController;
   public SwerveSubsystem swerve;
-  public Pose2d initPose;
+
 
 
   public SwerveDriveKinematics m_kinematics;
@@ -38,22 +38,25 @@ public class moveTo extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 
-    yController = new PIDController(0.2, 0, 0);
-    xController = new PIDController(0.2, 0, 0);
-    angleController = new PIDController(0.02, 0, 0);
+    yController = new PIDController(0.4, 0, 0);
+    xController = new PIDController(0.4, 0, 0);
+    angleController = new PIDController(1, 0, 0);
 
-    yController.setTolerance(0.1);
-    xController.setTolerance(0.1);
+    yController.setTolerance(0.3);
+    xController.setTolerance(0.3);
 
-    angleController.setTolerance(0.2);
+    angleController.setTolerance(0.025);
     swerve = swervesub;
     addRequirements(swerve);
 
-    initPose = swerve.getRobotPose();
+    
 
-    xPoint = initPose.getX() + transform.getX();
-    yPoint = initPose.getY() + transform.getY();
-    rotPoint = initPose.getRotation().getRadians() + transform.getRotation().getRadians();
+    xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
+    yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
+    rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + transform.getRotation().getRadians();
+  
+  
+  
   }
 
   public moveTo(Pose2d pose, SwerveSubsystem swervesub) {
@@ -74,7 +77,10 @@ public class moveTo extends CommandBase {
 
     xPoint = pose.getX();
     yPoint = pose.getY();
-    rotPoint = pose.getRotation().getRadians();
+    rotPoint = pose.getRotation().getRadians()%(2*Math.PI);
+
+
+
   }
 
   // Called when the command is initially scheduled.

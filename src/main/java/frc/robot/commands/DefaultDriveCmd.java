@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.SwerveModule;
@@ -34,9 +35,13 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double x = Input.getJoystickY();
-    double y = Input.getJoystickX();
-    double rot = Input.getRot();
+    double x = -Input.getJoystickY();
+    double y = -Input.getJoystickX();
+
+    SmartDashboard.putNumber("xInput", x);
+    SmartDashboard.putNumber("yInput", y);
+
+    double rot = -Input.getRot();
   
     x = Math.abs(x) > 0.1 ? x : 0.0;
     y = Math.abs(y) > 0.1 ? y : 0.0;

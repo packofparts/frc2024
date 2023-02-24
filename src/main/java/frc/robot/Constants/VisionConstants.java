@@ -4,8 +4,11 @@
 
 package frc.robot.Constants;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 
 /** Add your docs here. */
@@ -15,4 +18,5 @@ public class VisionConstants {
     public static final int ReflectivePipelineID = 2;
 
     public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
+    public static final Transform2d autoAlignOffset =  new Transform2d(new Translation2d(0.5, 0.0), new Rotation2d(0));
 }

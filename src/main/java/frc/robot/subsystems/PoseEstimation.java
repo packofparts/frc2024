@@ -14,6 +14,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -41,7 +42,7 @@ public class PoseEstimation extends SubsystemBase {
     this.swerve = swerve;
     lime = limelight;
     try {
-      layout = new AprilTagFieldLayout("C:\\Users\\Akyea\\Documents\\frc2023\\src\\main\\deploy\\biggestbird.json");
+      layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
     } catch (IOException e) {
       e.printStackTrace();
     }

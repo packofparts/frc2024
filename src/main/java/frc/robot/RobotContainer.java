@@ -7,12 +7,16 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
+import frc.robot.commands.AutoAlign;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.PIDtuning;
@@ -37,7 +41,7 @@ public class RobotContainer {
   public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(swerve);
   public final PIDtuning pid = new PIDtuning(swerve);
-  //public final AutoAlign align = new AutoAlign(pose, lime);
+  public final AutoAlign align = new AutoAlign(pose, lime, swerve, new Transform2d(new Translation2d(1, 0), new Rotation2d(0)));
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
