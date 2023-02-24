@@ -116,9 +116,9 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     m_odometry.update(getRotation2d(), getModulePositions());
-    SmartDashboard.putNumber("OdometryX", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("OdometryY", m_odometry.getPoseMeters().getY());
-    SmartDashboard.putNumber("RotationDegrees", this.getRobotPose().getRotation().getRadians());
+    SmartDashboard.putNumber("OdometryX", getRobotPose().getX());
+    SmartDashboard.putNumber("OdometryY", getRobotPose().getY());
+    SmartDashboard.putNumber("RotationDegrees", getRobotPose().getRotation().getRadians());
     if(Input.resetGyro()){resetGyro();}
     if(Input.resetPose()){
       this.resetRobotPose(new Pose2d());
@@ -132,7 +132,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   /**
-   * this gets the Yaw degrees of the gyro in continuous input (360 == 0)
+   * this gets the Yaw degrees of the gyro in continuous input (360 == 0) CCW (with neg)
    * @return the degrees at which the gyro is at
    */
   public double getHeading(){
@@ -165,15 +165,25 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kTeleMaxSpeedMPS);
         break;
       }
+      
+      // frontLeft.setDesiredState(new SwerveModuleState(-desiredStates[0].speedMetersPerSecond, desiredStates[0].angle),mode);
+      // frontRight.setDesiredState(new SwerveModuleState(-desiredStates[1].speedMetersPerSecond, desiredStates[1].angle),mode);
+      // backLeft.setDesiredState(new SwerveModuleState(-desiredStates[2].speedMetersPerSecond, desiredStates[2].angle),mode);
+      // backRight.setDesiredState(new SwerveModuleState(-desiredStates[3].speedMetersPerSecond, desiredStates[3].angle),mode);
 
-    frontLeft.setDesiredState(desiredStates[0],mode);
-    frontRight.setDesiredState(desiredStates[1],mode);
-    backLeft.setDesiredState(desiredStates[2],mode);
-    backRight.setDesiredState(desiredStates[3],mode);
+      frontLeft.setDesiredState(desiredStates[0],mode);
+      frontRight.setDesiredState(desiredStates[1],mode);
+      backLeft.setDesiredState(desiredStates[2],mode);
+      backRight.setDesiredState(desiredStates[3],mode);
   }
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kAutoMaxSpeedMPS);
+    // frontLeft.setDesiredState(new SwerveModuleState(-desiredStates[0].speedMetersPerSecond, desiredStates[0].angle),DriveMode.AUTO);
+    // frontRight.setDesiredState(new SwerveModuleState(-desiredStates[1].speedMetersPerSecond, desiredStates[1].angle),DriveMode.AUTO);
+    // backLeft.setDesiredState(new SwerveModuleState(-desiredStates[2].speedMetersPerSecond, desiredStates[2].angle),DriveMode.AUTO);
+    // backRight.setDesiredState(new SwerveModuleState(-desiredStates[3].speedMetersPerSecond, desiredStates[3].angle),DriveMode.AUTO);
+ 
     frontLeft.setDesiredState(desiredStates[0],DriveMode.AUTO);
     frontRight.setDesiredState(desiredStates[1],DriveMode.AUTO);
     backLeft.setDesiredState(desiredStates[2],DriveMode.AUTO);
@@ -229,6 +239,10 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return provide the pose of the robot in meters
    */
   public Pose2d getRobotPose(){
+    //return new Pose2d(-m_odometry.getPoseMeters().getX(),-m_odometry.getPoseMeters().getY(),m_odometry.getPoseMeters().getRotation());
+    
+    //return m_odometry.getPoseMeters().times(-1);
+
     return m_odometry.getPoseMeters();
   }
   /**

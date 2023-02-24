@@ -14,19 +14,22 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new AutoAlign. */
+  boolean notfound = false;
   public Limelight lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
   public moveTo move;
   public final double yOffset = 0.36;
-  public Transform2d offset = new Transform2d();
+  public Transform2d offset;
   public Transform2d moveby;
 
   public PoseEstimation pose;
@@ -46,30 +49,30 @@ public class AutoAlign extends CommandBase {
     this.pose = pose;
     lime = limelight;
     this.swerve = swerve;
+    this.offset = VisionConstants.autoAlignOffset;
   }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    target  = lime.getBestTarget();
+
+    if (target == null) {
+      notfound = true;
+    }
+    // Transform3d transform3d = target.getBestCameraToTarget().plus(VisionConstants.robotToCam);
+    Transform3d transform3d = target.getBestCameraToTarget().plus(VisionConstants.robotToCam);
+    SmartDashboard.putNumber("cameraToTagX", transform3d.getX());
+    SmartDashboard.putNumber("cameraToTagY", transform3d.getY());
+    Transform2d transform = new Transform2d(new Translation2d(transform3d.getX(), transform3d.getY()), new Rotation2d(transform3d.getRotation().getZ()));
+    move = new moveTo(transform, swerve);
+    move.schedule();
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (move == null) {
-      target = lime.getBestTarget();
-      if (target != null) {
-        swerve.stopAllAndBrake();
-        desiredPose3d = pose.layout.getTagPose(target.getFiducialId());
 
-        Pose2d desiredPose = new Pose2d(desiredPose3d.get().getX(), desiredPose3d.get().getY()+yOffset, new Rotation2d(desiredPose3d.get().getRotation().getAngle()));
-        moveby = pose.getPosition().minus(desiredPose.plus(offset));
-        move = new moveTo(moveby, swerve);
-        move.schedule();
-      } else {
-        swerve.setMotors(0, 0, 0.1);
-      }
-    } 
   }
 
   // Called once the command ends or is interrupted.
@@ -79,7 +82,15 @@ public class AutoAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return move.isFinished();
+    if (notfound) {
+      return true;
+    }
+    else {
+      if (move.isFinished()) {
+        return true;
+      }
+    } 
+    return false;
   }
 
 
