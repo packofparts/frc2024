@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -13,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.AutoMapConstants;
 import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutonomousDrive;
@@ -40,13 +45,14 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    PathPlannerTrajectory traj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
     m_robotContainer = new RobotContainer();
     autoSelector.addOption("Trajectory Classic", new AutonomousDrive(m_robotContainer.swerve));
     autoSelector.addOption("Auto Balance", new AutoBalanceCommand(m_robotContainer.swerve));
     autoSelector.addOption("Move By with Traj",
       new MoveByWithTarjectoryController(m_robotContainer.swerve, 
       new Transform2d(new Translation2d(2.5, 0), new Rotation2d(0))));
-    autoSelector.addOption("PPlib trajectory", new TGWithPPlib(m_robotContainer.swerve));
+    autoSelector.addOption("PPlib trajectory", new TGWithPPlib(m_robotContainer.swerve,AutoMapConstants.ConeCubeChargeTraj,AutoMapConstants.m_EventMap));
     autoSelector.addOption("classicMB", new moveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2.0)), m_robotContainer.swerve));
     autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
     SmartDashboard.putData("auto path", autoSelector);
