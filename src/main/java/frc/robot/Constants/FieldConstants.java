@@ -14,5 +14,4 @@ public class FieldConstants {
     public static final double kChargeStationBalanceBeamLengthCm = 122;
     public static final double kChargeStationMountLengthCm = 42.2995271841; 
     public static final double kAngleDeadZoneDeg = 0.5;
-    public static final HashMap <String,Command> eventMap = new HashMap<>();
 }

@@ -73,8 +73,6 @@ public class moveTo extends CommandBase {
     swerve = swervesub;
     addRequirements(swerve);
 
-
-
     xPoint = pose.getX();
     yPoint = pose.getY();
     rotPoint = pose.getRotation().getRadians()%(2*Math.PI);
@@ -111,8 +109,6 @@ public class moveTo extends CommandBase {
     double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
 
-
-
     xSpeed /= magnitude;
     ySpeed /= magnitude;
     xSpeed *= DriveConstants.kPhysicalMaxSpeedMPS;
@@ -123,7 +119,6 @@ public class moveTo extends CommandBase {
     else
       swerve.setMotors(0, 0, rot, DriveMode.AUTO);
 
-    
 
   }
 

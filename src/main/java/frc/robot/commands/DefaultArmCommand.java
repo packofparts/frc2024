@@ -36,17 +36,17 @@ public class DefaultArmCommand extends CommandBase {
     }else if(Input.getDPad() == Input.DPADDOWN){
       armControlSubsystem.changeDesiredPivotRotation(-.5);
     }else if(Input.getA()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevels[0]); // have to subtract the initial
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevels[0]));
+      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]); // have to subtract the initial
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0]));
     }else if(Input.getB()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevels[1]);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevels[1]));
+      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[1]);
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[1]));
     }else if(Input.getX()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevels[2]);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevels[2]));
+      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]);
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]));
     }else if(Input.getY()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.minExtension);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.minAngle));
+      armControlSubsystem.setDesiredExtension(ArmConstants.minExtensionIn);
+      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.minAngleRad));
     }
 
   }

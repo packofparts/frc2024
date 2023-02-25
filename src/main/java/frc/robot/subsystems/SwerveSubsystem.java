@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -102,7 +103,7 @@ public class SwerveSubsystem extends SubsystemBase {
     resetRobotPose(new Pose2d());
     rawMods = getRawModules();
     setIdleModeForAll(IdleMode.kBrake, IdleMode.kBrake);
-
+    headingController.setTolerance(Units.degreesToRadians(5));
   }
 
   @Override
@@ -149,7 +150,10 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getRotation2d(){
     return Rotation2d.fromDegrees(getHeading());
   }
-  /**
+  public Rotation2d geRotation2dNotCCW(){
+    return Rotation2d.fromDegrees(-getHeading());
+  }
+    /**
    * This function sets the current speeds of the swerve modules to the following array pattern
    * [frontleft, frontright, backleft, backright]
    * @see SwerveModuleState
@@ -220,7 +224,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setMotors(double x,double y, double rot){
-    //rot = headingController.calculate(navx.getRate(), rot);
+    rot = headingController.calculate(navx.getRate(), Units.radiansToDegrees(rot));
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}

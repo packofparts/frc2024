@@ -16,6 +16,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.pathplanner.lib.PathConstraints;
@@ -29,10 +30,13 @@ public class TGWithPPlib extends CommandBase {
   SwerveSubsystem swerve;
   SwerveAutoBuilder cmd;
   Command finalCMD;
-  PathPlannerTrajectory traj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
-  public TGWithPPlib(SwerveSubsystem swervee) {
+  PathPlannerTrajectory traj;
+  HashMap<String,Command> eventMap;
+  public TGWithPPlib(SwerveSubsystem swervee, PathPlannerTrajectory traj, HashMap<String,Command> eventMap) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swervee;
+    this.eventMap = eventMap;
+    this.traj = traj;
     addRequirements(this.swerve);
     this.swerve.resetRobotPose(new Pose2d());
     
@@ -40,11 +44,10 @@ public class TGWithPPlib extends CommandBase {
   
   @Override
   public void initialize() {
-    
   cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose,this.swerve.m_kinematics,
    new PIDConstants(0.5, 0, 0),
     new PIDConstants(0.5, 0, 0),
-    this.swerve::setModuleStates, FieldConstants.eventMap, true, this.swerve);
+    this.swerve::setModuleStates, this.eventMap, true, this.swerve);
     finalCMD = cmd.fullAuto(traj);
     finalCMD.schedule();
   }

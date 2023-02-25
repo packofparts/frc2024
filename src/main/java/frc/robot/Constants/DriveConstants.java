@@ -18,7 +18,7 @@ public class DriveConstants {
     public static double kTeleDriveMaxAccMPS = 5.0;
     public static double kTeleDriveMaxAngularAccRadPS = 4*Math.PI;
     public static double kTeleDriveMaxAngularSpeedRadiansPerSecond = 8;
-
+    public static double kDBHeightMeters = Units.inchesToMeters(3.75);
 
     public static double kAutoDriveMaxAccMPS = 3.0;
     public static double kAutoDriveMaxAngularAccRadPS = 2*Math.PI;

@@ -9,4 +9,6 @@ public class PnumaticConstants {
     public static int intakeSolenoid1ID;
     public static int compressorID;
     public static double totalOutputForce;
+    public static double clawLengthMeters;
+    public static double clawWidthMeters;
 }
