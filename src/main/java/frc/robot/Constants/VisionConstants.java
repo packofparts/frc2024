@@ -18,5 +18,10 @@ public class VisionConstants {
     public static final int ReflectivePipelineID = 2;
 
     public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
-    public static final Transform2d autoAlignOffset =  new Transform2d(new Translation2d(0.5, 0.0), new Rotation2d(0));
+
+
+    //TODO CONSTANTS
+    public static final Transform2d substationAlign = new Transform2d();
+    public static final Transform2d autoAlign = new Transform2d();
+
 }
