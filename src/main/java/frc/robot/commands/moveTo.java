@@ -48,8 +48,8 @@ public class moveTo extends CommandBase {
     xController = new PIDController(0.4, 0, 0);
     angleController = new PIDController(1.4, 0, 0);
 
-    yController.setTolerance(0.3);
-    xController.setTolerance(0.3);
+    yController.setTolerance(0.05);
+    xController.setTolerance(0.05);
 
     angleController.setTolerance(0.001);
     swerve = swervesub;
@@ -76,7 +76,7 @@ public class moveTo extends CommandBase {
 
     xController.setTolerance(0.3);
     yController.setTolerance(0.3);
-    angleController.setTolerance(0.001);
+    angleController.setTolerance(0.005);
 
     swerve = swervesub;
     addRequirements(swerve);
