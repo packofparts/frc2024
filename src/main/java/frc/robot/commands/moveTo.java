@@ -64,18 +64,19 @@ public class moveTo extends CommandBase {
 
     yController = new PIDController(0.4, 0, 0);
     xController = new PIDController(0.4, 0, 0);
-    angleController = new PIDController(1, 0, 0);
+    angleController = new PIDController(1.4, .02, 0);
 
     xController.setTolerance(0.3);
     yController.setTolerance(0.3);
 
-    angleController.setTolerance(0.025);
+    angleController.setTolerance(0.001);
+    //angleController.enableContinuousInput(-Math.PI, Math.PI);
     swerve = swervesub;
     addRequirements(swerve);
 
     xPoint = pose.getX();
     yPoint = pose.getY();
-    rotPoint = pose.getRotation().getRadians()%(2*Math.PI);
+    rotPoint = Math.PI/2;
 
 
 
@@ -96,12 +97,13 @@ public class moveTo extends CommandBase {
     double ySpeed = yController.calculate(pose.getY(), yPoint);
     double xSpeed = xController.calculate(pose.getX(), xPoint);
     
-    double rot = angleController.calculate(-pose.getRotation().getRadians(), rotPoint);
+    double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
     SmartDashboard.putNumber("xSpeedCalc", xSpeed);
     SmartDashboard.putNumber("ySpeedCalc", ySpeed);
     SmartDashboard.putNumber("rotSpeedCalc", rot);
     SmartDashboard.putNumber("rotErr", angleController.getPositionError());
     SmartDashboard.putNumber("rotSetpoint", rotPoint);
+    SmartDashboard.putBoolean("isAtRotSetpoint", angleController.atSetpoint());
 
 
 
@@ -114,10 +116,18 @@ public class moveTo extends CommandBase {
     xSpeed *= DriveConstants.kPhysicalMaxSpeedMPS;
     ySpeed *= DriveConstants.kPhysicalMaxSpeedMPS;
     
+
+    if(Math.abs(rot) < 1.5 && !angleController.atSetpoint()){
+      // Setting to 0.1 with correct sign
+      rot = 1.5 * (rot/Math.abs(rot));
+    }
+
     if((!xController.atSetpoint() || !yController.atSetpoint()))
       swerve.setMotors(xSpeed, ySpeed, rot, DriveMode.AUTO);
     else
       swerve.setMotors(0, 0, rot, DriveMode.AUTO);
+
+
 
 
   }
@@ -130,8 +140,11 @@ public class moveTo extends CommandBase {
   @Override
   public boolean isFinished() {
     //Transform2d difference = initPose.plus(transform).minus(swerve.getRobotPose());
-    if (xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint())
+    if (xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint()){
+      SmartDashboard.putBoolean("isAtRotSetpoint", angleController.atSetpoint());
       return true;
+    }
+      
     return false;
   }
 }

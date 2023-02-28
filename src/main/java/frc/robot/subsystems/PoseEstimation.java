@@ -78,7 +78,12 @@ public class PoseEstimation extends SubsystemBase {
       EstimatedRobotPose pose = result.get();
       poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
     }
-    field.setRobotPose(getPosition());
+    Pose2d pose = getPosition();
+    field.setRobotPose(pose);
+    
+    SmartDashboard.putNumber("X Pose", pose.getX());
+    SmartDashboard.putNumber("Y Pose", pose.getY());
+    SmartDashboard.putNumber("Rot Pose", pose.getRotation().getDegrees());
   }
 
   public Pose2d getPosition() {

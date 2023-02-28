@@ -37,20 +37,20 @@ public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
-   0,false, false,0.889,false, true,
+   0,false, false,0.384,false, true,
    PIDConstants.flPID, PIDConstants.flPIDTrans);
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-   1,true,false,0.828,false, true,
+   1,true,false,0.328,false, true,
    PIDConstants.frPID,PIDConstants.frPIDTrans);
 
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
-  2,false,false,0.288,false, true,
+  2,false,false,0.752,false, true,
   PIDConstants.blPID,PIDConstants.flPIDTrans);
 
 
   private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
-  3,true,false,0.952,false, true,
+  3,true,false,0.583,false, true,
    PIDConstants.brPID,PIDConstants.brPIDTrans); 
 
   // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
@@ -119,7 +119,7 @@ public class SwerveSubsystem extends SubsystemBase {
     m_odometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("OdometryX", getRobotPose().getX());
     SmartDashboard.putNumber("OdometryY", getRobotPose().getY());
-    SmartDashboard.putNumber("RotationDegrees", getRobotPose().getRotation().getRadians());
+    SmartDashboard.putNumber("RotationDegrees", getRobotPose().getRotation().getDegrees());
     if(Input.resetGyro()){resetGyro();}
     if(Input.resetPose()){
       this.resetRobotPose(new Pose2d());
@@ -211,6 +211,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public void setMotors(double x,double y, double rot, DriveMode dMode){
     //rot = headingController.calculate(navx.getRate(), rot);
+
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}

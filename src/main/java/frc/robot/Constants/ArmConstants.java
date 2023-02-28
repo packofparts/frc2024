@@ -22,7 +22,7 @@ public class ArmConstants {
 
 
     //CAP af find this!!!
-    public static final double pivotPosInMetersY = Units.inchestoMeters(45.75);
+    public static final double pivotPosInMetersY = Units.inchesToMeters(45.75);
 
 
     //TBD

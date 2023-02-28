@@ -35,6 +35,8 @@ public class Input {
 
     public static double getRot(){return useXbox ? xboxController.getRightX() : rJoystick.getX();}
 
+    public static boolean getPrecision(){return rJoystick.getTriggerPressed();}
+
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}

@@ -19,6 +19,8 @@ public class DefaultDriveCmd extends CommandBase {
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
+
+  boolean isPrecision = false;
   public DefaultDriveCmd(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveee = swerve;
@@ -35,17 +37,38 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if(Input.getPrecision()){
+      isPrecision = !isPrecision;
+    }
+
+
     double x = -Input.getJoystickY();
     double y = -Input.getJoystickX();
 
     SmartDashboard.putNumber("xInput", x);
     SmartDashboard.putNumber("yInput", y);
+    SmartDashboard.putBoolean("Precision", isPrecision);
 
     double rot = -Input.getRot();
-  
-    x = Math.abs(x) > 0.1 ? x : 0.0;
-    y = Math.abs(y) > 0.1 ? y : 0.0;
-    rot = Math.abs(rot) > 0.05 ? rot : 0.0;
+
+    if(isPrecision){
+      rot = rot/2;
+      x = x/2;
+      y = y/2;
+      x = Math.abs(x) > 0.1 ? x : 0.0;
+      y = Math.abs(y) > 0.1 ? y :0.0;
+      rot = Math.abs(rot) > 0.02 ? rot : 0.0;
+    }else{
+      x = Math.abs(x) > 0.15 ? x : 0.0;
+      y = Math.abs(y) > 0.15 ? y : 0.0;
+      rot = Math.abs(rot) > 0.1 ? rot : 0.0;
+    }
+
+    
+    
+
+
+
       
     // 3. Make the driving smoother
     x = xLimiter.calculate(x)* DriveConstants.kPhysicalMaxSpeedMPS;
