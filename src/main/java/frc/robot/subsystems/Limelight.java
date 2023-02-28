@@ -66,7 +66,6 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    img = photonCamera.getLatestResult();
   }
 
   public double getXoffset(){
@@ -82,7 +81,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setPipeline(int PipelineIndex){
-    photonCamera.setPipelineIndex(PipelineIndex);;
+    photonCamera.setPipelineIndex(PipelineIndex);
   }
 
 public void addAprilTag(HashMap<String,Object>[]Tags){
@@ -104,6 +103,9 @@ public void addAprilTag(HashMap<String,Object>[]Tags){
   }
   public double getTimestamp() {
     return img.getTimestampSeconds();
+  }
+  public PhotonPipelineResult getImg() {
+    return photonCamera.getLatestResult();
   }
 
 
