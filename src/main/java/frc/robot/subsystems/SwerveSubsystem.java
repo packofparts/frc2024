@@ -214,7 +214,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
-    } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
+    } else {chassisSpeeds1 = new ChassisSpeeds(x, y, rot);}
     SmartDashboard.putNumber("ChassispeedsX",chassisSpeeds1.vxMetersPerSecond);
     SmartDashboard.putNumber("Chassispeedsy",chassisSpeeds1.vyMetersPerSecond);
     SmartDashboard.putNumber("ChassispeedsRadians",chassisSpeeds1.omegaRadiansPerSecond);
@@ -244,10 +244,6 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return provide the pose of the robot in meters
    */
   public Pose2d getRobotPose(){
-    //return new Pose2d(-m_odometry.getPoseMeters().getX(),-m_odometry.getPoseMeters().getY(),m_odometry.getPoseMeters().getRotation());
-    
-    //return m_odometry.getPoseMeters().times(-1);
-
     return m_odometry.getPoseMeters();
   }
   /**
