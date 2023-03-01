@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
@@ -44,9 +45,9 @@ public class moveTo extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
 
-    yController = new PIDController(0.4, 0, 0);
-    xController = new PIDController(0.4, 0, 0);
-    angleController = new PIDController(1.4, 0, 0);
+    yController = PIDConstants.YController;
+    xController = PIDConstants.XController;
+    angleController = PIDConstants.rotController;
 
     yController.setTolerance(0.3);
     xController.setTolerance(0.3);
