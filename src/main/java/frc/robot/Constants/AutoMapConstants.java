@@ -31,7 +31,7 @@ public class AutoMapConstants {
         //m_EventMap.put("angle_N0",new InstantCommand(()))
         //Ball extension TBD
         m_EventMap.put("angle_neutral",new InstantCommand(()->arm.setDesiredPivotRotation(ArmConstants.minAngleRad), arm));
-   
+
         m_EventMap.put("teloscope_N3", null);
         m_EventMap.put("teloscope_N2", null);
         m_EventMap.put("teloscope_N1", null);
