@@ -49,7 +49,7 @@ public class AutoAlign extends CommandBase {
     this.pose = pose;
     lime = limelight;
     this.swerve = swerve;
-    this.offset = VisionConstants.autoAlignOffset;
+    this.offset = VisionConstants.autoAlign;
   }
   // Called when the command is initially scheduled.
   @Override
