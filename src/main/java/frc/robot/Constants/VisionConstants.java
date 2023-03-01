@@ -23,5 +23,5 @@ public class VisionConstants {
     //TODO CONSTANTS
     public static final Transform2d substationAlign = new Transform2d();
     public static final Transform2d autoAlign = new Transform2d();
-
+    
 }
