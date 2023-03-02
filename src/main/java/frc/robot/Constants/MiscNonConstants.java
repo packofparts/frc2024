@@ -19,4 +19,5 @@ public class MiscNonConstants {
     
     public static final double kRotP = 0.005;
     public static double priorGyroAngle = 0;
+
 }

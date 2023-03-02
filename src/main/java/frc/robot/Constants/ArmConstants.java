@@ -37,6 +37,7 @@ public class ArmConstants {
     public static final int leftArmPivot = 16;
     public static final int telescopicArmSpark = 17;
     public static final int armPivotEncoderPort = 17;
+    public static final int clawPosrt = 0;
 
     //Change this
     public static boolean leftPivotInverted = false;

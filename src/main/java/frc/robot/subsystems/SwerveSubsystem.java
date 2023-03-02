@@ -288,7 +288,12 @@ public class SwerveSubsystem extends SubsystemBase {
    * forms an X shape with the wheels for grip
    */
   public void setXShape(){
-    
+    setModuleStates(new SwerveModuleState[]{
+      new SwerveModuleState(0,new Rotation2d(Units.degreesToRadians(45))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(45))),
+      new SwerveModuleState(0, new Rotation2d(Units.degreesToRadians(-45)))
+    });
   }
 
   /**

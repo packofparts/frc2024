@@ -49,6 +49,10 @@ public class Input {
     public static boolean getX(){return xboxController.getXButtonPressed();}
     public static boolean getY(){return xboxController.getYButtonPressed();}
     public static double getDPad(){return xboxController.getPOV();}
-    public static boolean getRightBumper(){return xboxController.getRightBumper();}
+    public static boolean getIntake(){return xboxController.getRightBumper();}
+    public static boolean getOuttake(){return xboxController.getLeftBumper();}
+    
+
+
 }
 
