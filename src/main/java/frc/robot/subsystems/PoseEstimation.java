@@ -37,8 +37,7 @@ public class PoseEstimation extends SubsystemBase {
   /** Creates a new PoseEstimation. */
   public AprilTagFieldLayout layout;
   public PhotonPoseEstimator estimator;
-  private final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-  private final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(5)); 
+
  // Transformation from robot to 
  SwerveSubsystem swerve;
  Limelight lime;
@@ -61,8 +60,8 @@ public class PoseEstimation extends SubsystemBase {
        swerve.getRotation2d(),
        swerve.getModulePositions(),
        getOdometry(),
-       stateStdDevs,
-       visionMeasurementStdDevs);
+       VisionConstants.stateStdDevs,
+       VisionConstants.visionMeasurementStdDevs);
     field = new Field2d();
     SmartDashboard.putData("Field", field);
   }

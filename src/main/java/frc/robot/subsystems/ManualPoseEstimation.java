@@ -43,8 +43,7 @@ public class ManualPoseEstimation extends SubsystemBase {
   /** Creates a new PoseEstimation. */
   public AprilTagFieldLayout layout;
   public PhotonPoseEstimator estimator;
-  private final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-  private final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(5));
+
  // Transformation from robot to 
  SwerveSubsystem swerve;
  Limelight lime;
@@ -52,30 +51,39 @@ public class ManualPoseEstimation extends SubsystemBase {
  double visionTimestamp;
  
   public ManualPoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
+    //Initializing Subsystems
     this.swerve = swerve;
     lime = limelight;
+    // Getting Tag Layout
     try {
       layout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("biggestbird.json"));
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-
-
+    // Initializing poseEstimator
     poseEstimator = new SwerveDrivePoseEstimator(swerve.m_kinematics,
        swerve.getRotation2d(),
        swerve.getModulePositions(),
        getOdometry(),
-       stateStdDevs,
-       visionMeasurementStdDevs);
+       VisionConstants.stateStdDevs,
+       VisionConstants.visionMeasurementStdDevs);
       
+  }
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+     
+    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
+    
+    updateVision();
   }
 
   public void updateVision() {
     PhotonPipelineResult image = lime.getImg();
     double timestamp = image.getTimestampSeconds();
     PhotonTrackedTarget target = image.getBestTarget();
-    visionTimestamp = lime.getTimestamp();
+
     if (target != null) {
       
       if (target.getPoseAmbiguity()<=.2) {
@@ -99,16 +107,11 @@ public class ManualPoseEstimation extends SubsystemBase {
   }
   
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-     
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
-    
-    updateVision();
-  }
+
 
   public Pose2d getPosition() {
     return poseEstimator.getEstimatedPosition();
   }
+
+
 }
