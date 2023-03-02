@@ -61,7 +61,7 @@ public class ClawMotor extends SubsystemBase {
    * @param runtime total time in seconds for the intake to outtake on call of command before ending
    * @return
    */
-  public Command getOuttakeCommand(double runtime){
+  public Command getOuttakeCmd(double runtime){
     return new InstantCommand(this::intake,this).andThen(new WaitCommand(runtime)).andThen(this::brake);
   }
 }

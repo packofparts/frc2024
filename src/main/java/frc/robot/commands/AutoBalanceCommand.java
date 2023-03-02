@@ -145,7 +145,6 @@ public class AutoBalanceCommand extends CommandBase {
     
   }
 
-  
   @Override
   public boolean isFinished() {
     return false;
