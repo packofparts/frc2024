@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import java.util.Optional;
 
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -54,18 +55,21 @@ public class AutoAlign extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    target  = lime.getBestTarget();
+    PhotonPipelineResult img = lime.getImg();
 
-    if (target == null) {
+    if (!img.hasTargets()) {
       notfound = true;
     }
-    // Transform3d transform3d = target.getBestCameraToTarget().plus(VisionConstants.robotToCam);
-    Transform3d transform3d = target.getBestCameraToTarget().plus(VisionConstants.robotToCam);
-    SmartDashboard.putNumber("cameraToTagX", transform3d.getX());
-    SmartDashboard.putNumber("cameraToTagY", transform3d.getY());
-    Transform2d transform = new Transform2d(new Translation2d(transform3d.getX(), transform3d.getY()), new Rotation2d(transform3d.getRotation().getZ()));
-    move = new moveTo(transform, swerve);
-    move.schedule();
+    else {
+      target = img.getBestTarget();
+      // Transform3d transform3d = target.getBestCameraToTarget().plus(VisionConstants.robotToCam);
+      Transform3d transform3d = target.getBestCameraToTarget().inverse().plus(VisionConstants.robotToCam).inverse();
+      SmartDashboard.putNumber("cameraToTagX", transform3d.getX());
+      SmartDashboard.putNumber("cameraToTagY", transform3d.getY());
+      Transform2d transform = new Transform2d(new Translation2d(transform3d.getX(), transform3d.getY()), new Rotation2d(transform3d.getRotation().getZ()));
+      move = new moveTo(transform, swerve, pose);
+      move.schedule();
+    }
   }
 
 
@@ -86,11 +90,8 @@ public class AutoAlign extends CommandBase {
       return true;
     }
     else {
-      if (move.isFinished()) {
-        return true;
-      }
+      return move.isFinished();
     } 
-    return false;
   }
 
 

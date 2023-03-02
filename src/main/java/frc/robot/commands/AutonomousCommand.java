@@ -75,17 +75,17 @@ public class AutonomousCommand extends CommandBase {
 
     if (!middle){
       command = new SequentialCommandGroup(
-        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
+        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoAlign(poseEstimator, lime, swerve),
-        new moveTo(firstPiece.minus(poseEstimator.getPosition()), swerve),
-        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
+        new moveTo(firstPiece.minus(poseEstimator.getPosition()), swerve, poseEstimator),
+        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoAlign(poseEstimator, lime, swerve),
         new AutoBalanceCommand(swerve)
       );
     }
     else {
       command = new SequentialCommandGroup(
-        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
+        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoAlign(poseEstimator, lime, swerve)
       );
     }

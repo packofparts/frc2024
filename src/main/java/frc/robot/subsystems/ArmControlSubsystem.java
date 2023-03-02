@@ -25,6 +25,13 @@ import frc.robot.Util;
 
 
 public class ArmControlSubsystem extends SubsystemBase {
+  public enum ArmSetting{
+    NODE3,
+    NODE2,
+    NODE1,
+    GNODE,
+    NEUTRAL,
+  }
   
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
@@ -148,6 +155,42 @@ public class ArmControlSubsystem extends SubsystemBase {
     double theta = getCurrentPivotRotation(true);
 
     return new Translation2d((r*Math.cos(theta)),(r*Math.sin(theta))); 
+  }
+
+  public void moveToEnum(ArmSetting set) {
+    double extension = ArmConstants.minExtensionIn;
+    double rotation = ArmConstants.minAngleRad;
+    switch (set) {
+      case GNODE:
+        break;
+      case NEUTRAL:
+        extension = ArmConstants.minExtensionIn;
+        rotation = ArmConstants.minAngleRad;
+        break;
+      case NODE1:
+        extension = ArmConstants.extensionLevelsIn[0];
+        rotation = ArmConstants.angleLevelsDeg[0];
+        break;
+      case NODE2:
+        extension = ArmConstants.extensionLevelsIn[1];
+        rotation = ArmConstants.angleLevelsDeg[1];
+        break;
+      case NODE3:
+        extension = ArmConstants.extensionLevelsIn[2];
+        rotation = ArmConstants.angleLevelsDeg[2];
+        break;
+      default:
+        extension = ArmConstants.minExtensionIn;
+        rotation = ArmConstants.minAngleRad; 
+        break;
+    }
+
+    setDesiredPivotRotation(rotation);
+    setDesiredExtension(extension);
+
+
+
+
   }
 
 

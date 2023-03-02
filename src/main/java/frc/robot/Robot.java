@@ -25,6 +25,7 @@ import frc.robot.commands.MoveByWithTarjectoryController;
 import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.TGWithPPlib;
 import frc.robot.commands.moveTo;
+import frc.robot.subsystems.PoseEstimation;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -57,7 +58,7 @@ public class Robot extends TimedRobot {
     autoSelector.addOption("ClassicMB", new moveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2)), m_robotContainer.swerve));
     autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
     SmartDashboard.putData("Auto Path", autoSelector);
-    autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve));
+    autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
   }
 
   /**

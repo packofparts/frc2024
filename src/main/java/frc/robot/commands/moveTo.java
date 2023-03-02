@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
+import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
@@ -25,6 +26,7 @@ public class moveTo extends CommandBase {
   public PIDController yController, xController;
   public PIDController angleController;
   public SwerveSubsystem swerve;
+  public PoseEstimation estimator;
 
 
 
@@ -41,9 +43,12 @@ public class moveTo extends CommandBase {
    * @param transform
    * @param swervesub
    */
-  public moveTo(Transform2d transform, SwerveSubsystem swervesub) {
+  public moveTo(Transform2d transform, SwerveSubsystem swervesub, PoseEstimation estimator) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.transform = transform;
+    this.estimator = estimator;
+    swerve = swervesub;
+    addRequirements(swerve);
 
     yController = PIDConstants.YController;
     xController = PIDConstants.XController;
@@ -53,13 +58,12 @@ public class moveTo extends CommandBase {
     xController.setTolerance(0.05);
 
     angleController.setTolerance(0.001);
-    swerve = swervesub;
-    addRequirements(swerve);
+
 
     
-    xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
-    yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
-    rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + transform.getRotation().getRadians();
+    xPoint = estimator.getPosition().getX() + this.transform.getX();
+    yPoint = estimator.getPosition().getY() + this.transform.getY();
+    rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
   }
 
 
@@ -95,7 +99,7 @@ public class moveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Pose2d pose = this.swerve.getRobotPose();
+    Pose2d pose = estimator.getPosition();
 
     double ySpeed = yController.calculate(pose.getY(), yPoint);
     double xSpeed = xController.calculate(pose.getX(), xPoint);

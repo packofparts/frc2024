@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.Constants.PIDConstants;
 
@@ -17,8 +18,10 @@ public class PositionPIDtuning extends CommandBase {
   /** Creates a new PositionPIDtuning. */
   SwerveSubsystem swerve;
   Translation2d desiredTrans;
-  public PositionPIDtuning(SwerveSubsystem swerve) {
+  PoseEstimation pEstimation;
+  public PositionPIDtuning(SwerveSubsystem swerve, PoseEstimation pose) {
     this.swerve = swerve;
+    this.pEstimation = pose;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerve);
   }
@@ -62,7 +65,7 @@ public class PositionPIDtuning extends CommandBase {
           new Translation2d(SmartDashboard.getNumber("X translation meters", 0),
           SmartDashboard.getNumber("Y translation meters", 0)),
           new Rotation2d(SmartDashboard.getNumber("Change in Rotation degrees", 0))
-        ), swerve);
+        ), swerve, pEstimation);
         SmartDashboard.putBoolean("Run Translation", false);
     }
 

@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.swing.text.Utilities;
@@ -44,13 +46,20 @@ public class ManualPoseEstimation extends SubsystemBase {
   public AprilTagFieldLayout layout;
   public PhotonPoseEstimator estimator;
 
+  public static enum Strategy {
+    BEST,
+    AVERAGEALL,
+  }
+
  // Transformation from robot to 
  SwerveSubsystem swerve;
  Limelight lime;
  SwerveDrivePoseEstimator poseEstimator;
  double visionTimestamp;
+ Strategy strategy;
  
-  public ManualPoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
+  public ManualPoseEstimation(Limelight limelight, SwerveSubsystem swerve, Strategy strategy) {
+    this.strategy = strategy;
     //Initializing Subsystems
     this.swerve = swerve;
     lime = limelight;
@@ -83,7 +92,31 @@ public class ManualPoseEstimation extends SubsystemBase {
     PhotonPipelineResult image = lime.getImg();
     double timestamp = image.getTimestampSeconds();
     PhotonTrackedTarget target = image.getBestTarget();
+    
+    Pose2d targetpose = getPoseFromTarget(target);
 
+    switch (this.strategy) {
+      case AVERAGEALL:
+        List<PhotonTrackedTarget> targets = image.getTargets();
+        ArrayList<Pose2d> poses = new ArrayList<Pose2d>();
+        for (PhotonTrackedTarget t:targets) {
+          
+        }
+        break;
+      case BEST:
+        break;
+      
+    }
+    
+
+
+
+    poseEstimator.addVisionMeasurement(targetpose, timestamp);
+
+    
+  }
+
+  public Pose2d getPoseFromTarget(PhotonTrackedTarget target) {
     if (target != null) {
       
       if (target.getPoseAmbiguity()<=.2) {
@@ -94,24 +127,23 @@ public class ManualPoseEstimation extends SubsystemBase {
         targetpose.plus(transformation);
         targetpose.plus(VisionConstants.robotToCam);
 
-        poseEstimator.addVisionMeasurement(targetpose.toPose2d(), timestamp);
+        return targetpose.toPose2d();
       }
       
     }
+    return null;
 
-    
   }
 
   public Pose2d getOdometry() {
     return swerve.getRobotPose();
   }
-  
-
-
 
   public Pose2d getPosition() {
     return poseEstimator.getEstimatedPosition();
   }
+
+
 
 
 }

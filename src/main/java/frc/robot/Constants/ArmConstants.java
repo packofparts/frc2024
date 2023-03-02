@@ -4,6 +4,9 @@
 
 package frc.robot.Constants;
 
+import java.util.HashMap;
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 import edu.wpi.first.math.util.Units;
@@ -17,6 +20,7 @@ public class ArmConstants {
     public static final double extensionEncoderToLength = 1.0/10;
     public static final double minExtensionIn = 29.85 + 7.073; //basically the length of the first base //inches
     public static final double maxExtensionIn = 48.85 + 7.073;
+    public static final double armToRobotAngle = 43.288;
 
 
 
@@ -28,16 +32,17 @@ public class ArmConstants {
 //    public static final double[] offGround
 
 
+
     //CAP af find this!!!
     public static final double pivotPosInMetersY = Units.inchesToMeters(45.75);
 
 
     //TBD
-    public static final int rightArmPivot = 15;
-    public static final int leftArmPivot = 16;
+    public static final int rightArmPivot = 16;
+    public static final int leftArmPivot = 15;
     public static final int telescopicArmSpark = 17;
     public static final int armPivotEncoderPort = 17;
-    public static final int clawPosrt = 0;
+    public static final int clawPort = 0;
 
     //Change this
     public static boolean leftPivotInverted = false;
