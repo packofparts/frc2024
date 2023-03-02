@@ -81,7 +81,8 @@ public class PoseEstimation extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-     
+    SmartDashboard.putData("Field", field);
+    
     poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
 
     Optional<EstimatedRobotPose> result = getVision(poseEstimator.getEstimatedPosition());
@@ -98,6 +99,7 @@ public class PoseEstimation extends SubsystemBase {
     SmartDashboard.putNumber("X Pose", pose.getX());
     SmartDashboard.putNumber("Y Pose", pose.getY());
     SmartDashboard.putNumber("Rot Pose", pose.getRotation().getDegrees());
+    SmartDashboard.updateValues();
   }
 
   public Pose2d getPosition() {

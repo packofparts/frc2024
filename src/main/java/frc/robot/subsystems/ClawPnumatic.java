@@ -32,7 +32,7 @@ public class ClawPnumatic extends SubsystemBase {
 
 
     //toggle intake solenoids
-    if (Input.getRightBumper()){togglePneumatics();}
+    if (Input.getIntake()){togglePneumatics();}
   }
 
   public void togglePneumatics(){
