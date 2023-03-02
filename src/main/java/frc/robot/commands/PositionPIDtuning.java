@@ -26,7 +26,7 @@ public class PositionPIDtuning extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    SmartDashboard.putBoolean("Run Translation?", false);
     SmartDashboard.putNumber("X translation meters", 0);
     SmartDashboard.putNumber("Y translation meters", 0);
     SmartDashboard.putNumber("Change in Rotation degrees", 0);
@@ -56,13 +56,16 @@ public class PositionPIDtuning extends CommandBase {
       SmartDashboard.getNumberArray("Rotation PID controller", new double [] {0,0,0})[1],
       SmartDashboard.getNumberArray("Rotation PID controller", new double [] {0,0,0})[2]
       );
-      
-    new moveTo(
-      new Transform2d(
-        new Translation2d(SmartDashboard.getNumber("X translation meters", 0),
-        SmartDashboard.getNumber("Y translation meters", 0)),
-        new Rotation2d(SmartDashboard.getNumber("Change in Rotation degrees", 0))
-      ), swerve);
+    if (SmartDashboard.getBoolean("Run Translation?", false)){
+      new moveTo(
+        new Transform2d(
+          new Translation2d(SmartDashboard.getNumber("X translation meters", 0),
+          SmartDashboard.getNumber("Y translation meters", 0)),
+          new Rotation2d(SmartDashboard.getNumber("Change in Rotation degrees", 0))
+        ), swerve);
+        SmartDashboard.putBoolean("Run Translation", false);
+    }
+
     
   }
 
