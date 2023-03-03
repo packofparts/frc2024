@@ -77,11 +77,11 @@ public class moveTo extends CommandBase {
 
     yController = new PIDController(0.4, 0, 0); 
     xController = new PIDController(0.4, 0, 0);
-    angleController = new PIDController(1.4, .02, 0);
+    angleController = new PIDController(1.8, .02, .75);
 
-    xController.setTolerance(0.3);
-    yController.setTolerance(0.3);
-    angleController.setTolerance(0.005);
+    xController.setTolerance(0.1);
+    yController.setTolerance(0.2);
+    angleController.setTolerance(0.02);
 
     swerve = swervesub;
     addRequirements(swerve);
@@ -128,8 +128,8 @@ public class moveTo extends CommandBase {
     // Otherwise PID slows down too much when approaching angle
     // Could maybe be resolved by calculating good PID values
     // Maybe substantially increase kP and then increase kD to correct for the oscillation
-    if(Math.abs(rot) < 1.5 && !angleController.atSetpoint()){
-      rot = 1.5 * (rot/Math.abs(rot));
+    if(Math.abs(rot) < .5 && !angleController.atSetpoint()){
+      rot = .5 * (rot/Math.abs(rot));
     }
 
     if((!xController.atSetpoint() || !yController.atSetpoint()))

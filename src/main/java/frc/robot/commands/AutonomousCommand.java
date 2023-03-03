@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -89,9 +90,15 @@ public class AutonomousCommand extends CommandBase {
       command = new SequentialCommandGroup(
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoAlign(poseEstimator, lime, swerve),
+<<<<<<< HEAD
         new moveTo(firstPiece.minus(poseEstimator.getPosition()), new Rotation2d(Math.PI), swerve, poseEstimator),
         new LimelightAlign(swerve, lime, 0, 0),
         new MoveArm(arm, claw, true, false, arm.ArmSetting.GNODE),
+=======
+        new moveTo(firstPiece.minus(poseEstimator.getPosition()), swerve, poseEstimator),
+        new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0),
+        
+>>>>>>> a34a58cc50760cf43e730524ac1113ca8541704f
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoBalanceCommand(swerve)
       );

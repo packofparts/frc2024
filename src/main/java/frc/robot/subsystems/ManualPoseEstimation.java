@@ -33,6 +33,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.spline.PoseWithCurvature;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
@@ -98,10 +99,23 @@ public class ManualPoseEstimation extends SubsystemBase {
     switch (this.strategy) {
       case AVERAGEALL:
         List<PhotonTrackedTarget> targets = image.getTargets();
-        ArrayList<Pose2d> poses = new ArrayList<Pose2d>();
-        for (PhotonTrackedTarget t:targets) {
-          
+        double x = 0;
+        double y = 0;
+        double angle = 0;
+        double count = 0;
+        for (int i = 0;i<targets.size();i++) {
+          Pose2d pose = getPoseFromTarget(targets.get(i));
+          if (pose != null) {
+            x += pose.getX();
+            y += pose.getY();
+            angle += pose.getRotation().getRadians();
+            count ++;
+          }       
         }
+        x /= count;
+        y /= count;
+        angle /= count;
+        targetpose = new Pose2d(x, y, new Rotation2d(angle));
         break;
       case BEST:
         break;

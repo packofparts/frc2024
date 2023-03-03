@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
@@ -36,17 +37,19 @@ public class AutoBalanceCommand extends CommandBase {
 
   private double lasttime, currenttime, deltatime;
   private Timer timer;
+
+  //private final double balancePoint = 
   
 
 
   public AutoBalanceCommand(SwerveSubsystem swervee) {
     this.swerveSubsystem = swervee;
 
-    velocityController = new PIDController(.05, 0, 0);
+    velocityController = new PIDController(.45, .05, 0);
     velocityController.setTolerance(FieldConstants.kAngleDeadZoneDeg);
     
 
-    positionController = new PIDController(0, 0, 0);
+    positionController = new PIDController(.5, 0, 0);
 
     xXGravityDestroyer420Xx = new SimpleMotorFeedforward(0, 0, 0);
 
@@ -58,7 +61,17 @@ public class AutoBalanceCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    this.swerveSubsystem.resetGyro();
+
+    isOnChargingStation = false;
+    prevPitch=0; pitch=0; roll=0; yaw=0; pitchSpeed = 0;
+    initXPos = 0;
+    currentXPos = 0;
+    isAtEnd = false;
+    lasttime = 0;
+    currenttime=0;
+    deltatime=0;
+
+    
 
     this.initXPos = this.swerveSubsystem.getRobotPose().getX();
     this.currentXPos = this.initXPos;
@@ -73,6 +86,10 @@ public class AutoBalanceCommand extends CommandBase {
   
   @Override
   public void execute() {
+
+
+
+
     this.lasttime = this.currenttime;
     this.currenttime = timer.get();
     this.deltatime = this.currenttime - this.lasttime;
@@ -84,11 +101,13 @@ public class AutoBalanceCommand extends CommandBase {
     this.yaw = this.swerveSubsystem.getYaw();
     this.pitchSpeed = (this.pitch - this.prevPitch) / (float) this.deltatime;
 
-    this.checkFallOff();
+    this.currentXPos = swerveSubsystem.getRobotPose().getX();
+
+    //this.checkFallOff();
 
     if (!this.isOnChargingStation){
       this.goForwardUntilOnChargeStation();
-    }else if (!this.isAtEnd){
+    }else if (Math.abs(this.pitch) >= 2.5){
       this.doBalanceMethod1();
       //this.doBalanceMethod2();
     }else{
@@ -101,7 +120,10 @@ public class AutoBalanceCommand extends CommandBase {
   //only uses PID control
   private void doBalanceMethod1(){
     double pidOutput = velocityController.calculate(this.pitch, 0);
-    this.swerveSubsystem.setMotors(pidOutput, 0, 0);
+    SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
+
+
+    this.swerveSubsystem.setMotors(pidOutput/15, 0, 0);
   }
 
   //incorporates angular velocity
@@ -122,10 +144,12 @@ public class AutoBalanceCommand extends CommandBase {
   private void goForwardUntilOnChargeStation(){
     if(Math.abs(this.pitch) >= 15){
       this.isOnChargingStation = true;
+      this.initXPos = this.swerveSubsystem.getRobotPose().getX();
       return;
     }
 
     this.swerveSubsystem.setMotors(.75, 0, 0);
+
   }
 
 

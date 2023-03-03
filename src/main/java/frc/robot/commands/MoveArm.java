@@ -37,6 +37,7 @@ public class MoveArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+<<<<<<< HEAD
     arm.moveToEnum(armset);
     if (intakeTrue) {
       claw.intake();
@@ -45,6 +46,9 @@ public class MoveArm extends CommandBase {
       claw.outtake();
     }
     done = true;
+=======
+    //arm.moveToEnum(arm.ArmSetting.GNODE);
+>>>>>>> a34a58cc50760cf43e730524ac1113ca8541704f
   }
 
   // Called once the command ends or is interrupted.
