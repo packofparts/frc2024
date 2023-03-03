@@ -18,6 +18,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.PnumaticConstants;
@@ -131,6 +132,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     return extensionPID.atSetpoint();
   }
 
+  public Command waitUntilSpPivot(double sp){
+    return new FunctionalCommand(()->setDesiredPivotRotation(sp), null, null, this::atAngleSetpoint, this);
+  }
+
+  public Command waitUntilSpTelescope(double sp){
+    return new FunctionalCommand(()->setDesiredExtension(sp), null, null, this::atTelescopeSetpoint, this);
+  }
+  
   public double getCurrentPivotRotation(boolean inRadians){
     double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
     if(inRadians)
