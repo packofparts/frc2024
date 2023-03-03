@@ -14,11 +14,16 @@ public class MoveArm extends CommandBase {
   public ArmControlSubsystem arm;
   public ClawMotor claw;
   public boolean intakeTrue;
-  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in) {
+  public boolean outtakeTrue;
+  public ArmSetting armset;
+  public boolean done = false;
+  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, ArmSetting armsetting) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = armSub;
     claw = clawSub;
     intakeTrue = in;
+    outtakeTrue = out;
+    armset = armsetting;
     addRequirements(arm);
     addRequirements(claw);
   }
@@ -32,7 +37,14 @@ public class MoveArm extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.moveToEnum(arm.ArmSetting.GNODE);
+    arm.moveToEnum(armset);
+    if (intakeTrue) {
+      claw.intake();
+    }
+    if (outtakeTrue) {
+      claw.outtake();
+    }
+    done = true;
   }
 
   // Called once the command ends or is interrupted.
@@ -42,6 +54,6 @@ public class MoveArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return done;
   }
 }
