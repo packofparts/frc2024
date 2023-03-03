@@ -25,7 +25,7 @@ public class ArmConstants {
 
 
     // Setpoints
-    public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, 43.0}; //inches
+    public static final double[] extensionLevelsIn = {minExtensionIn, maxExtensionIn, 43.0}; //inches
     public static final double[] angleLevelsDeg = {35.0-90, 85.0-90, 99.75-90}; //degrees
 
     public static final double[] offSubstation = {85.5-90, 46.0}; // angle, inches including claw

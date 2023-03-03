@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.AutoMapConstants;
 import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.MoveByWithTarjectoryController;
 import frc.robot.commands.PositionPIDtuning;
@@ -49,7 +50,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     PathPlannerTrajectory traj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
     m_robotContainer = new RobotContainer();
-    autoSelector.addOption("Trajectory Classic", new AutonomousDrive(m_robotContainer.swerve));
+    autoSelector.addOption("Trajectory Classic", new AutonomousCommand(m_robotContainer.lime, m_robotContainer.swerve, m_robotContainer.pose, AutonomousCommand.paths.BLUELEFT));
     autoSelector.addOption("Auto Balance", new AutoBalanceCommand(m_robotContainer.swerve));
     autoSelector.addOption("Move By with Traj",
       new MoveByWithTarjectoryController(m_robotContainer.swerve, 
