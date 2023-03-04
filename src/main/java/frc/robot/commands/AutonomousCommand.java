@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
@@ -89,27 +90,27 @@ public class AutonomousCommand extends CommandBase {
 
     if (!middle){
       command = new SequentialCommandGroup(
-        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
+        new ParallelCommandGroup(new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, ArmSetting.NODE3)),
         new AutoAlign(poseEstimator, lime, swerve),
-        new moveTo(firstPiece.minus(poseEstimator.getPosition()), swerve, poseEstimator),
-        new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0),
-        
+        new MoveArm(arm, claw, false, true, ArmSetting.NODE3),
+        new ParallelCommandGroup(new moveTo(new Transform2d(new Translation2d(5, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, ArmSetting.GNODE)),
+        new LimelightAlign(swerve, lime, 0, 0),
+        new ParallelCommandGroup(new moveTo(new Transform2d(new Translation2d(1, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, true, false, ArmSetting.GNODE)),
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoBalanceCommand(swerve)
-      );
-    }
+    );}
     else {
       command = new SequentialCommandGroup(
-        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
+        new ParallelCommandGroup(new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, ArmSetting.NODE3)),
         new AutoAlign(poseEstimator, lime, swerve),
-        //new moveTo(firstPiece.minus(poseEstimator.getPosition(), swerve, poseEstimator),
-        new moveTo(firstPiece, swerve, poseEstimator),
+        new MoveArm(arm, claw, false, true, ArmSetting.NODE3),
+        new ParallelCommandGroup(new moveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, ArmSetting.GNODE)),
         new LimelightAlign(swerve, lime, 0, 0),
-        new MoveArm(arm, claw, true, false, ArmSetting.GNODE),
-        new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
+        new ParallelCommandGroup(new moveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, true, false, ArmSetting.GNODE)),
+        new ParallelCommandGroup(new moveTo(new Transform2d(new Translation2d(-5, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, ArmSetting.NODE3)),
         new AutoAlign(poseEstimator, lime, swerve),
         new MoveArm(arm, claw, false, true, ArmSetting.NODE3)
-      );
+      ); 
     }
   }
 
