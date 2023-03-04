@@ -119,9 +119,30 @@ public class moveTo extends CommandBase {
     rotPoint = pose.getRotation().getRadians();
   }
 
+  public moveTo(Transform2d transform, SwerveSubsystem swervesub){
+    swerve = swervesub;
+    addRequirements(swerve);
+
+    yController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);
+    xController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);
+    angleController = new PIDController(PIDConstants.rotPIDValues[0], PIDConstants.rotPIDValues[1], PIDConstants.rotPIDValues[2]);
+
+    yController.setTolerance(0.1);
+    xController.setTolerance(0.1);
+    angleController.setTolerance(0.02);
+
+
+    xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
+    yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
+    rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + transform.getRotation().getRadians();
+  }
+
   @Override
   public void initialize(){
-
+    SmartDashboard.putBoolean("IsMoveTo", true);
+    yController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);
+    xController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);
+    angleController = new PIDController(PIDConstants.rotPIDValues[0], PIDConstants.rotPIDValues[1], PIDConstants.rotPIDValues[2]);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -181,8 +202,11 @@ public class moveTo extends CommandBase {
   public boolean isFinished() {
     //Transform2d difference = initPose.plus(transform).minus(swerve.getRobotPose());
     if (xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint()){
+      SmartDashboard.putBoolean("IsMoveTo", false);
       SmartDashboard.putBoolean("isAtRotSetpoint", angleController.atSetpoint());
       return true;
+    
+    
     }
       
     return false;

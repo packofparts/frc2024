@@ -49,14 +49,20 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     PathPlannerTrajectory traj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
+    
     m_robotContainer = new RobotContainer();
     //autoSelector.addOption("Trajectory Classic", new AutonomousCommand(m_robotContainer.lime, m_robotContainer.swerve, m_robotContainer.armControl, m_robotContainer.clawMotor, m_robotContainer.pose, AutonomousCommand.paths.BLUELEFT));
+    
     autoSelector.addOption("Auto Balance", new AutoBalanceCommand(m_robotContainer.swerve));
+    
     autoSelector.addOption("Move By with Traj",
       new MoveByWithTarjectoryController(m_robotContainer.swerve, 
       new Transform2d(new Translation2d(2.5, 0), new Rotation2d(0))));
+    
     autoSelector.addOption("Path Planner", new TGWithPPlib(m_robotContainer.swerve,AutoMapConstants.ConeCubeChargeTraj,AutoMapConstants.m_EventMap));
+    
     autoSelector.addOption("ClassicMB", new moveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2)), m_robotContainer.swerve));
+    
     autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
     
     autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));

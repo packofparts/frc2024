@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.Constants.PIDConstants;
@@ -19,7 +20,9 @@ public class PositionPIDtuning extends CommandBase {
   SwerveSubsystem swerve;
   Translation2d desiredTrans;
   PoseEstimation pEstimation;
-  moveTo moveTo;
+  moveTo back, forth;
+  SequentialCommandGroup backAndForth;
+
   public PositionPIDtuning(SwerveSubsystem swerve, PoseEstimation pose) {
     
     this.swerve = swerve;
@@ -32,66 +35,75 @@ public class PositionPIDtuning extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putBoolean("Run Translation?", false);
-    SmartDashboard.putNumber("X translation meters", 0);
-    SmartDashboard.putNumber("Y translation meters", 0);
+    SmartDashboard.putNumber("X Translation", 0);
+    SmartDashboard.putNumber("Y Translation", 0);
     SmartDashboard.putNumber("Change in Rotation degrees", 0);
-    // SmartDashboard.putNumberArray("Translation PID controller",
-    // new double [] {
-    //   PIDConstants.XController.getP(),
-    //   PIDConstants.XController.getI(),
-    //   PIDConstants.XController.getD()});
-
-    SmartDashboard.putNumber("XControllerP", PIDConstants.XController.getP());
-    SmartDashboard.putNumber("XControllerI", PIDConstants.XController.getI());
-    SmartDashboard.putNumber("XControllerD", PIDConstants.XController.getD());
-
-    // SmartDashboard.putNumberArray("Rotation PID controller",
-    // new double [] {
-    //   PIDConstants.XController.getP(),
-    //   PIDConstants.XController.getI(),
-    //   PIDConstants.XController.getD()});
-
-    SmartDashboard.putNumber("RotControllerP", PIDConstants.rotController.getP());
-    SmartDashboard.putNumber("RotControllerI", PIDConstants.rotController.getI());
-    SmartDashboard.putNumber("RotControllerD", PIDConstants.rotController.getD());
 
 
-    moveTo = new moveTo(
-      new Transform2d(
-        new Translation2d(SmartDashboard.getNumber("X translation meters", 0),
-        SmartDashboard.getNumber("Y translation meters", 0)),
-        new Rotation2d(SmartDashboard.getNumber("Change in Rotation degrees", 0))
-      ), swerve,pEstimation);
-      SmartDashboard.putBoolean("moveToIsScheduled?", moveTo.isScheduled());
-    }
+    SmartDashboard.putNumber("TransControllerP", PIDConstants.transPIDValues[0]);
+    SmartDashboard.putNumber("TransControllerI", PIDConstants.transPIDValues[1]);
+    SmartDashboard.putNumber("TransControllerD", PIDConstants.transPIDValues[2]);
+
+
+    SmartDashboard.putNumber("RotControllerP", PIDConstants.rotPIDValues[0]);
+    SmartDashboard.putNumber("RotControllerI", PIDConstants.rotPIDValues[1]);
+    SmartDashboard.putNumber("RotControllerD", PIDConstants.rotPIDValues[2]);
+
+    forth = new moveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(Math.PI/2)), swerve);
+    back = new moveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d(-Math.PI/2)), swerve);
+    backAndForth = new SequentialCommandGroup(forth, back);
+    
+    
+    backAndForth.repeatedly().schedule();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("moveToIsScheduled?", moveTo.isScheduled());
-    PIDConstants.XController = new PIDController(
-      SmartDashboard.getNumber("XControllerP", 0),
-      SmartDashboard.getNumber("XControllerI", 0),
-      SmartDashboard.getNumber("XControllerD", 0)
-      );
-    PIDConstants.YController = PIDConstants.XController;
-    PIDConstants.rotController = new PIDController(
-      SmartDashboard.getNumber("RotControllerP", 0),
-      SmartDashboard.getNumber("RotControllerI", 0),
-      SmartDashboard.getNumber("RotControllerD", 0)
-      );
-    if (moveTo != null && true && moveTo.isFinished() && !moveTo.isScheduled()){
-      moveTo = new moveTo(
-        new Transform2d(
-          new Translation2d(SmartDashboard.getNumber("X translation meters", 0),
-          SmartDashboard.getNumber("Y translation meters", 0)),
-          new Rotation2d(SmartDashboard.getNumber("Change in Rotation degrees", 0))
-        ), swerve, pEstimation);
-        SmartDashboard.putBoolean("Run Translation", false);
-        moveTo.schedule();
-        SmartDashboard.putBoolean("moveToIsSchduled", moveTo.isScheduled());
-        SmartDashboard.putBoolean("Run Translation?", false);
-    }
+
+
+    //try moving to a subsystem if it doesnt work
+    SmartDashboard.putBoolean("BackAndForchIsScheduled", backAndForth.isScheduled());
+    SmartDashboard.putBoolean("ForthIsScheduled", forth.isScheduled());
+    SmartDashboard.putBoolean("BackIsScheduled", back.isScheduled());
+
+    PIDConstants.transPIDValues[0] = SmartDashboard.getNumber("TransControllerP", 0);
+    PIDConstants.transPIDValues[1] = SmartDashboard.getNumber("TransControllerI", 0);
+    PIDConstants.transPIDValues[2] = SmartDashboard.getNumber("TransControllerD", 0);
+
+    PIDConstants.rotPIDValues[0] = SmartDashboard.getNumber("RotControllerP", 0);
+    PIDConstants.rotPIDValues[1] = SmartDashboard.getNumber("RotControllerI", 0);
+    PIDConstants.rotPIDValues[2] = SmartDashboard.getNumber("RotControllerD", 0);
+
+    // PIDConstants.XController = new PIDController(
+    //   SmartDashboard.getNumber("XControllerP", 0),
+    //   SmartDashboard.getNumber("XControllerI", 0),
+    //   SmartDashboard.getNumber("XControllerD", 0)
+    //   );
+
+
+
+    // PIDConstants.YController = PIDConstants.XController;
+    // PIDConstants.rotController = new PIDController(
+    //   SmartDashboard.getNumber("RotControllerP", 0),
+    //   SmartDashboard.getNumber("RotControllerI", 0),
+    //   SmartDashboard.getNumber("RotControllerD", 0)
+    //   );
+
+
+
+    // if (moveTo != null && true && moveTo.isFinished() && !moveTo.isScheduled()){
+    //   moveTo = new moveTo(
+    //     new Transform2d(
+    //       new Translation2d(SmartDashboard.getNumber("X translation meters", 0),
+    //       SmartDashboard.getNumber("Y translation meters", 0)),
+    //       new Rotation2d(SmartDashboard.getNumber("Change in Rotation degrees", 0))
+    //     ), swerve, pEstimation);
+    //     SmartDashboard.putBoolean("Run Translation", false);
+    //     moveTo.schedule();
+    //     SmartDashboard.putBoolean("moveToIsSchduled", moveTo.isScheduled());
+    //     SmartDashboard.putBoolean("Run Translation?", false);
+    // }
 
     
   }
