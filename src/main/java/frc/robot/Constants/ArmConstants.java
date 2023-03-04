@@ -13,7 +13,7 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class ArmConstants {
-    public static final double pivotInitOffset = .5; //arbitrary. what the abs encoder returns when the arm is parallel to ground
+    public static final double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
     public static final double minAngleRad = Units.degreesToRadians(5.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
     public static final double maxAngleRad = Units.degreesToRadians(115.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
 
@@ -43,6 +43,8 @@ public class ArmConstants {
     public static final int telescopicArmSpark = 17;
     public static final int armPivotEncoderPort = 17;
     public static final int clawPort = 0;
+
+    public static final double relEncoderToInitialGear = 1.0/48;
 
     //Change this
     public static boolean leftPivotInverted = false;

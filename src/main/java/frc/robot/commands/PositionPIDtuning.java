@@ -49,23 +49,6 @@ public class PositionPIDtuning extends CommandBase {
     SmartDashboard.putNumber("RotControllerI", PIDConstants.rotPIDValues[1]);
     SmartDashboard.putNumber("RotControllerD", PIDConstants.rotPIDValues[2]);
 
-    forth = new moveTo(new Transform2d(new Translation2d(3, 0), new Rotation2d(Math.PI/2)), swerve);
-    back = new moveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d(-Math.PI/2)), swerve);
-    backAndForth = new SequentialCommandGroup(forth, back);
-    
-    
-    backAndForth.repeatedly().schedule();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-
-
-    //try moving to a subsystem if it doesnt work
-    SmartDashboard.putBoolean("BackAndForchIsScheduled", backAndForth.isScheduled());
-    SmartDashboard.putBoolean("ForthIsScheduled", forth.isScheduled());
-    SmartDashboard.putBoolean("BackIsScheduled", back.isScheduled());
 
     PIDConstants.transPIDValues[0] = SmartDashboard.getNumber("TransControllerP", 0);
     PIDConstants.transPIDValues[1] = SmartDashboard.getNumber("TransControllerI", 0);
@@ -74,6 +57,30 @@ public class PositionPIDtuning extends CommandBase {
     PIDConstants.rotPIDValues[0] = SmartDashboard.getNumber("RotControllerP", 0);
     PIDConstants.rotPIDValues[1] = SmartDashboard.getNumber("RotControllerI", 0);
     PIDConstants.rotPIDValues[2] = SmartDashboard.getNumber("RotControllerD", 0);
+
+
+    forth = new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI/6)), swerve);
+    back = new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(-Math.PI/6)), swerve);
+    backAndForth = new SequentialCommandGroup(forth, back);
+    
+    
+    backAndForth.repeatedly().schedule();
+
+    //forth.schedule();
+
+  }
+
+  // Called every time the scheduler runs while the command is scheduled.
+  @Override
+  public void execute() {
+
+
+    //try moving to a subsystem if it doesnt work
+    //SmartDashboard.putBoolean("BackAndForchIsScheduled", backAndForth.isScheduled());
+    SmartDashboard.putBoolean("ForthIsScheduled", forth.isScheduled());
+    SmartDashboard.putBoolean("BackIsScheduled", back.isScheduled());
+
+
 
     // PIDConstants.XController = new PIDController(
     //   SmartDashboard.getNumber("XControllerP", 0),

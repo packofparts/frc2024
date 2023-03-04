@@ -22,6 +22,7 @@ import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutonomousCommand;
 import frc.robot.commands.AutonomousDrive;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.MoveByWithTarjectoryController;
 import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.TGWithPPlib;
@@ -67,6 +68,7 @@ public class Robot extends TimedRobot {
     
     autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
 
+    autoSelector.addOption("LimelightAlign", new LimelightAlign(m_robotContainer.swerve, m_robotContainer.lime, 0, 0));
 
     SmartDashboard.putData("Auto Modes Test", autoSelector);
   }

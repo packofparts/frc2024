@@ -20,11 +20,13 @@ import frc.robot.commands.AimbotDriveCmd;
 import frc.robot.commands.AutoAlign;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
+import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.ManualPoseEstimation;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,10 +45,12 @@ public class RobotContainer {
   public final SwerveSubsystem swerve = new SwerveSubsystem();
   
   public final Limelight lime = new Limelight();
+
   public final PoseEstimation pose = new PoseEstimation(lime, swerve);
+  public final ManualPoseEstimation manualPose = new ManualPoseEstimation(lime, swerve, ManualPoseEstimation.Strategy.BEST);
 
   //commented because testing and probably will cause null errors
-  //public final ArmControlSubsystem armControl = new ArmControlSubsystem();
+  public final ArmControlSubsystem armControl = new ArmControlSubsystem();
   //public final ClawMotor clawMotor = new ClawMotor();
 
   //commands
@@ -54,7 +58,7 @@ public class RobotContainer {
   public final AimbotDriveCmd aimbot = new AimbotDriveCmd(swerve, lime);
   public final PIDtuning pid = new PIDtuning(swerve);
   public final AutoAlign align = new AutoAlign(pose, lime, swerve, new Transform2d(new Translation2d(1, 0), new Rotation2d(0)));
-
+  public final LimelightAlign generalAlign = new LimelightAlign(swerve, lime, 1, 0);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
@@ -81,7 +85,7 @@ public class RobotContainer {
     if (!DriveConstants.tuningPID){swerve.setDefaultCommand(defaultDrive);}
     else{swerve.setDefaultCommand(new SinglePID(selecModule, swerve));}
   
-    //armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     
