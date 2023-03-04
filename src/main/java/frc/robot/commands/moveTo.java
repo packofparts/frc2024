@@ -29,7 +29,6 @@ public class moveTo extends CommandBase {
   public PoseEstimation estimator;
 
 
-
   public SwerveDriveKinematics m_kinematics;
   
 
@@ -37,6 +36,8 @@ public class moveTo extends CommandBase {
   public double yPoint;
   public double rotPoint;
 
+  private boolean usePoseEstimator = false;
+  private Pose2d currentPose;
 
   /**
    * Constructor that moves a certain transform from the current position
@@ -45,6 +46,8 @@ public class moveTo extends CommandBase {
    */
   public moveTo(Transform2d transform, SwerveSubsystem swervesub, PoseEstimation estimator) {
     // Use addRequirements() here to declare subsystem dependencies.
+    usePoseEstimator = true;
+    
     this.transform = transform;
     this.estimator = estimator;
     swerve = swervesub;
@@ -66,6 +69,30 @@ public class moveTo extends CommandBase {
     rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
   }
 
+  public moveTo(Pose2d desiredPose, SwerveSubsystem swervesub, PoseEstimation estimator) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    usePoseEstimator = true;
+    
+    this.estimator = estimator;
+    swerve = swervesub;
+    addRequirements(swerve);
+
+    yController = PIDConstants.YController;
+    xController = PIDConstants.XController;
+    angleController = PIDConstants.rotController;
+
+    yController.setTolerance(0.05);
+    xController.setTolerance(0.05);
+
+    angleController.setTolerance(0.001);
+
+
+    
+    xPoint = desiredPose.getX();
+    yPoint = desiredPose.getY();
+    rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
+  }
+
 
   /**
    * Contructor that goes to the pose specified
@@ -74,7 +101,8 @@ public class moveTo extends CommandBase {
    */
   public moveTo(Pose2d pose, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
-
+    
+    
     yController = new PIDController(0.4, 0, 0); 
     xController = new PIDController(0.4, 0, 0);
     angleController = new PIDController(1.8, .02, .75);
@@ -99,11 +127,17 @@ public class moveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Pose2d pose = estimator.getPosition();
+    
+    if(this.usePoseEstimator){
+      currentPose = estimator.getPosition();
+    }else{
+      currentPose = this.swerve.getRobotPose();
+    }
+    
 
-    double ySpeed = yController.calculate(pose.getY(), yPoint);
-    double xSpeed = xController.calculate(pose.getX(), xPoint);
-    double rot = angleController.calculate(pose.getRotation().getRadians(), rotPoint);
+    double ySpeed = yController.calculate(currentPose.getY(), yPoint);
+    double xSpeed = xController.calculate(currentPose.getX(), xPoint);
+    double rot = angleController.calculate(currentPose.getRotation().getRadians(), rotPoint);
 
     SmartDashboard.putNumber("xSpeedCalc", xSpeed);
     SmartDashboard.putNumber("ySpeedCalc", ySpeed);

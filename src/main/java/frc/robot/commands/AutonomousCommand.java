@@ -14,6 +14,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.ArmControlSubsystem.ArmSetting;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawMotor;
 
@@ -90,15 +91,9 @@ public class AutonomousCommand extends CommandBase {
       command = new SequentialCommandGroup(
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoAlign(poseEstimator, lime, swerve),
-<<<<<<< HEAD
-        new moveTo(firstPiece.minus(poseEstimator.getPosition()), new Rotation2d(Math.PI), swerve, poseEstimator),
-        new LimelightAlign(swerve, lime, 0, 0),
-        new MoveArm(arm, claw, true, false, arm.ArmSetting.GNODE),
-=======
         new moveTo(firstPiece.minus(poseEstimator.getPosition()), swerve, poseEstimator),
         new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0),
         
->>>>>>> a34a58cc50760cf43e730524ac1113ca8541704f
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoBalanceCommand(swerve)
       );
@@ -107,12 +102,13 @@ public class AutonomousCommand extends CommandBase {
       command = new SequentialCommandGroup(
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoAlign(poseEstimator, lime, swerve),
-        new moveTo(firstPiece.minus(poseEstimator.getPosition()), new Rotation2d(Math.PI) swerve, poseEstimator),
+        //new moveTo(firstPiece.minus(poseEstimator.getPosition(), swerve, poseEstimator),
+        new moveTo(firstPiece, swerve, poseEstimator),
         new LimelightAlign(swerve, lime, 0, 0),
-        new MoveArm(arm, claw, true, false, arm.ArmSetting.GNODE),
+        new MoveArm(arm, claw, true, false, ArmSetting.GNODE),
         new moveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
         new AutoAlign(poseEstimator, lime, swerve),
-        new MoveArm(arm, claw, false, true, arm.ArmSetting.NODE3)
+        new MoveArm(arm, claw, false, true, ArmSetting.NODE3)
       );
     }
   }

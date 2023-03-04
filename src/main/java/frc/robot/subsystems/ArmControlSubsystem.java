@@ -26,13 +26,15 @@ import frc.robot.Util;
 
 
 public class ArmControlSubsystem extends SubsystemBase {
-  public enum ArmSetting{
+  
+  public static enum ArmSetting {
     NODE3,
     NODE2,
     NODE1,
     GNODE,
     NEUTRAL,
   }
+  
   
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
@@ -60,6 +62,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
     extensionPID = new PIDController(0.1, 0, 0);
+    
   }
 
   @Override

@@ -38,14 +38,23 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+
+  //subsystems
   public final SwerveSubsystem swerve = new SwerveSubsystem();
-  //public final ArmControlSubsystem armControl = new ArmControlSubsystem();
+  
   public final Limelight lime = new Limelight();
   public final PoseEstimation pose = new PoseEstimation(lime, swerve);
+
+  //commented because testing and probably will cause null errors
+  //public final ArmControlSubsystem armControl = new ArmControlSubsystem();
+  //public final ClawMotor clawMotor = new ClawMotor();
+
+  //commands
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(swerve);
   public final AimbotDriveCmd aimbot = new AimbotDriveCmd(swerve, lime);
   public final PIDtuning pid = new PIDtuning(swerve);
   public final AutoAlign align = new AutoAlign(pose, lime, swerve, new Transform2d(new Translation2d(1, 0), new Rotation2d(0)));
+
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
