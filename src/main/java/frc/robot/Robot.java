@@ -64,11 +64,11 @@ public class Robot extends TimedRobot {
     
     autoSelector.addOption("ClassicMB", new moveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2)), m_robotContainer.swerve));
     
-    autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
+    //autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
     
-    autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
+    //autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
 
-    autoSelector.addOption("LimelightAlign", new LimelightAlign(m_robotContainer.swerve, m_robotContainer.lime, 0, 0));
+    autoSelector.addOption("LimelightAlign", new LimelightAlign(m_robotContainer.swerve, m_robotContainer.lime, 1, 0));
 
     SmartDashboard.putData("Auto Modes Test", autoSelector);
   }

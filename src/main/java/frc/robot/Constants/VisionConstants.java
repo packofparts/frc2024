@@ -26,7 +26,7 @@ public class VisionConstants {
 
     // Standard Devs
     public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
-    public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(30)); 
+    public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10)); 
     
     //TODO CONSTANTS
     public static final Transform2d substationAlign = new Transform2d();

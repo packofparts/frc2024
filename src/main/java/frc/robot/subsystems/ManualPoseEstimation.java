@@ -150,7 +150,7 @@ public class ManualPoseEstimation extends SubsystemBase {
     if (target != null) {
       SmartDashboard.putNumber("Pose Ambiguity", target.getPoseAmbiguity());
 
-      if (target.getPoseAmbiguity()<=.1) {
+      if (target.getPoseAmbiguity()<=.2) {
         Pose3d targetpose = layout.getTagPose(target.getFiducialId()).get();
 
         Transform3d transformation = target.getBestCameraToTarget().inverse();
