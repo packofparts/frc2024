@@ -33,9 +33,9 @@ public class DefaultArmCommand extends CommandBase {
   void handleInput(){
 
     if(Input.getDPad() == Input.DPADUP){
-      armControlSubsystem.changeDesiredPivotRotation(.5); //
+      armControlSubsystem.changeDesiredPivotRotation(.05); //
     }else if(Input.getDPad() == Input.DPADDOWN){
-      armControlSubsystem.changeDesiredPivotRotation(-.5);
+      armControlSubsystem.changeDesiredPivotRotation(-.05);
     }else if(Input.getA()){
       armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]); // have to subtract the initial
       armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0]));

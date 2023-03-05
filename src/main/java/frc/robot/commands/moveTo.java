@@ -131,14 +131,27 @@ public class moveTo extends CommandBase {
     xController.setTolerance(0.1);
     angleController.setTolerance(0.02);
 
-
+    this.transform = transform;
     xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
     yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
-    rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + transform.getRotation().getRadians();
+    rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + this.transform.getRotation().getRadians();
   }
 
   @Override
   public void initialize(){
+
+    PIDConstants.transPIDValues[0] = SmartDashboard.getNumber("TransControllerP", 0);
+    PIDConstants.transPIDValues[1] = SmartDashboard.getNumber("TransControllerI", 0);
+    PIDConstants.transPIDValues[2] = SmartDashboard.getNumber("TransControllerD", 0);
+
+    PIDConstants.rotPIDValues[0] = SmartDashboard.getNumber("RotControllerP", 0);
+    PIDConstants.rotPIDValues[1] = SmartDashboard.getNumber("RotControllerI", 0);
+    PIDConstants.rotPIDValues[2] = SmartDashboard.getNumber("RotControllerD", 0);
+
+
+    xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
+    yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
+    rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + this.transform.getRotation().getRadians();
     SmartDashboard.putBoolean("IsMoveTo", true);
     yController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);
     xController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);

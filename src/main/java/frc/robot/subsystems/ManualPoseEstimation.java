@@ -19,6 +19,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
@@ -36,6 +37,8 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.spline.PoseWithCurvature;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Util;
@@ -46,7 +49,7 @@ public class ManualPoseEstimation extends SubsystemBase {
   /** Creates a new PoseEstimation. */
   public AprilTagFieldLayout layout;
   public PhotonPoseEstimator estimator;
-
+  public Field2d field;
   public static enum Strategy {
     BEST,
     AVERAGEALL,
@@ -66,7 +69,7 @@ public class ManualPoseEstimation extends SubsystemBase {
     lime = limelight;
     // Getting Tag Layout
     try {
-      layout = new AprilTagFieldLayout(Filesystem.getDeployDirectory().toPath().resolve("biggestbird.json"));
+      layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -78,6 +81,8 @@ public class ManualPoseEstimation extends SubsystemBase {
        VisionConstants.stateStdDevs,
        VisionConstants.visionMeasurementStdDevs);
       
+      field = new Field2d();
+      SmartDashboard.putData("Field2", field);
   }
 
   @Override
@@ -87,6 +92,14 @@ public class ManualPoseEstimation extends SubsystemBase {
     poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
     
     updateVision();
+
+    Pose2d pose = getPosition();
+    field.setRobotPose(pose);
+    
+    SmartDashboard.putNumber("X Pose", pose.getX());
+    SmartDashboard.putNumber("Y Pose", pose.getY());
+    SmartDashboard.putNumber("Rot Pose", pose.getRotation().getDegrees());
+    SmartDashboard.updateValues();
   }
 
   public void updateVision() {
@@ -124,23 +137,33 @@ public class ManualPoseEstimation extends SubsystemBase {
     
 
 
-
-    poseEstimator.addVisionMeasurement(targetpose, timestamp);
-
+    if (targetpose != null) {
+      poseEstimator.addVisionMeasurement(targetpose, timestamp);
+      SmartDashboard.putBoolean("Updating Vision", true);
+    } else {
+      SmartDashboard.putBoolean("Updating Vision ", false);
+    }
     
   }
 
   public Pose2d getPoseFromTarget(PhotonTrackedTarget target) {
     if (target != null) {
-      
+      SmartDashboard.putNumber("Pose Ambiguity", target.getPoseAmbiguity());
+
       if (target.getPoseAmbiguity()<=.2) {
         Pose3d targetpose = layout.getTagPose(target.getFiducialId()).get();
 
         Transform3d transformation = target.getBestCameraToTarget().inverse();
+        
 
-        targetpose.plus(transformation);
-        targetpose.plus(VisionConstants.robotToCam);
 
+        targetpose = targetpose.plus(transformation);
+        targetpose = targetpose.plus(VisionConstants.robotToCam.inverse());
+
+        SmartDashboard.putNumber("Transformation X", targetpose.getX());
+        SmartDashboard.putNumber("Transformation Y", targetpose.getY());
+        SmartDashboard.putNumber("Transformation Rot", targetpose.toPose2d().getRotation().getDegrees());
+        
         return targetpose.toPose2d();
       }
       

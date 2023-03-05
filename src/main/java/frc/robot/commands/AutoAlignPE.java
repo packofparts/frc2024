@@ -63,6 +63,7 @@ public class AutoAlignPE extends CommandBase {
     else {
       desiredPose2d = desiredPose3d.get().toPose2d();
       move = new moveTo(desiredPose2d, swerve);
+      move.schedule();
 
     }
 
@@ -79,6 +80,7 @@ public class AutoAlignPE extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (move.isScheduled() && move.isFinished()) {return true;}
     return false;
   }
 }

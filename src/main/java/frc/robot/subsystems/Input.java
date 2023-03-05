@@ -29,11 +29,11 @@ public class Input {
    
     public static Joystick getTJoystick(){return tJoystick;}
 
-    public static double getJoystickX(){return useXbox ? xboxController.getLeftX() : tJoystick.getX();}
+    public static double getJoystickX(){return tJoystick.getX();}
 
-    public static double getJoystickY(){return useXbox ? xboxController.getLeftY() : tJoystick.getY();}
+    public static double getJoystickY(){return tJoystick.getY();}
 
-    public static double getRot(){return useXbox ? xboxController.getRightX() : rJoystick.getX();}
+    public static double getRot(){return rJoystick.getX();}
 
     public static boolean getPrecision(){return rJoystick.getTriggerPressed();}
 
