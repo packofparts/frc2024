@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -17,6 +19,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,7 +41,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
-  private final AnalogEncoder pivotEncoder = new AnalogEncoder(ArmConstants.armPivotEncoderPort);
+  //private final AnalogEncoder pivotEncoder = new AnalogEncoder(ArmConstants.armPivotEncoderPort);
 
   private final CANSparkMax extensionController = new CANSparkMax(ArmConstants.telescopicArmSpark, MotorType.kBrushless);
   private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
@@ -58,11 +61,13 @@ public class ArmControlSubsystem extends SubsystemBase {
   
   //TODO make the constructor more useful and modular by passing in most values from ArmConstants
   public ArmControlSubsystem() {
-    pivotPID = new PIDController(0.1, 0, 0); //TODO calculate gains to actually change the angle
+    pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
     extensionPID = new PIDController(0.1, 0, 0);
     
+    rightPivotController.setInverted(true);
+    SmartDashboard.putNumber("PivotkP", 2);
   }
 
   @Override
@@ -72,18 +77,29 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   private void pivotPeriodic(){
+
+    pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
+
     desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
 
     //set currentRotation with encoders
     currentPivotRotation = getCurrentPivotRotation(true);
 
     double pivotFeedforwardOutput = pivotFeedforward.calculate(desiredPivotRotation, 1, 1); //arbitrary
-    double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation); 
+    double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
+
+    SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
+    SmartDashboard.putNumber("CurrentPivotPoint", currentPivotRotation);
+    SmartDashboard.putNumber("DesiredPivotPoint", desiredPivotRotation);
+    SmartDashboard.putNumber("LeftSensor", leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.relEncoderToInitialGear);
+    SmartDashboard.putNumber("RightSensor", rightPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.relEncoderToInitialGear);
+
+     
     
     
     //TODO we dont know which one is inverted yet
     leftPivotController.set(pivotPIDOutput + (pivotFeedforwardOutput / RobotController.getBatteryVoltage())); 
-
+    rightPivotController.set(pivotPIDOutput + (pivotFeedforwardOutput / RobotController.getBatteryVoltage())); 
   }
 
   private void extensionPeriodic(){
@@ -145,9 +161,10 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
   
   public double getCurrentPivotRotation(boolean inRadians){
-    double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
+    //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
+    double rotation = rightPivotController.getSelectedSensorPosition() / 2048 / 240;
     if(inRadians)
-      return rotation * Math.PI * 2;
+      return rotation * Math.PI * 2 % (Math.PI * 2);
     return rotation;
   }
 

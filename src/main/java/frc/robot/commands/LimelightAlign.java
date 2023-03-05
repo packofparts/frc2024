@@ -61,7 +61,7 @@ public class LimelightAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (-lime.getXoffset() <= 1 || -lime.getXoffset() >= -1) {
+    if (rotPID.atSetpoint()) {
       return true;
     }
     return false;
