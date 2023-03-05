@@ -1,0 +1,116 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8823025146050314,
+        "y": 4.96198540474004
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9497469764170317,
+        "y": 4.83673140423204
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "sequential",
+        "waitBehavior": "before",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.632319610793068,
+        "y": 4.605493249448038
+      },
+      "prevControl": {
+        "x": 4.772779449405054,
+        "y": 4.9427155585080405
+      },
+      "nextControl": {
+        "x": 4.772779449405054,
+        "y": 4.9427155585080405
+      },
+      "holonomicAngle": 0,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "align_cube",
+          "claw_close",
+          "telescope_neutral"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.9015723608370314,
+        "y": 3.873239092632032
+      },
+      "prevControl": {
+        "x": 1.9208422070690316,
+        "y": 5.048699712784042
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "align_tag",
+          "telescope_N3",
+          "claw_open"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.0,
+      "names": [
+        "event",
+        "telescope_N3",
+        "claw_open",
+        "telescope_N0"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 0.7563636363636308,
+      "names": [
+        "event"
+      ]
+    },
+    {
+      "position": 1.309090909090956,
+      "names": [
+        "event"
+      ]
+    }
+  ]
+}

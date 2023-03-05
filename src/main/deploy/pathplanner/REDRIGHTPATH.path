@@ -1,0 +1,101 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 14.706385182001135,
+        "y": 4.952350481624041
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 14.234273949317132,
+        "y": 4.711477403724039
+      },
+      "holonomicAngle": 1.2188752351312642,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "angle_N3",
+          "telescope_N3",
+          "claw_open",
+          "telescope_N0"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 9.966003008929096,
+        "y": 4.576588480100038
+      },
+      "prevControl": {
+        "x": 11.151098552197105,
+        "y": 4.6343980187960385
+      },
+      "nextControl": {
+        "x": 11.151098552197105,
+        "y": 4.6343980187960385
+      },
+      "holonomicAngle": -178.36342295838335,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": true,
+      "stopEvent": {
+        "names": [
+          "align_cube",
+          "claw_close",
+          "telescope_neutral"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 14.619670873957132,
+        "y": 3.8539692464000317
+      },
+      "prevControl": {
+        "x": 14.706385182001135,
+        "y": 5.289572790684043
+      },
+      "nextControl": null,
+      "holonomicAngle": 0.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "align_tag",
+          "teloscope_N3",
+          "claw_open",
+          "telescope_neutral"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.5381818181818018,
+      "names": [
+        "angle_N0"
+      ]
+    },
+    {
+      "position": 1.4254545454545322,
+      "names": [
+        "angle_N3"
+      ]
+    }
+  ]
+}
