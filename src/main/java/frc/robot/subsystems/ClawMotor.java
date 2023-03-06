@@ -48,6 +48,12 @@ public class ClawMotor extends SubsystemBase {
   public void brake(){
     main.set(0);
   }
+
+
+  public void setSpeed(double speed){
+    main.set(speed);
+  }
+
   /**
    * Returns a command for intaking a gamepiece
    * @param runtime total time in seconds for the intake to inttake on call of command before ending
