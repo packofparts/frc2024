@@ -38,7 +38,8 @@ public class AutoBalanceCommand extends CommandBase {
   private double lasttime, currenttime, deltatime;
   private Timer timer;
 
-  //private final double balancePoint = 
+
+  private float pitchSpeedThreshold = 5;
   
 
 
@@ -108,8 +109,8 @@ public class AutoBalanceCommand extends CommandBase {
     if (!this.isOnChargingStation){
       this.goForwardUntilOnChargeStation();
     }else if (Math.abs(this.pitch) >= 2.5){
-      this.doBalanceMethod1();
-      //this.doBalanceMethod2();
+      //this.doBalanceMethod1();
+      this.doBalanceMethod2();
     }else{
       //brake
       this.swerveSubsystem.stopAllAndBrake();
@@ -130,14 +131,15 @@ public class AutoBalanceCommand extends CommandBase {
   //if angular velocity is too high, then the station must be turning
   
   private void doBalanceMethod2(){
-    float threshold = 35; //change later
-    double pidOutput = velocityController.calculate(this.pitch, 0);
-    pidOutput = Math.pow(pidOutput, 2);
-    if(this.pitchSpeed > threshold){
-      //move back briefly
-      this.swerveSubsystem.setMotors(-pidOutput*.5, 0, 0);
+    //detect change in velocity over threshold and stop until velocity is down again
+    if(Math.abs(this.pitchSpeed) >= this.pitchSpeedThreshold){
+      this.swerveSubsystem.stopAllAndBrake();
+      //maybe slightly move back for a tiny bit
     }else{
-      this.swerveSubsystem.setMotors(pidOutput, 0, 0);
+      double pidOutput = velocityController.calculate(this.pitch, 0);
+      SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
+
+      this.swerveSubsystem.setMotors(pidOutput/7, 0, 0);
     }
   }
 
@@ -148,7 +150,7 @@ public class AutoBalanceCommand extends CommandBase {
       return;
     }
 
-    this.swerveSubsystem.setMotors(.75, 0, 0);
+    this.swerveSubsystem.setMotors(1, 0, 0);
 
   }
 
