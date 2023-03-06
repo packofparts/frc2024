@@ -24,7 +24,9 @@ public class VisionConstants {
 
     public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
 
-    // Standard Devs
+    // Pose Estimation Constants
+    
+    public static final int maxDistance = 2; // Maximum distance for vision to update in meters
     public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
     public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(10)); 
     
