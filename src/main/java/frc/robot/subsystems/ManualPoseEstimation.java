@@ -109,34 +109,6 @@ public class ManualPoseEstimation extends SubsystemBase {
     
     Pose2d targetpose = getPoseFromTarget(target);
 
-    switch (this.strategy) {
-      case AVERAGEALL:
-        List<PhotonTrackedTarget> targets = image.getTargets();
-        double x = 0;
-        double y = 0;
-        double angle = 0;
-        double count = 0;
-        for (int i = 0;i<targets.size();i++) {
-          Pose2d pose = getPoseFromTarget(targets.get(i));
-          if (pose != null) {
-            x += pose.getX();
-            y += pose.getY();
-            angle += pose.getRotation().getRadians();
-            count ++;
-          }       
-        }
-        x /= count;
-        y /= count;
-        angle /= count;
-        targetpose = new Pose2d(x, y, new Rotation2d(angle));
-        break;
-      case BEST:
-        break;
-      
-    }
-    
-
-
     if (targetpose != null) {
       poseEstimator.addVisionMeasurement(targetpose, timestamp);
       SmartDashboard.putBoolean("Updating Vision", true);
@@ -163,8 +135,9 @@ public class ManualPoseEstimation extends SubsystemBase {
         SmartDashboard.putNumber("Transformation X", targetpose.getX());
         SmartDashboard.putNumber("Transformation Y", targetpose.getY());
         SmartDashboard.putNumber("Transformation Rot", targetpose.toPose2d().getRotation().getDegrees());
-        
-        return targetpose.toPose2d();
+
+        if (Math.sqrt(Math.pow(targetpose.getX(), 2) + Math.pow(targetpose.getY(), 2))<VisionConstants.maxDistance) 
+          return targetpose.toPose2d();
       }
       
     }

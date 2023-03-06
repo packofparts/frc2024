@@ -54,7 +54,7 @@ public class PoseEstimation extends SubsystemBase {
     }
 
 
-    estimator = new PhotonPoseEstimator(layout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, limelight.photonCamera, VisionConstants.robotToCam);
+    estimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, limelight.photonCamera, VisionConstants.robotToCam);
 
     poseEstimator = new SwerveDrivePoseEstimator(swerve.m_kinematics,
        swerve.getRotation2d(),
@@ -69,7 +69,21 @@ public class PoseEstimation extends SubsystemBase {
   public Optional<EstimatedRobotPose> getVision(Pose2d prevPose) {
     estimator.setReferencePose(prevPose);
     return estimator.update();
+  }
 
+  public void updateVision() {
+    Optional<EstimatedRobotPose> result = getVision(poseEstimator.getEstimatedPosition());
+
+    if (result.isPresent()) {
+
+      EstimatedRobotPose unpacked = result.get();
+      Pose2d pose = unpacked.estimatedPose.toPose2d();
+      if (Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2)) < VisionConstants.maxDistance) {
+        poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
+      }
+      
+
+    }
   }
 
   public Pose2d getOdometry() {
@@ -83,15 +97,9 @@ public class PoseEstimation extends SubsystemBase {
     SmartDashboard.putData("Field", field);
     
     poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
+    updateVision();
+    
 
-    Optional<EstimatedRobotPose> result = getVision(poseEstimator.getEstimatedPosition());
-
-    if (result.isPresent()) {
-
-      EstimatedRobotPose pose = result.get();
-      
-      poseEstimator.addVisionMeasurement(pose.estimatedPose.toPose2d(), pose.timestampSeconds);
-    }
     Pose2d pose = getPosition();
     field.setRobotPose(pose);
     
