@@ -24,7 +24,7 @@ public class AutoAlignPE extends CommandBase {
   public Limelight lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
-  public moveTo move;
+  public MoveTo move;
   public final double yOffset = 0.36;
   public Transform2d offset;
   public Transform2d moveby;
@@ -62,7 +62,7 @@ public class AutoAlignPE extends CommandBase {
     }
     else {
       desiredPose2d = desiredPose3d.get().toPose2d();
-      move = new moveTo(desiredPose2d, swerve);
+      move = new MoveTo(desiredPose2d, swerve);
       move.schedule();
 
     }

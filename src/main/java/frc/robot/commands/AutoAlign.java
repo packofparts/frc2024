@@ -28,7 +28,7 @@ public class AutoAlign extends CommandBase {
   public Limelight lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
-  public moveTo move;
+  public MoveTo move;
   public final double yOffset = 0.36;
   public Transform2d offset;
   public Transform2d moveby;
@@ -67,7 +67,7 @@ public class AutoAlign extends CommandBase {
       SmartDashboard.putNumber("cameraToTagX", transform3d.getX());
       SmartDashboard.putNumber("cameraToTagY", transform3d.getY());
       Transform2d transform = new Transform2d(new Translation2d(transform3d.getX(), transform3d.getY()), new Rotation2d(transform3d.getRotation().getZ()));
-      move = new moveTo(transform, swerve, pose);
+      move = new MoveTo(transform, swerve, pose);
       move.schedule();
     }
   }

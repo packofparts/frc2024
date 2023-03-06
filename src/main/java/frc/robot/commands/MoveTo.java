@@ -18,7 +18,7 @@ import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
-public class moveTo extends CommandBase {
+public class MoveTo extends CommandBase {
   /** Creates a new moveTo. */
   
   public Transform2d transform;
@@ -44,7 +44,7 @@ public class moveTo extends CommandBase {
    * @param transform
    * @param swervesub
    */
-  public moveTo(Transform2d transform, SwerveSubsystem swervesub, PoseEstimation estimator) {
+  public MoveTo(Transform2d transform, SwerveSubsystem swervesub, PoseEstimation estimator) {
     // Use addRequirements() here to declare subsystem dependencies.
     usePoseEstimator = true;
     
@@ -69,7 +69,7 @@ public class moveTo extends CommandBase {
     rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
   }
 
-  public moveTo(Pose2d desiredPose, SwerveSubsystem swervesub, PoseEstimation estimator) {
+  public MoveTo(Pose2d desiredPose, SwerveSubsystem swervesub, PoseEstimation estimator) {
     // Use addRequirements() here to declare subsystem dependencies.
     usePoseEstimator = true;
     
@@ -99,7 +99,7 @@ public class moveTo extends CommandBase {
    * @param pose
    * @param swervesub
    */
-  public moveTo(Pose2d pose, SwerveSubsystem swervesub) {
+  public MoveTo(Pose2d pose, SwerveSubsystem swervesub) {
     // Use addRequirements() here to declare subsystem dependencies.
     
     
@@ -119,7 +119,7 @@ public class moveTo extends CommandBase {
     rotPoint = pose.getRotation().getRadians();
   }
 
-  public moveTo(Transform2d transform, SwerveSubsystem swervesub){
+  public MoveTo(Transform2d transform, SwerveSubsystem swervesub){
     swerve = swervesub;
     addRequirements(swerve);
 
