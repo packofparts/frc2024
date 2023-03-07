@@ -47,7 +47,7 @@ public class RobotContainer {
   public final Limelight lime = new Limelight();
 
   //public final PoseEstimation pose = new PoseEstimation(lime, swerve);
-  //public final ManualPoseEstimation pose = new ManualPoseEstimation(lime, swerve, ManualPoseEstimation.Strategy.BEST);
+  public final ManualPoseEstimation pose = new ManualPoseEstimation(lime, swerve, ManualPoseEstimation.Strategy.BEST);
 
   //commented because testing and probably will cause null errors
   public final ArmControlSubsystem armControl = new ArmControlSubsystem();

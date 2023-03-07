@@ -45,7 +45,7 @@ import frc.robot.Util;
 import frc.robot.Constants.VisionConstants;
 
 
-public class ManualPoseEstimation extends SubsystemBase {
+public class ManualPoseEstimation extends PoseEstimation {
   /** Creates a new PoseEstimation. */
   public AprilTagFieldLayout layout;
   public PhotonPoseEstimator estimator;
@@ -63,6 +63,7 @@ public class ManualPoseEstimation extends SubsystemBase {
  Strategy strategy;
  
   public ManualPoseEstimation(Limelight limelight, SwerveSubsystem swerve, Strategy strategy) {
+    super(limelight, swerve);
     this.strategy = strategy;
     //Initializing Subsystems
     this.swerve = swerve;
@@ -82,26 +83,10 @@ public class ManualPoseEstimation extends SubsystemBase {
        VisionConstants.visionMeasurementStdDevs);
       
       field = new Field2d();
-      SmartDashboard.putData("Field2", field);
+      SmartDashboard.putData("Field", field);
   }
 
   @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-     
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
-    
-    updateVision();
-
-    Pose2d pose = getPosition();
-    field.setRobotPose(pose);
-    
-    SmartDashboard.putNumber("X Pose", pose.getX());
-    SmartDashboard.putNumber("Y Pose", pose.getY());
-    SmartDashboard.putNumber("Rot Pose", pose.getRotation().getDegrees());
-    SmartDashboard.updateValues();
-  }
-
   public void updateVision() {
     PhotonPipelineResult image = lime.getImg();
     double timestamp = image.getTimestampSeconds();
@@ -115,7 +100,6 @@ public class ManualPoseEstimation extends SubsystemBase {
     } else {
       SmartDashboard.putBoolean("Updating Vision ", false);
     }
-    
   }
 
   public Pose2d getPoseFromTarget(PhotonTrackedTarget target) {
@@ -145,14 +129,32 @@ public class ManualPoseEstimation extends SubsystemBase {
 
   }
 
+  @Override
   public Pose2d getOdometry() {
     return swerve.getRobotPose();
   }
 
+  @Override
   public Pose2d getPosition() {
     return poseEstimator.getEstimatedPosition();
   }
 
+  
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
+    updateVision();
+
+
+    Pose2d pose = getPosition();
+    field.setRobotPose(pose);
+    
+    SmartDashboard.putNumber("X Pose", pose.getX());
+    SmartDashboard.putNumber("Y Pose", pose.getY());
+    SmartDashboard.putNumber("Rot Pose", pose.getRotation().getDegrees());
+    SmartDashboard.updateValues();
+  }
 
 
 

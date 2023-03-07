@@ -66,13 +66,10 @@ public class PoseEstimation extends SubsystemBase {
     SmartDashboard.putData("Field", field);
   }
 
-  public Optional<EstimatedRobotPose> getVision(Pose2d prevPose) {
-    estimator.setReferencePose(prevPose);
-    return estimator.update();
-  }
-
   public void updateVision() {
-    Optional<EstimatedRobotPose> result = getVision(poseEstimator.getEstimatedPosition());
+    estimator.setReferencePose(getPosition());
+    
+    Optional<EstimatedRobotPose> result = estimator.update();
 
     if (result.isPresent()) {
 
@@ -89,13 +86,14 @@ public class PoseEstimation extends SubsystemBase {
   public Pose2d getOdometry() {
     return swerve.getRobotPose();
   }
-  
+
+  public Pose2d getPosition() {
+    return poseEstimator.getEstimatedPosition();
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    SmartDashboard.putData("Field", field);
-    
+    // This method will be called once per scheduler run    
     poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
     updateVision();
     
@@ -109,7 +107,5 @@ public class PoseEstimation extends SubsystemBase {
     SmartDashboard.updateValues();
   }
 
-  public Pose2d getPosition() {
-    return poseEstimator.getEstimatedPosition();
-  }
+
 }

@@ -62,7 +62,7 @@ public class Robot extends TimedRobot {
     
     autoSelector.addOption("Path Planner", new TGWithPPlib(m_robotContainer.swerve,AutoMapConstants.ConeCubeChargeTraj,AutoMapConstants.m_EventMap));
     
-    autoSelector.addOption("ClassicMB", new MoveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2)), m_robotContainer.swerve));
+    autoSelector.addOption("ClassicMB", new MoveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2)), m_robotContainer.swerve, m_robotContainer.pose));
     
     //autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
     

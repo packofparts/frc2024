@@ -48,28 +48,28 @@ public class AimbotDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    // Getting Input
+    double x = Input.getJoystickY();
+    double y = Input.getJoystickX();
     double rot = Input.getRot();
+
+    // Setting Deadzones
+    x = Math.abs(x) > 0.1 ? x : 0.0;
+    y = Math.abs(y) > 0.1 ? y : 0.0;
     rot = Math.abs(rot) > 0.05 ? rot : 0.0;
+
+    // Limit the Speeds
+    x = xLimiter.calculate(x * DriveConstants.kPhysicalMaxSpeedMPS);
+    y = yLimiter.calculate(y * DriveConstants.kPhysicalMaxSpeedMPS); 
     rot = turningLimiter.calculate(rot) * DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+
+    
+    // If there is a target, move towards it
     if(lemon.getBestTarget() != null){
-      double yaw = lemon.getXoffset();
+      double yaw = lemon.getSkew();
       rot = angleController.calculate(yaw, 0);
     }
 
-    double x = Input.getJoystickY();
-    double y = Input.getJoystickX();
-    
-  
-    x = Math.abs(x) > 0.1 ? x : 0.0;
-    y = Math.abs(y) > 0.1 ? y : 0.0;
-    
-      
-    // 3. Make the driving smoother
-    x = xLimiter.calculate(x) * DriveConstants.kPhysicalMaxSpeedMPS;
-    y = yLimiter.calculate(y) * DriveConstants.kPhysicalMaxSpeedMPS;
-    
-    
     this.swerve.setMotors(x, y, rot, DriveMode.TELEOP);
   }
 

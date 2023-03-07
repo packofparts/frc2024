@@ -35,8 +35,8 @@ public class LimelightAlign extends CommandBase {
     addRequirements(swerve);
     addRequirements(lime);
     index = PipelineIndex;
-    rotPID = new PIDController(0.05, 0, 0);
-    rotPID.setTolerance(0.1);
+    rotPID = new PIDController(0.1, 0, 0);
+    rotPID.setTolerance(1);
     offset = Xoffset;
     
   }
@@ -50,11 +50,12 @@ public class LimelightAlign extends CommandBase {
   public void execute() {
     lime.setPipeline(index);
     if (lime.img.hasTargets()) {
-      yaw = lime.getXoffset();
-      swerve.setMotors(0,0, -rotPID.calculate(yaw,offset));
+      yaw = lime.getSkew();
+      double rotSpeed = Units.degreesToRadians(rotPID.calculate(yaw, offset));
+      swerve.setMotors(0,0, rotSpeed);
     }
   }
-
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}

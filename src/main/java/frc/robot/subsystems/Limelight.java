@@ -75,10 +75,10 @@ public class Limelight extends SubsystemBase {
     }
   }
 
-  public double getXoffset(){
+  public double getSkew(){
     PhotonTrackedTarget targ = img.getBestTarget();
     //check positive direction
-    return targ.getYaw();
+    return targ.getSkew();
     
   }
 

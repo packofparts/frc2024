@@ -62,7 +62,7 @@ public class AutoAlignPE extends CommandBase {
     }
     else {
       desiredPose2d = desiredPose3d.get().toPose2d();
-      move = new MoveTo(desiredPose2d, swerve);
+      move = new MoveTo(desiredPose2d, swerve, pose);
       move.schedule();
 
     }

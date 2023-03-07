@@ -94,30 +94,30 @@ public class MoveTo extends CommandBase {
   }
 
 
-  /**
-   * Contructor that goes to the pose specified
-   * @param pose
-   * @param swervesub
-   */
-  public MoveTo(Pose2d pose, SwerveSubsystem swervesub) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  // /**
+  //  * Contructor that goes to the pose specified
+  //  * @param pose
+  //  * @param swervesub
+  //  */
+  // public MoveTo(Pose2d pose, SwerveSubsystem swervesub) {
+  //   // Use addRequirements() here to declare subsystem dependencies.
     
     
-    yController = new PIDController(0.4, 0, 0); 
-    xController = new PIDController(0.4, 0, 0);
-    angleController = new PIDController(1.8, .02, .75);
+  //   yController = new PIDController(0.4, 0, 0); 
+  //   xController = new PIDController(0.4, 0, 0);
+  //   angleController = new PIDController(1.8, .02, .75);
 
-    xController.setTolerance(0.1);
-    yController.setTolerance(0.2);
-    angleController.setTolerance(0.02);
+  //   xController.setTolerance(0.1);
+  //   yController.setTolerance(0.2);
+  //   angleController.setTolerance(0.02);
 
-    swerve = swervesub;
-    addRequirements(swerve);
+  //   swerve = swervesub;
+  //   addRequirements(swerve);
 
-    xPoint = pose.getX();
-    yPoint = pose.getY();
-    rotPoint = pose.getRotation().getRadians();
-  }
+  //   xPoint = pose.getX();
+  //   yPoint = pose.getY();
+  //   rotPoint = pose.getRotation().getRadians();
+  // }
 
   public MoveTo(Transform2d transform, SwerveSubsystem swervesub){
     swerve = swervesub;
