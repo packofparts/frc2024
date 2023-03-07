@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawMotor;
@@ -18,13 +19,42 @@ public class MoveArm extends CommandBase {
   public boolean outtakeTrue;
   public ArmSetting armset;
   public boolean done = false;
-  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, ArmSetting armsetting) {
+
+  private double forTime = 0;
+  private boolean doForTime = false;
+  private boolean indefinite = false;
+
+  Timer timer;
+
+  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, boolean indefinite, ArmSetting armsetting) {
     // Use addRequirements() here to declare subsystem dependencies.
     arm = armSub;
     claw = clawSub;
     intakeTrue = in;
     outtakeTrue = out;
     armset = armsetting;
+
+   
+
+
+    addRequirements(arm);
+    addRequirements(claw);
+  }
+
+  public MoveArm(ArmControlSubsystem armSub, ClawMotor clawSub, boolean in, boolean out, double fortime, ArmSetting armsetting) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    arm = armSub;
+    claw = clawSub;
+    intakeTrue = in;
+    outtakeTrue = out;
+    armset = armsetting;
+
+    this.doForTime = true;
+    this.forTime = fortime;
+
+    timer = new Timer();
+    
+
     addRequirements(arm);
     addRequirements(claw);
   }
@@ -32,20 +62,25 @@ public class MoveArm extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     arm.moveToEnum(armset);
+
+
+
     if (intakeTrue) {
       claw.intake();
     }
     if (outtakeTrue) {
       claw.outtake();
     }
-    done = true;
+
+    
+    
     //arm.moveToEnum(arm.ArmSetting.GNODE);
   }
 
@@ -56,6 +91,11 @@ public class MoveArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return done;
+
+    if(this.doForTime){
+      return arm.atAngleSetpoint() && arm.atTelescopeSetpoint() && timer.get() > this.forTime;
+    } 
+    return !this.indefinite && arm.atAngleSetpoint() && arm.atTelescopeSetpoint();
+    
   }
 }
