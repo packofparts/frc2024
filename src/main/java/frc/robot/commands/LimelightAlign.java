@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -34,7 +35,7 @@ public class LimelightAlign extends CommandBase {
     addRequirements(swerve);
     addRequirements(lime);
     index = PipelineIndex;
-    rotPID = new PIDController(0.5, 0, 0);
+    rotPID = new PIDController(0.05, 0, 0);
     rotPID.setTolerance(0.1);
     offset = Xoffset;
     
@@ -50,7 +51,7 @@ public class LimelightAlign extends CommandBase {
     lime.setPipeline(index);
     if (lime.img.hasTargets()) {
       yaw = lime.getXoffset();
-      swerve.setMotors(0,rotPID.calculate(yaw,offset),0);
+      swerve.setMotors(0,0, -rotPID.calculate(yaw,offset));
     }
   }
 

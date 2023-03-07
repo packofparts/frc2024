@@ -15,6 +15,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.Limelight.Pipeline;
 
@@ -35,7 +36,7 @@ public class Limelight extends SubsystemBase {
   //NetworkTable table = NetworkTableInstance.getDefault();
   PhotonCamera photonCamera;
   NetworkTableInstance net =  NetworkTableInstance.getDefault();
-  NetworkTable lime = net.getTable("photonvision");
+  NetworkTable lime;
   public PhotonPipelineResult img;
   public static enum Pipeline{
     TAG,
@@ -53,7 +54,9 @@ public class Limelight extends SubsystemBase {
   
 
   public Limelight() {
-    photonCamera = new PhotonCamera(net, "skype");
+    lime = net.getTable("photonvision");
+
+    photonCamera = new PhotonCamera(net, "OV5647");
     pipelineVals.put("TAG", 1);
     pipelineVals.put("REFLECTION", 2);
     pipelineVals.put("DRIVE", 3);
@@ -66,6 +69,10 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    img = photonCamera.getLatestResult();
+    if (img.getBestTarget() != null) {
+      SmartDashboard.putNumber("LimelightYaw", img.getBestTarget().getYaw());
+    }
   }
 
   public double getXoffset(){

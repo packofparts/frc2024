@@ -39,7 +39,7 @@ public class AutoBalanceCommand extends CommandBase {
   private Timer timer;
 
 
-  private float pitchSpeedThreshold = 5;
+  private float pitchSpeedThreshold = 35;
   
 
 
@@ -131,15 +131,17 @@ public class AutoBalanceCommand extends CommandBase {
   //if angular velocity is too high, then the station must be turning
   
   private void doBalanceMethod2(){
+    double pidOutput = velocityController.calculate(this.pitch, 0);
     //detect change in velocity over threshold and stop until velocity is down again
     if(Math.abs(this.pitchSpeed) >= this.pitchSpeedThreshold){
-      this.swerveSubsystem.stopAllAndBrake();
+      // this.swerveSubsystem.stopAllAndBrake();
+      this.swerveSubsystem.setMotors(-pidOutput/8, 0, 0);
       //maybe slightly move back for a tiny bit
     }else{
-      double pidOutput = velocityController.calculate(this.pitch, 0);
+      
       SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
-      this.swerveSubsystem.setMotors(pidOutput/7, 0, 0);
+      this.swerveSubsystem.setMotors(pidOutput/13, 0, 0);
     }
   }
 
