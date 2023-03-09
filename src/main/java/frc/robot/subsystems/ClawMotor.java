@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -17,12 +19,13 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.ArmConstants;
 
 public class ClawMotor extends SubsystemBase {
   /** Creates a new ClawMotor. */
-  CANSparkMax main;
+  TalonSRX main;
   public ClawMotor() {
-    main = new CANSparkMax(0, MotorType.kBrushless);
+    main = new TalonSRX(ArmConstants.clawPort);
   }
 
   @Override
@@ -40,18 +43,18 @@ public class ClawMotor extends SubsystemBase {
 
   }
   public void intake(){
-    main.set(1);
+    main.set(TalonSRXControlMode.PercentOutput, 1);;
   }
   public void outtake(){
-    main.set(-1);
+    main.set(TalonSRXControlMode.PercentOutput,-1);
   }
   public void brake(){
-    main.set(0);
+    main.set(TalonSRXControlMode.PercentOutput,0);
   }
 
 
   public void setSpeed(double speed){
-    main.set(speed);
+    main.set(TalonSRXControlMode.PercentOutput,speed);
   }
 
   /**

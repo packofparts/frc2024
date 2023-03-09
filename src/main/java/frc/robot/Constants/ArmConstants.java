@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.Constants;
 
 import java.util.HashMap;
@@ -43,7 +39,7 @@ public class ArmConstants {
     public static final int leftArmPivot = 15;
     public static final int telescopicArmSpark = 17;
     public static final int armPivotEncoderPort = 17;
-    public static final int clawPort = 0;
+    public static final int clawPort = 8;
 
     public static final double relEncoderToInitialGear = 1.0/48;
 

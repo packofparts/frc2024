@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.Limelight.Pipeline;
@@ -35,8 +36,8 @@ public class LimelightAlign extends CommandBase {
     addRequirements(swerve);
     addRequirements(lime);
     index = PipelineIndex;
-    rotPID = new PIDController(0.1, 0, 0);
-    rotPID.setTolerance(1);
+    rotPID = new PIDController(3, 0, 0);
+    rotPID.setTolerance(0.001);
     offset = Xoffset;
     
   }
@@ -49,9 +50,13 @@ public class LimelightAlign extends CommandBase {
   @Override
   public void execute() {
     lime.setPipeline(index);
+    double ballDist = lime.getForwardDistance(0.5);
+    double cubeSize = lime.getSize();
+    double sp = cubeSize*VisionConstants.LimelightConstantOffset;
     if (lime.img.hasTargets()) {
-      yaw = lime.getSkew();
-      double rotSpeed = Units.degreesToRadians(rotPID.calculate(yaw, offset));
+      yaw = lime.getYaw();
+
+      double rotSpeed = Units.degreesToRadians(rotPID.calculate(yaw, sp));
       swerve.setMotors(0,0, rotSpeed);
     }
   }

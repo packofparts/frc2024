@@ -22,7 +22,24 @@ public class VisionConstants {
     public static final int TagPiplineID = 1;
     public static final int ReflectivePipelineID = 2;
 
-    public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
+    //Left
+    public static final double camXOffsetMeters = -0.18;
+
+    //Up
+    public static final double camYOffsetMeters = 0.62;
+
+    //CCW
+    public static final double camPitchOffsetDegrees = -15;
+
+    public static final Transform3d robotToCam = new Transform3d(new Translation3d(camXOffsetMeters, camYOffsetMeters, 0),
+
+    new Rotation3d(0, Units.degreesToRadians(camPitchOffsetDegrees),0));
+    
+    //TODO
+    public static final double LimelightConstantOffset = 0;
+
+
+    
 
     // Pose Estimation Constants
     

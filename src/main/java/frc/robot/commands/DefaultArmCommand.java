@@ -50,13 +50,6 @@ public class DefaultArmCommand extends CommandBase {
       armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.minAngleRad));
     }
 
-    
-
-
-
-
-
-
   }
 
 

@@ -11,12 +11,14 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight.Pipeline;
 
 import org.photonvision.PhotonCamera;
@@ -74,6 +76,10 @@ public class Limelight extends SubsystemBase {
       SmartDashboard.putNumber("LimelightYaw", img.getBestTarget().getYaw());
     }
   }
+  public double getYaw(){
+    PhotonTrackedTarget targ = img.getBestTarget();
+    return targ.getYaw();
+  }
 
   public double getSkew(){
     PhotonTrackedTarget targ = img.getBestTarget();
@@ -84,9 +90,13 @@ public class Limelight extends SubsystemBase {
 
   public double getForwardDistance(double targetHeightMeters){
     PhotonTrackedTarget targ = img.getBestTarget();
-    return PhotonUtils.calculateDistanceToTargetMeters(0.05, targetHeightMeters, 0, targ.getPitch());
+    return PhotonUtils.calculateDistanceToTargetMeters(VisionConstants.camYOffsetMeters, targetHeightMeters, Units.degreesToRadians(-15), Units.degreesToRadians(targ.getPitch()));
   }
-
+  
+  public double getSize(){
+    PhotonTrackedTarget targ = img.getBestTarget();
+    return targ.getArea();
+  }
   public void setPipeline(int PipelineIndex){
     photonCamera.setPipelineIndex(PipelineIndex);
   }

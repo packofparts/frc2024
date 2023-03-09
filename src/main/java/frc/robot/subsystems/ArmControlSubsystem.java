@@ -1,3 +1,4 @@
+
 package frc.robot.subsystems;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
@@ -225,11 +226,5 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     setDesiredPivotRotation(rotation);
     setDesiredExtension(extension);
-
-
-
-
   }
-
-
 }
