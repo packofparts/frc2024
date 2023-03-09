@@ -61,11 +61,14 @@ public class ArmControlSubsystem extends SubsystemBase {
   
   //TODO make the constructor more useful and modular by passing in most values from ArmConstants
   public ArmControlSubsystem() {
-    pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
+    //pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
+    pivotPID = new PIDController(0.05, 0, 0);
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
-    extensionPID = new PIDController(0.1, 0, 0);
+    extensionPID = new PIDController(0.05, 0, 0);
     
+    
+
     rightPivotController.setInverted(true);
     SmartDashboard.putNumber("PivotkP", 2);
   }
@@ -103,7 +106,14 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   private void extensionPeriodic(){
+
+
     desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+    if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
+      desiredExtensionDistance = ArmConstants.minExtensionIn;
+    }
+
+
 
     currentExtensionDistance = getCurrentExtensionIn();
 
@@ -118,8 +128,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     leftPivotController.setInverted(ArmConstants.leftPivotInverted);
     rightPivotController.setNeutralMode(NeutralMode.Brake);
     leftPivotController.setNeutralMode(NeutralMode.Brake);
-
-
   }
 
   public void setDesiredPivotRotation(double _desiredRotation){

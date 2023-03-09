@@ -16,6 +16,7 @@ public class ArmConstants {
     public static final double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
     public static final double minAngleRad = Units.degreesToRadians(5.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
     public static final double maxAngleRad = Units.degreesToRadians(115.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
+    public static final double minPivotForExtensionRad = Units.degreesToRadians(23 + 4);
 
     public static final double extensionEncoderToLength =  1.0/8.11330126;
     public static final double minExtensionIn = 29.85 + 7.073; //basically the length of the first base //inches
