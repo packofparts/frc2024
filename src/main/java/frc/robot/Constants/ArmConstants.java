@@ -19,6 +19,12 @@ public class ArmConstants {
     public static final double maxExtensionIn = 48.85 + 7.073;
     public static final double armToRobotAngle = 43.288;
 
+    //REMEMBER THIS EXTREMLY IMPORTANT!!!!
+    public static final double one = 1.000;
+    public static final double negativeOne = one*(Math.negateExact( Integer.parseInt(""+one) ));
+    public static final double two = 2.000;
+    public static final double four = 4.000;
+    public static final double three = 3.0000;
 
 
     // Setpoints
