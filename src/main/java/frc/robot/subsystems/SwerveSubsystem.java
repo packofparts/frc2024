@@ -33,14 +33,14 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModule frontLeft = new SwerveModule(
     DriveConstants.kFrontLeftDriveCANId, 
     DriveConstants.kFrontLeftSteerCANId,
-    0,
-    false, 
-    false,
-    0.389,
-    false, 
-    true,
+    0 /* abs encoder analog channel number */,
+    false /* driving motor inversion */, 
+    false /* steering motor inversion */,
+    0.389 /* abs encoder offset */,
+    false /* abs encoder inversion */, 
+    true /* is using abs encoder */,
     PIDConstants.kFrontLeftSteeringPIDControl, 
-    PIDConstants.flPIDTrans);
+    PIDConstants.kFrontLeftDrivingMotorController);
 
   private final SwerveModule frontRight = new SwerveModule(
     DriveConstants.kFrontRightDriveCANId, 
@@ -52,7 +52,7 @@ public class SwerveSubsystem extends SubsystemBase {
     false,
     true,
     PIDConstants.kFrontRightSteeringPIDControl,
-    PIDConstants.frPIDTrans);
+    PIDConstants.kFrontRightDrivingMotorController);
 
   private final SwerveModule backLeft = new SwerveModule(
     DriveConstants.kBackLeftDriveCANId, 
@@ -64,7 +64,7 @@ public class SwerveSubsystem extends SubsystemBase {
     false, 
     true,
     PIDConstants.kBackRightSteeringPIDControl,
-    PIDConstants.flPIDTrans);
+    PIDConstants.kFrontLeftDrivingMotorController);
 
   private final SwerveModule backRight = new SwerveModule(
     DriveConstants.kBackRightDriveCANId, 
@@ -76,7 +76,7 @@ public class SwerveSubsystem extends SubsystemBase {
     false, 
     true,
     PIDConstants.kBackLeftSteeringPIDControl,
-    PIDConstants.brPIDTrans); 
+    PIDConstants.kBackRightDrivingMotorController); 
 
   private final PIDController headingController;
 
@@ -148,8 +148,6 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the degrees at which the gyro is at
    */
   public double getHeading(){
-    // SmartDashboard.putNumber("Gyro Heading",Math.IEEEremainder(navx.getAngle(), 360));
-    // return Math.IEEEremainder(navx.getAngle(), 360);
     SmartDashboard.putNumber("Gyro Heading",-navx.getAngle());
     return -navx.getAngle();
   }
@@ -181,11 +179,6 @@ public class SwerveSubsystem extends SubsystemBase {
         break;
       }
       
-      // frontLeft.setDesiredState(new SwerveModuleState(-desiredStates[0].speedMetersPerSecond, desiredStates[0].angle),mode);
-      // frontRight.setDesiredState(new SwerveModuleState(-desiredStates[1].speedMetersPerSecond, desiredStates[1].angle),mode);
-      // backLeft.setDesiredState(new SwerveModuleState(-desiredStates[2].speedMetersPerSecond, desiredStates[2].angle),mode);
-      // backRight.setDesiredState(new SwerveModuleState(-desiredStates[3].speedMetersPerSecond, desiredStates[3].angle),mode);
-
       frontLeft.setDesiredState(desiredStates[0],mode);
       frontRight.setDesiredState(desiredStates[1],mode);
       backLeft.setDesiredState(desiredStates[2],mode);
@@ -194,11 +187,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, DriveConstants.kAutoMaxSpeedMPS);
-    // frontLeft.setDesiredState(new SwerveModuleState(-desiredStates[0].speedMetersPerSecond, desiredStates[0].angle),DriveMode.AUTO);
-    // frontRight.setDesiredState(new SwerveModuleState(-desiredStates[1].speedMetersPerSecond, desiredStates[1].angle),DriveMode.AUTO);
-    // backLeft.setDesiredState(new SwerveModuleState(-desiredStates[2].speedMetersPerSecond, desiredStates[2].angle),DriveMode.AUTO);
-    // backRight.setDesiredState(new SwerveModuleState(-desiredStates[3].speedMetersPerSecond, desiredStates[3].angle),DriveMode.AUTO);
- 
     frontLeft.setDesiredState(desiredStates[0],DriveMode.AUTO);
     frontRight.setDesiredState(desiredStates[1],DriveMode.AUTO);
     backLeft.setDesiredState(desiredStates[2],DriveMode.AUTO);
@@ -221,8 +209,6 @@ public class SwerveSubsystem extends SubsystemBase {
    * @apiNote Keep in mind all of this is field relative so resetting the gyro midmatch will also reset these params
    */
   public void setMotors(double x,double y, double rot, DriveMode dMode){
-    //rot = headingController.calculate(navx.getRate(), Units.degreesToRadians(rot));
-
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x, y, rot);}
@@ -236,7 +222,6 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setMotors(double x,double y, double rot){
-    //rot = headingController.calculate(navx.getRate(), Units.radiansToDegrees(rot));
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}
