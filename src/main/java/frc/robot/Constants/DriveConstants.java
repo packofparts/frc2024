@@ -44,19 +44,18 @@ public class DriveConstants {
     public static boolean tuningPID = false;
 
     
-    //SPARK ids
-    public static final int frontLeftSteer = 3;//
-    public static final int frontLeftDrive = 1;//
+    // SPARK ids
+    public static final int kFrontLeftDriveCANId = 1;
+    public static final int kFrontLeftSteerCANId = 3;
         
-    public static final int frontRightSteer = 6;//
-    public static final int frontRightDrive = 7;//
+    public static final int kFrontRightDriveCANId = 7;
+    public static final int kFrontRightSteerCANId = 6;
 
-    public static final int rearLeftSteer = 5;//
-    public static final int rearLeftDrive = 4;//
+    public static final int kBackLeftDriveCANId = 4;
+    public static final int kBackLeftSteerCANId = 5;
 
-    public static final int rearRightSteer = 9;//
-    public static final int rearRightDrive = 8; // 
+    public static final int kBackRightDriveCANId = 8; 
+    public static final int kBackRightSteerCANId = 9;
 
-    public static final boolean gyroHold = false;
-
+    public static final boolean kGyroHold = false;
 }
