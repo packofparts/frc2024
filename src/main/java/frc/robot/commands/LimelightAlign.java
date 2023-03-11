@@ -50,9 +50,10 @@ public class LimelightAlign extends CommandBase {
   @Override
   public void execute() {
     lime.setPipeline(index);
-    double ballDist = lime.getForwardDistance(0.5);
+    double ballDist = lime.getForwardDistance(0.7);
     double cubeSize = lime.getSize();
-    double sp = cubeSize*VisionConstants.LimelightConstantOffset;
+    double sp = -(0.983*cubeSize-7.2608);
+
     if (lime.img.hasTargets()) {
       yaw = lime.getYaw();
 

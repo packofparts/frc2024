@@ -45,7 +45,7 @@ import frc.robot.Util;
 import frc.robot.Constants.VisionConstants;
 
 
-public class ManualPoseEstimation extends PoseEstimation {
+public class ManualPoseEstimation extends SubsystemBase{
   /** Creates a new PoseEstimation. */
   public AprilTagFieldLayout layout;
   public PhotonPoseEstimator estimator;
@@ -56,17 +56,16 @@ public class ManualPoseEstimation extends PoseEstimation {
   }
 
  // Transformation from robot to 
- SwerveSubsystem swerve;
+ SwerveSubsystem swervee;
  Limelight lime;
  SwerveDrivePoseEstimator poseEstimator;
  double visionTimestamp;
  Strategy strategy;
  
   public ManualPoseEstimation(Limelight limelight, SwerveSubsystem swerve, Strategy strategy) {
-    super(limelight, swerve);
     this.strategy = strategy;
     //Initializing Subsystems
-    this.swerve = swerve;
+    this.swervee = swerve;
     lime = limelight;
     // Getting Tag Layout
     try {
@@ -86,13 +85,13 @@ public class ManualPoseEstimation extends PoseEstimation {
       SmartDashboard.putData("Field", field);
   }
 
-  @Override
   public void updateVision() {
     PhotonPipelineResult image = lime.getImg();
     double timestamp = image.getTimestampSeconds();
     PhotonTrackedTarget target = image.getBestTarget();
     
     Pose2d targetpose = getPoseFromTarget(target);
+    
 
     if (targetpose != null) {
       poseEstimator.addVisionMeasurement(targetpose, timestamp);
@@ -113,14 +112,14 @@ public class ManualPoseEstimation extends PoseEstimation {
         
 
 
-        targetpose = targetpose.plus(transformation);
-        targetpose = targetpose.plus(VisionConstants.robotToCam.inverse());
+        targetpose = targetpose.transformBy(transformation);
+        targetpose = targetpose.transformBy(VisionConstants.robotToCam.inverse());
 
         SmartDashboard.putNumber("Transformation X", targetpose.getX());
         SmartDashboard.putNumber("Transformation Y", targetpose.getY());
         SmartDashboard.putNumber("Transformation Rot", targetpose.toPose2d().getRotation().getDegrees());
 
-        if (Math.sqrt(Math.pow(targetpose.getX(), 2) + Math.pow(targetpose.getY(), 2))<VisionConstants.maxDistance) 
+        if (Util.getMagnitude(targetpose.getX(), targetpose.getY())<VisionConstants.maxDistance) 
           return targetpose.toPose2d();
       }
       
@@ -129,12 +128,12 @@ public class ManualPoseEstimation extends PoseEstimation {
 
   }
 
-  @Override
+  
   public Pose2d getOdometry() {
-    return swerve.getRobotPose();
+    return this.swervee.getRobotPose();
   }
 
-  @Override
+  
   public Pose2d getPosition() {
     return poseEstimator.getEstimatedPosition();
   }
@@ -142,13 +141,16 @@ public class ManualPoseEstimation extends PoseEstimation {
   
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
+    poseEstimator.update(swervee.getRotation2d(), swervee.getModulePositions());
     updateVision();
 
 
     Pose2d pose = getPosition();
     field.setRobotPose(pose);
+    SmartDashboard.putData("Field", field);
+
     
     SmartDashboard.putNumber("X Pose", pose.getX());
     SmartDashboard.putNumber("Y Pose", pose.getY());

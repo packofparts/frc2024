@@ -17,7 +17,7 @@ public class Input {
 
 
 
-    private static XboxController xboxController = new XboxController(2);
+    private static XboxController xboxController = new XboxController(1);
 
     public static int DPADUP = 0;
     public static int DPADRIGHT = 90;
@@ -42,6 +42,10 @@ public class Input {
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
     public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
     public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
+    public static boolean armUp() {return tJoystick.getRawButtonPressed(10);}
+    public static boolean armDown() {return tJoystick.getRawButtonPressed(11);}
+
+
 
     //xbox controller 
     public static boolean getA(){return xboxController.getAButtonPressed();}

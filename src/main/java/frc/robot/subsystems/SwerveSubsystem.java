@@ -30,53 +30,40 @@ import frc.robot.SwerveModule;
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
-  private final SwerveModule frontLeft = new SwerveModule(
-    DriveConstants.kFrontLeftDriveCANId, 
-    DriveConstants.kFrontLeftSteerCANId,
-    0,
-    false, 
-    false,
-    0.389,
-    false, 
-    true,
-    PIDConstants.kFrontLeftSteeringPIDControl, 
-    PIDConstants.flPIDTrans);
+  private final SwerveModule frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveCANId, DriveConstants.kFrontLeftSteerCANId,
+   0,false, false,0.442,false, true,
+   PIDConstants.kFrontLeftSteeringPIDControl, PIDConstants.flPIDTrans);
 
-  private final SwerveModule frontRight = new SwerveModule(
-    DriveConstants.kFrontRightDriveCANId, 
-    DriveConstants.kFrontRightSteerCANId,
-    1,
-    true,
-    false,
-    0.321,
-    false,
-    true,
-    PIDConstants.kFrontRightSteeringPIDControl,
-    PIDConstants.frPIDTrans);
+   private final SwerveModule frontRight = new SwerveModule(DriveConstants.kFrontRightDriveCANId, DriveConstants.kFrontRightSteerCANId,
+   1,true,false,0.664,false, true,
+   PIDConstants.kFrontRightSteeringPIDControl,PIDConstants.frPIDTrans);
 
-  private final SwerveModule backLeft = new SwerveModule(
-    DriveConstants.kBackLeftDriveCANId, 
-    DriveConstants.kBackLeftSteerCANId,
-    2,
-    false,
-    false,
-    0.751,
-    false, 
-    true,
-    PIDConstants.kBackRightSteeringPIDControl,
-    PIDConstants.flPIDTrans);
+  private final SwerveModule backLeft = new SwerveModule(DriveConstants.kBackLeftDriveCANId, DriveConstants.kBackLeftSteerCANId,
+  2,false,false,0.757,false, true,
+  PIDConstants.kBackLeftSteeringPIDControl,PIDConstants.flPIDTrans);
 
-  private final SwerveModule backRight = new SwerveModule(
-    DriveConstants.kBackRightDriveCANId, 
-    DriveConstants.kBackRightSteerCANId,
-    3,
-    true,
-    false,
-    0.546,
-    false, 
-    true,
-    PIDConstants.kBackLeftSteeringPIDControl,
-    PIDConstants.brPIDTrans); 
+
+  private final SwerveModule backRight = new SwerveModule(DriveConstants.kBackRightDriveCANId, DriveConstants.kBackRightSteerCANId,
+  3,true,false,0.112,false, true,
+   PIDConstants.kBackRightSteeringPIDControl,PIDConstants.brPIDTrans); 
+
+  // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
+  //  0,false, false,0.889,false, true,
+  //  PIDConstants.flPID, PIDConstants.flPIDTrans);
+  //  private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
+  //  1,true,false,0.351,false, true,
+  //  PIDConstants.frPID,PIDConstants.frPIDTrans);
+
+
+  // private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
+  // 2,false,false,0.288,false, true,
+  // PIDConstants.blPID,PIDConstants.flPIDTrans);
+
+
+  // private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
+  // 3,true,false,0.952,false, true,
+  //  PIDConstants.brPID,PIDConstants.brPIDTrans); 
+
 
   private final PIDController headingController;
 

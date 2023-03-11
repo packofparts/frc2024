@@ -34,7 +34,7 @@ public class ArmBackup extends SubsystemBase {
   //private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
   
 
-  double currentPivotRotation = ArmConstants.minAngleRad;
+  double currentPivotRotation = ArmConstants.minAngleRad+1.0;
   double desiredPivotRotation = currentPivotRotation;
 
   //double currentExtensionDistance = ArmConstants.minExtensionIn;

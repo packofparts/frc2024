@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -20,6 +22,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -69,15 +72,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionPID = new PIDController(0.05, 0, 0);
     
     
-
-    rightPivotController.setInverted(true);
+    setConfig();
     SmartDashboard.putNumber("PivotkP", 2);
   }
 
   @Override
   public void periodic() {
       pivotPeriodic(); //maintains the desired pivot angle
-      extensionPeriodic(); //maintains the desired extension length
+      //extensionPeriodic(); //maintains the desired extension length
   }
 
   private void pivotPeriodic(){
@@ -95,15 +97,16 @@ public class ArmControlSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
     SmartDashboard.putNumber("CurrentPivotPoint", currentPivotRotation);
     SmartDashboard.putNumber("DesiredPivotPoint", desiredPivotRotation);
-    SmartDashboard.putNumber("LeftSensor", leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.relEncoderToInitialGear);
-    SmartDashboard.putNumber("RightSensor", rightPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.relEncoderToInitialGear);
+    SmartDashboard.putNumber("LeftSensor", leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear);
+    SmartDashboard.putNumber("RightSensor", rightPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear);
+
 
      
     
     
     //TODO we dont know which one is inverted yet
-    leftPivotController.set(pivotPIDOutput + (pivotFeedforwardOutput / RobotController.getBatteryVoltage())); 
-    rightPivotController.set(pivotPIDOutput + (pivotFeedforwardOutput / RobotController.getBatteryVoltage())); 
+    leftPivotController.set(pivotPIDOutput);
+    rightPivotController.set(pivotPIDOutput); 
   }
 
   private void extensionPeriodic(){
@@ -129,6 +132,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     leftPivotController.setInverted(ArmConstants.leftPivotInverted);
     rightPivotController.setNeutralMode(NeutralMode.Brake);
     leftPivotController.setNeutralMode(NeutralMode.Brake);
+    rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
   }
 
   public void setDesiredPivotRotation(double _desiredRotation){
@@ -166,20 +171,23 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public Command waitUntilSpTelescope(double sp){
+  
     return new FunctionalCommand(()->setDesiredExtension(sp), null, null, this::atTelescopeSetpoint, this);
   }
   
   public double getCurrentPivotRotation(boolean inRadians){
     //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
-    double rotation = rightPivotController.getSelectedSensorPosition() / 2048 / 240;
-    if(inRadians)
+    double rotation = leftPivotController.getSelectedSensorPosition() / 2048 /240;
+    
+    if(inRadians){
       return rotation * Math.PI * 2 % (Math.PI * 2);
+    }
     return rotation;
   }
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
-    return extensionEncoder.getPosition()*ArmConstants.extensionEncoderToLength + ArmConstants.minExtensionIn;
+    return extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches + ArmConstants.minExtensionIn;
   }
   
   public void changeDesiredPivotRotation(double i){

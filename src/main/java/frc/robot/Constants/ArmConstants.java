@@ -12,16 +12,16 @@ public class ArmConstants {
     public static final double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
     public static final double minAngleRad = Units.degreesToRadians(5.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
     public static final double maxAngleRad = Units.degreesToRadians(115.0) - Units.rotationsToRadians(pivotInitOffset) - Units.degreesToRadians(90);
-    public static final double minPivotForExtensionRad = Units.degreesToRadians(23 + 4);
+    public static final double minPivotForExtensionRad = Units.degreesToRadians(27);
 
-    public static final double extensionEncoderToLength =  1.0/8.11330126;
+    public static final double extensionEncoderToInches =  1.0/8.11330126;
     public static final double minExtensionIn = 29.85 + 7.073; //basically the length of the first base //inches
     public static final double maxExtensionIn = 48.85 + 7.073;
     public static final double armToRobotAngle = 43.288;
 
     //REMEMBER THIS EXTREMLY IMPORTANT!!!!
     public static final double one = 1.000;
-    public static final double negativeOne = one*(Math.negateExact( Integer.parseInt(""+one) ));
+    public static final double negativeOne = one*(Math.negateExact( Integer.parseInt(""+one)));
     public static final double two = 2.000;
     public static final double four = 4.000;
     public static final double three = 3.0000;
@@ -48,7 +48,7 @@ public class ArmConstants {
     public static final int clawPort = 8;
 
     public static final double relEncoderToInitialGear = 1.0/48;
-
+    public static final double falconToFinalGear = 1/240;
     //Change this
-    public static boolean leftPivotInverted = false;
+    public static boolean leftPivotInverted = true;
 }
