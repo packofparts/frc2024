@@ -12,10 +12,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.math.controller.DifferentialDriveFeedforward;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -24,52 +21,62 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
-
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
 import frc.robot.SwerveModule;
-import frc.robot.commands.AutoBalanceCommand;
-
 
 public class SwerveSubsystem extends SubsystemBase {
   //Bevel Gear must be facing to the left in order to work
 
-  private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
-   0,false, false,0.389,false, true,
-   PIDConstants.flPID, PIDConstants.flPIDTrans);
-   private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-   1,true,false,0.321,false, true,
-   PIDConstants.frPID,PIDConstants.frPIDTrans);
+  private final SwerveModule frontLeft = new SwerveModule(
+    DriveConstants.kFrontLeftDriveCANId, 
+    DriveConstants.kFrontLeftSteerCANId,
+    0,
+    false, 
+    false,
+    0.389,
+    false, 
+    true,
+    PIDConstants.kFrontLeftSteeringPIDControl, 
+    PIDConstants.flPIDTrans);
 
+  private final SwerveModule frontRight = new SwerveModule(
+    DriveConstants.kFrontRightDriveCANId, 
+    DriveConstants.kFrontRightSteerCANId,
+    1,
+    true,
+    false,
+    0.321,
+    false,
+    true,
+    PIDConstants.kFrontRightSteeringPIDControl,
+    PIDConstants.frPIDTrans);
 
-  private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
-  2,false,false,0.751,false, true,
-  PIDConstants.blPID,PIDConstants.flPIDTrans);
+  private final SwerveModule backLeft = new SwerveModule(
+    DriveConstants.kBackLeftDriveCANId, 
+    DriveConstants.kBackLeftSteerCANId,
+    2,
+    false,
+    false,
+    0.751,
+    false, 
+    true,
+    PIDConstants.kBackRightSteeringPIDControl,
+    PIDConstants.flPIDTrans);
 
-
-  private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
-  3,true,false,0.546,false, true,
-   PIDConstants.brPID,PIDConstants.brPIDTrans); 
-
-  // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
-  //  0,false, false,0.889,false, true,
-  //  PIDConstants.flPID, PIDConstants.flPIDTrans);
-  //  private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-  //  1,true,false,0.351,false, true,
-  //  PIDConstants.frPID,PIDConstants.frPIDTrans);
-
-
-  // private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
-  // 2,false,false,0.288,false, true,
-  // PIDConstants.blPID,PIDConstants.flPIDTrans);
-
-
-  // private final SwerveModule backRight = new SwerveModule(DriveConstants.rearRightDrive, DriveConstants.rearRightSteer,
-  // 3,true,false,0.952,false, true,
-  //  PIDConstants.brPID,PIDConstants.brPIDTrans); 
-
+  private final SwerveModule backRight = new SwerveModule(
+    DriveConstants.kBackRightDriveCANId, 
+    DriveConstants.kBackRightSteerCANId,
+    3,
+    true,
+    false,
+    0.546,
+    false, 
+    true,
+    PIDConstants.kBackLeftSteeringPIDControl,
+    PIDConstants.brPIDTrans); 
 
   private final PIDController headingController;
 
@@ -79,12 +86,10 @@ public class SwerveSubsystem extends SubsystemBase {
   AHRS navx = new AHRS(Port.kMXP);
   SwerveModule [] rawMods;
   
-
   public static enum DriveMode{
     AUTO,
     TELEOP
   }
-
 
   public SwerveSubsystem() {
     m_kinematics = new SwerveDriveKinematics(
