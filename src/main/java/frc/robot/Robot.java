@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -43,21 +39,41 @@ public class Robot extends TimedRobot {
     // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
     _commandSelector.addOption("Auto Balance", new AutoBalanceCommand(_robotContainer.swerve));
     
-    _commandSelector.addOption("Move By with Traj",
-      new MoveByWithTrajectoryController(_robotContainer.swerve, 
-      new Transform2d(new Translation2d(2.5, 0), new Rotation2d(0))));
+    _commandSelector.addOption(
+      "Move By with Trajecotry",
+      new MoveByWithTrajectoryController(
+        _robotContainer.swerve, 
+        new Transform2d(
+          new Translation2d(2.5, 0), 
+          new Rotation2d(0))));
     
-    _commandSelector.addOption("Path Planner", new TGWithPPlib(_robotContainer.swerve,AutoMapConstants.ConeCubeChargeTraj,AutoMapConstants.m_EventMap));
+    _commandSelector.addOption(
+      "Path Planner", 
+      new TGWithPPlib(
+        _robotContainer.swerve,
+        AutoMapConstants.ConeCubeChargeTraj,
+        AutoMapConstants.m_EventMap));
     
-    _commandSelector.addOption("ClassicMB", new MoveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2)), _robotContainer.swerve, _robotContainer.pose));
+    _commandSelector.addOption(
+      "ClassicMB", 
+      new MoveTo(
+        new Pose2d(0, 0, 
+        new Rotation2d(Math.PI/2)), 
+      _robotContainer.swerve, 
+      _robotContainer.pose));
     
-    //autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
-    
-    //autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
+    // autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
+    // autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
 
-    _commandSelector.addOption("LimelightAlign", new LimelightAlign(_robotContainer.swerve, _robotContainer.lime, 1, 0));
+    _commandSelector.addOption(
+      "LimelightAlign", 
+      new LimelightAlign(
+        _robotContainer.swerve, 
+        _robotContainer.lime, 
+        1, 
+        0));
 
-    SmartDashboard.putData("Auto Modes Test", _commandSelector);
+    SmartDashboard.putData("Auto commands", _commandSelector);
   }
 
   /**
@@ -111,15 +127,10 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    // if (m_robotContainer.joys.aprilAlign()) {
-    //   m_robotContainer.align.schedule();
-    // }
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
