@@ -36,13 +36,17 @@ public class DefaultArmCommand extends CommandBase {
       armControlSubsystem.changeDesiredPivotRotation(.05); //
     }else if(Input.getDPad() == Input.DPADDOWN){
       armControlSubsystem.changeDesiredPivotRotation(-.05);
-    if(Input.getDPad() == Input.DPADRIGHT){
-      armControlSubsystem.changeDesiredExtension(0.05);
+
+    }
+    
+    else if(Input.getDPad() == Input.DPADRIGHT){
+      armControlSubsystem.changeDesiredExtension(0.1);
     }
     else if(Input.getDPad() == Input.DPADLEFT){
-      armControlSubsystem.changeDesiredExtension(-0.05);
+      armControlSubsystem.changeDesiredExtension(-0.1);
     }
-    }else if(Input.getA()){
+    
+    else if(Input.getA()){
       armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]); // have to subtract the initial
       armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0]));
     }else if(Input.getB()){

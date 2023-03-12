@@ -6,18 +6,12 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.PIDConstants;
 import frc.robot.commands.AimbotDriveCmd;
-import frc.robot.commands.AutoAlign;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.commands.LimelightAlign;
@@ -27,7 +21,6 @@ import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ManualPoseEstimation;
-import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -41,28 +34,36 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  //subsystems
-  public final SwerveSubsystem swerve = new SwerveSubsystem();
+  public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   
-  public final Limelight lime = new Limelight();
+  public final Limelight limeLightSubSystem = new Limelight();
 
   //public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   //public final ManualPoseEstimation pose = new ManualPoseEstimation(lime, swerve, ManualPoseEstimation.Strategy.BEST);
 
-  //commented because testing and probably will cause null errors
+  // Commented because testing and probably will cause null errors
   public final ArmControlSubsystem armControl = new ArmControlSubsystem();
-  //public final ClawMotor clawMotor = new ClawMotor();
 
-  //commands
-  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(swerve);
-  public final AimbotDriveCmd aimbot = new AimbotDriveCmd(swerve, lime);
-  public final PIDtuning pid = new PIDtuning(swerve);
-  //public final AutoAlign align = new AutoAlign(pose, lime, swerve, new Transform2d(new Translation2d(1, 0), new Rotation2d(0)));
-  public final LimelightAlign generalAlign = new LimelightAlign(swerve, lime, 1, 0);
+  // public final ClawMotor clawMotor = new ClawMotor();
+
+  // Commands
+  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
+  public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
+  public final PIDtuning pid = new PIDtuning(drivetrain);
+
+  //public final AutoAlign align = 
+   // new AutoAlign(pose, lime, swerve, new Transform2d(new Translation2d(1, 0), new Rotation2d(0)));
+
+  public final LimelightAlign generalAlign = 
+    new LimelightAlign(
+      drivetrain, 
+      limeLightSubSystem, 
+      1, 
+      0);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
-  public SwerveModule [] allModules = swerve.getRawModules(); 
+  public SwerveModule [] allModules = drivetrain.getRawModules(); 
   public SwerveModule selecModule = allModules[3];
 
 
@@ -74,16 +75,20 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    // Configure the button bindings
-    
+
     moduleSelector.addOption("Front Left", allModules[0]);
     moduleSelector.addOption("Front Right", allModules[1]);
     moduleSelector.addOption("Back Left", allModules[2]);
     moduleSelector.addOption("Back Right", allModules[3]);
 
-
-    if (!DriveConstants.tuningPID){swerve.setDefaultCommand(defaultDrive);}
-    else{swerve.setDefaultCommand(new SinglePID(selecModule, swerve));}
+    if (!DriveConstants.tuningPID){
+      drivetrain.setDefaultCommand(defaultDrive);
+    } else{
+      drivetrain.setDefaultCommand(
+        new SinglePID(
+          selecModule, 
+          drivetrain));
+    }
   
     armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
@@ -100,15 +105,5 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     new JoystickButton(Input.getTJoystick(), 2).toggleOnTrue(aimbot);
-  }
-
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return null;//m_autoCommand;
   }
 }

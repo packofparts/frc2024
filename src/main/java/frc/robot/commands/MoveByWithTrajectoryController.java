@@ -23,12 +23,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MoveByWithTarjectoryController extends CommandBase {
+public class MoveByWithTrajectoryController extends CommandBase {
   /** Creates a new MoveByWithTarjectoryController. */
   SwerveSubsystem swervee;
   SwerveControllerCommand yeet;
   Transform2d trans;
-  public MoveByWithTarjectoryController(SwerveSubsystem swerve,Transform2d translation) {
+  public MoveByWithTrajectoryController(SwerveSubsystem swerve,Transform2d translation) {
     this.swervee = swerve;
     addRequirements(this.swervee);
     this.trans = translation;

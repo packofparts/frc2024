@@ -17,7 +17,7 @@ public class Input {
 
 
 
-    private static XboxController xboxController = new XboxController(1);
+    private static XboxController xboxController = new XboxController(JoystickConstants.xboxControllerPort);
 
     public static int DPADUP = 0;
     public static int DPADRIGHT = 90;

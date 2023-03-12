@@ -45,6 +45,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
   
   int ii = 0;
+  boolean isCoast = false;
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
   //private final AnalogEncoder pivotEncoder = new AnalogEncoder(ArmConstants.armPivotEncoderPort);
@@ -73,12 +74,18 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionPID = new PIDController(0.05, 0, 0);
     
     
-    setConfig(false);
+    setConfig(isCoast);
     SmartDashboard.putNumber("PivotkP", 2);
+    SmartDashboard.putBoolean("armCoastMode", isCoast);
   }
 
   @Override
   public void periodic() {
+      // boolean br = SmartDashboard.getBoolean("armCoastMode", false);
+      // if (br != isCoast){
+      //   setConfig(br);
+      // }
+
       //pivotPeriodic(); //maintains the desired pivot angle
       extensionPeriodic(); //maintains the desired extension length
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
@@ -117,27 +124,21 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
     desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
-    if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
-      desiredExtensionDistance = ArmConstants.minExtensionIn;
-    }
-
+    // if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
+    //   desiredExtensionDistance = ArmConstants.minExtensionIn;
+    // }
 
 
     currentExtensionDistance = getCurrentExtensionIn();
 
     double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
+    SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
+    
+    extensionController.set(extensionPIDOutput);
 
-    if (ii++ < 200) {
-      extensionController.set(0.25);
-    } else if (ii-- > 0) {
-      extensionController.set(0.25);
-    } else{
-      extensionController.set(0);
-    }
   }
 
   public void setConfig(boolean isCoast){
-    ii = 0;
 
     rightPivotController.follow(leftPivotController);
     rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
@@ -212,6 +213,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
+
     return extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches + ArmConstants.minExtensionIn;
   }
   
@@ -219,7 +221,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     this.desiredPivotRotation += i;
   }
   public void changeDesiredExtension(double i){
-    this.desiredExtensionDistance+=i;
+    this.desiredExtensionDistance += i;
   }
   /**
    * returns the pose of the center of the claw relative to the base of the robot

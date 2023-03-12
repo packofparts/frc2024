@@ -4,10 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -18,28 +14,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.AutoMapConstants;
-import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.AutonomousCommand;
-import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.MoveByWithTarjectoryController;
-import frc.robot.commands.PositionPIDtuning;
+import frc.robot.commands.MoveByWithTrajectoryController;
 import frc.robot.commands.TGWithPPlib;
 import frc.robot.commands.MoveTo;
-import frc.robot.subsystems.PoseEstimation;
 
-/**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
- * project.
- */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
-
-  private RobotContainer m_robotContainer;
-  public SendableChooser <Command> autoSelector = new SendableChooser<>();
+  
+  private Command _autonomousCommand;
+  private RobotContainer _robotContainer;
+  public SendableChooser <Command> _commandSelector = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -49,28 +34,46 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    PathPlannerTrajectory traj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
-    
-    m_robotContainer = new RobotContainer();
-    //autoSelector.addOption("Trajectory Classic", new AutonomousCommand(m_robotContainer.lime, m_robotContainer.swerve, m_robotContainer.armControl, m_robotContainer.clawMotor, m_robotContainer.pose, AutonomousCommand.paths.BLUELEFT));
-    
-    autoSelector.addOption("Auto Balance", new AutoBalanceCommand(m_robotContainer.swerve));
-    
-    autoSelector.addOption("Move By with Traj",
-      new MoveByWithTarjectoryController(m_robotContainer.swerve, 
-      new Transform2d(new Translation2d(2.5, 0), new Rotation2d(0))));
-    
-    autoSelector.addOption("Path Planner", new TGWithPPlib(m_robotContainer.swerve,AutoMapConstants.ConeCubeChargeTraj,AutoMapConstants.m_EventMap));
-    
-    //autoSelector.addOption("ClassicMB", new MoveTo(new Pose2d(0, 0, new Rotation2d(Math.PI/2)), m_robotContainer.swerve, m_robotContainer.pose));
-    
-    //autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
-    
-    //autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
+    _robotContainer = new RobotContainer();
 
-    autoSelector.addOption("LimelightAlign", new LimelightAlign(m_robotContainer.swerve, m_robotContainer.lime, 1, 0));
+    // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
+    _commandSelector.addOption("Auto Balance", new AutoBalanceCommand(_robotContainer.drivetrain));
+    
+    _commandSelector.addOption(
+      "Move By with Trajecotry",
+      new MoveByWithTrajectoryController(
+        _robotContainer.drivetrain, 
+        new Transform2d(
+          new Translation2d(2.5, 0), 
+          new Rotation2d(0))));
+    
+    _commandSelector.addOption(
+      "Path Planner", 
+      new TGWithPPlib(
+        _robotContainer.drivetrain,
+        AutoMapConstants.ConeCubeChargeTraj,
+        AutoMapConstants.m_EventMap));
+    
+    // _commandSelector.addOption(
+    //   "ClassicMB", 
+    //   new MoveTo(
+    //     new Pose2d(0, 0, 
+    //     new Rotation2d(Math.PI/2)), 
+    //   _robotContainer.drivetrain, 
+    //   _robotContainer.poseEstimator));
+    
+    // autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
+    // autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
 
-    SmartDashboard.putData("Auto Modes Test", autoSelector);
+    _commandSelector.addOption(
+      "LimelightAlign", 
+      new LimelightAlign(
+        _robotContainer.drivetrain, 
+        _robotContainer.limeLightSubSystem, 
+        1, 
+        0));
+
+    SmartDashboard.putData("Auto commands", _commandSelector);
   }
 
   /**
@@ -99,11 +102,11 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = autoSelector.getSelected();
+    _autonomousCommand = _commandSelector.getSelected();
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    if (_autonomousCommand != null) {
+      _autonomousCommand.schedule();
     }
   }
 
@@ -117,22 +120,17 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+    if (_autonomousCommand != null) {
+      _autonomousCommand.cancel();
     }
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-    // if (m_robotContainer.joys.aprilAlign()) {
-    //   m_robotContainer.align.schedule();
-    // }
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
 
