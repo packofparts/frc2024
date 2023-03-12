@@ -37,12 +37,12 @@ public class Robot extends TimedRobot {
     _robotContainer = new RobotContainer();
 
     // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
-    _commandSelector.addOption("Auto Balance", new AutoBalanceCommand(_robotContainer.swerve));
+    _commandSelector.addOption("Auto Balance", new AutoBalanceCommand(_robotContainer.drivetrain));
     
     _commandSelector.addOption(
       "Move By with Trajecotry",
       new MoveByWithTrajectoryController(
-        _robotContainer.swerve, 
+        _robotContainer.drivetrain, 
         new Transform2d(
           new Translation2d(2.5, 0), 
           new Rotation2d(0))));
@@ -50,7 +50,7 @@ public class Robot extends TimedRobot {
     _commandSelector.addOption(
       "Path Planner", 
       new TGWithPPlib(
-        _robotContainer.swerve,
+        _robotContainer.drivetrain,
         AutoMapConstants.ConeCubeChargeTraj,
         AutoMapConstants.m_EventMap));
     
@@ -59,8 +59,8 @@ public class Robot extends TimedRobot {
       new MoveTo(
         new Pose2d(0, 0, 
         new Rotation2d(Math.PI/2)), 
-      _robotContainer.swerve, 
-      _robotContainer.pose));
+      _robotContainer.drivetrain, 
+      _robotContainer.poseEstimator));
     
     // autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
     // autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
@@ -68,8 +68,8 @@ public class Robot extends TimedRobot {
     _commandSelector.addOption(
       "LimelightAlign", 
       new LimelightAlign(
-        _robotContainer.swerve, 
-        _robotContainer.lime, 
+        _robotContainer.drivetrain, 
+        _robotContainer.limeLightSubSystem, 
         1, 
         0));
 
