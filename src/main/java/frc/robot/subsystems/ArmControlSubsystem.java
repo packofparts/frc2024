@@ -87,10 +87,11 @@ public class ArmControlSubsystem extends SubsystemBase {
       // }
 
       //pivotPeriodic(); //maintains the desired pivot angle
-      extensionPeriodic(); //maintains the desired extension length
+      //extensionPeriodic(); //maintains the desired extension length
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
       SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
       SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
+      SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition());
   }
 
   private void pivotPeriodic(){
@@ -114,7 +115,8 @@ public class ArmControlSubsystem extends SubsystemBase {
 
      
     
-    
+    //-0.095237523317337
+    //0.142857700586319
     //TODO we dont know which one is inverted yet
     leftPivotController.set(pivotPIDOutput);
     rightPivotController.set(pivotPIDOutput); 
@@ -123,7 +125,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   private void extensionPeriodic(){
 
 
-    desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+    //desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
     // if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
     //   desiredExtensionDistance = ArmConstants.minExtensionIn;
     // }
@@ -147,8 +149,10 @@ public class ArmControlSubsystem extends SubsystemBase {
     leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
     rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    extensionController.setIdleMode(isCoast ? IdleMode.kCoast : IdleMode.kBrake);
+    extensionController.setIdleMode(IdleMode.kBrake);
     extensionController.setInverted(true);
+    extensionController.burnFlash();
+    
   }
 
   public void setDesiredPivotRotation(double _desiredRotation){
@@ -222,6 +226,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
   public void changeDesiredExtension(double i){
     this.desiredExtensionDistance += i;
+    extensionController.set(i);
   }
   /**
    * returns the pose of the center of the claw relative to the base of the robot
