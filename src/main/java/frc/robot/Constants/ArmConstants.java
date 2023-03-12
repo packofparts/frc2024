@@ -15,8 +15,9 @@ public class ArmConstants {
     public static final double minPivotForExtensionRad = Units.degreesToRadians(27);
 
     public static final double extensionEncoderToInches =  1.0/8.11330126;
-    public static final double minExtensionIn = 29.85 + 7.073; //basically the length of the first base //inches
-    public static final double maxExtensionIn = 48.85 + 7.073;
+    public static final double minExtensionIn = 41;//29.85 + 7.073; //basically the length of the first base //inches
+
+    public static final double maxExtensionIn = 57;
     public static final double armToRobotAngle = 43.288;
 
     //REMEMBER THIS EXTREMLY IMPORTANT!!!!

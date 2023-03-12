@@ -37,10 +37,10 @@ public class DefaultArmCommand extends CommandBase {
     }else if(Input.getDPad() == Input.DPADDOWN){
       armControlSubsystem.changeDesiredPivotRotation(-.05);
     if(Input.getDPad() == Input.DPADRIGHT){
-      armControlSubsystem.changeDesiredExtension(0.5);
+      armControlSubsystem.changeDesiredExtension(0.05);
     }
     else if(Input.getDPad() == Input.DPADLEFT){
-      armControlSubsystem.changeDesiredExtension(-0.5);
+      armControlSubsystem.changeDesiredExtension(-0.05);
     }
     }else if(Input.getA()){
       armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]); // have to subtract the initial

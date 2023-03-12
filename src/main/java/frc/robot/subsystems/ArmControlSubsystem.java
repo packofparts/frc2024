@@ -44,7 +44,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     NEUTRAL,
   }
   
-  
+  int ii = 0;
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
   //private final AnalogEncoder pivotEncoder = new AnalogEncoder(ArmConstants.armPivotEncoderPort);
@@ -79,8 +79,8 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-      pivotPeriodic(); //maintains the desired pivot angle
-      //extensionPeriodic(); //maintains the desired extension length
+      //pivotPeriodic(); //maintains the desired pivot angle
+      extensionPeriodic(); //maintains the desired extension length
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
       SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
       SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
@@ -127,10 +127,17 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
 
-    extensionController.set(extensionPIDOutput);
+    if (ii++ < 200) {
+      extensionController.set(0.25);
+    } else if (ii-- > 0) {
+      extensionController.set(0.25);
+    } else{
+      extensionController.set(0);
+    }
   }
 
   public void setConfig(boolean isCoast){
+    ii = 0;
 
     rightPivotController.follow(leftPivotController);
     rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
