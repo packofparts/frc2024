@@ -7,7 +7,7 @@ package frc.robot.Constants;
 /** Add your docs here. */
 public class JoystickConstants {
     public static int rotJoystickPort = 0;
-    public static int transJoystickPort = 1;
+    public static int transJoystickPort = 0;
 
     public static double deadZone = 0.2;
     public static double radDeadZone = 0.05;
