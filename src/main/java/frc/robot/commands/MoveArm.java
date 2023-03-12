@@ -91,11 +91,11 @@ public class MoveArm extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-
-    if(this.doForTime){
-      return arm.atAngleSetpoint() && arm.atTelescopeSetpoint() && timer.get() > this.forTime;
-    } 
-    return !this.indefinite && arm.atAngleSetpoint() && arm.atTelescopeSetpoint();
+    return true;
+    // if(this.doForTime){
+    //   return arm.atAngleSetpoint() && arm.atTelescopeSetpoint() && timer.get() > this.forTime;
+    // } 
+    // return !this.indefinite && arm.atAngleSetpoint() && arm.atTelescopeSetpoint();
     
   }
 }

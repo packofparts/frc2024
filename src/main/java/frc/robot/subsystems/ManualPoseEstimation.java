@@ -37,6 +37,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.spline.PoseWithCurvature;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
@@ -67,6 +68,7 @@ public class ManualPoseEstimation extends SubsystemBase{
     //Initializing Subsystems
     this.swervee = swerve;
     lime = limelight;
+    lime.setPipeline(1);
     // Getting Tag Layout
     try {
       layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
@@ -88,10 +90,13 @@ public class ManualPoseEstimation extends SubsystemBase{
   public void updateVision() {
     PhotonPipelineResult image = lime.getImg();
     double timestamp = image.getTimestampSeconds();
-    PhotonTrackedTarget target = image.getBestTarget();
-    
-    Pose2d targetpose = getPoseFromTarget(target);
-    
+    PhotonTrackedTarget target;
+    Pose2d targetpose = null;
+    if (image.hasTargets()) {
+      target = image.getBestTarget();
+      
+      targetpose = getPoseFromTarget(target);
+    }
 
     if (targetpose != null) {
       poseEstimator.addVisionMeasurement(targetpose, timestamp);
@@ -106,21 +111,26 @@ public class ManualPoseEstimation extends SubsystemBase{
       SmartDashboard.putNumber("Pose Ambiguity", target.getPoseAmbiguity());
 
       if (target.getPoseAmbiguity()<=.2) {
-        Pose3d targetpose = layout.getTagPose(target.getFiducialId()).get();
+
+        Optional<Pose3d> targetpose = layout.getTagPose(target.getFiducialId());
+
+        if (targetpose.isPresent()) {
+          return null;
+        }
 
         Transform3d transformation = target.getBestCameraToTarget().inverse();
         
 
 
-        targetpose = targetpose.transformBy(transformation);
-        targetpose = targetpose.transformBy(VisionConstants.robotToCam.inverse());
+        Pose3d targetPoseFinal = targetpose.get().transformBy(transformation);
+        targetPoseFinal = targetPoseFinal.transformBy(VisionConstants.robotToCam.inverse());
 
-        SmartDashboard.putNumber("Transformation X", targetpose.getX());
-        SmartDashboard.putNumber("Transformation Y", targetpose.getY());
-        SmartDashboard.putNumber("Transformation Rot", targetpose.toPose2d().getRotation().getDegrees());
+        SmartDashboard.putNumber("Transformation X", targetPoseFinal.getX());
+        SmartDashboard.putNumber("Transformation Y", targetPoseFinal.getY());
+        SmartDashboard.putNumber("Transformation Rot", targetPoseFinal.toPose2d().getRotation().getDegrees());
 
-        if (Util.getMagnitude(targetpose.getX(), targetpose.getY())<VisionConstants.maxDistance) 
-          return targetpose.toPose2d();
+        //if (Util.getMagnitude(targetPoseFinal.getX(), targetPoseFinal.getY())<VisionConstants.maxDistance) 
+          return targetPoseFinal.toPose2d();
       }
       
     }

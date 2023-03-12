@@ -18,6 +18,7 @@ import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.ClawMotor;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ManualPoseEstimation;
@@ -36,30 +37,30 @@ public class RobotContainer {
 
   public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   
-  public final Limelight limeLightSubSystem = new Limelight();
+  //public final Limelight limeLightSubSystem = new Limelight();
 
   //public final PoseEstimation pose = new PoseEstimation(lime, swerve);
-  //public final ManualPoseEstimation pose = new ManualPoseEstimation(lime, swerve, ManualPoseEstimation.Strategy.BEST);
+  //public final ManualPoseEstimation pose = new ManualPoseEstimation(limeLightSubSystem, drivetrain, ManualPoseEstimation.Strategy.BEST);
 
   // Commented because testing and probably will cause null errors
   public final ArmControlSubsystem armControl = new ArmControlSubsystem();
 
-  // public final ClawMotor clawMotor = new ClawMotor();
+  public final ClawMotor clawMotor = new ClawMotor();
 
   // Commands
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
-  public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
+  //public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
   public final PIDtuning pid = new PIDtuning(drivetrain);
 
   //public final AutoAlign align = 
    // new AutoAlign(pose, lime, swerve, new Transform2d(new Translation2d(1, 0), new Rotation2d(0)));
 
-  public final LimelightAlign generalAlign = 
-    new LimelightAlign(
-      drivetrain, 
-      limeLightSubSystem, 
-      1, 
-      0);
+  // public final LimelightAlign generalAlign = 
+  //   new LimelightAlign(
+  //     drivetrain, 
+  //     limeLightSubSystem, 
+  //     1, 
+  //     0);
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
@@ -104,6 +105,6 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    new JoystickButton(Input.getTJoystick(), 2).toggleOnTrue(aimbot);
+    //new JoystickButton(Input.getTJoystick(), 2).toggleOnTrue(aimbot);
   }
 }

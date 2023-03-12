@@ -34,7 +34,7 @@ public class ClawMotor extends SubsystemBase {
     if(Input.getIntake()){
       intake();
     }
-    if(Input.getOuttake()){
+    else if(Input.getOuttake()){
       outtake();
     }
     else{
@@ -49,7 +49,7 @@ public class ClawMotor extends SubsystemBase {
     main.set(TalonSRXControlMode.PercentOutput,-1);
   }
   public void brake(){
-    main.set(TalonSRXControlMode.PercentOutput,0);
+    main.set(TalonSRXControlMode.PercentOutput,0.1);
   }
 
 

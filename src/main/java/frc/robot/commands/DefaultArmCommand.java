@@ -33,17 +33,17 @@ public class DefaultArmCommand extends CommandBase {
   void handleInput(){
 
     if(Input.getDPad() == Input.DPADUP){
-      armControlSubsystem.changeDesiredPivotRotation(.05); //
+      armControlSubsystem.changeDesiredPivotRotation(.025); //
     }else if(Input.getDPad() == Input.DPADDOWN){
-      armControlSubsystem.changeDesiredPivotRotation(-.05);
+      armControlSubsystem.changeDesiredPivotRotation(-.025);
 
     }
     
     else if(Input.getDPad() == Input.DPADRIGHT){
-      armControlSubsystem.changeDesiredExtension(0.25);
+      armControlSubsystem.changeDesiredExtension(.2);
     }
     else if(Input.getDPad() == Input.DPADLEFT){
-      armControlSubsystem.changeDesiredExtension(-0.25);
+      armControlSubsystem.changeDesiredExtension(-.2);
     }
     
     else if(Input.getA()){

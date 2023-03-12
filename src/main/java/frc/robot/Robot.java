@@ -65,13 +65,13 @@ public class Robot extends TimedRobot {
     // autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
     // autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
 
-    _commandSelector.addOption(
-      "LimelightAlign", 
-      new LimelightAlign(
-        _robotContainer.drivetrain, 
-        _robotContainer.limeLightSubSystem, 
-        1, 
-        0));
+    // _commandSelector.addOption(
+    //   "LimelightAlign", 
+    //   new LimelightAlign(
+    //     _robotContainer.drivetrain, 
+    //     _robotContainer.limeLightSubSystem, 
+    //     1, 
+    //     0));
 
     SmartDashboard.putData("Auto commands", _commandSelector);
   }

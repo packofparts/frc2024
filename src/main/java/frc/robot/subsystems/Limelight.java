@@ -75,6 +75,8 @@ public class Limelight extends SubsystemBase {
     if (img.getBestTarget() != null) {
       SmartDashboard.putNumber("LimelightYaw", img.getBestTarget().getYaw());
     }
+    SmartDashboard.putBoolean("AprilTag Detected", img.hasTargets());
+
   }
   public double getYaw(){
     PhotonTrackedTarget targ = img.getBestTarget();

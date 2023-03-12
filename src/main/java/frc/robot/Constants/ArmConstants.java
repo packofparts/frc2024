@@ -47,7 +47,7 @@ public class ArmConstants {
     public static final int clawPort = 2;
 
     public static final double relEncoderToInitialGear = 1.0/48;
-    public static final double falconToFinalGear = 1/240;
+    public static final double falconToFinalGear = 1.0/240;
     //Change this
     public static boolean leftPivotInverted = true;
 }

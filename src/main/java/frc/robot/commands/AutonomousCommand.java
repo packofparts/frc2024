@@ -99,16 +99,17 @@ public class AutonomousCommand extends CommandBase {
         //spit out cube
         new MoveArm(arm, claw, false, true, 1.0, ArmSetting.NODE3),
         //move forward and lower arm
-        new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(5, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmSetting.GNODE)),
-        //align with cube
-        new LimelightAlign(swerve, lime, 0, 0),
-        //move forward and get piece
-        new MoveTo(new Transform2d(new Translation2d(1, 0), new Rotation2d(0)), swerve, poseEstimator).raceWith(new MoveArm(arm, claw, true, false, true, ArmSetting.GNODE)),
-        //rotate
         new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
-        //charge station
-        new AutoBalanceCommand(swerve)
-    );
+        new AutoBalanceCommand(swerveSub));    //     new ParallelCommandGroup(new MoveTo(new Transform2d(new Translation2d(5, 0), new Rotation2d(0)), swerve, poseEstimator),new MoveArm(arm, claw, false, false, false, ArmSetting.GNODE)),
+    //     //align with cube
+    //     new LimelightAlign(swerve, lime, 0, 0),
+    //     //move forward and get piece
+    //     new MoveTo(new Transform2d(new Translation2d(1, 0), new Rotation2d(0)), swerve, poseEstimator).raceWith(new MoveArm(arm, claw, true, false, true, ArmSetting.GNODE)),
+    //     //rotate
+    //     new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve, poseEstimator),
+    //     //charge station
+    //     new AutoBalanceCommand(swerve)
+    // );
     }
     else {
       //assuming it starts facing towards positive X and that you are in line with the cube piece across

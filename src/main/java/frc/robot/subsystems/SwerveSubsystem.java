@@ -97,18 +97,18 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putNumber("Pitch", getPitch());
-    SmartDashboard.putNumber("Yaw", getYaw());
-    SmartDashboard.putNumber("Roll", getRoll());
+    // SmartDashboard.putNumber("Pitch", getPitch());
+    // SmartDashboard.putNumber("Yaw", getYaw());
+    // SmartDashboard.putNumber("Roll", getRoll());
 
-    for(int i = 0; i<getRawModules().length;i++){
-      SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
-      SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
-      SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
-      SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
-      SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
-      SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity());
-    }
+    // for(int i = 0; i<getRawModules().length;i++){
+    //   SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
+    //   SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
+    //   SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
+    //   SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
+    //   SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
+    //   SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity());
+    // }
 
     m_odometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("OdometryX", getRobotPose().getX());
