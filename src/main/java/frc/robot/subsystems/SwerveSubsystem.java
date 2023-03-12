@@ -28,8 +28,8 @@ import frc.robot.Constants.PIDConstants;
 import frc.robot.SwerveModule;
 
 public class SwerveSubsystem extends SubsystemBase {
-  //Bevel Gear must be facing to the left in order to work
 
+  // Bevel gears must be facing to the left in order to work
   private final SwerveModule frontLeft = new SwerveModule(
     DriveConstants.kFrontLeftDriveCANId, 
     DriveConstants.kFrontLeftSteerCANId,
@@ -45,36 +45,36 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveModule frontRight = new SwerveModule(
     DriveConstants.kFrontRightDriveCANId, 
     DriveConstants.kFrontRightSteerCANId,
-    1,
-    true,
-    false,
-    0.321,
-    false,
-    true,
+    1 /* abs encoder analog channel number */,
+    true /* driving motor inversion */,
+    false /* steering motor inversion */,
+    0.321 /* abs encoder offset */,
+    false /* abs encoder inversion */,
+    true /* is using abs encoder */,
     PIDConstants.kFrontRightSteeringPIDControl,
     PIDConstants.kFrontRightDrivingMotorController);
 
   private final SwerveModule backLeft = new SwerveModule(
     DriveConstants.kBackLeftDriveCANId, 
     DriveConstants.kBackLeftSteerCANId,
-    2,
-    false,
-    false,
-    0.751,
-    false, 
-    true,
+    2 /* abs encoder analog channel number */,
+    false /* driving motor inversion */,
+    false /* steering motor inversion */,
+    0.751 /* abs encoder offset */,
+    false /* abs encoder inversion */, 
+    true /* is using abs encoder */,
     PIDConstants.kBackRightSteeringPIDControl,
     PIDConstants.kFrontLeftDrivingMotorController);
 
   private final SwerveModule backRight = new SwerveModule(
     DriveConstants.kBackRightDriveCANId, 
     DriveConstants.kBackRightSteerCANId,
-    3,
-    true,
-    false,
-    0.546,
-    false, 
-    true,
+    3 /* abs encoder analog channel number */,
+    true /* driving motor inversion */,
+    false /* steering motor inversion */,
+    0.546 /* abs encoder offset */,
+    false /* abs encoder inversion */, 
+    true /* is using abs encoder */,
     PIDConstants.kBackLeftSteeringPIDControl,
     PIDConstants.kBackRightDrivingMotorController); 
 
@@ -151,6 +151,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Heading",-navx.getAngle());
     return -navx.getAngle();
   }
+
   /**
    * This gets the Rotation2d of the gyro (which is in continuous input)
    * @return the Rotation2d of the gyro
@@ -159,9 +160,11 @@ public class SwerveSubsystem extends SubsystemBase {
   public Rotation2d getRotation2d(){
     return Rotation2d.fromDegrees(getHeading());
   }
+
   public Rotation2d geRotation2dNotCCW(){
     return Rotation2d.fromDegrees(-getHeading());
   }
+
     /**
    * This function sets the current speeds of the swerve modules to the following array pattern
    * [frontleft, frontright, backleft, backright]
@@ -192,6 +195,7 @@ public class SwerveSubsystem extends SubsystemBase {
     backLeft.setDesiredState(desiredStates[2],DriveMode.AUTO);
     backRight.setDesiredState(desiredStates[3],DriveMode.AUTO);
   }
+
   /**
    * 
    * @return an array of SwerveModulePosition objects as [frontleft, frontright, backleft, backright]
@@ -200,6 +204,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveModulePosition[] getModulePositions(){
     return(new SwerveModulePosition[]{frontLeft.getModulePos(),frontRight.getModulePos(),backLeft.getModulePos(),backRight.getModulePos()});
   }
+
   /**
    * 
    * @param x this is the forward velocity in meters/second
@@ -228,6 +233,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
     this.setModuleStates(moduleStates, DriveMode.AUTO);
   }
+
   /**
    * This method resets the pose of the robot to the desired robot pose
    * @param pose provide the new desired pose of the robot
@@ -236,12 +242,14 @@ public class SwerveSubsystem extends SubsystemBase {
   public void resetRobotPose(Pose2d pose){
     m_odometry.resetPosition(pose.getRotation(), getModulePositions(), pose);
   }
+
   /**
    * @return provide the pose of the robot in meters
    */
   public Pose2d getRobotPose(){
     return m_odometry.getPoseMeters();
   }
+
   /**
    * makes all modules return to its original state
    */
@@ -251,12 +259,14 @@ public class SwerveSubsystem extends SubsystemBase {
       mod.returnToOrigin();
     }
   }
+
   /**
    * @return an array of all the SwerveModule objects in the format [frontLeft,frontRight,backLeft,backRight]
    */
   public SwerveModule[] getRawModules(){
     return new SwerveModule[]{frontLeft,frontRight,backLeft,backRight};
   }
+
   /**
    * stops all swerve module rotation and translation
    */
@@ -265,6 +275,7 @@ public class SwerveSubsystem extends SubsystemBase {
       mod.stop();
     }
   }
+
   /**
    * sets the Idle mode for all the modules
    * @param transMode idle mode for translation motor
@@ -299,6 +310,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public float getRoll(){
     return this.navx.getRoll(); 
   }
+
   /**
    * 
    * @return returns yaw in degrees (180,-180)
@@ -306,6 +318,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public float getYaw(){
     return this.navx.getYaw();
   }
+
   /**
    * 
    * @return returns pitch in degrees (180,-180)
@@ -313,5 +326,4 @@ public class SwerveSubsystem extends SubsystemBase {
   public float getPitch(){
     return this.navx.getPitch();
   }
-
 }
