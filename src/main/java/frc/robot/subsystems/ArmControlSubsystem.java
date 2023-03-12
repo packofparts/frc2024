@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
@@ -20,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.BooleanArrayEntry;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -51,12 +53,11 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
   
 
-  double currentPivotRotation = ArmConstants.minAngleRad;
-  double desiredPivotRotation = currentPivotRotation;
+  double currentPivotRotation = Units.degreesToRadians(6.5);
+  double desiredPivotRotation = ArmConstants.minAngleRad;
 
   double currentExtensionDistance = ArmConstants.minExtensionIn;
   double desiredExtensionDistance = currentExtensionDistance;
-
   //TODO moves these to ArmConstants
   PIDController pivotPID; //TODO calculate gains to actually change the angle
   ArmFeedforward pivotFeedforward; //TODO calculate gains to beat the force of gravity 
@@ -72,7 +73,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionPID = new PIDController(0.05, 0, 0);
     
     
-    setConfig();
+    setConfig(false);
     SmartDashboard.putNumber("PivotkP", 2);
   }
 
@@ -80,6 +81,9 @@ public class ArmControlSubsystem extends SubsystemBase {
   public void periodic() {
       pivotPeriodic(); //maintains the desired pivot angle
       //extensionPeriodic(); //maintains the desired extension length
+      SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
+      SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
+      SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
   }
 
   private void pivotPeriodic(){
@@ -87,7 +91,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
 
     desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
-
+    
     //set currentRotation with encoders
     currentPivotRotation = getCurrentPivotRotation(true);
 
@@ -95,10 +99,10 @@ public class ArmControlSubsystem extends SubsystemBase {
     double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
 
     SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
-    SmartDashboard.putNumber("CurrentPivotPoint", currentPivotRotation);
-    SmartDashboard.putNumber("DesiredPivotPoint", desiredPivotRotation);
-    SmartDashboard.putNumber("LeftSensor", leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear);
-    SmartDashboard.putNumber("RightSensor", rightPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear);
+    SmartDashboard.putNumber("CurrentPivotPoint", Units.radiansToDegrees(currentPivotRotation));
+    SmartDashboard.putNumber("DesiredPivotPoint", Units.radiansToDegrees(desiredPivotRotation));
+    SmartDashboard.putNumber("LeftSensor", leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
+    SmartDashboard.putNumber("RightSensor", rightPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
 
 
      
@@ -126,14 +130,17 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionController.set(extensionPIDOutput);
   }
 
-  public void setConfig(){
+  public void setConfig(boolean isCoast){
+
     rightPivotController.follow(leftPivotController);
     rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
     leftPivotController.setInverted(ArmConstants.leftPivotInverted);
-    rightPivotController.setNeutralMode(NeutralMode.Brake);
-    leftPivotController.setNeutralMode(NeutralMode.Brake);
+    rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
+    leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
     rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    extensionController.setIdleMode(isCoast ? IdleMode.kCoast : IdleMode.kBrake);
+    extensionController.setInverted(true);
   }
 
   public void setDesiredPivotRotation(double _desiredRotation){
@@ -155,6 +162,8 @@ public class ArmControlSubsystem extends SubsystemBase {
    * @param distanceFromCamera in meters
    * @return the desired angle in radians
    */
+
+
   public double getDesiredPivotAngle(double distanceFromCamera){
     return Math.atan(distanceFromCamera / ArmConstants.pivotPosInMetersY); //in radians
   }
@@ -162,28 +171,37 @@ public class ArmControlSubsystem extends SubsystemBase {
   public boolean atAngleSetpoint(){
     return pivotPID.atSetpoint();
   }
+
+
   public boolean atTelescopeSetpoint(){
     return extensionPID.atSetpoint();
   }
 
+
   public Command waitUntilSpPivot(double sp){
     return new FunctionalCommand(()->setDesiredPivotRotation(sp), null, null, this::atAngleSetpoint, this);
   }
+
 
   public Command waitUntilSpTelescope(double sp){
   
     return new FunctionalCommand(()->setDesiredExtension(sp), null, null, this::atTelescopeSetpoint, this);
   }
   
+
   public double getCurrentPivotRotation(boolean inRadians){
     //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
+
     double rotation = leftPivotController.getSelectedSensorPosition() / 2048 /240;
+
+    rotation = Math.IEEEremainder(rotation, 1.0);
     
     if(inRadians){
-      return rotation * Math.PI * 2 % (Math.PI * 2);
+      return rotation * 2*Math.PI + Units.degreesToRadians(6.5);
     }
-    return rotation;
+    return rotation + Units.degreesToRotations(6.5);
   }
+
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
@@ -192,6 +210,9 @@ public class ArmControlSubsystem extends SubsystemBase {
   
   public void changeDesiredPivotRotation(double i){
     this.desiredPivotRotation += i;
+  }
+  public void changeDesiredExtension(double i){
+    this.desiredExtensionDistance+=i;
   }
   /**
    * returns the pose of the center of the claw relative to the base of the robot
