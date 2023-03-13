@@ -54,7 +54,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
   
 
-  double currentPivotRotation = Units.degreesToRadians(6.5);
+  double currentPivotRotation = Units.degreesToRadians(ArmConstants.zeroAngleRad);
   double desiredPivotRotation = ArmConstants.minAngleRad;
 
   double currentExtensionDistance = ArmConstants.minExtensionIn;
@@ -78,9 +78,33 @@ public class ArmControlSubsystem extends SubsystemBase {
     setConfig(isCoast);
     SmartDashboard.putNumber("PivotkP", 2);
     SmartDashboard.putBoolean("armCoastMode", isCoast);
-
+    
 
     desiredPivotRotation = getCurrentPivotRotation(true);
+  }
+
+  public void setConfig(boolean isCoast){
+    rightPivotController.configFactoryDefault();
+    leftPivotController.configFactoryDefault();
+
+    rightPivotController.follow(leftPivotController);
+
+    rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
+    leftPivotController.setInverted(ArmConstants.leftPivotInverted);
+
+    rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
+    leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
+
+    rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
+    leftPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*ArmConstants.encoderResolution*ArmConstants.falconToFinalGear);
+    rightPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.minExtensionIn)*ArmConstants.encoderResolution*ArmConstants.extensionEncoderToInches);
+
+    extensionController.setIdleMode(IdleMode.kBrake);
+    extensionController.setInverted(true);
+    extensionController.burnFlash();
+    
   }
 
   @Override
@@ -155,20 +179,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   }
 
-  public void setConfig(boolean isCoast){
 
-    rightPivotController.follow(leftPivotController);
-    rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
-    leftPivotController.setInverted(ArmConstants.leftPivotInverted);
-    rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-    leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-    rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    extensionController.setIdleMode(IdleMode.kBrake);
-    extensionController.setInverted(true);
-    extensionController.burnFlash();
-    
-  }
 
   public void setDesiredPivotRotation(double _desiredRotation){
     desiredPivotRotation = _desiredRotation;
@@ -219,15 +230,14 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public double getCurrentPivotRotation(boolean inRadians){
     //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
-
-    double rotation = (leftPivotController.getSelectedSensorPosition()) / 2048 / 240;
+    double rotation = (leftPivotController.getSelectedSensorPosition()) *ArmConstants.encoderResolution * ArmConstants.falconToFinalGear;
 
     rotation = Math.IEEEremainder(rotation, 1.0);
     
     if(inRadians){
-      return rotation * 2*Math.PI + Units.degreesToRadians(66.5);
+      return rotation * 2*Math.PI;
     }
-    return rotation + Units.degreesToRotations(66.5);
+    return rotation;
   }
 
 
