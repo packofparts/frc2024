@@ -99,10 +99,12 @@ public class ArmControlSubsystem extends SubsystemBase {
     leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
     leftPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*ArmConstants.encoderResolution*ArmConstants.falconToFinalGear);
-    rightPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.minExtensionIn)*ArmConstants.encoderResolution*ArmConstants.extensionEncoderToInches);
+    rightPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*ArmConstants.encoderResolution*ArmConstants.falconToFinalGear);
 
     extensionController.setIdleMode(IdleMode.kBrake);
     extensionController.setInverted(true);
+    extensionEncoder.setPositionConversionFactor(ArmConstants.extensionEncoderToInches);
+    extensionEncoder.setPosition(ArmConstants.minExtensionIn);
     extensionController.burnFlash();
     
   }
@@ -243,8 +245,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
-
-    return extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches + ArmConstants.minExtensionIn;
+    return extensionEncoder.getPosition();
   }
   
   public void changeDesiredPivotRotation(double i){
