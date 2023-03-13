@@ -98,8 +98,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-    leftPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*ArmConstants.encoderResolution*ArmConstants.falconToFinalGear);
-    rightPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*ArmConstants.encoderResolution*ArmConstants.falconToFinalGear);
+    leftPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*(1.0/ArmConstants.encoderResolution)*(1.0/ArmConstants.falconToFinalGear));
+    rightPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*(1.0/ArmConstants.encoderResolution)*(1.0/ArmConstants.falconToFinalGear));
 
     extensionController.setIdleMode(IdleMode.kBrake);
     extensionController.setInverted(true);
