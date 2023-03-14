@@ -40,10 +40,10 @@ public class DefaultArmCommand extends CommandBase {
     }
     
     else if(Input.getDPad() == Input.DPADRIGHT){
-      armControlSubsystem.changeDesiredExtension(.2);
+      armControlSubsystem.changeDesiredExtension(.12);
     }
     else if(Input.getDPad() == Input.DPADLEFT){
-      armControlSubsystem.changeDesiredExtension(-.2);
+      armControlSubsystem.changeDesiredExtension(-.12);
     }
     
     else if(Input.getA()){

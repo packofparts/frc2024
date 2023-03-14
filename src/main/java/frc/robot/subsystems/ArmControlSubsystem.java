@@ -14,6 +14,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -72,7 +73,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotPID = new PIDController(0.02, 0, 0);
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
-    extensionPID = new PIDController(0.05, 0, 0);
+    extensionPID = new PIDController(0.3, 0, 0);
+    extensionPID.setTolerance(0.25);
     
    
     
@@ -104,8 +106,10 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     extensionController.setIdleMode(IdleMode.kBrake);
     extensionController.setInverted(true);
-    extensionEncoder.setPositionConversionFactor(ArmConstants.extensionEncoderToInches);
-    extensionEncoder.setPosition(ArmConstants.minExtensionIn);
+    extensionEncoder.setPositionConversionFactor(1);
+    extensionEncoder.setPosition(0);
+
+    SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition());
     extensionController.burnFlash();
     
   }
@@ -166,9 +170,9 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
     desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
-    // if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
-    //   desiredExtensionDistance = ArmConstants.minExtensionIn;
-    // }
+    if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
+      desiredExtensionDistance = ArmConstants.minExtensionIn;
+    }
 
 
     currentExtensionDistance = getCurrentExtensionIn();
@@ -176,6 +180,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
     
+    extensionPIDOutput = MathUtil.applyDeadband(extensionPIDOutput, 0.05);
+
     extensionController.set(extensionPIDOutput);
 
   }
@@ -252,7 +258,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
   public void changeDesiredExtension(double i){
     this.desiredExtensionDistance += i;
-    extensionController.set(i);
+    //extensionController.set(i);
   }
   /**
    * returns the pose of the center of the claw relative to the base of the robot
