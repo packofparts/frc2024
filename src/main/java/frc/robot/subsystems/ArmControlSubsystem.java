@@ -59,6 +59,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   double currentExtensionDistance = ArmConstants.minExtensionIn;
   double desiredExtensionDistance = currentExtensionDistance;
+
   //TODO moves these to ArmConstants
   PIDController pivotPID; //TODO calculate gains to actually change the angle
   ArmFeedforward pivotFeedforward; //TODO calculate gains to beat the force of gravity 
@@ -68,7 +69,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   //TODO make the constructor more useful and modular by passing in most values from ArmConstants
   public ArmControlSubsystem() {
     //pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
-    pivotPID = new PIDController(0.05, 0, 0);
+    pivotPID = new PIDController(0.02, 0, 0);
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
     extensionPID = new PIDController(0.05, 0, 0);
@@ -80,7 +81,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("armCoastMode", isCoast);
     
 
-    desiredPivotRotation = getCurrentPivotRotation(true);
+    //desiredPivotRotation = getCurrentPivotRotation(true);
   }
 
   public void setConfig(boolean isCoast){
@@ -137,7 +138,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   private void pivotPeriodic(){
 
-    pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
+    //pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
 
     desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
     
@@ -156,8 +157,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("LeftPivotAbsPos",leftPivotController.getSensorCollection().getIntegratedSensorPosition());
     SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSensorCollection().getIntegratedSensorPosition());
     
-    //-0.095237523317337
-    //0.142857700586319
     //TODO we dont know which one is inverted yet
     leftPivotController.set(pivotPIDOutput);
     rightPivotController.set(pivotPIDOutput); 
@@ -166,7 +165,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   private void extensionPeriodic(){
 
 
-    //desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+    desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
     // if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
     //   desiredExtensionDistance = ArmConstants.minExtensionIn;
     // }
@@ -232,12 +231,12 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public double getCurrentPivotRotation(boolean inRadians){
     //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
-    double rotation = (leftPivotController.getSelectedSensorPosition()) *ArmConstants.encoderResolution * ArmConstants.falconToFinalGear;
+    double rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear;
 
     rotation = Math.IEEEremainder(rotation, 1.0);
     
     if(inRadians){
-      return rotation * 2*Math.PI;
+      return rotation * 2 * Math.PI;
     }
     return rotation;
   }
