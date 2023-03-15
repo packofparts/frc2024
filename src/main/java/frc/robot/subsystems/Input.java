@@ -53,8 +53,16 @@ public class Input {
     public static boolean getX(){return xboxController.getXButtonPressed();}
     public static boolean getY(){return xboxController.getYButtonPressed();}
     public static double getDPad(){return xboxController.getPOV();}
-    public static boolean getIntake(){return xboxController.getRightBumper();}
-    public static boolean getOuttake(){return xboxController.getLeftBumper();}
+    public static boolean getRightBumper(){return xboxController.getRightBumper();}
+    public static boolean getLeftBumper(){return xboxController.getLeftBumper();}
+
+    public static double getLeftTrigger(){return xboxController.getLeftTriggerAxis();}
+    public static double getRightTrigger(){return xboxController.getRightTriggerAxis();}
+
+    public static double getLeftStickY(){return xboxController.getLeftY();}
+    public static double getRightStickY(){return xboxController.getRightY();}
+    
+    //public static double getRightStickY(){return xboxController.getRightStickY()}
     
 
 

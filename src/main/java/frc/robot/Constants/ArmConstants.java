@@ -11,18 +11,17 @@ import edu.wpi.first.math.util.Units;
 public class ArmConstants {
     public static final double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
     public static final double zeroAngleRad = Units.degreesToRadians(6.5);
-    public static final double minAngleRad = Units.degreesToRadians(20.0);
+
+    public static final double minAngleRad = Units.degreesToRadians(27.0);
     public static final double maxAngleRad = Units.degreesToRadians(115.0);
-    public static final double minPivotForExtensionRad = Units.degreesToRadians(27);
 
     public static final double extensionEncoderToInches =  1.0/.25;
     public static final double minExtensionIn = 41;//29.85+ 7.073; //basically the length of the first base //inches
-
+    //when it is at zeroAngleRad
+    public static final double zeroExtensionIn = 1.618 + minExtensionIn;
 
 
     public static final double maxExtensionIn = 57;
-    public static final double armToRobotAngle = 43.288;
-
 
     // Setpoints
     public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, 43.0}; //inches
@@ -42,7 +41,7 @@ public class ArmConstants {
     public static final int leftArmPivot = 15;
     public static final int telescopicArmSpark = 10;
     public static final int armPivotEncoderPort = 17;
-    public static final int clawPort = 2;
+
 
     public static final double relEncoderToInitialGear = 1.0/48;
 

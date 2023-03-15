@@ -4,11 +4,16 @@
 
 package frc.robot.Constants;
 
+import com.ctre.phoenix.motorcontrol.InvertType;
+
 /** Add your docs here. */
-public class PnumaticConstants {
+public class IntakeConstants {
     public static int intakeSolenoid1ID;
     public static int compressorID;
     public static double totalOutputForce;
     public static double clawLengthMeters;
     public static double clawWidthMeters;
+    public static final int clawPort = 2;
+    public static final int intakePort = 0;
+    public static final InvertType motorInverted = InvertType.None;
 }

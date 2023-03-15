@@ -20,21 +20,22 @@ import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.IntakeConstants;
 
 public class ClawMotor extends SubsystemBase {
   /** Creates a new ClawMotor. */
   TalonSRX main;
   public ClawMotor() {
-    main = new TalonSRX(ArmConstants.clawPort);
+    main = new TalonSRX(IntakeConstants.clawPort);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if(Input.getIntake()){
+    if(Input.getRightBumper()){
       intake();
     }
-    else if(Input.getOuttake()){
+    else if(Input.getLeftBumper()){
       outtake();
     }
     else{

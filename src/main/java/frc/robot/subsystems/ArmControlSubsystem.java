@@ -31,7 +31,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.PnumaticConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Util;
 
 
@@ -170,7 +170,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
     desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
-    if(desiredPivotRotation <= ArmConstants.minPivotForExtensionRad){
+    if(desiredPivotRotation <= ArmConstants.minAngleRad ){
       desiredExtensionDistance = ArmConstants.minExtensionIn;
     }
 
@@ -265,7 +265,7 @@ public class ArmControlSubsystem extends SubsystemBase {
    * @return a translation2d object in meters and radians X is horizontal dist from the center of bot and Y is vertical distance from the center of the robot
    */
   public Translation2d getRelativeClawPose(){
-    double r = Units.inchesToMeters(getCurrentExtensionIn()) + PnumaticConstants.clawLengthMeters/2 + ArmConstants.pivotPosInMetersY;
+    double r = Units.inchesToMeters(getCurrentExtensionIn()) + IntakeConstants.clawLengthMeters/2 + ArmConstants.pivotPosInMetersY;
     double theta = getCurrentPivotRotation(true);
 
     return new Translation2d((r*Math.cos(theta)),(r*Math.sin(theta))); 
