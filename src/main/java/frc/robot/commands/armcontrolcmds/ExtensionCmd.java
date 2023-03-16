@@ -2,23 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.armcontrolcmds;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 
-public class MoveArmin extends CommandBase {
-  
-  public MoveArmin(ArmControlSubsystem armControlSubsystem) {
+public class ExtensionCmd extends CommandBase {
+  ArmControlSubsystem armControl;
+  double desiredExtension;
+  public ExtensionCmd(ArmControlSubsystem arm, double desiredExtension) {
     
+    armControl = arm;
+    this.desiredExtension = desiredExtension;
 
-    addRequirements(armControlSubsystem);
+    addRequirements(armControl);
   }
 
-  
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    armControl.setDesiredExtension(desiredExtension);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -32,6 +36,6 @@ public class MoveArmin extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return armControl.atTelescopeSetpoint();
   }
 }

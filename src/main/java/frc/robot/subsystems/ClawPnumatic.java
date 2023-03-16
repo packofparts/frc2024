@@ -96,6 +96,15 @@ public class ClawPnumatic extends SubsystemBase {
     intakeSolenoid1.set(true);
   }
 
+
+  public void changePneumatics(boolean closed){
+    intakeSolenoid1.set(closed);
+  }
+
+  public void changeIntake(double speed){
+    intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);
+  }
+
   public void spinIntake(double speed){
     intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);
   }

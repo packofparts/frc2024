@@ -44,6 +44,12 @@ public class ArmControlSubsystem extends SubsystemBase {
     GNODE,
     NEUTRAL,
   }
+
+  public static enum MoveArmConfig {
+    SIMULTANEOUS,
+    SEQ_EXTEND_THEN_PIVOT,
+    SEQ_PIVOT_THEN_EXTEND
+  }
   
   int ii = 0;
   boolean isCoast = false;
@@ -71,10 +77,10 @@ public class ArmControlSubsystem extends SubsystemBase {
   public ArmControlSubsystem() {
 
     //pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
-    pivotPID = new PIDController(1.2, 0, 0);
+    pivotPID = new PIDController(1.4, 0, 0);
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
-    extensionPID = new PIDController(0.3, 0, 0);
+    extensionPID = new PIDController(0.15, 0, 0);
     extensionPID.setTolerance(0.15);
     
    
@@ -110,7 +116,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionController.setNeutralMode(NeutralMode.Brake);
     extensionController.setInverted(true);
     extensionController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    extensionController.setSelectedSensorPosition(ArmConstants.minExtensionIn);
+    extensionController.setSelectedSensorPosition(ArmConstants.minExtensionIn * 2048 / ArmConstants.extensionEncoderToInches);
     //extensionEncoder.setPositionConversionFactor(4);
     //extensionEncoder.setPosition(41);
 
@@ -126,8 +132,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       //   setConfig(br);
       // }
 
-      //pivotPeriodic(); //maintains the desired pivot angle
-      //extensionPeriodic(); //maintains the desired extension length
+      pivotPeriodic(); //maintains the desired pivot angle
+      extensionPeriodic(); //maintains the desired extension length
 
       // Getting Current And Desired Distances
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
@@ -144,7 +150,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
 
       SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
-      SmartDashboard.putNumber("extensionEncoderPos", extensionController.getSelectedSensorPosition()*ArmConstants.extensionEncoderToInches);
+      SmartDashboard.putNumber("extensionEncoderPos", extensionController.getSelectedSensorPosition()/2048*ArmConstants.extensionEncoderToInches);
+      //5.96533203125 max 
   }
 
   private void pivotPeriodic(){
@@ -252,7 +259,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
-    return extensionController.getSelectedSensorPosition()*ArmConstants.extensionEncoderToInches;
+    return extensionController.getSelectedSensorPosition()/2048*ArmConstants.extensionEncoderToInches;
   }
   
   public void changeDesiredPivotRotation(double i){
@@ -304,4 +311,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     setDesiredPivotRotation(rotation);
     setDesiredExtension(extension);
   }
+
+  
+
 }
