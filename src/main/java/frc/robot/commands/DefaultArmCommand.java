@@ -40,10 +40,10 @@ public class DefaultArmCommand extends CommandBase {
     }
     
     else if(Input.getDPad() == Input.DPADRIGHT){
-      armControlSubsystem.changeDesiredExtension(.12);
+      armControlSubsystem.changeDesiredExtension(.16);
     }
     else if(Input.getDPad() == Input.DPADLEFT){
-      armControlSubsystem.changeDesiredExtension(-.12);
+      armControlSubsystem.changeDesiredExtension(-.16);
     }
     
     else if(Input.getA()){
@@ -55,9 +55,6 @@ public class DefaultArmCommand extends CommandBase {
     }else if(Input.getX()){
       armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]);
       armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]));
-    }else if(Input.getY()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.minExtensionIn);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.minAngleRad));
     }
 
   }

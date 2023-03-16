@@ -11,30 +11,52 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import frc.robot.Constants.MiscNonConstants;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class ClawPnumatic extends SubsystemBase {
   /** Creates a new ClawPnumatic. */
+  //DoubleSolenoid intakeSolenoid1;
   Solenoid intakeSolenoid1;
   Compressor phCompressor;
+  PneumaticHub hub;
   TalonSRX intakeMotor;
+  AnalogPotentiometer pressureSensor;
+
 
   public ClawPnumatic() {
-    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, IntakeConstants.intakeSolenoid1ID);
-    phCompressor = new Compressor(IntakeConstants.compressorID, PneumaticsModuleType.REVPH);
-    intakeMotor = new TalonSRX(IntakeConstants.intakePort);
+    
+    hub = new PneumaticHub();
+    
+    /*
+    intakeSolenoid1 = hub.makeDoubleSolenoid(0,1);
+    pressureSensor = new AnalogPotentiometer(1);
+    phCompressor = hub.makeCompressor();
+    
+    phCompressor.enableAnalog(20, 60);
+    */
+    intakeMotor = new TalonSRX(IntakeConstants.clawPort);
+    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, 1); //extend
+    phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("ValueSwitch", phCompressor.getPressureSwitchValue());
+    SmartDashboard.putBoolean("CompressorEnabled", phCompressor.isEnabled());
+    SmartDashboard.putNumber("pressure", phCompressor.getPressure());
+    phCompressor.enableDigital();
     if (phCompressor.getPressure() > 60) phCompressor.disable();
-    else if (phCompressor.getPressure() <= 60) phCompressor.enableDigital();
+    else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
 
 
     //toggle intake solenoids
@@ -61,15 +83,17 @@ public class ClawPnumatic extends SubsystemBase {
   }
 
   public void togglePneumatics(){
-    if(intakeSolenoid1.get()){intakeSolenoid1.set(false);}
+    if(intakeSolenoid1.get()){
+      intakeSolenoid1.set(false);
+    }
     else{intakeSolenoid1.set(true);}
   }
 
   public void openPneumatics(){
-    intakeSolenoid1.set(true);
+    intakeSolenoid1.set(false);
   }
   public void closePneumatics(){
-    intakeSolenoid1.set(false);
+    intakeSolenoid1.set(true);
   }
 
   public void spinIntake(double speed){

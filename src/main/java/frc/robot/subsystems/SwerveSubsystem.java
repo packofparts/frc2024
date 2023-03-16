@@ -32,20 +32,20 @@ public class SwerveSubsystem extends SubsystemBase {
   // Bevel gears must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveCANId, DriveConstants.kFrontLeftSteerCANId,
-   0,false, false,0.442,false, true,
+   0,false, false,0.446,false, true,
    PIDConstants.kFrontLeftSteeringPIDControl, PIDConstants.kFrontLeftSteeringPIDControl);
 
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.kFrontRightDriveCANId, DriveConstants.kFrontRightSteerCANId,
-   1,true,false,0.664,false, true,
+   1,true,false,0.248,false, true,
    PIDConstants.kFrontRightSteeringPIDControl,PIDConstants.kFrontLeftDrivingMotorController);
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.kBackLeftDriveCANId, DriveConstants.kBackLeftSteerCANId,
-  2,false,false,0.757,false, true,
+  2,false,false,0.268,false, true,
   PIDConstants.kBackLeftSteeringPIDControl,PIDConstants.kBackLeftSteeringPIDControl);
 
 
   private final SwerveModule backRight = new SwerveModule(DriveConstants.kBackRightDriveCANId, DriveConstants.kBackRightSteerCANId,
-  3,true,false,0.112,false, true,
+  3,true,false,0.087,false, true,
    PIDConstants.kBackRightSteeringPIDControl,PIDConstants.kBackRightSteeringPIDControl); 
 
   // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
@@ -97,18 +97,18 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
 
-    // SmartDashboard.putNumber("Pitch", getPitch());
-    // SmartDashboard.putNumber("Yaw", getYaw());
-    // SmartDashboard.putNumber("Roll", getRoll());
+    SmartDashboard.putNumber("Pitch", getPitch());
+    SmartDashboard.putNumber("Yaw", getYaw());
+    SmartDashboard.putNumber("Roll", getRoll());
 
-    // for(int i = 0; i<getRawModules().length;i++){
-    //   SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
-    //   SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
-    //   SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
-    //   SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
-    //   SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
-    //   SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity());
-    // }
+    for(int i = 0; i<getRawModules().length;i++){
+      SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
+      SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
+      SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
+      SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
+      SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
+      SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity());
+    }
 
     m_odometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("OdometryX", getRobotPose().getX());

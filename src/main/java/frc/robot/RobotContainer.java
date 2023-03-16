@@ -19,6 +19,7 @@ import frc.robot.commands.PIDtuning;
 import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawMotor;
+import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ManualPoseEstimation;
@@ -44,8 +45,7 @@ public class RobotContainer {
 
   // Commented because testing and probably will cause null errors
   public final ArmControlSubsystem armControl = new ArmControlSubsystem();
-
-  public final ClawMotor clawMotor = new ClawMotor();
+  public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
