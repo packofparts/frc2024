@@ -42,6 +42,8 @@ public class ArmConstants {
     public static final int telescopicArmSpark = 10;
     public static final int armPivotEncoderPort = 17;
 
+    public static final int extensionPort = 0;
+
 
     public static final double relEncoderToInitialGear = 1.0/48;
 

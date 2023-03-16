@@ -43,7 +43,7 @@ public class ClawPnumatic extends SubsystemBase {
     phCompressor.enableAnalog(20, 60);
     */
     intakeMotor = new TalonSRX(IntakeConstants.clawPort);
-    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, 1); //extend
+    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, 0); //extend
     phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
   
   }
