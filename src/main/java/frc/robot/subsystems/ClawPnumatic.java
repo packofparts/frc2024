@@ -67,14 +67,22 @@ public class ClawPnumatic extends SubsystemBase {
       togglePneumatics();
 
     }
+
+    SmartDashboard.putNumber("RightTrigger", Input.getRightTrigger());
+
     if(Input.getRightTrigger()!= 0){
+      
       spinIntake(Input.getRightTrigger());
 
     }
     else if (Input.getLeftTrigger()!=0){
       spinOuttake(Input.getLeftTrigger());
 
+    }else{
+      changeIntake(0);
     }
+
+    //spinIntake(1);
   }
 
   public void setConfig(){

@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -59,13 +60,14 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   private final WPI_TalonFX extensionController = new WPI_TalonFX(ArmConstants.extensionPort);
   //private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
+  private final BangBangController bangController = new BangBangController();
   
 
-  double currentPivotRotation = Units.degreesToRadians(ArmConstants.zeroAngleRad);
+  double currentPivotRotation = ArmConstants.zeroAngleRad;
   double desiredPivotRotation = ArmConstants.minAngleRad;
 
   double currentExtensionDistance = ArmConstants.minExtensionIn;
-  double desiredExtensionDistance = currentExtensionDistance;
+  double desiredExtensionDistance = currentExtensionDistance + 3;
 
   //TODO moves these to ArmConstants
   PIDController pivotPID; //TODO calculate gains to actually change the angle
@@ -88,6 +90,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     setConfig(isCoast);
     SmartDashboard.putNumber("PivotkP", 2);
     SmartDashboard.putBoolean("armCoastMode", isCoast);
+    
     
 
     //desiredPivotRotation = getCurrentPivotRotation(true);
@@ -114,9 +117,9 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     
     extensionController.setNeutralMode(NeutralMode.Brake);
-    extensionController.setInverted(true);
+    extensionController.setInverted(false);
     extensionController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    extensionController.setSelectedSensorPosition(ArmConstants.minExtensionIn * 2048 / ArmConstants.extensionEncoderToInches);
+    extensionController.setSelectedSensorPosition(0);
     //extensionEncoder.setPositionConversionFactor(4);
     //extensionEncoder.setPosition(41);
 
@@ -133,7 +136,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       // }
 
       pivotPeriodic(); //maintains the desired pivot angle
-      extensionPeriodic(); //maintains the desired extension length
+      //extensionPeriodic(); //maintains the desired extension length
 
       // Getting Current And Desired Distances
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
@@ -185,13 +188,25 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     currentExtensionDistance = getCurrentExtensionIn();
 
-    double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
+    //double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
+    double extensionPIDOutput = bangController.calculate(currentExtensionDistance, desiredExtensionDistance);
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
     
     //extensionPIDOutput = MathUtil.applyDeadband(extensionPIDOutput, 0.05);
 
-    extensionController.set(extensionPIDOutput);
-    
+    if(Math.abs(extensionPIDOutput) < .1){
+      extensionPIDOutput = 0;
+    }
+
+    //extensionController.set(extensionPIDOutput);
+    if (Input.getDPad() == Input.DPADRIGHT){
+      extensionController.set(.25);
+    }else if(Input.getDPad() == Input.DPADLEFT){
+      extensionController.set(-.25);
+    }
+    else{
+      extensionController.set(0);
+    }
 
   }
 
