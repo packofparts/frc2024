@@ -46,22 +46,22 @@ public class DefaultArmCommand extends CommandBase {
     }
     
     else if(Input.getDPad() == Input.DPADRIGHT){
-      armControlSubsystem.changeDesiredExtension(.16);
+      armControlSubsystem.changeDesiredExtension(.3);
     }
     else if(Input.getDPad() == Input.DPADLEFT){
-      armControlSubsystem.changeDesiredExtension(-.16);
+      armControlSubsystem.changeDesiredExtension(-.3);
     }
     
-    else if(Input.getA()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]); // have to subtract the initial
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0]));
-    }else if(Input.getB()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[1]);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[1]));
-    }else if(Input.getX()){
-      armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]);
-      armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]));
-    }
+    // else if(Input.getA()){
+    //   armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]); // have to subtract the initial
+    //   armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0]));
+    // }else if(Input.getB()){
+    //   armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[1]);
+    //   armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[1]));
+    // }else if(Input.getX()){
+    //   armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]);
+    //   armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]));
+    // }
 
   }
 

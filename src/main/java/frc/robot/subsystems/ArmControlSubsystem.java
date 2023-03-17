@@ -82,8 +82,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotPID = new PIDController(1.4, 0, 0);
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
-    extensionPID = new PIDController(0.15, 0, 0);
-    extensionPID.setTolerance(0.15);
+    extensionPID = new PIDController(0.12, 0, 0);
+    extensionPID.setTolerance(.25);
     
    
     
@@ -134,15 +134,26 @@ public class ArmControlSubsystem extends SubsystemBase {
       // if (br != isCoast){
       //   setConfig(br);
       // }
+      
+      if(!isCoast){
+        pivotPeriodic(); //maintains the desired pivot angle
+        extensionPeriodic();
+      }
+       //maintains the desired extension length
 
-      pivotPeriodic(); //maintains the desired pivot angle
-      //extensionPeriodic(); //maintains the desired extension length
+      if(Input.getDPad() == Input.DPADDOWN){
+        isCoast = !isCoast;
+        rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
+        leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
+      }
 
       // Getting Current And Desired Distances
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
       SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
       SmartDashboard.putNumber("CurrentPivotPoint", Units.radiansToDegrees(currentPivotRotation));
       SmartDashboard.putNumber("DesiredPivotPoint", Units.radiansToDegrees(desiredPivotRotation));
+
+      SmartDashboard.putBoolean("isCost", isCoast);
 
 
       //SmartDashboard.putNumber("LeftSensor", (leftPivotController.getSelectedSensorPosition()) / 2048 * ArmConstants.falconToFinalGear*360+60);
@@ -188,25 +199,36 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     currentExtensionDistance = getCurrentExtensionIn();
 
-    //double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
-    double extensionPIDOutput = bangController.calculate(currentExtensionDistance, desiredExtensionDistance);
+    double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
+
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
+
+    double difference = desiredExtensionDistance - currentExtensionDistance;
+    if (Math.abs(difference) > 0.5) {
+      extensionController.set(0.3 * (difference/Math.abs(difference)));
+    } else {
+      extensionController.set(0);
+    }
     
     //extensionPIDOutput = MathUtil.applyDeadband(extensionPIDOutput, 0.05);
 
-    if(Math.abs(extensionPIDOutput) < .1){
-      extensionPIDOutput = 0;
-    }
-
+    // if(Math.abs(extensionPIDOutput) < .20){
+    //   if (Math.abs(extensionPIDOutput) > 0.13)
+    //     extensionPIDOutput = .20;
+    //   else if (Math.abs(extensionPIDOutput)<=0.13) 
+    //     extensionPIDOutput = 0;
+    // }
+    // extensionController.set(extensionPIDOutput);
     //extensionController.set(extensionPIDOutput);
-    if (Input.getDPad() == Input.DPADRIGHT){
-      extensionController.set(.25);
-    }else if(Input.getDPad() == Input.DPADLEFT){
-      extensionController.set(-.25);
-    }
-    else{
-      extensionController.set(0);
-    }
+
+    // if (Input.getDPad() == Input.DPADRIGHT){
+    //   extensionController.set(.25);
+    // }else if(Input.getDPad() == Input.DPADLEFT){
+    //   extensionController.set(-.25);
+    // }
+    // else{
+    //   extensionController.set(0);
+    // }
 
   }
 

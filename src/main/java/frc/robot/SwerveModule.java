@@ -88,6 +88,7 @@ public class SwerveModule {
         return _rotEncoder.getVelocity();
     }
 
+    
     /**
      * Resets Relative encoder to Abs encoder position
      */

@@ -120,7 +120,7 @@ public class AutoBalanceCommand extends CommandBase {
 
   //only uses PID control
   private void doBalanceMethod1(){
-    double pidOutput = velocityController.calculate(this.pitch, 0);
+    double pidOutput = velocityController.calculate(this.roll, 0);
     SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
 
@@ -131,7 +131,7 @@ public class AutoBalanceCommand extends CommandBase {
   //if angular velocity is too high, then the station must be turning
   
   private void doBalanceMethod2(){
-    double pidOutput = velocityController.calculate(this.pitch, 0);
+    double pidOutput = velocityController.calculate(this.roll, 0);
     //detect change in velocity over threshold and stop until velocity is down again
     if(Math.abs(this.pitchSpeed) >= this.pitchSpeedThreshold){
       // this.swerveSubsystem.stopAllAndBrake();
@@ -146,7 +146,7 @@ public class AutoBalanceCommand extends CommandBase {
   }
 
   private void goForwardUntilOnChargeStation(){
-    if(Math.abs(this.pitch) >= 15){
+    if(Math.abs(this.roll) >= 15){
       this.isOnChargingStation = true;
       this.initXPos = this.swerveSubsystem.getRobotPose().getX();
       return;

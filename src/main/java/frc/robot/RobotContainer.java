@@ -83,7 +83,7 @@ public class RobotContainer {
     moduleSelector.addOption("Back Right", allModules[3]);
 
     if (!DriveConstants.tuningPID){
-      //drivetrain.setDefaultCommand(defaultDrive);
+      drivetrain.setDefaultCommand(defaultDrive);
     } else{
       drivetrain.setDefaultCommand(
         new SinglePID(

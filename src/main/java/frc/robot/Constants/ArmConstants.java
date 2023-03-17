@@ -44,9 +44,6 @@ public class ArmConstants {
 
     public static final int extensionPort = 0;
 
-
-    public static final double relEncoderToInitialGear = 1.0/48;
-
     public static final double falconToFinalGear = 1.0/240;
     public static final double encoderResolution = 1.0/2048;
     //Change this

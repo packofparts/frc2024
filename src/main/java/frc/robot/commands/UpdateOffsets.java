@@ -25,7 +25,7 @@ public class UpdateOffsets extends CommandBase {
 
 
     for (SwerveModule module : modules) {
-      module.setAbsoluteEncoderOffset(module.getAbsolutePosition());
+      //module.setAbsoluteEncoderOffset(module.getAbsolutePosition());
     }
 
   }
