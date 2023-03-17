@@ -17,13 +17,12 @@ public class SinglePID extends CommandBase {
   SwerveSubsystem swerve;
   SwerveModule selectedModule;
   Double sp;
-  public SinglePID(SwerveModule module, SwerveSubsystem swervee) {
+  public SinglePID(SwerveModule module) {
     this.selectedModule = module;
     SmartDashboard.putNumber("kP", MiscNonConstants.kP);
     SmartDashboard.putNumber("kI", MiscNonConstants.kI);
     SmartDashboard.putNumber("kD", MiscNonConstants.kD);
     SmartDashboard.putNumber("setPointReal", DriveConstants.tuningSetpoint);
-    addRequirements(swervee);
 
   }
 

@@ -41,7 +41,7 @@ public class DriveConstants {
     
     // Distance between front and back wheels
     public static final double kWheelBase = 0.54;
-    public static boolean tuningPID = false;
+    public static boolean tuningPID = true;
 
     
     // SPARK ids

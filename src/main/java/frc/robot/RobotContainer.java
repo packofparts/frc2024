@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  public final SwerveSubsystem drivetrain = new SwerveSubsystem();
+  //public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   
   //public final Limelight limeLightSubSystem = new Limelight();
 
@@ -48,9 +48,9 @@ public class RobotContainer {
   public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
-  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
+  //public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
   //public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
-  public final PIDtuning pid = new PIDtuning(drivetrain);
+  //public final PIDtuning pid = new PIDtuning(drivetrain);
 
   //public final AutoAlign align = 
    // new AutoAlign(pose, lime, swerve, new Transform2d(new Translation2d(1, 0), new Rotation2d(0)));
@@ -64,8 +64,8 @@ public class RobotContainer {
 
   public SendableChooser <SwerveModule> moduleSelector = new SendableChooser<>();
 
-  public SwerveModule [] allModules = drivetrain.getRawModules(); 
-  public SwerveModule selecModule = allModules[3];
+  //public SwerveModule [] allModules = drivetrain.getRawModules(); 
+  //public SwerveModule selecModule = allModules[2];
 
 
   
@@ -77,18 +77,18 @@ public class RobotContainer {
    */
   public RobotContainer() {
 
-    moduleSelector.addOption("Front Left", allModules[0]);
-    moduleSelector.addOption("Front Right", allModules[1]);
-    moduleSelector.addOption("Back Left", allModules[2]);
-    moduleSelector.addOption("Back Right", allModules[3]);
+    // moduleSelector.addOption("Front Left", allModules[0]);
+    // moduleSelector.addOption("Front Right", allModules[1]);
+    // moduleSelector.addOption("Back Left", allModules[2]);
+    // moduleSelector.addOption("Back Right", allModules[3]);
 
     if (!DriveConstants.tuningPID){
-      drivetrain.setDefaultCommand(defaultDrive);
+      //drivetrain.setDefaultCommand(defaultDrive);
     } else{
-      drivetrain.setDefaultCommand(
-        new SinglePID(
-          selecModule, 
-          drivetrain));
+      // drivetrain.setDefaultCommand(
+      //   new SinglePID(
+      //     selecModule 
+      //     ));
     }
   
     armControl.setDefaultCommand(new DefaultArmCommand(armControl));

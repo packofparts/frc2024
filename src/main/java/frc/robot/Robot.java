@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMaxLowLevel;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -18,6 +20,7 @@ import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.MoveByWithTrajectoryController;
 import frc.robot.commands.TGWithPPlib;
+import frc.robot.commands.TestSpark;
 import frc.robot.commands.MoveTo;
 
 public class Robot extends TimedRobot {
@@ -37,22 +40,27 @@ public class Robot extends TimedRobot {
     _robotContainer = new RobotContainer();
 
     // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
-    _commandSelector.addOption("Auto Balance", new AutoBalanceCommand(_robotContainer.drivetrain));
+    //_commandSelector.addOption("Auto Balance", new AutoBalanceCommand(_robotContainer.drivetrain));
     
-    _commandSelector.addOption(
-      "Move By with Trajecotry",
-      new MoveByWithTrajectoryController(
-        _robotContainer.drivetrain, 
-        new Transform2d(
-          new Translation2d(2.5, 0), 
-          new Rotation2d(0))));
+    // _commandSelector.addOption(
+    //   "Move By with Trajecotry",
+    //   new MoveByWithTrajectoryController(
+    //     _robotContainer.drivetrain, 
+    //     new Transform2d(
+    //       new Translation2d(2.5, 0), 
+    //       new Rotation2d(0))));
     
+    // _commandSelector.addOption(
+    //   "Path Planner", 
+    //   new TGWithPPlib(
+    //     _robotContainer.drivetrain,
+    //     AutoMapConstants.ConeCubeChargeTraj,
+    //     AutoMapConstants.m_EventMap));
     _commandSelector.addOption(
-      "Path Planner", 
-      new TGWithPPlib(
-        _robotContainer.drivetrain,
-        AutoMapConstants.ConeCubeChargeTraj,
-        AutoMapConstants.m_EventMap));
+      "Test Motor",
+      new TestSpark(7, -0.3));
+    
+    
     
     // _commandSelector.addOption(
     //   "ClassicMB", 
@@ -123,6 +131,8 @@ public class Robot extends TimedRobot {
     if (_autonomousCommand != null) {
       _autonomousCommand.cancel();
     }
+
+    CANSparkMaxLowLevel.enableExternalUSBControl(false);
   }
 
   /** This function is called periodically during operator control. */
@@ -132,6 +142,7 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 
   /** This function is called periodically during test mode. */

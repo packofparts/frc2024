@@ -58,9 +58,10 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
   //private final AnalogEncoder pivotEncoder = new AnalogEncoder(ArmConstants.armPivotEncoderPort);
 
-  private final WPI_TalonFX extensionController = new WPI_TalonFX(ArmConstants.extensionPort);
-  //private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
-  private final BangBangController bangController = new BangBangController();
+  //private final WPI_TalonFX extensionController = new WPI_TalonFX(ArmConstants.extensionPort);
+  private final CANSparkMax extensionController = new CANSparkMax(ArmConstants.telescopicArmSpark, MotorType.kBrushless);
+  private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
+
   
 
   double currentPivotRotation = ArmConstants.zeroAngleRad;
@@ -116,15 +117,15 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
     
-    extensionController.setNeutralMode(NeutralMode.Brake);
+    extensionController.setIdleMode(IdleMode.kBrake);
     extensionController.setInverted(false);
-    extensionController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    extensionController.setSelectedSensorPosition(0);
+    //extensionController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    //extensionController.setSelectedSensorPosition(0);
     //extensionEncoder.setPositionConversionFactor(4);
-    //extensionEncoder.setPosition(41);
+    extensionEncoder.setPosition(1);
 
-    SmartDashboard.putNumber("InitialExtensionPosRaw", extensionController.getSelectedSensorPosition()*ArmConstants.extensionEncoderToInches);
-    //extensionController.burnFlash();
+    SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);
+    extensionController.burnFlash();
     
   }
 
@@ -136,8 +137,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       // }
       
       if(!isCoast){
-        pivotPeriodic(); //maintains the desired pivot angle
-        extensionPeriodic();
+        //pivotPeriodic(); //maintains the desired pivot angle
+        //extensionPeriodic();
       }
        //maintains the desired extension length
 
@@ -164,7 +165,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
 
       SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
-      SmartDashboard.putNumber("extensionEncoderPos", extensionController.getSelectedSensorPosition()/2048*ArmConstants.extensionEncoderToInches);
+      SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);
       //5.96533203125 max 
   }
 
@@ -204,11 +205,11 @@ public class ArmControlSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
 
     double difference = desiredExtensionDistance - currentExtensionDistance;
-    if (Math.abs(difference) > 0.5) {
-      extensionController.set(0.3 * (difference/Math.abs(difference)));
-    } else {
-      extensionController.set(0);
-    }
+    // if (Math.abs(difference) > 1) {
+    //   extensionController.set(0.6 * (difference/Math.abs(difference)));
+    // } else {
+    //   extensionController.set(0);
+    // }
     
     //extensionPIDOutput = MathUtil.applyDeadband(extensionPIDOutput, 0.05);
 
@@ -221,14 +222,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     // extensionController.set(extensionPIDOutput);
     //extensionController.set(extensionPIDOutput);
 
-    // if (Input.getDPad() == Input.DPADRIGHT){
-    //   extensionController.set(.25);
-    // }else if(Input.getDPad() == Input.DPADLEFT){
-    //   extensionController.set(-.25);
-    // }
-    // else{
-    //   extensionController.set(0);
-    // }
+    if (Input.getDPad() == Input.DPADRIGHT){
+      extensionController.set(.60);
+    }else if(Input.getDPad() == Input.DPADLEFT){
+      extensionController.set(-.60);
+    }
+    else{
+      extensionController.set(0);
+    }
 
   }
 
@@ -296,7 +297,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
-    return extensionController.getSelectedSensorPosition()/2048*ArmConstants.extensionEncoderToInches;
+    return extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches;
   }
   
   public void changeDesiredPivotRotation(double i){
