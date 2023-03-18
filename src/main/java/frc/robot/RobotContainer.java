@@ -36,7 +36,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
-  //public final SwerveSubsystem drivetrain = new SwerveSubsystem();
+  public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   
   //public final Limelight limeLightSubSystem = new Limelight();
 
@@ -48,7 +48,7 @@ public class RobotContainer {
   public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
-  //public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
+  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
   //public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
   //public final PIDtuning pid = new PIDtuning(drivetrain);
 
@@ -83,7 +83,7 @@ public class RobotContainer {
     // moduleSelector.addOption("Back Right", allModules[3]);
 
     if (!DriveConstants.tuningPID){
-      //drivetrain.setDefaultCommand(defaultDrive);
+      drivetrain.setDefaultCommand(defaultDrive);
     } else{
       // drivetrain.setDefaultCommand(
       //   new SinglePID(

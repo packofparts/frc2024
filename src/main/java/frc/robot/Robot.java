@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -35,6 +36,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+      CameraServer.startAutomaticCapture();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     _robotContainer = new RobotContainer();
@@ -56,9 +58,9 @@ public class Robot extends TimedRobot {
     //     _robotContainer.drivetrain,
     //     AutoMapConstants.ConeCubeChargeTraj,
     //     AutoMapConstants.m_EventMap));
-    _commandSelector.addOption(
-      "Test Motor",
-      new TestSpark(7, -0.3));
+    // _commandSelector.addOption(
+    //   "Test Motor",
+    //   new TestSpark(7, -0.3));
     
     
     
@@ -86,7 +88,7 @@ public class Robot extends TimedRobot {
 
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
+   * that you want ran during disabled, autonomous, teleoperated and test. fr
    *
    * <p>This runs after the mode specific periodic functions, but before LiveWindow and
    * SmartDashboard integrated updating.
@@ -102,7 +104,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    
+  }
 
   @Override
   public void disabledPeriodic() {}

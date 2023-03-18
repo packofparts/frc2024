@@ -117,7 +117,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
     
-    extensionController.setIdleMode(IdleMode.kBrake);
+    extensionController.setIdleMode(IdleMode.kCoast);
     extensionController.setInverted(false);
     //extensionController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     //extensionController.setSelectedSensorPosition(0);
@@ -137,8 +137,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       // }
       
       if(!isCoast){
-        //pivotPeriodic(); //maintains the desired pivot angle
-        //extensionPeriodic();
+        pivotPeriodic(); //maintains the desired pivot angle
+        extensionPeriodic();
       }
        //maintains the desired extension length
 
@@ -223,9 +223,9 @@ public class ArmControlSubsystem extends SubsystemBase {
     //extensionController.set(extensionPIDOutput);
 
     if (Input.getDPad() == Input.DPADRIGHT){
-      extensionController.set(.60);
+      extensionController.set(.25);
     }else if(Input.getDPad() == Input.DPADLEFT){
-      extensionController.set(-.60);
+      extensionController.set(-.25);
     }
     else{
       extensionController.set(0);
