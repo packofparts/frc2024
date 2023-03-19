@@ -27,7 +27,8 @@ public class SwerveModule {
     public PIDController _transController;
     
     private boolean _transInverted;
-    private boolean _rotInverted;    
+    private boolean _rotInverted;
+    private boolean _isAbsEncoder;
 
     public SwerveModule(int motorTransID, int motorRotID, int universalEncoderID,
      boolean transInverted, boolean rotInverted, double universalEncoderOffsetinit,
@@ -39,6 +40,7 @@ public class SwerveModule {
         this._rotInverted = rotInverted;
         this._transController = transController;
         _transMotor = new CANSparkMax(this._motorTransID, MotorType.kBrushless);
+        this._isAbsEncoder = isAbsEncoder;
         
         _rotMotor = new CANSparkMax(this._motorRotID, MotorType.kBrushless);
 
@@ -56,6 +58,10 @@ public class SwerveModule {
         _rotationPIDController = pidController;
         _rotationPIDController.enableContinuousInput(-Math.PI,Math.PI);       
         resetEncoders(); 
+
+        if (DriveConstants.reduceRelativeFrameRate) {
+            _transEncoder.setMeasurementPeriod(DriveConstants.reducedRelativeFrameRate);
+        }
     }
 
     /**
@@ -93,10 +99,14 @@ public class SwerveModule {
      * Resets Relative encoder to Abs encoder position
      */
     public void resetEncoders(){
-        _rotEncoder.setPosition(-(
-            _universalEncoder.getAbsolutePosition() - _universalEncoder.getPositionOffset()) * 18);
-        _transEncoder.setPosition(0);
-        
+
+        if (_isAbsEncoder) {
+            _rotEncoder.setPosition(-(
+                _universalEncoder.getAbsolutePosition() - _universalEncoder.getPositionOffset()) * 18);
+            _transEncoder.setPosition(0);
+        } else {
+            _rotEncoder.setPosition(0);
+        }
         // _transEncoder.setPosition(0);
         // _rotEncoder.setPosition(0);
     }

@@ -72,10 +72,7 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     img = photonCamera.getLatestResult();
-    if (img.getBestTarget() != null) {
-      SmartDashboard.putNumber("LimelightYaw", img.getBestTarget().getYaw());
-    }
-    SmartDashboard.putBoolean("AprilTag Detected", img.hasTargets());
+
 
   }
   public double getYaw(){

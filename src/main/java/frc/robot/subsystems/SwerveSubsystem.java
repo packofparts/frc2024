@@ -32,20 +32,20 @@ public class SwerveSubsystem extends SubsystemBase {
   // Bevel gears must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveCANId, DriveConstants.kFrontLeftSteerCANId,
-   0,false, false,0.452,false, true,
+   0,false, false,0.452,false, DriveConstants.useAbsEncoder,
    PIDConstants.kFrontLeftSteeringPIDControl, PIDConstants.kFrontLeftSteeringPIDControl);
 
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.kFrontRightDriveCANId, DriveConstants.kFrontRightSteerCANId,
-   1,true,false,0.731,false, true,
+   1,true,false,0.731,false, DriveConstants.useAbsEncoder,
    PIDConstants.kFrontRightSteeringPIDControl,PIDConstants.kFrontLeftDrivingMotorController);
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.kBackLeftDriveCANId, DriveConstants.kBackLeftSteerCANId,
-  2,false,false,0.775,false, true,
+  2,false,false,0.775,false, DriveConstants.useAbsEncoder,
   PIDConstants.kBackLeftSteeringPIDControl,PIDConstants.kBackLeftSteeringPIDControl);
 
 //above 0.5
   private final SwerveModule backRight = new SwerveModule(DriveConstants.kBackRightDriveCANId, DriveConstants.kBackRightSteerCANId,
-  3,true,false,0.518,false, true,
+  3,true,false,0.518,false, DriveConstants.useAbsEncoder,
    PIDConstants.kBackRightSteeringPIDControl,PIDConstants.kBackRightSteeringPIDControl); 
 
   // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
@@ -96,18 +96,18 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    SmartDashboard.putNumber("Pitch", getPitch());
-    SmartDashboard.putNumber("Yaw", getYaw());
-    SmartDashboard.putNumber("Roll", getRoll());
-
-    for(int i = 0; i<getRawModules().length;i++){
-      SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
-      SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
-      SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
-      SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
-      SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
-      SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity());
+    if (DriveConstants.debug) {
+      SmartDashboard.putNumber("Pitch", getPitch());
+      SmartDashboard.putNumber("Yaw", getYaw());
+      SmartDashboard.putNumber("Roll", getRoll());
+      for(int i = 0; i<getRawModules().length;i++){
+        SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
+        SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
+        SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
+        SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
+        SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity());
+      }
     }
 
     m_odometry.update(getRotation2d(), getModulePositions());
@@ -212,9 +212,6 @@ public class SwerveSubsystem extends SubsystemBase {
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x, y, rot);}
-    SmartDashboard.putNumber("ChassispeedsX",chassisSpeeds1.vxMetersPerSecond);
-    SmartDashboard.putNumber("Chassispeedsy",chassisSpeeds1.vyMetersPerSecond);
-    SmartDashboard.putNumber("ChassispeedsRadians",chassisSpeeds1.omegaRadiansPerSecond);
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
 
 
