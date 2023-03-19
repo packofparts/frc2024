@@ -44,8 +44,10 @@ public class RobotContainer {
   //public final ManualPoseEstimation pose = new ManualPoseEstimation(limeLightSubSystem, drivetrain, ManualPoseEstimation.Strategy.BEST);
 
   // Commented because testing and probably will cause null errors
+  //
+  
   public final ArmControlSubsystem armControl = new ArmControlSubsystem();
-  public final ClawPnumatic clawPnumatic = new ClawPnumatic();
+  //public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
@@ -91,7 +93,7 @@ public class RobotContainer {
       //     ));
     }
   
-    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    // armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     

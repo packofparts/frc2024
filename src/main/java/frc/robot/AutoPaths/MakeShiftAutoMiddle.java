@@ -9,6 +9,7 @@ import java.time.Instant;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -33,12 +34,11 @@ public class MakeShiftAutoMiddle extends CommandBase {
 
     path = new SequentialCommandGroup(
       new InstantCommand(()->swerve.resetGyro()),
-      new PivotCmd(arm, ArmConstants.angleLevelsDeg[2]),
-      new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
+      new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[1])),
       new InstantCommand(()->claw.spinOuttake(0.2)),
-      new WaitCommand(.5),
+      new WaitCommand(1),
+      new InstantCommand(()->claw.spinOuttake(0)),
       new PivotCmd(arm, ArmConstants.minAngleRad),
-      new ExtensionCmd(arm, ArmConstants.minExtensionIn),
       new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
       new InstantCommand(()->swerve.resetGyro()),
       new AutoBalanceCommand(swerve)

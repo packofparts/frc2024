@@ -54,6 +54,7 @@ public class ClawPnumatic extends SubsystemBase {
     SmartDashboard.putBoolean("ValueSwitch", phCompressor.getPressureSwitchValue());
     SmartDashboard.putBoolean("CompressorEnabled", phCompressor.isEnabled());
     SmartDashboard.putNumber("pressure", phCompressor.getPressure());
+    SmartDashboard.putBoolean("Claw Closed", intakeSolenoid1.get());
     phCompressor.enableDigital();
     if (phCompressor.getPressure() > 60) phCompressor.disable();
     else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
@@ -104,7 +105,10 @@ public class ClawPnumatic extends SubsystemBase {
     intakeSolenoid1.set(true);
   }
 
-
+  public void compression(){
+    if (phCompressor.getPressure() > 60) phCompressor.disable();
+    else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
+  }
   public void changePneumatics(boolean closed){
     intakeSolenoid1.set(closed);
   }

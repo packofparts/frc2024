@@ -108,9 +108,9 @@ public class AutoBalanceCommand extends CommandBase {
 
     if (!this.isOnChargingStation){
       this.goForwardUntilOnChargeStation();
-    }else if (Math.abs(this.pitch) >= 2.5){
-      //this.doBalanceMethod1();
-      this.doBalanceMethod2();
+    }else if (Math.abs(this.roll) >= 2.5){
+      this.doBalanceMethod1();
+      //this.doBalanceMethod2();
     }else{
       //brake
       this.swerveSubsystem.stopAllAndBrake();
@@ -124,7 +124,7 @@ public class AutoBalanceCommand extends CommandBase {
     SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
 
-    this.swerveSubsystem.setMotors(pidOutput/7, 0, 0);
+    this.swerveSubsystem.setMotors(pidOutput/9, 0, 0);
   }
 
   //incorporates angular velocity

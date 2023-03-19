@@ -81,14 +81,15 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     //pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
     pivotPID = new PIDController(1.4, 0, 0);
+    pivotPID.setTolerance(Units.degreesToRadians(3.5));
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
-    extensionPID = new PIDController(0.12, 0, 0);
+    extensionPID = new PIDController(0.0388, 0, 0);
     extensionPID.setTolerance(.25);
     
    
     
-    setConfig(isCoast);
+    setConfig(true);
     SmartDashboard.putNumber("PivotkP", 2);
     SmartDashboard.putBoolean("armCoastMode", isCoast);
     
@@ -112,7 +113,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-    leftPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*(1.0/ArmConstants.encoderResolution)*(1.0/ArmConstants.falconToFinalGear));
+    leftPivotController.setSelectedSensorPosition(Math.signum(leftPivotController.getSensorCollection().getIntegratedSensorPosition())*1*Units.radiansToRotations(ArmConstants.zeroAngleRad)*(1.0/ArmConstants.encoderResolution)*(1.0/ArmConstants.falconToFinalGear));
     rightPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*(1.0/ArmConstants.encoderResolution)*(1.0/ArmConstants.falconToFinalGear));
 
 
@@ -137,16 +138,16 @@ public class ArmControlSubsystem extends SubsystemBase {
       // }
       
       if(!isCoast){
-        pivotPeriodic(); //maintains the desired pivot angle
-        extensionPeriodic();
+         pivotPeriodic(); //maintains the desired pivot angle
+         extensionPeriodic();
       }
        //maintains the desired extension length
 
-      if(Input.getDPad() == Input.DPADDOWN){
-        isCoast = !isCoast;
-        rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-        leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-      }
+      // if(Input.getDPad() == Input.DPADDOWN){
+      //   isCoast = !isCoast;
+      //   rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
+      //   leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
+      // }
 
       // Getting Current And Desired Distances
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
@@ -173,13 +174,19 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     //pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
 
-    desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
+    //desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
     
     //set currentRotation with encoders
     currentPivotRotation = getCurrentPivotRotation(true);
 
-    double pivotFeedforwardOutput = pivotFeedforward.calculate(desiredPivotRotation, 1, 1); //arbitrary
+    //double pivotFeedforwardOutput = pivotFeedforward.calculate(desiredPivotRotation, 1, 1); //arbitrary
     double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
+
+    if(pivotPIDOutput > 0.6){
+      pivotPIDOutput = 0.6;
+    }else if(pivotPIDOutput < -0.6){
+      pivotPIDOutput = 0.6;
+    }
 
     SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
     //SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition());
@@ -205,27 +212,19 @@ public class ArmControlSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
 
     double difference = desiredExtensionDistance - currentExtensionDistance;
-    // if (Math.abs(difference) > 1) {
-    //   extensionController.set(0.6 * (difference/Math.abs(difference)));
-    // } else {
+
+    // double offset =  .25 * (difference > 0 ? 1 : -1);
+    // if (Math.abs(difference) > .5){
+    //   extensionController.set(offset + extensionPIDOutput);
+    // }else{
     //   extensionController.set(0);
     // }
-    
-    //extensionPIDOutput = MathUtil.applyDeadband(extensionPIDOutput, 0.05);
 
-    // if(Math.abs(extensionPIDOutput) < .20){
-    //   if (Math.abs(extensionPIDOutput) > 0.13)
-    //     extensionPIDOutput = .20;
-    //   else if (Math.abs(extensionPIDOutput)<=0.13) 
-    //     extensionPIDOutput = 0;
-    // }
-    // extensionController.set(extensionPIDOutput);
-    //extensionController.set(extensionPIDOutput);
 
-    if (Input.getDPad() == Input.DPADRIGHT){
-      extensionController.set(.25);
-    }else if(Input.getDPad() == Input.DPADLEFT){
-      extensionController.set(-.25);
+    if (Input.getRightStickY() >.05){
+      extensionController.set(Input.getRightStickY()/4 + 0.15);
+    }else if(Input.getRightStickY() < -0.05){
+      extensionController.set(Input.getRightStickY()/4 - 0.15);
     }
     else{
       extensionController.set(0);

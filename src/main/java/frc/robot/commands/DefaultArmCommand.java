@@ -45,12 +45,12 @@ public class DefaultArmCommand extends CommandBase {
       armControlSubsystem.changeDesiredPivotRotation(.02 * (Input.getLeftStickY()+0.05));
     }
     
-    else if(Input.getDPad() == Input.DPADRIGHT){
-      armControlSubsystem.changeDesiredExtension(.3);
-    }
-    else if(Input.getDPad() == Input.DPADLEFT){
-      armControlSubsystem.changeDesiredExtension(-.3);
-    }
+    // else if(Input.getDPad() == Input.DPADRIGHT){
+    //   armControlSubsystem.changeDesiredExtension(.3);
+    // }
+    // else if(Input.getDPad() == Input.DPADLEFT){
+    //   armControlSubsystem.changeDesiredExtension(-.3);
+    // }
     
     // else if(Input.getA()){
     //   armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]); // have to subtract the initial

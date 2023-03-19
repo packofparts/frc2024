@@ -96,6 +96,9 @@ public class SwerveModule {
         _rotEncoder.setPosition(-(
             _universalEncoder.getAbsolutePosition() - _universalEncoder.getPositionOffset()) * 18);
         _transEncoder.setPosition(0);
+        
+        // _transEncoder.setPosition(0);
+        // _rotEncoder.setPosition(0);
     }
 
     /**
