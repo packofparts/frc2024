@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -40,20 +41,17 @@ public class AutoBalanceCommand extends CommandBase {
   private Timer timer;
 
 
-  private float pitchSpeedThreshold = 35;
   
 
 
   public AutoBalanceCommand(SwerveSubsystem swervee) {
     this.swerveSubsystem = swervee;
 
-    velocityController = new PIDController(.45, .05, 0);
-    velocityController.setTolerance(FieldConstants.kAngleDeadZoneDeg);
+    velocityController = CompConstants.velocityController;
+    velocityController.setTolerance(CompConstants.kAngleDeadZoneDeg);
     
 
     positionController = new PIDController(.5, 0, 0);
-
-    xXGravityDestroyer420Xx = new SimpleMotorFeedforward(0, 0, 0);
 
     timer = new Timer();
 
@@ -128,27 +126,28 @@ public class AutoBalanceCommand extends CommandBase {
   
   private void doBalanceMethod2(){
     double pidOutput = velocityController.calculate(this.roll, 0);
+    SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
+
     //detect change in velocity over threshold and stop until velocity is down again
-    if(Math.abs(this.pitchSpeed) >= this.pitchSpeedThreshold){
+    if(Math.abs(this.pitchSpeed) >= CompConstants.pitchSpeedThreshold){
       // this.swerveSubsystem.stopAllAndBrake();
       this.swerveSubsystem.setMotors(-pidOutput/8, 0, 0,DriveMode.AUTO,false);
       //maybe slightly move back for a tiny bit
     }else{
       
-      SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
       this.swerveSubsystem.setMotors(pidOutput/13, 0, 0,DriveMode.AUTO,false);
     }
   }
 
   private void goForwardUntilOnChargeStation(){
-    if(Math.abs(this.roll) >= 15){
+    if(Math.abs(this.roll) >= CompConstants.onChargeStationOrientation){
       this.isOnChargingStation = true;
       this.initXPos = this.swerveSubsystem.getRobotPose().getX();
       return;
     }
 
-    this.swerveSubsystem.setMotors(1, 0, 0,DriveMode.AUTO,false);
+    this.swerveSubsystem.setMotors(CompConstants.entrySpeed, 0, 0,DriveMode.AUTO,false);
 
   }
 

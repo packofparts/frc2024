@@ -86,7 +86,6 @@ public class MoveTo extends CommandBase {
 
     angleController.setTolerance(0.001);
 
-
     
     xPoint = desiredPose.getX();
     yPoint = desiredPose.getY();

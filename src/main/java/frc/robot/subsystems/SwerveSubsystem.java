@@ -5,6 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+
+
+//Bababbooey
+
+
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -23,6 +28,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
 import frc.robot.SwerveModule;
@@ -32,20 +38,20 @@ public class SwerveSubsystem extends SubsystemBase {
   // Bevel gears must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveCANId, DriveConstants.kFrontLeftSteerCANId,
-   0,false, false,0.452,false, DriveConstants.useAbsEncoder,
+   0,false, false,0.452,false, CompConstants.useAbsEncoder,
    PIDConstants.kFrontLeftSteeringPIDControl, PIDConstants.kFrontLeftSteeringPIDControl);
 
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.kFrontRightDriveCANId, DriveConstants.kFrontRightSteerCANId,
-   1,true,false,0.731,false, DriveConstants.useAbsEncoder,
+   1,true,false,0.731,false, CompConstants.useAbsEncoder,
    PIDConstants.kFrontRightSteeringPIDControl,PIDConstants.kFrontLeftDrivingMotorController);
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.kBackLeftDriveCANId, DriveConstants.kBackLeftSteerCANId,
-  2,false,false,0.775,false, DriveConstants.useAbsEncoder,
+  2,false,false,0.775,false, CompConstants.useAbsEncoder,
   PIDConstants.kBackLeftSteeringPIDControl,PIDConstants.kBackLeftSteeringPIDControl);
 
 //above 0.5
   private final SwerveModule backRight = new SwerveModule(DriveConstants.kBackRightDriveCANId, DriveConstants.kBackRightSteerCANId,
-  3,true,false,0.518,false, DriveConstants.useAbsEncoder,
+  3,true,false,0.518,false, CompConstants.useAbsEncoder,
    PIDConstants.kBackRightSteeringPIDControl,PIDConstants.kBackRightSteeringPIDControl); 
 
   // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
@@ -96,7 +102,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (DriveConstants.debug) {
+    if (CompConstants.debug) {
       SmartDashboard.putNumber("Pitch", getPitch());
       SmartDashboard.putNumber("Yaw", getYaw());
       SmartDashboard.putNumber("Roll", getRoll());
@@ -197,6 +203,10 @@ public class SwerveSubsystem extends SubsystemBase {
    * @apiNote Keep in mind all of this is field relative so resetting the gyro midmatch will also reset these params
    */
   public void setMotors(double x,double y, double rot, DriveMode dMode, boolean fieldOriented){
+    if (CompConstants.kGyroHold){
+      rot = headingController.calculate(Units.degreesToRadians(navx.getRate()), rot);
+    }
+
     if (fieldOriented){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x, y, rot);}
@@ -206,6 +216,9 @@ public class SwerveSubsystem extends SubsystemBase {
     this.setModuleStates(moduleStates, dMode);
   }
   public void setMotors(double x,double y, double rot, DriveMode dMode){
+    if (CompConstants.kGyroHold){
+      rot = headingController.calculate(Units.degreesToRadians(navx.getRate()), rot);
+    }
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x, y, rot);}
@@ -216,6 +229,9 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setMotors(double x,double y, double rot){
+    if (CompConstants.kGyroHold){
+      rot = headingController.calculate(Units.degreesToRadians(navx.getRate()), rot);
+    }
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x,y, rot);}

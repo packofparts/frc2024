@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.revrobotics.CANSparkMax.IdleMode;
+
+import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 import frc.robot.Constants.MiscNonConstants;
@@ -59,8 +61,8 @@ public class SwerveModule {
         _rotationPIDController.enableContinuousInput(-Math.PI,Math.PI);       
         resetEncoders(); 
 
-        if (DriveConstants.reduceRelativeFrameRate) {
-            _transEncoder.setMeasurementPeriod(DriveConstants.reducedRelativeFrameRate);
+        if (CompConstants.reduceRelativeFrameRate) {
+            _transEncoder.setMeasurementPeriod(CompConstants.reducedRelativeFrameRate);
         }
     }
 

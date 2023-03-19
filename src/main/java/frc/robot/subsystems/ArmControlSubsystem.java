@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Util;
@@ -127,7 +128,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     //extensionEncoder.setPositionConversionFactor(4);
     extensionEncoder.setPosition(1);
 
-    if (DriveConstants.debug) {SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);}
+    if (CompConstants.debug) {SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);}
     extensionController.burnFlash();
     
   }
@@ -155,7 +156,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
       SmartDashboard.putNumber("CurrentPivotPoint", Units.radiansToDegrees(currentPivotRotation));
 
-      if (DriveConstants.debug) {
+      if (CompConstants.debug) {
         SmartDashboard.putNumber("DesiredPivotPoint", Units.radiansToDegrees(desiredPivotRotation));
         SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
       }
@@ -168,7 +169,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   
 
       //Encoder Positions
-      if (DriveConstants.debug) {
+      if (CompConstants.debug) {
         SmartDashboard.putNumber("LeftPivotAbsPos",leftPivotController.getSensorCollection().getIntegratedSensorPosition());
         SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
 
@@ -199,12 +200,16 @@ public class ArmControlSubsystem extends SubsystemBase {
       pivotPIDOutput = 0.6;
     }
 
-    if (DriveConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
+    if (CompConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
     //SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition());
     
     //TODO we dont know which one is inverted yet
-    leftPivotController.set(pivotRateLimiter.calculate(pivotPIDOutput));
-    rightPivotController.set(pivotRateLimiter.calculate(pivotPIDOutput)); 
+    if (CompConstants.rateLimitArm) {
+      pivotPIDOutput = pivotRateLimiter.calculate(pivotPIDOutput);
+    }
+
+    leftPivotController.set(pivotPIDOutput);
+    rightPivotController.set(pivotPIDOutput);
   }
 
   private void extensionPeriodic(){
