@@ -78,7 +78,13 @@ public class SwerveModule {
      * @return Returns rotations of rotation motor BEFORE GEAR RATIO
      */
     public double getRotPosition(){
-        return _rotEncoder.getPosition();
+        if(_isAbsEncoder){
+            return -(
+                _universalEncoder.getAbsolutePosition() - _universalEncoder.getPositionOffset()) * 2 * Math.PI;
+        }else{
+            return _rotEncoder.getPosition();
+        }
+        
     }
 
     /**
@@ -154,8 +160,15 @@ public class SwerveModule {
                 break;
         }
         
-        _rotMotor.set(_rotationPIDController.calculate(_rotEncoder.getPosition()*DriveConstants.angleEncoderConversionFactortoRad,
+        if(_isAbsEncoder){
+            _rotMotor.set(_rotationPIDController.calculate(( -(
+                _universalEncoder.getAbsolutePosition() - _universalEncoder.getPositionOffset()) ) * 2 * Math.PI,
             desiredState.angle.getRadians()));
+        }else{
+            _rotMotor.set(_rotationPIDController.calculate((_rotEncoder.getPosition())*DriveConstants.angleEncoderConversionFactortoRad,
+            desiredState.angle.getRadians()));
+        }
+  
     }
 
     /**
@@ -190,8 +203,15 @@ public class SwerveModule {
     public SwerveModulePosition getModulePos(){
 
         //shit dont work for some reason. conversions are fuqued
-        return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
+
+        if(_isAbsEncoder){
+            return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
+            new Rotation2d(getRotPosition()));
+        }else{
+            return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
             new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
+        }
+
 
         // return new SwerveModulePosition(transEncoder.getPosition()/DriveConstants.weirdAssOdVal,
         //     new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));

@@ -183,7 +183,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     //pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
     
-    desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
+    //desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
     
 
     //set currentRotation with encoders
@@ -197,7 +197,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     if(pivotPIDOutput > 0.6){
       pivotPIDOutput = 0.6;
     }else if(pivotPIDOutput < -0.6){
-      pivotPIDOutput = 0.6;
+      pivotPIDOutput = -0.6;
     }
 
     if (CompConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
@@ -299,7 +299,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public double getCurrentPivotRotation(boolean inRadians){
     //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
-    double rotation = (leftPivotController.getSelectedSensorPosition()+ArmConstants.zeroAngleRad) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear;
+    double rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + Units.radiansToRotations(ArmConstants.zeroAngleRad);
 
     //rotation = Math.IEEEremainder(rotation, 1.0);
     

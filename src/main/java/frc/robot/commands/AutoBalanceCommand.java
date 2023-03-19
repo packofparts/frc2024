@@ -118,7 +118,7 @@ public class AutoBalanceCommand extends CommandBase {
     SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
 
-    this.swerveSubsystem.setMotors(pidOutput/9, 0, 0,DriveMode.AUTO,false);
+    this.swerveSubsystem.setMotors(pidOutput/14, 0, 0,DriveMode.AUTO,false);
   }
 
   //incorporates angular velocity

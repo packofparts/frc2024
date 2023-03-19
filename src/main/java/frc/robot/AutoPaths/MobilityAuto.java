@@ -17,6 +17,7 @@ import frc.robot.commands.armcontrolcmds.PivotCmd;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class MobilityAuto extends CommandBase {
   /** Creates a new MobilityAuto. */
@@ -26,7 +27,7 @@ public class MobilityAuto extends CommandBase {
     path = new SequentialCommandGroup(
       new InstantCommand(()->swerve.resetGyro()),
       new WaitCommand(1),
-      new InstantCommand(()->swerve.setMotors(-0.5, 0, 0)),
+      new InstantCommand(()->swerve.setMotors(-0.5, 0, 0,DriveMode.AUTO,false)),
       new WaitCommand(5),
       new InstantCommand(()->swerve.setMotors(0, 0, 0))
     );

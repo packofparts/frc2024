@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 
@@ -51,16 +52,26 @@ public class ClawPnumatic extends SubsystemBase {
 
   @Override
   public void periodic() {
+
     // This method will be called once per scheduler run
-    if (DriveConstants.debug) {
-    SmartDashboard.putBoolean("ValueSwitch", phCompressor.getPressureSwitchValue());
-    SmartDashboard.putBoolean("CompressorEnabled", phCompressor.isEnabled());
+    if (CompConstants.debug) {
+      SmartDashboard.putBoolean("ValueSwitch", phCompressor.getPressureSwitchValue());
+      SmartDashboard.putBoolean("CompressorEnabled", phCompressor.isEnabled());
     }
+
     SmartDashboard.putNumber("pressure", phCompressor.getPressure());
     SmartDashboard.putBoolean("Claw Closed", intakeSolenoid1.get());
-    phCompressor.enableDigital();
-    if (phCompressor.getPressure() > 60) phCompressor.disable();
-    else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
+
+    //phCompressor.enableDigital();
+
+    if (phCompressor.getPressure() > 60) 
+    {
+      phCompressor.disable();
+    }
+    else 
+    {
+       phCompressor.enableDigital();
+    }
 
 
     //toggle intake solenoids
@@ -69,19 +80,14 @@ public class ClawPnumatic extends SubsystemBase {
 
     if (Input.getRightBumper()){
       togglePneumatics();
-
     }
 
-
     if(Input.getRightTrigger()!= 0){
-      
       spinIntake(Input.getRightTrigger());
-
     }
     else if (Input.getLeftTrigger()!=0){
       spinOuttake(Input.getLeftTrigger());
-
-    }else{
+    } else {
       changeIntake(0);
     }
 

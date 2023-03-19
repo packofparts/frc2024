@@ -51,7 +51,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
 //above 0.5
   private final SwerveModule backRight = new SwerveModule(DriveConstants.kBackRightDriveCANId, DriveConstants.kBackRightSteerCANId,
-  3,true,false,0.518,false, CompConstants.useAbsEncoder,
+  3,true,false,0.552,false, CompConstants.useAbsEncoder,
    PIDConstants.kBackRightSteeringPIDControl,PIDConstants.kBackRightSteeringPIDControl); 
 
   // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
@@ -98,6 +98,8 @@ public class SwerveSubsystem extends SubsystemBase {
     rawMods = getRawModules();
     setIdleModeForAll(IdleMode.kBrake, IdleMode.kBrake);
     headingController.setTolerance(Units.degreesToRadians(5));
+    rawMods[0].setModeTrans(IdleMode.kCoast);
+    rawMods[0].burnSparks();
   }
 
   @Override

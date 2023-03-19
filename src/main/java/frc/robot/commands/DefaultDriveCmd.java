@@ -53,10 +53,11 @@ public class DefaultDriveCmd extends CommandBase {
 
     if(isPrecision){
       rot = rot/2;
-      x = x/2;
-      y = y/2;
-      x = Math.abs(x) > 0.1 ? x : 0.0;
-      y = Math.abs(y) > 0.1 ? y :0.0;
+      x = x/3;
+      y = y/3;
+      rot = rot/3;
+      x = Math.abs(x) > 0.04 ? x : 0.0;
+      y = Math.abs(y) > 0.04 ? y :0.0;
       rot = Math.abs(rot) > 0.02 ? rot : 0.0;
     }else{
       x = Math.abs(x) > 0.15 ? x : 0.0;
