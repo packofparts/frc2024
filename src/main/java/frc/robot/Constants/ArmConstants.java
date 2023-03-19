@@ -20,6 +20,10 @@ public class ArmConstants {
     //when it is at zeroAngleRad
     public static final double zeroExtensionIn = 1.618 + minExtensionIn;
 
+    public static final double maxPivotRateRadSec = Units.degreesToRadians(70);
+    public static final double pysicalMaxPivotRadSec = Units.degreesToRadians(142);
+    
+    public static final double maxPivotRatePercentSec = maxPivotRateRadSec/pysicalMaxPivotRadSec;
 
     public static final double maxExtensionIn = 18;
 

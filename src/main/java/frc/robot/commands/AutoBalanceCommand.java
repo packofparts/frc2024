@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class AutoBalanceCommand extends CommandBase {
 
@@ -88,9 +89,6 @@ public class AutoBalanceCommand extends CommandBase {
   @Override
   public void execute() {
 
-
-
-
     this.lasttime = this.currenttime;
     this.currenttime = timer.get();
     this.deltatime = this.currenttime - this.lasttime;
@@ -103,8 +101,6 @@ public class AutoBalanceCommand extends CommandBase {
     this.pitchSpeed = (this.pitch - this.prevPitch) / (float) this.deltatime;
 
     this.currentXPos = swerveSubsystem.getRobotPose().getX();
-
-    //this.checkFallOff();
 
     if (!this.isOnChargingStation){
       this.goForwardUntilOnChargeStation();
@@ -124,7 +120,7 @@ public class AutoBalanceCommand extends CommandBase {
     SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
 
-    this.swerveSubsystem.setMotors(pidOutput/9, 0, 0);
+    this.swerveSubsystem.setMotors(pidOutput/9, 0, 0,DriveMode.AUTO,false);
   }
 
   //incorporates angular velocity
@@ -135,13 +131,13 @@ public class AutoBalanceCommand extends CommandBase {
     //detect change in velocity over threshold and stop until velocity is down again
     if(Math.abs(this.pitchSpeed) >= this.pitchSpeedThreshold){
       // this.swerveSubsystem.stopAllAndBrake();
-      this.swerveSubsystem.setMotors(-pidOutput/8, 0, 0);
+      this.swerveSubsystem.setMotors(-pidOutput/8, 0, 0,DriveMode.AUTO,false);
       //maybe slightly move back for a tiny bit
     }else{
       
       SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
-      this.swerveSubsystem.setMotors(pidOutput/13, 0, 0);
+      this.swerveSubsystem.setMotors(pidOutput/13, 0, 0,DriveMode.AUTO,false);
     }
   }
 
@@ -152,7 +148,7 @@ public class AutoBalanceCommand extends CommandBase {
       return;
     }
 
-    this.swerveSubsystem.setMotors(1, 0, 0);
+    this.swerveSubsystem.setMotors(1, 0, 0,DriveMode.AUTO,false);
 
   }
 

@@ -196,6 +196,18 @@ public class SwerveSubsystem extends SubsystemBase {
    * 
    * @apiNote Keep in mind all of this is field relative so resetting the gyro midmatch will also reset these params
    */
+  public void setMotors(double x,double y, double rot, DriveMode dMode, boolean fieldOriented){
+    if (fieldOriented){
+      chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
+    } else {chassisSpeeds1 = new ChassisSpeeds(x, y, rot);}
+    SmartDashboard.putNumber("ChassispeedsX",chassisSpeeds1.vxMetersPerSecond);
+    SmartDashboard.putNumber("Chassispeedsy",chassisSpeeds1.vyMetersPerSecond);
+    SmartDashboard.putNumber("ChassispeedsRadians",chassisSpeeds1.omegaRadiansPerSecond);
+    SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
+
+
+    this.setModuleStates(moduleStates, dMode);
+  }
   public void setMotors(double x,double y, double rot, DriveMode dMode){
     if (!Input.getRobotOriented()){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());

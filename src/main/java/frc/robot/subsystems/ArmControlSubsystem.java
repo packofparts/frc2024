@@ -3,9 +3,11 @@ package frc.robot.subsystems;
 
 import javax.swing.text.StyleContext.SmallAttributeSet;
 
+import com.ctre.phoenix.motorcontrol.ControlFrame;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -18,15 +20,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.BooleanArrayEntry;
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -73,7 +72,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   //TODO moves these to ArmConstants
   PIDController pivotPID; //TODO calculate gains to actually change the angle
   ArmFeedforward pivotFeedforward; //TODO calculate gains to beat the force of gravity 
-
+  SlewRateLimiter pivotRateLimiter;
   PIDController extensionPID;
   
   //TODO make the constructor more useful and modular by passing in most values from ArmConstants
@@ -86,6 +85,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     extensionPID = new PIDController(0.0388, 0, 0);
     extensionPID.setTolerance(.25);
+    pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
     
    
     
@@ -110,12 +110,12 @@ public class ArmControlSubsystem extends SubsystemBase {
     rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
     leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
 
+
     rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
-    leftPivotController.setSelectedSensorPosition(Math.signum(leftPivotController.getSensorCollection().getIntegratedSensorPosition())*1*Units.radiansToRotations(ArmConstants.zeroAngleRad)*(1.0/ArmConstants.encoderResolution)*(1.0/ArmConstants.falconToFinalGear));
-    rightPivotController.setSelectedSensorPosition(Units.radiansToRotations(ArmConstants.zeroAngleRad)*(1.0/ArmConstants.encoderResolution)*(1.0/ArmConstants.falconToFinalGear));
-
+    leftPivotController.setSelectedSensorPosition(0);
+    rightPivotController.setSelectedSensorPosition(0);
 
     
     extensionController.setIdleMode(IdleMode.kCoast);
@@ -173,27 +173,32 @@ public class ArmControlSubsystem extends SubsystemBase {
   private void pivotPeriodic(){
 
     //pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
-
-    //desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
     
+    desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
+    
+
     //set currentRotation with encoders
     currentPivotRotation = getCurrentPivotRotation(true);
 
     //double pivotFeedforwardOutput = pivotFeedforward.calculate(desiredPivotRotation, 1, 1); //arbitrary
     double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
 
+
+
     if(pivotPIDOutput > 0.6){
       pivotPIDOutput = 0.6;
     }else if(pivotPIDOutput < -0.6){
       pivotPIDOutput = 0.6;
     }
-
+    
+    
+    
     SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
     //SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition());
     
     //TODO we dont know which one is inverted yet
-    leftPivotController.set(pivotPIDOutput);
-    rightPivotController.set(pivotPIDOutput); 
+    leftPivotController.set(pivotRateLimiter.calculate(pivotPIDOutput));
+    rightPivotController.set(pivotRateLimiter.calculate(pivotPIDOutput)); 
   }
 
   private void extensionPeriodic(){
@@ -229,7 +234,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     else{
       extensionController.set(0);
     }
-
+   
   }
 
 
@@ -283,7 +288,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public double getCurrentPivotRotation(boolean inRadians){
     //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
-    double rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear;
+    double rotation = (leftPivotController.getSelectedSensorPosition()+ArmConstants.zeroAngleRad) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear;
 
     //rotation = Math.IEEEremainder(rotation, 1.0);
     
