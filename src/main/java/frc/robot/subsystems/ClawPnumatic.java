@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class ClawPnumatic extends SubsystemBase {
@@ -51,8 +52,10 @@ public class ClawPnumatic extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (DriveConstants.debug) {
     SmartDashboard.putBoolean("ValueSwitch", phCompressor.getPressureSwitchValue());
     SmartDashboard.putBoolean("CompressorEnabled", phCompressor.isEnabled());
+    }
     SmartDashboard.putNumber("pressure", phCompressor.getPressure());
     SmartDashboard.putBoolean("Claw Closed", intakeSolenoid1.get());
     phCompressor.enableDigital();
@@ -69,7 +72,6 @@ public class ClawPnumatic extends SubsystemBase {
 
     }
 
-    SmartDashboard.putNumber("RightTrigger", Input.getRightTrigger());
 
     if(Input.getRightTrigger()!= 0){
       

@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Util;
 
@@ -90,7 +91,8 @@ public class ArmControlSubsystem extends SubsystemBase {
    
     
     setConfig(true);
-    SmartDashboard.putNumber("PivotkP", 2);
+
+
     SmartDashboard.putBoolean("armCoastMode", isCoast);
     
     
@@ -125,7 +127,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     //extensionEncoder.setPositionConversionFactor(4);
     extensionEncoder.setPosition(1);
 
-    SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);
+    if (DriveConstants.debug) {SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);}
     extensionController.burnFlash();
     
   }
@@ -151,9 +153,12 @@ public class ArmControlSubsystem extends SubsystemBase {
 
       // Getting Current And Desired Distances
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
-      SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
       SmartDashboard.putNumber("CurrentPivotPoint", Units.radiansToDegrees(currentPivotRotation));
-      SmartDashboard.putNumber("DesiredPivotPoint", Units.radiansToDegrees(desiredPivotRotation));
+
+      if (DriveConstants.debug) {
+        SmartDashboard.putNumber("DesiredPivotPoint", Units.radiansToDegrees(desiredPivotRotation));
+        SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
+      }
 
       SmartDashboard.putBoolean("isCost", isCoast);
 
@@ -161,12 +166,15 @@ public class ArmControlSubsystem extends SubsystemBase {
       //SmartDashboard.putNumber("LeftSensor", (leftPivotController.getSelectedSensorPosition()) / 2048 * ArmConstants.falconToFinalGear*360+60);
       //SmartDashboard.putNumber("RightSensor", (rightPivotController.getSelectedSensorPosition()) / 2048 * ArmConstants.falconToFinalGear*360+60);
   
-      //Encoder Positions
-      SmartDashboard.putNumber("LeftPivotAbsPos",leftPivotController.getSensorCollection().getIntegratedSensorPosition());
-      SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
 
-      SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
-      SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);
+      //Encoder Positions
+      if (DriveConstants.debug) {
+        SmartDashboard.putNumber("LeftPivotAbsPos",leftPivotController.getSensorCollection().getIntegratedSensorPosition());
+        SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
+
+        SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
+        SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionEncoderToInches);
+      }
       //5.96533203125 max 
   }
 
@@ -188,7 +196,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       pivotPIDOutput = 0.6;
     }
 
-    SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
+    if (DriveConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
     //SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition());
     
     //TODO we dont know which one is inverted yet

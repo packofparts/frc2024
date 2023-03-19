@@ -58,4 +58,13 @@ public class DriveConstants {
     public static final int kBackRightSteerCANId = 8;
 
     public static final boolean kGyroHold = false;
+
+
+    // CAN Traffic Reduction Booleans
+    public static final boolean debug = false; // Opens up ShuffleBoard Values
+    public static final boolean useAbsEncoder = false; // If we don't use the abs encoder, we don't even initialize them to reduce can traffic
+    public static final boolean reduceRelativeFrameRate = false; // Reducing the relative encoder sampling rate
+
+
+    public static final int reducedRelativeFrameRate = 50; // Relative encoder frame rate if we reduce IN MILLISECONDS
 }
