@@ -200,9 +200,6 @@ public class SwerveSubsystem extends SubsystemBase {
     if (fieldOriented){
       chassisSpeeds1 = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
     } else {chassisSpeeds1 = new ChassisSpeeds(x, y, rot);}
-    SmartDashboard.putNumber("ChassispeedsX",chassisSpeeds1.vxMetersPerSecond);
-    SmartDashboard.putNumber("Chassispeedsy",chassisSpeeds1.vyMetersPerSecond);
-    SmartDashboard.putNumber("ChassispeedsRadians",chassisSpeeds1.omegaRadiansPerSecond);
     SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(chassisSpeeds1);
 
 
