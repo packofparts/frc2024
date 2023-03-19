@@ -15,7 +15,7 @@ public class ArmConstants {
     public static final double minAngleRad = Units.degreesToRadians(33.0);
     public static final double maxAngleRad = Units.degreesToRadians(115.0);
 
-    public static final double extensionEncoderToInches =  18.3/5.96533203125;
+    public static final double extensionRotationToInches =  18.3/5.96533203125;
     public static final double minExtensionIn = 1;//29.85+ 7.073; //basically the length of the first base //inches
     //when it is at zeroAngleRad
     public static final double zeroExtensionIn = 1.618 + minExtensionIn;
@@ -28,7 +28,9 @@ public class ArmConstants {
     public static final double maxExtensionIn = 18;
 
     // Setpoints
-    public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, 43.0}; //inches
+    public static final double gearRatioExtension = 1.0/10;
+
+    public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, maxExtensionIn}; //inches
     public static final double[] angleLevelsDeg = {35.0, 87.0, 99.75}; //degrees
 
     public static final double[] offSubstation = {85.5, 46.0}; // angle, inches including claw
