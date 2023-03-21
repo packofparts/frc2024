@@ -39,6 +39,13 @@ public class VisionConstants {
     public static final double LimelightConstantOffset = 2.617;
 
 
+    // Constants such as camera and target height stored. Change per robot and goal!
+    public final static double CAMERA_HEIGHT_METERS = Units.inchesToMeters(24);
+    public final static double TARGET_HEIGHT_METERS = Units.feetToMeters(5);
+    // Angle between horizontal and the camera.
+    public final static double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+
+
     
 
     // Pose Estimation Constants

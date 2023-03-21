@@ -44,7 +44,9 @@ public class ArmControlSubsystem extends SubsystemBase {
     NODE2,
     NODE1,
     GNODE,
+    SUBSTATION,
     NEUTRAL,
+
   }
 
   public static enum MoveArmConfig {
@@ -356,6 +358,9 @@ public class ArmControlSubsystem extends SubsystemBase {
         extension = ArmConstants.extensionLevelsIn[2];
         rotation = ArmConstants.angleLevelsDeg[2];
         break;
+      case SUBSTATION:
+        extension = ArmConstants.offSubstation[1];
+        rotation = ArmConstants.offSubstation[2]
       default:
         extension = ArmConstants.minExtensionIn;
         rotation = ArmConstants.minAngleRad; 
