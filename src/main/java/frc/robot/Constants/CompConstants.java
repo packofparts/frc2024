@@ -5,7 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 public class CompConstants {
 
     
-    public static final boolean debug = false; // Opens up ShuffleBoard Values
+    public static final boolean debug = true; // Opens up ShuffleBoard Values
 
     // CAN Bus Reduction
     public static final boolean useAbsEncoder = true; // If we don't use the abs encoder, we don't even initialize them to reduce can traffic
@@ -18,7 +18,7 @@ public class CompConstants {
     // AutoBalance Tuning
     public static final PIDController velocityController = new PIDController(.45, .05, 0);
     public static final double onChargeStationOrientation = 15;
-    public static final double entrySpeed = 0.21;
+    public static final double entrySpeed = 0.36;
     public static float pitchSpeedThreshold = 35;
 
     public static final double kAngleDeadZoneDeg = 0.5;

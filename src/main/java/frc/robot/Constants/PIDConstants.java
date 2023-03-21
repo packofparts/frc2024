@@ -8,13 +8,13 @@ import edu.wpi.first.math.controller.PIDController;
 
 public class PIDConstants {
     public static final PIDController kFrontLeftSteeringPIDControl = 
-        new PIDController(0.56, 0.025, 0.01);
+        new PIDController(0.56, 0.0, 0.01);
 
     public static final PIDController kFrontRightSteeringPIDControl = 
         new PIDController(0.771, 0.025, 0.015);
 
     public static final PIDController kBackLeftSteeringPIDControl = 
-        new PIDController(0.56, 0, 0.015);
+        new PIDController(0.40, 0, 0.015);
 
     public static final PIDController kBackRightSteeringPIDControl = 
         new PIDController(0.56, 0, 0.01);

@@ -38,7 +38,7 @@ public class SwerveSubsystem extends SubsystemBase {
   // Bevel gears must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveCANId, DriveConstants.kFrontLeftSteerCANId,
-   0,false, false,0.452,false, CompConstants.useAbsEncoder,
+   0,false, false,0.112,false, CompConstants.useAbsEncoder,
    PIDConstants.kFrontLeftSteeringPIDControl, PIDConstants.kFrontLeftSteeringPIDControl);
 
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.kFrontRightDriveCANId, DriveConstants.kFrontRightSteerCANId,
@@ -98,8 +98,8 @@ public class SwerveSubsystem extends SubsystemBase {
     rawMods = getRawModules();
     setIdleModeForAll(IdleMode.kBrake, IdleMode.kBrake);
     headingController.setTolerance(Units.degreesToRadians(5));
-    rawMods[0].setModeTrans(IdleMode.kCoast);
-    rawMods[0].burnSparks();
+    //rawMods[0].setModeTrans(IdleMode.kCoast);
+    //rawMods[0].burnSparks();
   }
 
   @Override

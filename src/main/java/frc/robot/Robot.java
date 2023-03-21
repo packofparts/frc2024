@@ -57,10 +57,16 @@ public class Robot extends TimedRobot {
     // _commandSelector.addOption("Side Auto",
     //     new MakeShiftAutoSide(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
 
-    _commandSelector.addOption("MobilitySideAuto", 
-        new MobilityAuto(_robotContainer.drivetrain));
+    // _commandSelector.addOption("MobilitySideAuto", 
+    //     new MobilityAuto(_robotContainer.drivetrain));
+
+   // _commandSelector.addOption("MakeShiftAutoSide", new MakeShiftAutoSide(null, null, null))
+
     _commandSelector.addOption("ChargeStation",
          new AutoBalanceCommand(_robotContainer.drivetrain));
+
+
+
     // _commandSelector.addOption(
     //   "Move By with Trajecotry",
     //   new MoveByWithTrajectoryController(

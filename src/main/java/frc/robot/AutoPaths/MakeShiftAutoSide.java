@@ -32,6 +32,7 @@ public class MakeShiftAutoSide extends CommandBase {
   public MakeShiftAutoSide(ArmControlSubsystem arm, ClawPnumatic claw, SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     path = new SequentialCommandGroup(
+      new InstantCommand(() -> swerve.resetGyro()),
       new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[1])),
       new InstantCommand(()->claw.togglePneumatics()),
       new WaitCommand(1),

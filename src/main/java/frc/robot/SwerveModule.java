@@ -128,7 +128,7 @@ public class SwerveModule {
 
         // Returns SwerveModuleState
         return new SwerveModuleState(getTransVelocity()*DriveConstants.RPMtoMPS*DriveConstants.driveEncoderConversionFactortoRotations,
-            new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));  
+            new Rotation2d(getRotPosition()));  
     }
 
     /**
@@ -159,6 +159,7 @@ public class SwerveModule {
                 _transMotor.set(desiredState.speedMetersPerSecond/DriveConstants.kPhysicalMaxSpeedMPS);
                 break;
         }
+
         
         if(_isAbsEncoder){
             _rotMotor.set(_rotationPIDController.calculate(( -(

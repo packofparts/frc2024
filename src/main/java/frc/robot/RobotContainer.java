@@ -46,7 +46,7 @@ public class RobotContainer {
   // Commented because testing and probably will cause null errors
   //
   
-  public final ArmControlSubsystem armControl = new ArmControlSubsystem();
+  //public final ArmControlSubsystem armControl = new ArmControlSubsystem();
   public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
@@ -93,7 +93,7 @@ public class RobotContainer {
       //     ));
     }
   
-    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    //armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     
