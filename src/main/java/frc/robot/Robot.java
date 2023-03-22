@@ -27,6 +27,9 @@ import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.TGWithPPlib;
 import frc.robot.commands.TestSpark;
 import frc.robot.commands.MoveTo;
+import frc.robot.commands.PositionPIDtuning;
+import frc.robot.commands.SubstationAlignManual;
+import frc.robot.commands.SubstationAlignMoveTo;
 
 public class Robot extends TimedRobot {
   
@@ -65,7 +68,12 @@ public class Robot extends TimedRobot {
     _commandSelector.addOption("ChargeStation",
          new AutoBalanceCommand(_robotContainer.drivetrain));
 
+    //_commandSelector.addOption("MoveTo", new MoveTo(new Trasform, null));
 
+    _commandSelector.addOption("SubstationAlignManuel", 
+        new SubstationAlignManual(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));
+    _commandSelector.addOption("SubstationAlignMoveTo", 
+        new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));  
 
     // _commandSelector.addOption(
     //   "Move By with Trajecotry",
@@ -96,7 +104,7 @@ public class Robot extends TimedRobot {
     //   _robotContainer.poseEstimator));
     
     // autoSelector.addOption("AutoAlign", new AutoAlign(m_robotContainer.pose, m_robotContainer.lime, m_robotContainer.swerve));
-    // autoSelector.addOption("PositionPID", new PositionPIDtuning(m_robotContainer.swerve, m_robotContainer.pose));
+    _commandSelector.addOption("PositionPID", new PositionPIDtuning(_robotContainer.drivetrain));
 
     // _commandSelector.addOption(
     //   "LimelightAlign", 

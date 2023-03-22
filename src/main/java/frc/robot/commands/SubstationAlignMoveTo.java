@@ -6,6 +6,8 @@ package frc.robot.commands;
 
 import java.io.IOException;
 
+import javax.xml.crypto.dsig.Transform;
+
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -14,8 +16,13 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -31,6 +38,8 @@ public class SubstationAlignMoveTo extends CommandBase {
 
 
   private final Pose2d relativeDesiredPose = new Pose2d(new Translation2d(-4, -0.5), new Rotation2d(0));
+  private final Transform3d offset = new Transform3d(new Translation3d(-2, 0, 0), new Rotation3d(0, 0, 0));
+
 
   private SwerveSubsystem swerve;
   private Limelight lime;
@@ -48,16 +57,13 @@ public class SubstationAlignMoveTo extends CommandBase {
 
 
   /** Creates a new SubstationAlign. */
-  public SubstationAlignMoveTo(SwerveSubsystem swerve, Limelight lime, ArmControlSubsystem arm, ClawPnumatic claw) {
+  public SubstationAlignMoveTo(SwerveSubsystem swerve, Limelight lime) {
     this.swerve = swerve;
     this.lime = lime;
-    this.arm = arm;
-    this.claw = claw;
+
 
     addRequirements(swerve);
     addRequirements(lime);
-    addRequirements(arm);
-    addRequirements(claw);
 
   }
 
@@ -68,17 +74,30 @@ public class SubstationAlignMoveTo extends CommandBase {
 
     if (result.hasTargets()) {
 
-      Pose3d pose = new Pose3d();
-      pose.transformBy(result.getBestTarget().getBestCameraToTarget().inverse());
+      // Pose3d pose = new Pose3d();
+      // pose.transformBy(result.getBestTarget().getBestCameraToTarget().inverse());
 
-      move = new MoveTo(pose.toPose2d().minus(relativeDesiredPose), swerve);
+      // move = new MoveTo(pose.toPose2d().minus(relativeDesiredPose), swerve);
+
+
+      Transform3d transform = result.getBestTarget().getBestCameraToTarget().plus(offset);
+      Transform2d transform2d = new Transform2d(new Translation2d(transform.getX(), transform.getY()), new Rotation2d(transform.getRotation().getAngle()));
+      SmartDashboard.putNumber("TransformX", transform2d.getX());
+      SmartDashboard.putNumber("TransformY", transform2d.getY());
+      SmartDashboard.putNumber("TransformRot", transform2d.getRotation().getDegrees());
+      move = new MoveTo(transform2d, swerve);
 
       
       commandGroup = new SequentialCommandGroup(
-        move,
-        new InstantCommand(() -> arm.moveToEnum(ArmSetting.SUBSTATION))
+        move
       );
 
+      if (commandGroup != null) {
+        commandGroup.schedule();
+        
+      } else {
+        failed = true;
+      }
 
 
     
@@ -89,12 +108,7 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (commandGroup != null) {
-      commandGroup.schedule();
-      
-    } else {
-      failed = true;
-    }
+
   }
 
   // Called once the command ends or is interrupted.

@@ -23,10 +23,10 @@ public class PositionPIDtuning extends CommandBase {
   MoveTo back, forth;
   SequentialCommandGroup backAndForth;
 
-  public PositionPIDtuning(SwerveSubsystem swerve, PoseEstimation pose) {
+  public PositionPIDtuning(SwerveSubsystem swerve) {
     
     this.swerve = swerve;
-    this.pEstimation = pose;
+    //this.pEstimation = pose;
     // Use addRequirements() here to declare subsystem dependencies.
    
   }
@@ -59,8 +59,8 @@ public class PositionPIDtuning extends CommandBase {
     PIDConstants.rotPIDValues[2] = SmartDashboard.getNumber("RotControllerD", 0);
 
 
-    forth = new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI/6)), swerve);
-    back = new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(-Math.PI/6)), swerve);
+    forth = new MoveTo(new Transform2d(new Translation2d(2, 0), new Rotation2d(Math.PI/6)), swerve);
+    back = new MoveTo(new Transform2d(new Translation2d(-2, 0), new Rotation2d(-Math.PI/6)), swerve);
     backAndForth = new SequentialCommandGroup(forth, back);
     
     

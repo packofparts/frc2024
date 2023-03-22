@@ -84,16 +84,17 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     //pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
     pivotPID = new PIDController(1.4, 0, 0);
-    pivotPID.setTolerance(Units.degreesToRadians(3.5));
+    
+    pivotPID.setTolerance(Units.degreesToRadians(2));
     pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
 
-    extensionPID = new PIDController(0.0388, 0, 0);
-    extensionPID.setTolerance(.25);
+    extensionPID = new PIDController(0.0688, 0, 0);
+    extensionPID.setTolerance(.2);
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
     
    
     
-    setConfig(true);
+    setConfig(false);
 
 
     SmartDashboard.putBoolean("armCoastMode", isCoast);
@@ -143,8 +144,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       // }
       
       if(!isCoast){
-         pivotPeriodic(); //maintains the desired pivot angle
-         extensionPeriodic();
+         //pivotPeriodic(); //maintains the desired pivot angle
+         //extensionPeriodic();
       }
        //maintains the desired extension length
 
@@ -185,7 +186,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     //pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
     
-    //desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
+    desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
     
 
     //set currentRotation with encoders
@@ -232,8 +233,14 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     double difference = desiredExtensionDistance - currentExtensionDistance;
 
-    double offset =  .2 * (difference > 0 ? 1 : -1);
-    if (Math.abs(difference) > .5){
+    if(extensionPIDOutput > .8){
+      extensionPIDOutput = .7;
+    }else if (extensionPIDOutput < -0.8){
+      extensionPIDOutput = -.8;
+    }
+
+    double offset =  .12 * (difference > 0 ? 1 : -1);
+    if (Math.abs(difference) > .14){
       extensionController.set(offset + extensionPIDOutput);
     }else{
       extensionController.set(0);
@@ -360,7 +367,7 @@ public class ArmControlSubsystem extends SubsystemBase {
         break;
       case SUBSTATION:
         extension = ArmConstants.offSubstation[1];
-        rotation = ArmConstants.offSubstation[2]
+        rotation = ArmConstants.offSubstation[2];
       default:
         extension = ArmConstants.minExtensionIn;
         rotation = ArmConstants.minAngleRad; 

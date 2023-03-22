@@ -38,7 +38,7 @@ public class RobotContainer {
 
   public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   
-  //public final Limelight limeLightSubSystem = new Limelight();
+  public final Limelight limeLightSubSystem = new Limelight();
 
   //public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   //public final ManualPoseEstimation pose = new ManualPoseEstimation(limeLightSubSystem, drivetrain, ManualPoseEstimation.Strategy.BEST);
@@ -46,8 +46,8 @@ public class RobotContainer {
   // Commented because testing and probably will cause null errors
   //
   
-  //public final ArmControlSubsystem armControl = new ArmControlSubsystem();
-  public final ClawPnumatic clawPnumatic = new ClawPnumatic();
+  public final ArmControlSubsystem armControl = new ArmControlSubsystem();
+  //public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
@@ -93,7 +93,7 @@ public class RobotContainer {
       //     ));
     }
   
-    //armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     

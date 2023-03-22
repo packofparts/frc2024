@@ -63,9 +63,6 @@ public class Limelight extends SubsystemBase {
     pipelineVals.put("REFLECTION", 2);
     pipelineVals.put("DRIVE", 3);
     pipelineVals.put("CUBE", 0);
-
-                
-
   }
 
   @Override
