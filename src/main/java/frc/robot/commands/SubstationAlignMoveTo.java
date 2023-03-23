@@ -92,6 +92,8 @@ public class SubstationAlignMoveTo extends CommandBase {
   public MoveTo getAlignment() {
     PhotonPipelineResult result = lime.getImg();
 
+    SmartDashboard.putBoolean("HasTargers", result.hasTargets());
+
     if (result.hasTargets()) {
 
       Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
@@ -113,6 +115,8 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putBoolean("HasTargers", lime.getImg().hasTargets());
+
     if (right.isFinished()&&!moveScheduled) {
       move = getAlignment();
       move.schedule();
