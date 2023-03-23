@@ -76,11 +76,14 @@ public class SubstationAlignMoveTo extends CommandBase {
 
 
 
-    
 
     right.schedule();
 
-
+    SequentialCommandGroup commandGroup = new SequentialCommandGroup(
+      right,
+      new InstantCommand(()->getAlignment().schedule())
+    );
+    commandGroup.schedule();
 
   }
 
@@ -92,10 +95,8 @@ public class SubstationAlignMoveTo extends CommandBase {
   public MoveTo getAlignment() {
     PhotonPipelineResult result = lime.getImg();
 
-    SmartDashboard.putBoolean("HasTargers", result.hasTargets());
-
     if (result.hasTargets()) {
-
+      System.out.println("And his name is bababoey------------------------------");
       Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
 
       Transform2d fin = new Transform2d(new Translation2d(0, transformation.getY()+1), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
@@ -115,13 +116,13 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putBoolean("HasTargers", lime.getImg().hasTargets());
-
-    if (right.isFinished()&&!moveScheduled) {
-      move = getAlignment();
-      move.schedule();
-      moveScheduled = true;
-    }
+    // SmartDashboard.putBoolean("rightFinished", right.isFinished());
+    // if (right.isFinished()&&!moveScheduled) {
+    //   SmartDashboard.putBoolean("MoveScheduled", true);
+    //   move = getAlignment();
+    //   move.schedule();
+    //   moveScheduled = true;
+    // }
   }
 
   // Called once the command ends or is interrupted.
