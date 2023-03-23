@@ -64,6 +64,9 @@ public class SwerveModule {
         if (CompConstants.reduceRelativeFrameRate) {
             _transEncoder.setMeasurementPeriod(CompConstants.reducedRelativeFrameRate);
         }
+
+        //applySettings();
+        //burnSparks();
     }
 
     /**

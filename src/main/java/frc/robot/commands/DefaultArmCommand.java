@@ -86,6 +86,16 @@ public class DefaultArmCommand extends CommandBase {
       );
       command.schedule();
     }
+    else if(Input.getY()){
+      SequentialCommandGroup command = new SequentialCommandGroup(
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.offSubstation[0]))),
+        new WaitCommand(0.5),
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.offSubstation[1]))
+
+      );
+      command.schedule();
+    }
+    
 
   }
 

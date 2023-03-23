@@ -27,9 +27,7 @@ public class MobilityAuto extends CommandBase {
     path = new SequentialCommandGroup(
       new InstantCommand(()->swerve.resetGyro()),
       new WaitCommand(1),
-      new InstantCommand(()->swerve.setMotors(-0.5, 0, 0,DriveMode.AUTO,false)),
-      new WaitCommand(5),
-      new InstantCommand(()->swerve.setMotors(0, 0, 0))
+      new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d(0)), swerve)
     );
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(swerve);

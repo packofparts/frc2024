@@ -74,19 +74,15 @@ public class SubstationAlignMoveTo extends CommandBase {
 
     if (result.hasTargets()) {
 
-      // Pose3d pose = new Pose3d();
-      // pose.transformBy(result.getBestTarget().getBestCameraToTarget().inverse());
+      Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
 
-      // move = new MoveTo(pose.toPose2d().minus(relativeDesiredPose), swerve);
+      Transform2d fin = new Transform2d(new Translation2d(0, transformation.getY()), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
 
+      move = new MoveTo(fin, swerve);
 
-      Transform3d transform = result.getBestTarget().getBestCameraToTarget().plus(offset);
-      Transform2d transform2d = new Transform2d(new Translation2d(transform.getX(), transform.getY()), new Rotation2d(transform.getRotation().getAngle()));
-      SmartDashboard.putNumber("TransformX", transform2d.getX());
-      SmartDashboard.putNumber("TransformY", transform2d.getY());
-      SmartDashboard.putNumber("TransformRot", transform2d.getRotation().getDegrees());
-      move = new MoveTo(transform2d, swerve);
-
+      SmartDashboard.putNumber("TransformX",fin.getX());
+      SmartDashboard.putNumber("TransformY", fin.getY());
+      SmartDashboard.putNumber("TransformRot", fin.getRotation().getDegrees());
       
       commandGroup = new SequentialCommandGroup(
         move
@@ -97,12 +93,18 @@ public class SubstationAlignMoveTo extends CommandBase {
         
       } else {
         failed = true;
+        System.out.println("bababoey");
       }
 
 
     
     
     }
+  }
+
+  public double optimize(double rad) {
+    //return rad%Math.PI - Math.PI * (rad/Math.abs(rad));
+    return rad;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -120,6 +122,6 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return failed || commandGroup.isFinished();
+    return false; //failed || commandGroup.isFinished();
   }
 }

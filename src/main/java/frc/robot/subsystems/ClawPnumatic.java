@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.time.Instant;
+
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
@@ -18,7 +20,10 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -79,7 +84,22 @@ public class ClawPnumatic extends SubsystemBase {
     // else if(Input.getOuttake()){spinOuttake(1);}
 
     if (Input.getRightBumper()){
-      togglePneumatics();
+      SequentialCommandGroup command;
+      if (!intakeSolenoid1.get()) {
+        command = new SequentialCommandGroup(
+          new InstantCommand(()->spinIntake(0.3)),
+          new InstantCommand(()->togglePneumatics()),
+          new WaitCommand(0.5),
+          new InstantCommand(()->spinIntake(0))
+        );
+      } else {
+        command = new SequentialCommandGroup(
+          new InstantCommand(this::togglePneumatics)
+        );
+      }
+      //togglePneumatics();
+
+      command.schedule();
     }
 
     if(Input.getRightTrigger()!= 0){
@@ -114,8 +134,8 @@ public class ClawPnumatic extends SubsystemBase {
   }
 
   public void compression(){
-    if (phCompressor.getPressure() > 60) phCompressor.disable();
-    else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
+    if (phCompressor.getPressure() > 120) phCompressor.disable();
+    else if (phCompressor.getPressure() < 120) phCompressor.enableDigital();
   }
   public void changePneumatics(boolean closed){
     intakeSolenoid1.set(closed);

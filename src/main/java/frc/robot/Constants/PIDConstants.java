@@ -38,6 +38,6 @@ public class PIDConstants {
     public static PIDController YController = new PIDController(0.4, 0, 0);
     public static PIDController rotController =  new PIDController(1.4, 0, 0);
 
-    public static double[] transPIDValues = new double[]{0.4, 0, 0};
+    public static double[] transPIDValues = new double[]{0.5, 0, 0};
     public static double[] rotPIDValues = new double[]{1.5, 0, 0};
 }

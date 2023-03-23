@@ -43,7 +43,7 @@ public class VisionConstants {
     public final static double CAMERA_HEIGHT_METERS = Units.inchesToMeters(26.56);
     public final static double TARGET_HEIGHT_METERS = Units.feetToMeters(3);
     // Angle between horizontal and the camera.
-    public final static double CAMERA_PITCH_RADIANS = Units.degreesToRadians(15);
+    public final static double CAMERA_PITCH_RADIANS = Units.degreesToRadians(-15);
 
 
     

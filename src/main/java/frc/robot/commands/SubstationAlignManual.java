@@ -15,6 +15,7 @@ import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class SubstationAlignManual extends CommandBase {
   /** Creates a new SubstationAlignManual. */
@@ -65,7 +66,7 @@ public class SubstationAlignManual extends CommandBase {
         forwardSpeed = 0;
         rotationSpeed = 0;
     }
-    swerve.setMotors(forwardSpeed, 0, rotationSpeed);
+    swerve.setMotors(forwardSpeed, 0, rotationSpeed, DriveMode.AUTO, false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -79,6 +80,6 @@ public class SubstationAlignManual extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return forwardController.atSetpoint() && rotationController.atSetpoint();
   }
 }

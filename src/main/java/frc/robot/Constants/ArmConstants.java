@@ -12,7 +12,7 @@ public class ArmConstants {
     public static final double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
     public static final double zeroAngleRad = Units.degreesToRadians(11.5);//11.5
 
-    public static final double minAngleRad = Units.degreesToRadians(23); //33
+    public static final double minAngleRad = Units.degreesToRadians(30); //33
     public static final double maxAngleRad = Units.degreesToRadians(115.0);
 
     public static final double extensionRotationToInches =  18.3/5.96533203125;
@@ -31,9 +31,9 @@ public class ArmConstants {
     public static final double gearRatioExtension = 1.0/10;
 
     public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, maxExtensionIn}; //inches
-    public static final double[] angleLevelsDeg = {35.0, 87.0, 99.75}; //degrees
+    public static final double[] angleLevelsDeg = {35.0, 75.0, 99.75}; //degrees
 
-    public static final double[] offSubstation = {85.5, 46.0}; // angle, inches including claw
+    public static final double[] offSubstation = {92, 7}; // angle, inches including claw
 //    public static final double[] offGround
 
 

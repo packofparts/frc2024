@@ -180,15 +180,13 @@ public class MoveTo extends CommandBase {
     SmartDashboard.putBoolean("isAtRotSetpoint", angleController.atSetpoint());
 
 
-
-
     double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
 
 
-    xSpeed /= magnitude;
-    ySpeed /= magnitude;
-    xSpeed *= DriveConstants.kPhysicalMaxSpeedMPS;
-    ySpeed *= DriveConstants.kPhysicalMaxSpeedMPS;
+    
+    
+    double fx = (xSpeed / magnitude) * (DriveConstants.kPhysicalMaxSpeedMPS/3);
+    double fy = (ySpeed / magnitude) * (DriveConstants.kPhysicalMaxSpeedMPS/3);
     
 
     // Setting to a little less than 90 degrees per second as minimum speed
@@ -200,7 +198,7 @@ public class MoveTo extends CommandBase {
     }
 
     if((!xController.atSetpoint() || !yController.atSetpoint()))
-      swerve.setMotors(xSpeed, ySpeed, rot, DriveMode.AUTO);
+      swerve.setMotors(xSpeed + fx, ySpeed + fy, rot, DriveMode.AUTO);
     else
       swerve.setMotors(0, 0, rot, DriveMode.AUTO);
   }
