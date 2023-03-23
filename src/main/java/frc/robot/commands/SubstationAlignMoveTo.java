@@ -73,7 +73,7 @@ public class SubstationAlignMoveTo extends CommandBase {
   @Override
   public void initialize() {
     right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(-swerve.getRotation2d().getRadians())), swerve);
-
+    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(this.lime.hasTarg() ? -this.lime.getYaw() : -swerve.getRotation2d().getRadians())), swerve);
 
 
 

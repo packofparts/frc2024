@@ -106,11 +106,8 @@ public void addAprilTag(HashMap<String,Object>[]Tags){
   }
 
 
-  public Object hasTarg(Supplier<Object> Func){
-    if (img.hasTargets()){
-      return Func.get();
-    }
-    return null;
+  public Boolean hasTarg(){
+    return img.hasTargets();
   }
 
   public PhotonTrackedTarget getBestTarget() {
