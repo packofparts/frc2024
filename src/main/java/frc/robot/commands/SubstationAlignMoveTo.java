@@ -47,11 +47,13 @@ public class SubstationAlignMoveTo extends CommandBase {
   ArmControlSubsystem arm;
   ClawPnumatic claw;
   boolean failed = false;
+  MoveTo right;
   
   private SequentialCommandGroup commandGroup;
   private PoseEstimation pose;
 
   private MoveTo move;
+  boolean moveScheduled = false;
 
   final double GOAL_RANGE_METERS = Units.feetToMeters(3);
 
@@ -70,36 +72,16 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    PhotonPipelineResult result = lime.getImg();
+    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(-swerve.getRotation2d().getRadians())), swerve);
 
-    if (result.hasTargets()) {
-
-      Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
-
-      Transform2d fin = new Transform2d(new Translation2d(0, transformation.getY()), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
-
-      move = new MoveTo(fin, swerve);
-
-      SmartDashboard.putNumber("TransformX",fin.getX());
-      SmartDashboard.putNumber("TransformY", fin.getY());
-      SmartDashboard.putNumber("TransformRot", fin.getRotation().getDegrees());
-      
-      commandGroup = new SequentialCommandGroup(
-        move
-      );
-
-      if (commandGroup != null) {
-        commandGroup.schedule();
-        
-      } else {
-        failed = true;
-        System.out.println("bababoey");
-      }
 
 
     
-    
-    }
+
+    right.schedule();
+
+
+
   }
 
   public double optimize(double rad) {
@@ -107,10 +89,35 @@ public class SubstationAlignMoveTo extends CommandBase {
     return rad;
   }
 
+  public MoveTo getAlignment() {
+    PhotonPipelineResult result = lime.getImg();
+
+    if (result.hasTargets()) {
+
+      Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
+
+      Transform2d fin = new Transform2d(new Translation2d(0, transformation.getY()+1), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
+
+      MoveTo move = new MoveTo(fin, swerve);
+
+      SmartDashboard.putNumber("TransformX",fin.getX());
+      SmartDashboard.putNumber("TransformY", fin.getY());
+      SmartDashboard.putNumber("TransformRot", fin.getRotation().getDegrees());
+      
+      //commandGroup.addCommands(move);
+      return move;
+    }
+    return new MoveTo(new Transform2d(), swerve);
+  }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if (right.isFinished()&&!moveScheduled) {
+      move = getAlignment();
+      move.schedule();
+      moveScheduled = true;
+    }
   }
 
   // Called once the command ends or is interrupted.

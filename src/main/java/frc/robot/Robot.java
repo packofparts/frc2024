@@ -62,6 +62,7 @@ public class Robot extends TimedRobot {
 
     _commandSelector.addOption("MobilitySideAuto", 
         new MobilityAuto(_robotContainer.drivetrain));
+    
 
    // _commandSelector.addOption("MakeShiftAutoSide", new MakeShiftAutoSide(null, null, null))
 
