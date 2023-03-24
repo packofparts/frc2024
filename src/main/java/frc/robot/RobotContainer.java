@@ -47,10 +47,10 @@ public class RobotContainer {
   //
   
   public final ArmControlSubsystem armControl = new ArmControlSubsystem();
-  //public final ClawPnumatic clawPnumatic = new ClawPnumatic();
+  public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
-  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
+  //public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
   //public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
   //public final PIDtuning pid = new PIDtuning(drivetrain);
 
@@ -85,7 +85,7 @@ public class RobotContainer {
     // moduleSelector.addOption("Back Right", allModules[3]);
 
     if (!DriveConstants.tuningPID){
-      drivetrain.setDefaultCommand(defaultDrive);
+      //drivetrain.setDefaultCommand(defaultDrive);
     } else{
       // drivetrain.setDefaultCommand(
       //   new SinglePID(
@@ -93,7 +93,7 @@ public class RobotContainer {
       //     ));
     }
   
-    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    //armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     

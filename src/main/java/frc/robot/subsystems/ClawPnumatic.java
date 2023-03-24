@@ -67,21 +67,9 @@ public class ClawPnumatic extends SubsystemBase {
     SmartDashboard.putNumber("pressure", phCompressor.getPressure());
     SmartDashboard.putBoolean("Claw Closed", intakeSolenoid1.get());
 
-    //phCompressor.enableDigital();
-
-    if (phCompressor.getPressure() > 60) 
-    {
-      phCompressor.disable();
-    }
-    else 
-    {
-       phCompressor.enableDigital();
-    }
+    phCompressor.enableAnalog(60, 120);
 
 
-    //toggle intake solenoids
-    // if (Input.getIntake()){spinIntake(1);}
-    // else if(Input.getOuttake()){spinOuttake(1);}
 
     if (Input.getRightBumper()){
       SequentialCommandGroup command;
