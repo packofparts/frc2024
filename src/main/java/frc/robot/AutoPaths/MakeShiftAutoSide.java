@@ -35,10 +35,10 @@ public class MakeShiftAutoSide extends CommandBase {
       new InstantCommand(() -> swerve.resetGyro()),
       new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[1])),
       new WaitCommand(1),
-      new ExtensionCmd(arm, 5),
+      //new ExtensionCmd(arm, 5),
       //new InstantCommand(()->claw.togglePneumatics()),
       new WaitCommand(1),
-      new ExtensionCmd(arm, 0),
+      //new ExtensionCmd(arm, 0),
       new WaitCommand(1),
       new PivotCmd(arm, ArmConstants.minAngleRad)
       // new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d(0)), swerve),

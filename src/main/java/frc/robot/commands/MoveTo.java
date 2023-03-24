@@ -84,12 +84,13 @@ public class MoveTo extends CommandBase {
     yController.setTolerance(0.05);
     xController.setTolerance(0.05);
 
+
     angleController.setTolerance(0.001);
 
     
     xPoint = desiredPose.getX();
     yPoint = desiredPose.getY();
-    rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
+    rotPoint = desiredPose.getRotation().getRadians();
   }
 
 

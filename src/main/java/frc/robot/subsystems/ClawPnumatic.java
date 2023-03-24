@@ -135,7 +135,7 @@ public class ClawPnumatic extends SubsystemBase {
 
   public void compression(){
     if (phCompressor.getPressure() > 120) phCompressor.disable();
-    else if (phCompressor.getPressure() < 120) phCompressor.enableDigital();
+    else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
   }
   public void changePneumatics(boolean closed){
     intakeSolenoid1.set(closed);
