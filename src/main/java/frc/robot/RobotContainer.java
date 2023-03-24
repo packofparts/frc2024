@@ -11,21 +11,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.AimbotDriveCmd;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
-import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.PIDtuning;
-import frc.robot.commands.SinglePID;
 import frc.robot.subsystems.ArmControlSubsystem;
-import frc.robot.subsystems.ClawMotor;
 import frc.robot.subsystems.ClawPnumatic;
-import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.ManualPoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -43,14 +35,12 @@ public class RobotContainer {
   //public final PoseEstimation pose = new PoseEstimation(lime, swerve);
   //public final ManualPoseEstimation pose = new ManualPoseEstimation(limeLightSubSystem, drivetrain, ManualPoseEstimation.Strategy.BEST);
 
-  // Commented because testing and probably will cause null errors
-  //
   
   public final ArmControlSubsystem armControl = new ArmControlSubsystem();
   public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
-  //public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
+  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
   //public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
   //public final PIDtuning pid = new PIDtuning(drivetrain);
 
@@ -70,10 +60,6 @@ public class RobotContainer {
   //public SwerveModule selecModule = allModules[2];
 
 
-  
-
-  //public final pnumatics pnu = new pnumatics();
-  //public final Camera cam = new Camera();
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -85,7 +71,7 @@ public class RobotContainer {
     // moduleSelector.addOption("Back Right", allModules[3]);
 
     if (!DriveConstants.tuningPID){
-      //drivetrain.setDefaultCommand(defaultDrive);
+      drivetrain.setDefaultCommand(defaultDrive);
     } else{
       // drivetrain.setDefaultCommand(
       //   new SinglePID(
@@ -93,7 +79,7 @@ public class RobotContainer {
       //     ));
     }
   
-    //armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     

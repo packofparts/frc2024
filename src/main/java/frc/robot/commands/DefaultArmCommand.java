@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Util;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 
@@ -35,13 +34,6 @@ public class DefaultArmCommand extends CommandBase {
 
   void handleInput(){
 
-    // if(Input.getDPad() == Input.DPADUP){
-    //   armControlSubsystem.changeDesiredPivotRotation(.025); //
-    // }else if(Input.getDPad() == Input.DPADDOWN){
-    //   armControlSubsystem.changeDesiredPivotRotation(-.025);
-
-    // }
-
     if(Input.getLeftStickY() > 0.15){
       armControlSubsystem.changeDesiredPivotRotation(.03 * (Input.getLeftStickY()-0.15));
     }else if(Input.getLeftStickY() < -0.15){
@@ -49,17 +41,11 @@ public class DefaultArmCommand extends CommandBase {
     }
 
     if(Input.getRightStickY() > 0.05){
-      armControlSubsystem.changeDesiredExtension(.16 * (Input.getRightStickY() - 0.05));
+      armControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() - 0.05));
     }else if(Input.getRightStickY() < -0.05){
-      armControlSubsystem.changeDesiredExtension(.16 * (Input.getRightStickY() + 0.05));
+      armControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() + 0.05));
     }
     
-    // else if(Input.getDPad() == Input.DPADRIGHT){
-    //   armControlSubsystem.changeDesiredExtension(.3);
-    // }
-    // else if(Input.getDPad() == Input.DPADLEFT){
-    //   armControlSubsystem.changeDesiredExtension(-.3);
-    // }
     
     else if(Input.getA()){
       SequentialCommandGroup command = new SequentialCommandGroup(

@@ -5,7 +5,6 @@
 package frc.robot.commands.armcontrolcmds;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 
 public class ExtensionCmd extends CommandBase {

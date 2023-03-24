@@ -7,27 +7,15 @@ package frc.robot;
 import com.revrobotics.CANSparkMaxLowLevel;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.AutoPaths.MakeShiftAutoMiddle;
 import frc.robot.AutoPaths.MakeShiftAutoSide;
 import frc.robot.AutoPaths.MobilityAuto;
-import frc.robot.Constants.AutoMapConstants;
 import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.TGWithPPlib;
-import frc.robot.commands.TestSpark;
 import frc.robot.subsystems.Input;
-import frc.robot.commands.MoveTo;
 import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.SubstationAlignManual;
 import frc.robot.commands.SubstationAlignMoveTo;
@@ -37,7 +25,7 @@ public class Robot extends TimedRobot {
   private Command _autonomousCommand;
   private RobotContainer _robotContainer;
   public SendableChooser <Command> _commandSelector = new SendableChooser<>();
-  public SubstationAlignMoveTo susStation;
+  public SubstationAlignMoveTo substationCmd;
 
   boolean isOn = false;
 
@@ -50,12 +38,14 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
-      CameraServer.startAutomaticCapture();
-      //phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+
+    CameraServer.startAutomaticCapture();
+
+
     _robotContainer = new RobotContainer();
-    susStation = new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem);
+    substationCmd = new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem);
 
 
     // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
@@ -64,18 +54,16 @@ public class Robot extends TimedRobot {
     //     new MakeShiftAutoMiddle(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
     
     _commandSelector.addOption("Side Auto",
-        new MakeShiftAutoSide(_robotContainer.armControl, _robotContainer.drivetrain));
+        new MakeShiftAutoSide(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
 
-    _commandSelector.addOption("MobilitySideAuto", 
+    _commandSelector.addOption("OnlyMobilitySideAuto", 
         new MobilityAuto(_robotContainer.drivetrain));
     
 
-   // _commandSelector.addOption("MakeShiftAutoSide", new MakeShiftAutoSide(null, null, null))
 
     _commandSelector.addOption("ChargeStation",
          new AutoBalanceCommand(_robotContainer.drivetrain));
 
-    //_commandSelector.addOption("MoveTo", new MoveTo(new Trasform, null));
 
     _commandSelector.addOption("SubstationAlignManuel", 
         new SubstationAlignManual(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));
@@ -198,22 +186,22 @@ public class Robot extends TimedRobot {
     //   susStation.cancel();
     // }
 
-    if(Input.LimelightAlignTrigger()){
+    if(Input.limelightAlignTrigger()){
 
       if(isOn){
-        susStation.cancel();
+        substationCmd.cancel();
         
         isOn = false;
       }else{
         isOn = true;
-        susStation = new  SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem);
-        susStation.schedule();
+        substationCmd = new  SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem);
+        substationCmd.schedule();
       }
 
     }
 
 
-    SmartDashboard.putBoolean("SusStation", susStation.isScheduled());
+    SmartDashboard.putBoolean("SusStation", substationCmd.isScheduled());
 
     SmartDashboard.putBoolean("ISON", isOn);
   }

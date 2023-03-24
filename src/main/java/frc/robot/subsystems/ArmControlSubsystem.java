@@ -1,38 +1,26 @@
 
 package frc.robot.subsystems;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
-import com.ctre.phoenix.motorcontrol.ControlFrame;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CompConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Util;
 
@@ -59,9 +47,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   boolean isCoast = false;
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
-  //private final AnalogEncoder pivotEncoder = new AnalogEncoder(ArmConstants.armPivotEncoderPort);
 
-  //private final WPI_TalonFX extensionController = new WPI_TalonFX(ArmConstants.extensionPort);
+  
   private final CANSparkMax extensionController = new CANSparkMax(ArmConstants.telescopicArmSpark, MotorType.kBrushless);
   private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
 
@@ -73,20 +60,18 @@ public class ArmControlSubsystem extends SubsystemBase {
   double currentExtensionDistance = ArmConstants.minExtensionIn;
   double desiredExtensionDistance = currentExtensionDistance + 3;
 
-  //TODO moves these to ArmConstants
-  PIDController pivotPID; //TODO calculate gains to actually change the angle
-  ArmFeedforward pivotFeedforward; //TODO calculate gains to beat the force of gravity 
+
+  PIDController pivotPID; 
+
   SlewRateLimiter pivotRateLimiter;
   PIDController extensionPID;
   
-  //TODO make the constructor more useful and modular by passing in most values from ArmConstants
   public ArmControlSubsystem() {
 
-    //pivotPID = new PIDController(2, 0, 0); //TODO calculate gains to actually change the angle
     pivotPID = new PIDController(1.4, 0, 0);
     
     pivotPID.setTolerance(Units.degreesToRadians(2));
-    pivotFeedforward = new ArmFeedforward(0, 0, 0, 0); //TODO calculate gains to beat the force of gravity 
+
 
     extensionPID = new PIDController(0.0688, 0, 0);
     extensionPID.setTolerance(.2);
@@ -99,9 +84,6 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     SmartDashboard.putBoolean("armCoastMode", isCoast);
     
-    
-
-    //desiredPivotRotation = getCurrentPivotRotation(true);
   }
 
   public void setConfig(boolean isCoast){
@@ -126,9 +108,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     
     extensionController.setIdleMode(IdleMode.kCoast);
     extensionController.setInverted(false);
-    //extensionController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    //extensionController.setSelectedSensorPosition(0);
-    //extensionEncoder.setPositionConversionFactor(4);
+
     extensionEncoder.setPosition(0);
 
     if (CompConstants.debug) {SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches);}
@@ -137,23 +117,11 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {
-      // boolean br = SmartDashboard.getBoolean("armCoastMode", false);
-      // if (br != isCoast){
-      //   setConfig(br);
-      // }
-      
+  public void periodic() {      
       if(!isCoast){
-         //pivotPeriodic(); //maintains the desired pivot angle
-         //extensionPeriodic();
+         pivotPeriodic(); //maintains the desired pivot angle
+         extensionPeriodic();
       }
-       //maintains the desired extension length
-
-      // if(Input.getDPad() == Input.DPADDOWN){
-      //   isCoast = !isCoast;
-      //   rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-      //   leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-      // }
 
       // Getting Current And Desired Distances
       SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
@@ -164,12 +132,7 @@ public class ArmControlSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
       }
 
-      SmartDashboard.putBoolean("isCost", isCoast);
-
-
-      //SmartDashboard.putNumber("LeftSensor", (leftPivotController.getSelectedSensorPosition()) / 2048 * ArmConstants.falconToFinalGear*360+60);
-      //SmartDashboard.putNumber("RightSensor", (rightPivotController.getSelectedSensorPosition()) / 2048 * ArmConstants.falconToFinalGear*360+60);
-  
+      SmartDashboard.putBoolean("isCoast", isCoast);
 
       //Encoder Positions
       if (CompConstants.debug) {
@@ -179,13 +142,10 @@ public class ArmControlSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
         SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches);
       }
-      //5.96533203125 max 
+      
   }
 
-  private void pivotPeriodic(){
-
-    //pivotPID = new PIDController(SmartDashboard.getNumber("PivotkP", 0), 0, 0);
-    
+  private void pivotPeriodic(){    
     desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
     
 
@@ -206,7 +166,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     if (CompConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
     //SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition());
     
-    //TODO we dont know which one is inverted yet
     if (CompConstants.rateLimitArm) {
       pivotPIDOutput = pivotRateLimiter.calculate(pivotPIDOutput);
     }
@@ -246,15 +205,6 @@ public class ArmControlSubsystem extends SubsystemBase {
       extensionController.set(0);
     }
 
-
-    // if (Input.getRightStickY() >.05){
-    //   extensionController.set(Input.getRightStickY()/4 + 0.15);
-    // }else if(Input.getRightStickY() < -0.05){
-    //   extensionController.set(Input.getRightStickY()/4 - 0.15);
-    // }
-    // else{
-    //   extensionController.set(0);
-    // }
    
   }
 
@@ -262,7 +212,6 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public void setDesiredPivotRotation(double _desiredRotation){
     desiredPivotRotation = _desiredRotation;
-    //rotates the rotater 
   }
 
   //in inches

@@ -1,10 +1,5 @@
 package frc.robot.Constants;
 
-import java.util.HashMap;
-import java.util.List;
-
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-
 import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
@@ -34,11 +29,11 @@ public class ArmConstants {
     public static final double[] angleLevelsDeg = {35.0, 75.0, 99.75}; //degrees
 
     public static final double[] offSubstation = {92, 7}; // angle, inches including claw
-//    public static final double[] offGround
 
 
 
-    //CAP af find this!!!
+
+    
     public static final double pivotPosInMetersY = Units.inchesToMeters(45.75);
 
 

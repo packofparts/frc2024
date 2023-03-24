@@ -2,21 +2,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.JoystickConstants;
 
 /** Add your docs here. */
 public class Input {
 
-    private static boolean useXbox = false; 
-
-    
     private static Joystick rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
     private static Joystick tJoystick = new Joystick (JoystickConstants.transJoystickPort);
     
-
-
-
     private static XboxController xboxController = new XboxController(JoystickConstants.xboxControllerPort);
 
     public static int DPADUP = 0;
@@ -41,8 +34,7 @@ public class Input {
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
     public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
-    public static boolean LimelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}
-    public static boolean LimelightAlignCancel(){return tJoystick.getRawButtonReleased(3);}
+    public static boolean limelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}
     public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
     public static boolean armUp() {return tJoystick.getRawButtonPressed(10);}
     public static boolean armDown() {return tJoystick.getRawButtonPressed(11);}
