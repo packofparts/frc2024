@@ -63,6 +63,9 @@ public class Limelight extends SubsystemBase {
     pipelineVals.put("REFLECTION", 2);
     pipelineVals.put("DRIVE", 3);
     pipelineVals.put("CUBE", 0);
+
+
+
   }
 
   @Override
@@ -70,6 +73,8 @@ public class Limelight extends SubsystemBase {
     // This method will be called once per scheduler run
     img = photonCamera.getLatestResult();
     SmartDashboard.putBoolean("HasTargers", img.hasTargets());
+
+    
 
 
 

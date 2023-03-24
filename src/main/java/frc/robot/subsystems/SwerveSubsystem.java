@@ -121,7 +121,7 @@ public class SwerveSubsystem extends SubsystemBase {
     m_odometry.update(getRotation2d(), getModulePositions());
     SmartDashboard.putNumber("OdometryX", getRobotPose().getX());
     SmartDashboard.putNumber("OdometryY", getRobotPose().getY());
-    SmartDashboard.putNumber("RotationDegrees", getRobotPose().getRotation().getDegrees());
+    SmartDashboard.putNumber("RotationaRadians", -optimize(getRobotPose().getRotation().getRadians()));
     if(Input.resetGyro()){resetGyro();}
     if(Input.resetPose()){
       this.resetRobotPose(new Pose2d());
@@ -142,6 +142,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Heading",-navx.getAngle());
     return -navx.getAngle();
   }
+
+
 
   /**
    * This gets the Rotation2d of the gyro (which is in continuous input)
@@ -281,6 +283,12 @@ public class SwerveSubsystem extends SubsystemBase {
     for (SwerveModule mod : rawMods){
       mod.stop();
     }
+  }
+
+  public double optimize(double rad) {
+    return Math.IEEEremainder(Math.abs(rad), 2*Math.PI)*Math.signum(rad);
+
+    // return (Math.abs(rad) %  (2*Math.PI)) * Math.signum(rad);
   }
 
   /**

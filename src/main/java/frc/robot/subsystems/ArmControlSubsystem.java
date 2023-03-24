@@ -144,8 +144,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       // }
       
       if(!isCoast){
-         //pivotPeriodic(); //maintains the desired pivot angle
-         //extensionPeriodic();
+         pivotPeriodic(); //maintains the desired pivot angle
+         extensionPeriodic();
       }
        //maintains the desired extension length
 

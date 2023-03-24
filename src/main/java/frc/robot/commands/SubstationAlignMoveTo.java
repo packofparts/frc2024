@@ -48,8 +48,8 @@ public class SubstationAlignMoveTo extends CommandBase {
   ClawPnumatic claw;
   boolean failed = false;
   MoveTo right;
-  
-  private SequentialCommandGroup commandGroup;
+
+  public SequentialCommandGroup commandGroup;
   private PoseEstimation pose;
 
   private MoveTo move;
@@ -64,7 +64,7 @@ public class SubstationAlignMoveTo extends CommandBase {
     this.lime = lime;
 
 
-    addRequirements(swerve);
+    //addRequirements(swerve);
     addRequirements(lime);
 
   }
@@ -72,24 +72,28 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(-swerve.getRotation2d().getRadians())), swerve);
-    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(this.lime.hasTarg() ? -this.lime.getYaw() : -swerve.getRotation2d().getRadians())), swerve);
+    
 
+    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(-optimize(swerve.getRotation2d().getRadians()))), swerve);
+    // right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(this.lime.hasTarg() ? Units.degreesToRadians(-this.lime.getYaw())  : -swerve.getRotation2d().getRadians())), swerve);
+    // SmartDashboard.putNumber("AprilTagYAW", this.lime.getYaw());
 
-
-    right.schedule();
-
-    SequentialCommandGroup commandGroup = new SequentialCommandGroup(
+    // //right.schedule();  
+    SmartDashboard.putNumber("Sauce", -optimize(swerve.getRotation2d().getRadians()));
+    commandGroup = new SequentialCommandGroup(
+     // right,
       right,
       new InstantCommand(()->getAlignment().schedule())
     );
+
     commandGroup.schedule();
 
   }
 
   public double optimize(double rad) {
-    //return rad%Math.PI - Math.PI * (rad/Math.abs(rad));
-    return rad;
+    return Math.IEEEremainder(Math.abs(rad), 2*Math.PI)*Math.signum(rad);
+
+    // return (Math.abs(rad) %  (2*Math.PI)) * Math.signum(rad);
   }
 
   public MoveTo getAlignment() {
@@ -99,9 +103,9 @@ public class SubstationAlignMoveTo extends CommandBase {
       System.out.println("And his name is bababoey------------------------------");
       Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
 
-      Transform2d fin = new Transform2d(new Translation2d(0, transformation.getY()+1), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
-
-      MoveTo move = new MoveTo(fin, swerve);
+      Transform2d fin = new Transform2d(new Translation2d(transformation.getX(), transformation.getY()), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
+      fin = fin.plus(new Transform2d(new Translation2d(-1, 0.5), new Rotation2d(0)));
+      move = new MoveTo(fin, swerve);
 
       SmartDashboard.putNumber("TransformX",fin.getX());
       SmartDashboard.putNumber("TransformY", fin.getY());
@@ -116,24 +120,26 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // SmartDashboard.putBoolean("rightFinished", right.isFinished());
-    // if (right.isFinished()&&!moveScheduled) {
-    //   SmartDashboard.putBoolean("MoveScheduled", true);
-    //   move = getAlignment();
-    //   move.schedule();
-    //   moveScheduled = true;
-    // }
+    SmartDashboard.putNumber("Bababoey Gyro", optimize(-swerve.getRotation2d().getRadians()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void cancel() {
+      commandGroup.cancel();
 
+      if (move != null) {move.cancel();}
+      if (right != null) {right.cancel();}
+      //move.cancel();
+      //right.cancel();
+  
   }
+
+
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; //failed || commandGroup.isFinished();
+    return commandGroup.isFinished(); //failed || commandGroup.isFinished();
   }
 }

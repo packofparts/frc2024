@@ -193,8 +193,8 @@ public class MoveTo extends CommandBase {
     // Otherwise PID slows down too much when approaching angle
     // Could maybe be resolved by calculating good PID values
     // Maybe substantially increase kP and then increase kD to correct for the oscillation
-    if(Math.abs(rot) < .5 && !angleController.atSetpoint()){
-      rot = .5 * (rot/Math.abs(rot));
+    if(Math.abs(rot) < .7 && !angleController.atSetpoint()){
+      rot = .7 * (rot/Math.abs(rot));
     }
 
     if((!xController.atSetpoint() || !yController.atSetpoint()))
@@ -205,7 +205,9 @@ public class MoveTo extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    swerve.stopAllAndBrake();
+  }
 
   // Returns true when the command should end.
   @Override
