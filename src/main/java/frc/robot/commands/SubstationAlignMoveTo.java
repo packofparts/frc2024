@@ -4,17 +4,9 @@
 
 package frc.robot.commands;
 
-import java.io.IOException;
-
-import javax.xml.crypto.dsig.Transform;
-
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -26,13 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.ArmControlSubsystem.ArmSetting;
 
 public class SubstationAlignMoveTo extends CommandBase {
 
@@ -75,11 +65,7 @@ public class SubstationAlignMoveTo extends CommandBase {
     
 
     right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(-optimize(swerve.getRotation2d().getRadians()))), swerve);
-    // right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(this.lime.hasTarg() ? Units.degreesToRadians(-this.lime.getYaw())  : -swerve.getRotation2d().getRadians())), swerve);
-    // SmartDashboard.putNumber("AprilTagYAW", this.lime.getYaw());
 
-    // //right.schedule();  
-    SmartDashboard.putNumber("Sauce", -optimize(swerve.getRotation2d().getRadians()));
     commandGroup = new SequentialCommandGroup(
      // right,
       right,
@@ -92,19 +78,17 @@ public class SubstationAlignMoveTo extends CommandBase {
 
   public double optimize(double rad) {
     return Math.IEEEremainder(Math.abs(rad), 2*Math.PI)*Math.signum(rad);
-
-    // return (Math.abs(rad) %  (2*Math.PI)) * Math.signum(rad);
   }
 
   public MoveTo getAlignment() {
     PhotonPipelineResult result = lime.getImg();
 
     if (result.hasTargets()) {
-      System.out.println("And his name is bababoey------------------------------");
+      //System.out.println("And his name is bababoey------------------------------");
       Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
 
       Transform2d fin = new Transform2d(new Translation2d(transformation.getX(), transformation.getY()), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
-      fin = fin.plus(new Transform2d(new Translation2d(-1, 0.5), new Rotation2d(0)));
+      fin = fin.plus(new Transform2d(new Translation2d(-1.3, 0.45), new Rotation2d(0)));
       move = new MoveTo(fin, swerve);
 
       SmartDashboard.putNumber("TransformX",fin.getX());
@@ -120,7 +104,7 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SmartDashboard.putNumber("Bababoey Gyro", optimize(-swerve.getRotation2d().getRadians()));
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -140,6 +124,6 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return commandGroup.isFinished(); //failed || commandGroup.isFinished();
+    return commandGroup.isFinished(); 
   }
 }

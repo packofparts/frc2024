@@ -10,7 +10,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -43,7 +42,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     SEQ_PIVOT_THEN_EXTEND
   }
   
-  int ii = 0;
+
   boolean isCoast = false;
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
@@ -57,8 +56,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   double currentPivotRotation = ArmConstants.zeroAngleRad;
   double desiredPivotRotation = ArmConstants.minAngleRad;
 
-  double currentExtensionDistance = ArmConstants.minExtensionIn;
-  double desiredExtensionDistance = currentExtensionDistance + 3;
+  double currentExtensionDistance = 0.0;
+  double desiredExtensionDistance = currentExtensionDistance + 1;
 
 
   PIDController pivotPID; 
@@ -79,7 +78,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     
    
     
-    setConfig(true);
+    setConfig(false);
 
 
     SmartDashboard.putBoolean("armCoastMode", isCoast);
@@ -106,12 +105,12 @@ public class ArmControlSubsystem extends SubsystemBase {
     rightPivotController.setSelectedSensorPosition(0);
 
     
-    extensionController.setIdleMode(IdleMode.kCoast);
+    extensionController.setIdleMode(IdleMode.kBrake); //ccheck if needed
     extensionController.setInverted(false);
 
     extensionEncoder.setPosition(0);
 
-    if (CompConstants.debug) {SmartDashboard.putNumber("InitialExtensionPosRaw", extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches);}
+
     extensionController.burnFlash();
     
   }
@@ -119,8 +118,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   @Override
   public void periodic() {      
       if(!isCoast){
-         pivotPeriodic(); //maintains the desired pivot angle
-         extensionPeriodic();
+        pivotPeriodic(); //maintains the desired pivot angle
+        extensionPeriodic();
       }
 
       // Getting Current And Desired Distances
@@ -130,18 +129,17 @@ public class ArmControlSubsystem extends SubsystemBase {
       if (CompConstants.debug) {
         SmartDashboard.putNumber("DesiredPivotPoint", Units.radiansToDegrees(desiredPivotRotation));
         SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
-      }
-
-      SmartDashboard.putBoolean("isCoast", isCoast);
 
       //Encoder Positions
-      if (CompConstants.debug) {
+      
         SmartDashboard.putNumber("LeftPivotAbsPos",leftPivotController.getSensorCollection().getIntegratedSensorPosition());
         SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
 
         SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
         SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches);
       }
+
+      SmartDashboard.putBoolean("isCoast", isCoast);
       
   }
 
@@ -152,7 +150,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     //set currentRotation with encoders
     currentPivotRotation = getCurrentPivotRotation(true);
 
-    //double pivotFeedforwardOutput = pivotFeedforward.calculate(desiredPivotRotation, 1, 1); //arbitrary
     double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
 
 
@@ -164,7 +161,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     }
 
     if (CompConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
-    //SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition());
     
     if (CompConstants.rateLimitArm) {
       pivotPIDOutput = pivotRateLimiter.calculate(pivotPIDOutput);
@@ -178,7 +174,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       
 
 
-    desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+    //desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
     if(desiredPivotRotation <= ArmConstants.minAngleRad ){
       desiredExtensionDistance = ArmConstants.minExtensionIn;
     }
@@ -235,7 +231,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atAngleSetpoint(){
-    return pivotPID.atSetpoint();
+    //return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(2);
+    return true;
   }
 
 
@@ -257,10 +254,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   
 
   public double getCurrentPivotRotation(boolean inRadians){
-    //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
-    double rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + Units.radiansToRotations(ArmConstants.zeroAngleRad);
 
-    //rotation = Math.IEEEremainder(rotation, 1.0);
+    double rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + Units.radiansToRotations(ArmConstants.zeroAngleRad);
     
     if(inRadians){
       return rotation * 2 * Math.PI;
@@ -279,7 +274,6 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
   public void changeDesiredExtension(double i){
     this.desiredExtensionDistance += i;
-    //extensionController.set(i);
   }
   /**
    * returns the pose of the center of the claw relative to the base of the robot

@@ -4,10 +4,6 @@
 
 package frc.robot.Constants;
 
-import java.util.HashMap;
-
-import edu.wpi.first.wpilibj2.command.Command;
-
 /** Add your docs here. */
 public class FieldConstants {
     public static final double kChargeStationFullLengthCm = 193;

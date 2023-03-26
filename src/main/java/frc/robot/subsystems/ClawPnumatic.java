@@ -54,7 +54,7 @@ public class ClawPnumatic extends SubsystemBase {
 
 
     //change max to 105 and min to 85 for the actual game
-    phCompressor.enableAnalog(60, 120);
+    phCompressor.enableAnalog(85, 105);
 
 
 

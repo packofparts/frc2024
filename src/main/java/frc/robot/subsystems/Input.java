@@ -32,6 +32,7 @@ public class Input {
 
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
+    
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
     public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
     public static boolean limelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}

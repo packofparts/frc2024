@@ -26,20 +26,26 @@ public class MakeShiftAutoMiddle extends CommandBase {
   /** Creates a new MakeShiftAuto. */
   SequentialCommandGroup path;
   public MakeShiftAutoMiddle(ArmControlSubsystem arm, ClawPnumatic claw, SwerveSubsystem swerve) {
-    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(claw);
+    addRequirements(arm);
+    addRequirements(swerve);
 
     path = new SequentialCommandGroup(
+      
       new InstantCommand(() -> swerve.resetGyro()),
-      new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[1])),
-      new WaitCommand(.75),
-      new ExtensionCmd(arm, 5),
+      new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
+      new WaitCommand(2),
+      new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
+      new WaitCommand(1),
       new InstantCommand(()->claw.togglePneumatics()),
-      new WaitCommand(.5),
+      new WaitCommand(1),
+      new InstantCommand(()->claw.togglePneumatics()),
       new ExtensionCmd(arm, 0),
-      new WaitCommand(.75),
+      new WaitCommand(1.5),
       new PivotCmd(arm, ArmConstants.minAngleRad),
+      new WaitCommand(0),
 
-      new MoveTo(new Transform2d(new Translation2d(0, 0), new Rotation2d(Math.PI)), swerve),
+      new MoveTo(new Transform2d(new Translation2d(-0.3, 0), new Rotation2d(Math.PI)), swerve),
       new InstantCommand(()->swerve.resetGyro()),
       new AutoBalanceCommand(swerve)
     );

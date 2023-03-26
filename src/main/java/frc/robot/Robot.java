@@ -12,8 +12,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.AutoPaths.MakeShiftAutoSide;
+import frc.robot.AutoPaths.AutoLeftMid;
+import frc.robot.AutoPaths.AutoLeftHigh;
+import frc.robot.AutoPaths.AutoRightHigh;
+import frc.robot.AutoPaths.AutoRightMid;
+import frc.robot.AutoPaths.MakeShiftAutoMiddle;
 import frc.robot.AutoPaths.MobilityAuto;
+import frc.robot.AutoPaths.MobilityCharge;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.subsystems.Input;
 import frc.robot.commands.PositionPIDtuning;
@@ -53,10 +58,10 @@ public class Robot extends TimedRobot {
     // _commandSelector.addOption("Middle Auto",
     //     new MakeShiftAutoMiddle(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
     
-    _commandSelector.addOption("Side Auto",
-        new MakeShiftAutoSide(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
+    _commandSelector.addOption("Middle",
+        new MakeShiftAutoMiddle(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
 
-    _commandSelector.addOption("OnlyMobilitySideAuto", 
+    _commandSelector.addOption("OnlyMobilitySide", 
         new MobilityAuto(_robotContainer.drivetrain));
     
 
@@ -65,12 +70,28 @@ public class Robot extends TimedRobot {
          new AutoBalanceCommand(_robotContainer.drivetrain));
 
 
-    _commandSelector.addOption("SubstationAlignManuel", 
-        new SubstationAlignManual(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));
-    _commandSelector.addOption("SubstationAlignMoveTo", 
-        new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));  
+    // _commandSelector.addOption("SubstationAlignManuel", 
+    //     new SubstationAlignManual(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));
+    // _commandSelector.addOption("SubstationAlignMoveTo", 
+    //     new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));  
+    // _commandSelector.addOption("Mobility Charge <Self Destruct Sequence>", 
+    //     new MobilityCharge(_robotContainer.drivetrain));
+    _commandSelector.addOption("Left High", 
+        new AutoLeftHigh(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));   
+    
+    
+        _commandSelector.addOption("Right High", 
+        new AutoRightHigh(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
 
-    // _commandSelector.addOption(
+
+        _commandSelector.addOption("Left Mid", 
+        new AutoLeftMid(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));   
+    
+    
+        _commandSelector.addOption("Right Mid", 
+        new AutoRightMid(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
+    
+        // _commandSelector.addOption(
     //   "Move By with Trajecotry",
     //   new MoveByWithTrajectoryController(
     //     _robotContainer.drivetrain, 

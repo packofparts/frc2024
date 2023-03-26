@@ -7,30 +7,40 @@ package frc.robot.AutoPaths;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.MoveTo;
+import frc.robot.commands.armcontrolcmds.ExtensionCmd;
+import frc.robot.commands.armcontrolcmds.PivotCmd;
+import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MobilityAuto extends CommandBase {
-  /** Creates a new MobilityAuto. */
+public class AutoLeftMid extends CommandBase {
+  /** Creates a new MakeShiftAutoSide. */
   SequentialCommandGroup path;
-  public MobilityAuto(SwerveSubsystem swerve) {
-
-    path = new SequentialCommandGroup(
-      new InstantCommand(()->swerve.resetGyro()),
-      new WaitCommand(1),
-      new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d(0)), swerve),
-      new WaitCommand(1),
-      new MoveTo(new Transform2d(new Translation2d(2.5, 0), new Rotation2d(0)), swerve)
-
-      
-
-    );
+  public AutoLeftMid(ArmControlSubsystem arm, ClawPnumatic claw, SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve);
+    path = new SequentialCommandGroup(
+      new WaitCommand(3),
+      new InstantCommand(() -> swerve.resetGyro()),
+      new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[1])),
+      new WaitCommand(2),
+      new ExtensionCmd(arm, 5),
+      new WaitCommand(1),
+      new InstantCommand(()->claw.togglePneumatics()),
+      new WaitCommand(1),
+      new InstantCommand(()->claw.togglePneumatics()),
+      new ExtensionCmd(arm, 0),
+      new WaitCommand(1),
+      new PivotCmd(arm, ArmConstants.minAngleRad),
+      new MoveTo(new Transform2d(new Translation2d(-3, 0.05), new Rotation2d(0)), swerve)
+    );
+    
   }
 
   // Called when the command is initially scheduled.

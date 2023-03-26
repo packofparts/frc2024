@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.armcontrolcmds.PivotCmd;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 
@@ -49,7 +50,7 @@ public class DefaultArmCommand extends CommandBase {
     
     else if(Input.getA()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0]))),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0] + 4))),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]))
 
       );
@@ -65,8 +66,10 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getX()){
       SequentialCommandGroup command = new SequentialCommandGroup(
+        //new PivotCmd(armControlSubsystem, )),
         new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]))),
-        new WaitCommand(.5),
+
+        new WaitCommand(1.2),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]))
 
       );
@@ -75,13 +78,21 @@ public class DefaultArmCommand extends CommandBase {
     else if(Input.getY()){
       SequentialCommandGroup command = new SequentialCommandGroup(
         new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.offSubstation[0]))),
-        new WaitCommand(0.5),
+        new WaitCommand(1),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.offSubstation[1]))
 
       );
       command.schedule();
     }
-    
+    else if(Input.getDPad() == Input.DPADUP){
+      SequentialCommandGroup command = new SequentialCommandGroup(
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.groundPick))),
+        new WaitCommand(0.5),
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]))
+
+      );
+      command.schedule();
+    }
 
   }
 
