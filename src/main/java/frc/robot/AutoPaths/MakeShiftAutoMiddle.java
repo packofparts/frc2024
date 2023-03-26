@@ -34,7 +34,7 @@ public class MakeShiftAutoMiddle extends CommandBase {
       
       new InstantCommand(() -> swerve.resetGyro()),
       new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
-      new WaitCommand(2),
+      new WaitCommand(1.3),
       new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(1),
       new InstantCommand(()->claw.togglePneumatics()),
