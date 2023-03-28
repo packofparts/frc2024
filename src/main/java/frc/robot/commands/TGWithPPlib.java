@@ -5,26 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.HashMap;
-import java.util.List;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 public class TGWithPPlib extends CommandBase {
   /** Creates a new TGWithPPlib. */
   SwerveSubsystem swerve;

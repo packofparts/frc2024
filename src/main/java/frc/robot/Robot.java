@@ -7,26 +7,20 @@ package frc.robot;
 import com.revrobotics.CANSparkMaxLowLevel;
 
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.AutoPaths.AutoLeftMid;
+import frc.robot.AutoPaths.AutoLeftHigh;
+import frc.robot.AutoPaths.AutoRightHigh;
+import frc.robot.AutoPaths.AutoRightMid;
 import frc.robot.AutoPaths.MakeShiftAutoMiddle;
-import frc.robot.AutoPaths.MakeShiftAutoSide;
 import frc.robot.AutoPaths.MobilityAuto;
-import frc.robot.Constants.AutoMapConstants;
+import frc.robot.AutoPaths.MobilityCharge;
 import frc.robot.commands.AutoBalanceCommand;
-import frc.robot.commands.LimelightAlign;
-import frc.robot.commands.TGWithPPlib;
-import frc.robot.commands.TestSpark;
-import frc.robot.commands.MoveTo;
+import frc.robot.subsystems.Input;
 import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.SubstationAlignManual;
 import frc.robot.commands.SubstationAlignMoveTo;
@@ -36,7 +30,10 @@ public class Robot extends TimedRobot {
   private Command _autonomousCommand;
   private RobotContainer _robotContainer;
   public SendableChooser <Command> _commandSelector = new SendableChooser<>();
-  
+  public SubstationAlignMoveTo substationCmd;
+
+  boolean isOn = false;
+
   //Compressor phCompressor;
 
   /**
@@ -45,11 +42,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-      CameraServer.startAutomaticCapture();
-      //phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+
+        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+
+    CameraServer.startAutomaticCapture();
+
+
     _robotContainer = new RobotContainer();
+    substationCmd = new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem);
 
 
     // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
@@ -57,26 +58,40 @@ public class Robot extends TimedRobot {
     // _commandSelector.addOption("Middle Auto",
     //     new MakeShiftAutoMiddle(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
     
-    _commandSelector.addOption("Side Auto",
-        new MakeShiftAutoSide(_robotContainer.armControl, _robotContainer.drivetrain));
+    _commandSelector.addOption("Middle",
+        new MakeShiftAutoMiddle(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
 
-    _commandSelector.addOption("MobilitySideAuto", 
+    _commandSelector.addOption("OnlyMobilitySide", 
         new MobilityAuto(_robotContainer.drivetrain));
     
 
-   // _commandSelector.addOption("MakeShiftAutoSide", new MakeShiftAutoSide(null, null, null))
 
     _commandSelector.addOption("ChargeStation",
          new AutoBalanceCommand(_robotContainer.drivetrain));
 
-    //_commandSelector.addOption("MoveTo", new MoveTo(new Trasform, null));
 
-    _commandSelector.addOption("SubstationAlignManuel", 
-        new SubstationAlignManual(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));
-    _commandSelector.addOption("SubstationAlignMoveTo", 
-        new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));  
+    // _commandSelector.addOption("SubstationAlignManuel", 
+    //     new SubstationAlignManual(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));
+    // _commandSelector.addOption("SubstationAlignMoveTo", 
+    //     new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem));  
+    // _commandSelector.addOption("Mobility Charge <Self Destruct Sequence>", 
+    //     new MobilityCharge(_robotContainer.drivetrain));
+    _commandSelector.addOption("Left High", 
+        new AutoLeftHigh(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));   
+    
+    
+        _commandSelector.addOption("Right High", 
+        new AutoRightHigh(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
 
-    // _commandSelector.addOption(
+
+        _commandSelector.addOption("Left Mid", 
+        new AutoLeftMid(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));   
+    
+    
+        _commandSelector.addOption("Right Mid", 
+        new AutoRightMid(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
+    
+        // _commandSelector.addOption(
     //   "Move By with Trajecotry",
     //   new MoveByWithTrajectoryController(
     //     _robotContainer.drivetrain, 
@@ -95,6 +110,7 @@ public class Robot extends TimedRobot {
     //   new TestSpark(7, -0.3));
     
     
+
     
     // _commandSelector.addOption(
     //   "ClassicMB", 
@@ -132,13 +148,14 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    
 
     // phCompressor.enableDigital();
     // if (phCompressor.getPressure() > 60) phCompressor.disable();
     // else if (phCompressor.getPressure() < 60) phCompressor.enableDigital();
-
-
   }
+
+  
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
@@ -174,12 +191,41 @@ public class Robot extends TimedRobot {
       _autonomousCommand.cancel();
     }
 
+    
+
     CANSparkMaxLowLevel.enableExternalUSBControl(false);
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+
+    // if(Input.LimelightAlignTrigger()){
+    //   susStation = new SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem);
+    //   susStation.schedule();
+    // }else if (Input.LimelightAlignTrigger() && susStation.isScheduled()){
+    //   susStation.cancel();
+    // }
+
+    if(Input.limelightAlignTrigger()){
+
+      if(isOn){
+        substationCmd.cancel();
+        
+        isOn = false;
+      }else{
+        isOn = true;
+        substationCmd = new  SubstationAlignMoveTo(_robotContainer.drivetrain, _robotContainer.limeLightSubSystem);
+        substationCmd.schedule();
+      }
+
+    }
+
+
+    SmartDashboard.putBoolean("SusStation", substationCmd.isScheduled());
+
+    SmartDashboard.putBoolean("ISON", isOn);
+  }
 
   @Override
   public void testInit() {
@@ -189,7 +235,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override

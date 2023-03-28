@@ -4,17 +4,9 @@
 
 package frc.robot.commands;
 
-import java.io.IOException;
-
-import javax.xml.crypto.dsig.Transform;
-
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -26,13 +18,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.ArmControlSubsystem.ArmSetting;
 
 public class SubstationAlignMoveTo extends CommandBase {
 
@@ -48,8 +38,8 @@ public class SubstationAlignMoveTo extends CommandBase {
   ClawPnumatic claw;
   boolean failed = false;
   MoveTo right;
-  
-  private SequentialCommandGroup commandGroup;
+
+  public SequentialCommandGroup commandGroup;
   private PoseEstimation pose;
 
   private MoveTo move;
@@ -64,7 +54,7 @@ public class SubstationAlignMoveTo extends CommandBase {
     this.lime = lime;
 
 
-    addRequirements(swerve);
+    //addRequirements(swerve);
     addRequirements(lime);
 
   }
@@ -72,36 +62,34 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(-swerve.getRotation2d().getRadians())), swerve);
-    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(this.lime.hasTarg() ? -this.lime.getYaw() : -swerve.getRotation2d().getRadians())), swerve);
+    
 
+    right = new MoveTo(new Transform2d(new Translation2d(), new Rotation2d(-optimize(swerve.getRotation2d().getRadians()))), swerve);
 
-
-    right.schedule();
-
-    SequentialCommandGroup commandGroup = new SequentialCommandGroup(
+    commandGroup = new SequentialCommandGroup(
+     // right,
       right,
       new InstantCommand(()->getAlignment().schedule())
     );
+
     commandGroup.schedule();
 
   }
 
   public double optimize(double rad) {
-    //return rad%Math.PI - Math.PI * (rad/Math.abs(rad));
-    return rad;
+    return Math.IEEEremainder(Math.abs(rad), 2*Math.PI)*Math.signum(rad);
   }
 
   public MoveTo getAlignment() {
     PhotonPipelineResult result = lime.getImg();
 
     if (result.hasTargets()) {
-      System.out.println("And his name is bababoey------------------------------");
+      //System.out.println("And his name is bababoey------------------------------");
       Transform3d transformation = result.getBestTarget().getBestCameraToTarget();
 
-      Transform2d fin = new Transform2d(new Translation2d(0, transformation.getY()+1), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
-
-      MoveTo move = new MoveTo(fin, swerve);
+      Transform2d fin = new Transform2d(new Translation2d(transformation.getX(), transformation.getY()), new Rotation2d(0));//-swerve.getRotation2d().getRadians()));
+      fin = fin.plus(new Transform2d(new Translation2d(-1.3, 0.45), new Rotation2d(0)));
+      move = new MoveTo(fin, swerve);
 
       SmartDashboard.putNumber("TransformX",fin.getX());
       SmartDashboard.putNumber("TransformY", fin.getY());
@@ -116,24 +104,26 @@ public class SubstationAlignMoveTo extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // SmartDashboard.putBoolean("rightFinished", right.isFinished());
-    // if (right.isFinished()&&!moveScheduled) {
-    //   SmartDashboard.putBoolean("MoveScheduled", true);
-    //   move = getAlignment();
-    //   move.schedule();
-    //   moveScheduled = true;
-    // }
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void cancel() {
+      commandGroup.cancel();
 
+      if (move != null) {move.cancel();}
+      if (right != null) {right.cancel();}
+      //move.cancel();
+      //right.cancel();
+  
   }
+
+
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false; //failed || commandGroup.isFinished();
+    return commandGroup.isFinished(); 
   }
 }

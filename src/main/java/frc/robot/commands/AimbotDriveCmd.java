@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.SwerveModule;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;

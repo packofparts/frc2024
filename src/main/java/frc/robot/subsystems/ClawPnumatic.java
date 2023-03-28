@@ -4,34 +4,26 @@
 
 package frc.robot.subsystems;
 
-import java.time.Instant;
-
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import frc.robot.Constants.MiscNonConstants;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CompConstants;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.IntakeConstants;
 
 public class ClawPnumatic extends SubsystemBase {
   /** Creates a new ClawPnumatic. */
   //DoubleSolenoid intakeSolenoid1;
-  Solenoid intakeSolenoid1;
+  Solenoid intakeSolenoid;
   Compressor phCompressor;
   PneumaticHub hub;
   TalonSRX intakeMotor;
@@ -42,15 +34,8 @@ public class ClawPnumatic extends SubsystemBase {
     
     hub = new PneumaticHub();
     
-    /*
-    intakeSolenoid1 = hub.makeDoubleSolenoid(0,1);
-    pressureSensor = new AnalogPotentiometer(1);
-    phCompressor = hub.makeCompressor();
-    
-    phCompressor.enableAnalog(20, 60);
-    */
     intakeMotor = new TalonSRX(IntakeConstants.clawPort);
-    intakeSolenoid1 = new Solenoid(PneumaticsModuleType.REVPH, 0); //extend
+    intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0); //extend
     phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
   
   }
@@ -65,27 +50,17 @@ public class ClawPnumatic extends SubsystemBase {
     }
 
     SmartDashboard.putNumber("pressure", phCompressor.getPressure());
-    SmartDashboard.putBoolean("Claw Closed", intakeSolenoid1.get());
-
-    //phCompressor.enableDigital();
-
-    if (phCompressor.getPressure() > 60) 
-    {
-      phCompressor.disable();
-    }
-    else 
-    {
-       phCompressor.enableDigital();
-    }
+    SmartDashboard.putBoolean("Claw Closed", intakeSolenoid.get());
 
 
-    //toggle intake solenoids
-    // if (Input.getIntake()){spinIntake(1);}
-    // else if(Input.getOuttake()){spinOuttake(1);}
+    //change max to 105 and min to 85 for the actual game
+    phCompressor.enableAnalog(85, 105);
+
+
 
     if (Input.getRightBumper()){
       SequentialCommandGroup command;
-      if (!intakeSolenoid1.get()) {
+      if (!intakeSolenoid.get()) {
         command = new SequentialCommandGroup(
           new InstantCommand(()->spinIntake(0.3)),
           new InstantCommand(()->togglePneumatics()),
@@ -120,25 +95,22 @@ public class ClawPnumatic extends SubsystemBase {
   }
 
   public void togglePneumatics(){
-    if(intakeSolenoid1.get()){
-      intakeSolenoid1.set(false);
+    if(intakeSolenoid.get()){
+      intakeSolenoid.set(false);
     }
-    else{intakeSolenoid1.set(true);}
+    else{intakeSolenoid.set(true);}
   }
 
   public void openPneumatics(){
-    intakeSolenoid1.set(false);
+    intakeSolenoid.set(false);
   }
   public void closePneumatics(){
-    intakeSolenoid1.set(true);
+    intakeSolenoid.set(true);
   }
 
-  public void compression(){
-    if (phCompressor.getPressure() > 120) phCompressor.disable();
-    else if (phCompressor.getPressure() < 120) phCompressor.enableDigital();
-  }
+
   public void changePneumatics(boolean closed){
-    intakeSolenoid1.set(closed);
+    intakeSolenoid.set(closed);
   }
 
   public void changeIntake(double speed){

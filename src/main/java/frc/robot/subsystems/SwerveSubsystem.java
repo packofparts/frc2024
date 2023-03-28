@@ -59,17 +59,6 @@ public class SwerveSubsystem extends SubsystemBase {
   3,true,false,DriveConstants.kBackRightOffset,false, CompConstants.useAbsEncoder,
    PIDConstants.kBackRightSteeringPIDControl,PIDConstants.kBackRightSteeringPIDControl); 
 
-  // private final SwerveModule frontLeft = new SwerveModule(DriveConstants.frontLeftDrive, DriveConstants.frontLeftSteer,
-  //  0,false, false,0.889,false, true,
-  //  PIDConstants.flPID, PIDConstants.flPIDTrans);
-  //  private final SwerveModule frontRight = new SwerveModule(DriveConstants.frontRightDrive, DriveConstants.frontRightSteer,
-  //  1,true,false,0.351,false, true,
-  //  PIDConstants.frPID,PIDConstants.frPIDTrans);
-
-
-  // private final SwerveModule backLeft = new SwerveModule(DriveConstants.rearLeftDrive, DriveConstants.rearLeftSteer,
-  // 2,false,false,0.288,false, true,
-  // PIDConstants.blPID,PIDConstants.flPIDTrans);
 
 
   private final PIDController headingController;
@@ -91,10 +80,9 @@ public class SwerveSubsystem extends SubsystemBase {
       new Translation2d(DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2),
       new Translation2d(-DriveConstants.kWheelBase / 2, DriveConstants.kTrackWidthMeters / 2),
       new Translation2d(-DriveConstants.kWheelBase / 2, -DriveConstants.kTrackWidthMeters / 2));
+
     m_odometry = new SwerveDriveOdometry(m_kinematics, getRotation2d(), this.getModulePositions());
-    SmartDashboard.putNumber("p", 0);
-    SmartDashboard.putNumber("i", 0);
-    SmartDashboard.putNumber("d", 0);
+
     resetGyro();
 
     headingController = new PIDController(0.5, 0, 0);
@@ -124,9 +112,11 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     m_odometry.update(getRotation2d(), getModulePositions());
+    
     SmartDashboard.putNumber("OdometryX", getRobotPose().getX());
     SmartDashboard.putNumber("OdometryY", getRobotPose().getY());
     SmartDashboard.putNumber("RotationDegrees", getRobotPose().getRotation().getDegrees());
+
     if(Input.resetGyro()){resetGyro();}
     if(Input.resetPose()){
       this.resetRobotPose(new Pose2d());
@@ -147,6 +137,8 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Gyro Heading",-navx.getAngle());
     return -navx.getAngle();
   }
+
+
 
   /**
    * This gets the Rotation2d of the gyro (which is in continuous input)
@@ -286,6 +278,12 @@ public class SwerveSubsystem extends SubsystemBase {
     for (SwerveModule mod : rawMods){
       mod.stop();
     }
+  }
+
+  public double optimize(double rad) {
+    return Math.IEEEremainder(Math.abs(rad), 2*Math.PI)*Math.signum(rad);
+
+    // return (Math.abs(rad) %  (2*Math.PI)) * Math.signum(rad);
   }
 
   /**

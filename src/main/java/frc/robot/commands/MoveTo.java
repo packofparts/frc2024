@@ -84,12 +84,13 @@ public class MoveTo extends CommandBase {
     yController.setTolerance(0.05);
     xController.setTolerance(0.05);
 
+
     angleController.setTolerance(0.001);
 
     
     xPoint = desiredPose.getX();
     yPoint = desiredPose.getY();
-    rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
+    rotPoint = desiredPose.getRotation().getRadians();
   }
 
 
@@ -139,22 +140,10 @@ public class MoveTo extends CommandBase {
   @Override
   public void initialize(){
 
-    // PIDConstants.transPIDValues[0] = SmartDashboard.getNumber("TransControllerP", 0);
-    // PIDConstants.transPIDValues[1] = SmartDashboard.getNumber("TransControllerI", 0);
-    // PIDConstants.transPIDValues[2] = SmartDashboard.getNumber("TransControllerD", 0);
-
-    // PIDConstants.rotPIDValues[0] = SmartDashboard.getNumber("RotControllerP", 0);
-    // PIDConstants.rotPIDValues[1] = SmartDashboard.getNumber("RotControllerI", 0);
-    // PIDConstants.rotPIDValues[2] = SmartDashboard.getNumber("RotControllerD", 0);
-
-
     xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
     yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
     rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + this.transform.getRotation().getRadians();
-    // SmartDashboard.putBoolean("IsMoveTo", true);
-    // yController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);
-    // xController = new PIDController(PIDConstants.transPIDValues[0], PIDConstants.transPIDValues[1], PIDConstants.transPIDValues[2]);
-    // angleController = new PIDController(PIDConstants.rotPIDValues[0], PIDConstants.rotPIDValues[1], PIDConstants.rotPIDValues[2]);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -172,6 +161,7 @@ public class MoveTo extends CommandBase {
     double xSpeed = xController.calculate(currentPose.getX(), xPoint);
     double rot = angleController.calculate(currentPose.getRotation().getRadians(), rotPoint);
 
+    
     SmartDashboard.putNumber("xSpeedCalc", xSpeed);
     SmartDashboard.putNumber("ySpeedCalc", ySpeed);
     SmartDashboard.putNumber("rotSpeedCalc", rot);
@@ -193,8 +183,8 @@ public class MoveTo extends CommandBase {
     // Otherwise PID slows down too much when approaching angle
     // Could maybe be resolved by calculating good PID values
     // Maybe substantially increase kP and then increase kD to correct for the oscillation
-    if(Math.abs(rot) < .5 && !angleController.atSetpoint()){
-      rot = .5 * (rot/Math.abs(rot));
+    if(Math.abs(rot) < .7 && !angleController.atSetpoint()){
+      rot = .7 * (rot/Math.abs(rot));
     }
 
     if((!xController.atSetpoint() || !yController.atSetpoint()))
@@ -205,7 +195,9 @@ public class MoveTo extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    swerve.stopAllAndBrake();
+  }
 
   // Returns true when the command should end.
   @Override

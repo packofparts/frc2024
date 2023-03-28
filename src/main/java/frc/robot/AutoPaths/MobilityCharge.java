@@ -11,22 +11,20 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class MobilityAuto extends CommandBase {
+public class MobilityCharge extends CommandBase {
   /** Creates a new MobilityAuto. */
   SequentialCommandGroup path;
-  public MobilityAuto(SwerveSubsystem swerve) {
+  public MobilityCharge(SwerveSubsystem swerve) {
 
     path = new SequentialCommandGroup(
-      new InstantCommand(()->swerve.resetGyro()),
+      new InstantCommand(swerve::resetGyro),
+      new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d()), swerve),
       new WaitCommand(1),
-      new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d(0)), swerve),
-      new WaitCommand(1),
-      new MoveTo(new Transform2d(new Translation2d(2.5, 0), new Rotation2d(0)), swerve)
-
-      
+      new AutoBalanceCommand(swerve)
 
     );
     // Use addRequirements() here to declare subsystem dependencies.

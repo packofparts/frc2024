@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Util;
+import frc.robot.commands.armcontrolcmds.PivotCmd;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 
@@ -35,13 +35,6 @@ public class DefaultArmCommand extends CommandBase {
 
   void handleInput(){
 
-    // if(Input.getDPad() == Input.DPADUP){
-    //   armControlSubsystem.changeDesiredPivotRotation(.025); //
-    // }else if(Input.getDPad() == Input.DPADDOWN){
-    //   armControlSubsystem.changeDesiredPivotRotation(-.025);
-
-    // }
-
     if(Input.getLeftStickY() > 0.15){
       armControlSubsystem.changeDesiredPivotRotation(.03 * (Input.getLeftStickY()-0.15));
     }else if(Input.getLeftStickY() < -0.15){
@@ -49,21 +42,15 @@ public class DefaultArmCommand extends CommandBase {
     }
 
     if(Input.getRightStickY() > 0.05){
-      armControlSubsystem.changeDesiredExtension(.16 * (Input.getRightStickY() - 0.05));
+      armControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() - 0.05));
     }else if(Input.getRightStickY() < -0.05){
-      armControlSubsystem.changeDesiredExtension(.16 * (Input.getRightStickY() + 0.05));
+      armControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() + 0.05));
     }
     
-    // else if(Input.getDPad() == Input.DPADRIGHT){
-    //   armControlSubsystem.changeDesiredExtension(.3);
-    // }
-    // else if(Input.getDPad() == Input.DPADLEFT){
-    //   armControlSubsystem.changeDesiredExtension(-.3);
-    // }
     
     else if(Input.getA()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0]))),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0] + 4))),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]))
 
       );
@@ -79,8 +66,10 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getX()){
       SequentialCommandGroup command = new SequentialCommandGroup(
+        //new PivotCmd(armControlSubsystem, )),
         new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]))),
-        new WaitCommand(.5),
+
+        new WaitCommand(1.2),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]))
 
       );
@@ -89,13 +78,21 @@ public class DefaultArmCommand extends CommandBase {
     else if(Input.getY()){
       SequentialCommandGroup command = new SequentialCommandGroup(
         new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.offSubstation[0]))),
-        new WaitCommand(0.5),
+        new WaitCommand(1),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.offSubstation[1]))
 
       );
       command.schedule();
     }
-    
+    else if(Input.getDPad() == Input.DPADUP){
+      SequentialCommandGroup command = new SequentialCommandGroup(
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.groundPick[0]))),
+        new WaitCommand(0.5),
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.groundPick[1]))
+
+      );
+      command.schedule();
+    }
 
   }
 

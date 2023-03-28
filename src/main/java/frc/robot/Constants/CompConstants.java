@@ -16,9 +16,9 @@ public class CompConstants {
     public static final boolean kGyroHold = false; //if drift is too much
 
     // AutoBalance Tuning
-    public static final PIDController velocityController = new PIDController(.45, .05, 0);
+    public static final PIDController velocityController = new PIDController(.45, .05, 0.1);
     public static final double onChargeStationOrientation = 15;
-    public static final double entrySpeed = 0.36;
+    public static final double entrySpeed = 2.5;
     public static float pitchSpeedThreshold = 35;
 
     public static final double kAngleDeadZoneDeg = 0.5;

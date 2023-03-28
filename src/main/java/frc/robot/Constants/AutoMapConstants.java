@@ -11,25 +11,23 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.subsystems.ArmControlSubsystem;
-import frc.robot.subsystems.ClawMotor;
-import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
-/** Add your docs here. */
+
+// CODE ISN'T FUNCTIONAL YET
+
 public class AutoMapConstants {
     public static PathPlannerTrajectory ConeCubeChargeTraj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
     public static HashMap<String,Command> m_EventMap =  new HashMap<>();
 
-    public static void populateHashMaps(SwerveSubsystem swerve, Limelight lime, ClawMotor claw, ArmControlSubsystem arm, PoseEstimation pose){
+    public static void populateHashMaps(SwerveSubsystem swerve, Limelight lime, ArmControlSubsystem arm, PoseEstimation pose){
         m_EventMap.put("angle_N3", new InstantCommand(()->arm.setDesiredPivotRotation(ArmConstants.angleLevelsDeg[2]), arm));
         m_EventMap.put("angle_N2", new InstantCommand(()->arm.setDesiredPivotRotation(ArmConstants.angleLevelsDeg[1]), arm));
         m_EventMap.put("angle_N1", new InstantCommand(()->arm.setDesiredPivotRotation(ArmConstants.angleLevelsDeg[0]), arm));
@@ -46,8 +44,6 @@ public class AutoMapConstants {
         m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));
         m_EventMap.put("align_tag",new AutoAlign(pose, lime, swerve));
 
-        m_EventMap.put("claw_open", claw.getOuttakeCmd(1));
-        m_EventMap.put("claw_close",claw.getIntakeCmd(1));
     }
 
 }
