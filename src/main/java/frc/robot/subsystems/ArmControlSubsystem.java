@@ -57,7 +57,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   double desiredPivotRotation = ArmConstants.minAngleRad;
 
   double currentExtensionDistance = 0.0;
-  double desiredExtensionDistance = currentExtensionDistance + 1;
+  double desiredExtensionDistance = currentExtensionDistance;
 
 
   PIDController pivotPID; 
@@ -174,10 +174,10 @@ public class ArmControlSubsystem extends SubsystemBase {
       
 
 
-    //desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
-    if(desiredPivotRotation <= ArmConstants.minAngleRad ){
-      desiredExtensionDistance = ArmConstants.minExtensionIn;
-    }
+    desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+    // if(desiredPivotRotation <= ArmConstants.minAngleRad ){
+    //   desiredExtensionDistance = ArmConstants.minExtensionIn;
+    // }
 
 
     currentExtensionDistance = getCurrentExtensionIn();
@@ -237,7 +237,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
   public boolean atTelescopeSetpoint(){
-    //return extensionPID.atSetpoint();
+   // return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 1;
     return true;
   }
 

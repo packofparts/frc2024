@@ -86,9 +86,9 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getDPad() == Input.DPADUP){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.groundPick))),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.groundPick[0]))),
         new WaitCommand(0.5),
-        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]))
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.groundPick[1]))
 
       );
       command.schedule();

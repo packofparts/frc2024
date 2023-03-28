@@ -38,7 +38,8 @@ public class AutoRightHigh extends CommandBase {
       new ExtensionCmd(arm, 0),
       new WaitCommand(2),
       new PivotCmd(arm, ArmConstants.minAngleRad),
-      new MoveTo(new Transform2d(new Translation2d(-3.5, -0.05), new Rotation2d(0)), swerve)
+      new MoveTo(new Transform2d(new Translation2d(-3.5, -0.05), new Rotation2d(-Math.PI)), swerve),
+      new InstantCommand(()->swerve.resetGyro())
     );
     
   }

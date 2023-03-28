@@ -34,17 +34,16 @@ public class MakeShiftAutoMiddle extends CommandBase {
       
       new InstantCommand(() -> swerve.resetGyro()),
       new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
-      new WaitCommand(1.3),
-      new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(1),
+      new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
+      new WaitCommand(.5),
       new InstantCommand(()->claw.togglePneumatics()),
       new WaitCommand(1),
       new InstantCommand(()->claw.togglePneumatics()),
       new ExtensionCmd(arm, 0),
-      new WaitCommand(1.5),
+      new WaitCommand(.1),
       new PivotCmd(arm, ArmConstants.minAngleRad),
-      new WaitCommand(0),
-
+      new WaitCommand(.7),
       new MoveTo(new Transform2d(new Translation2d(-0.3, 0), new Rotation2d(Math.PI)), swerve),
       new InstantCommand(()->swerve.resetGyro()),
       new AutoBalanceCommand(swerve)
