@@ -1,10 +1,24 @@
 package frc.robot.Constants;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycle;
 
 /** Add your docs here. */
 public class ArmConstants {
-    public static final double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
+
+    public static final boolean useAbsEncoderPiv = false;
+    public static final boolean useAbsEncoderTelescope = false; 
+
+
+    //channel on dio port
+    public static final int DIOPortPiv = 0;
+
+    public static final double pivotAbsEncToRotation = 0;
+    public static double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
+
+
+
+
     public static final double zeroAngleRad = Units.degreesToRadians(14);//11.5
 
     public static final double minAngleRad = Units.degreesToRadians(14); //33
@@ -48,6 +62,7 @@ public class ArmConstants {
 
     public static final double falconToFinalGear = 1.0/240;
     public static final double encoderResolution = 1.0/2048;
+
     //Change this
     public static boolean leftPivotInverted = true;
 }

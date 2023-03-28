@@ -14,6 +14,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -64,6 +66,9 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   SlewRateLimiter pivotRateLimiter;
   PIDController extensionPID;
+  DutyCycleEncoder absPivEncoder;
+  DutyCycleEncoder absTelescopeEncoder;
+
   
   public ArmControlSubsystem() {
 
@@ -75,6 +80,12 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionPID = new PIDController(0.0688, 0, 0);
     extensionPID.setTolerance(.2);
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
+    if(ArmConstants.useAbsEncoderPiv){
+      absPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPortPiv);
+      absPivEncoder.setPositionOffset(ArmConstants.pivotInitOffset);
+      absPivEncoder.setDistancePerRotation(ArmConstants.pivotAbsEncToRotation);
+    }
+
     
    
     
@@ -254,8 +265,13 @@ public class ArmControlSubsystem extends SubsystemBase {
   
 
   public double getCurrentPivotRotation(boolean inRadians){
-
-    double rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + Units.radiansToRotations(ArmConstants.zeroAngleRad);
+    //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
+    double rotation;
+    if (ArmConstants.useAbsEncoderPiv && absPivEncoder.isConnected()){
+       rotation = absPivEncoder.getAbsolutePosition();
+    }else{
+      rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + Units.radiansToRotations(ArmConstants.zeroAngleRad);
+    }
     
     if(inRadians){
       return rotation * 2 * Math.PI;

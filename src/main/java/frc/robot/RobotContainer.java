@@ -70,7 +70,7 @@ public class RobotContainer {
     // moduleSelector.addOption("Front Right", allModules[1]);
     // moduleSelector.addOption("Back Left", allModules[2]);
     // moduleSelector.addOption("Back Right", allModules[3]);
-
+    drivetrain.updateAbsEncOffsets();
     if (!DriveConstants.tuningPID){
       drivetrain.setDefaultCommand(defaultDrive);
     } else{

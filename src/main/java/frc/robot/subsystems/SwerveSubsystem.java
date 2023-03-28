@@ -28,30 +28,35 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CompConstants;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants .DriveConstants;
 import frc.robot.Constants.PIDConstants;
 import frc.robot.SwerveModule;
+import java.io.*;
+import java.util.*;
+import org.json.simple.*;
+import org.json.simple.parser.*;
 
 public class SwerveSubsystem extends SubsystemBase {
 
   // Bevel gears must be facing to the left in order to work
 
   private final SwerveModule frontLeft = new SwerveModule(DriveConstants.kFrontLeftDriveCANId, DriveConstants.kFrontLeftSteerCANId,
-   0,false, false,0.480,false, CompConstants.useAbsEncoder,
+   0,false, false,DriveConstants.kFrontLeftOffset,false, CompConstants.useAbsEncoder,
    PIDConstants.kFrontLeftSteeringPIDControl, PIDConstants.kFrontLeftSteeringPIDControl);
 
    private final SwerveModule frontRight = new SwerveModule(DriveConstants.kFrontRightDriveCANId, DriveConstants.kFrontRightSteerCANId,
-   1,true,false,0.731,false, CompConstants.useAbsEncoder,
+   1,true,false,DriveConstants.kFrontRightOffset,false, CompConstants.useAbsEncoder,
    PIDConstants.kFrontRightSteeringPIDControl,PIDConstants.kFrontLeftDrivingMotorController);
 
   private final SwerveModule backLeft = new SwerveModule(DriveConstants.kBackLeftDriveCANId, DriveConstants.kBackLeftSteerCANId,
-  2,false,false,0.775,false, CompConstants.useAbsEncoder,
+  2,false,false,DriveConstants.kBackLeftOffset,false, CompConstants.useAbsEncoder,
   PIDConstants.kBackLeftSteeringPIDControl,PIDConstants.kBackLeftSteeringPIDControl);
 
 //above 0.5
   private final SwerveModule backRight = new SwerveModule(DriveConstants.kBackRightDriveCANId, DriveConstants.kBackRightSteerCANId,
-  3,true,false,0.552,false, CompConstants.useAbsEncoder,
+  3,true,false,DriveConstants.kBackRightOffset,false, CompConstants.useAbsEncoder,
    PIDConstants.kBackRightSteeringPIDControl,PIDConstants.kBackRightSteeringPIDControl); 
 
 
@@ -330,5 +335,37 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public float getPitch(){
     return this.navx.getPitch();
+  }
+
+  public void updateAbsEncOffsets(){
+    JSONParser parser = new JSONParser();
+
+    try {
+      Object json1 = parser.parse(new FileReader(new File("src\\main\\deploy\\AbsolutEncoder.json")));
+      JSONObject json = (JSONObject)json1;
+
+      DriveConstants.kFrontLeftOffset = (double)json.get("frontLeft");
+      DriveConstants.kFrontRightOffset = (double)json.get("frontRight");
+      DriveConstants.kBackLeftOffset = (double)json.get("backLeft");
+      DriveConstants.kBackRightOffset = (double)json.get("backRight");
+
+      this.getRawModules()[0].setOffset(DriveConstants.kFrontLeftOffset);
+      this.getRawModules()[1].setOffset(DriveConstants.kFrontRightOffset);
+      this.getRawModules()[2].setOffset(DriveConstants.kBackLeftOffset);
+      this.getRawModules()[3].setOffset(DriveConstants.kBackRightOffset);
+
+      ArmConstants.pivotInitOffset = (double)json.get("pivot");
+      
+
+    } catch (FileNotFoundException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (IOException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (ParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 }
