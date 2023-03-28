@@ -62,9 +62,7 @@ public class PoseEstimation extends SubsystemBase {
 
       EstimatedRobotPose unpacked = result.get();
       Pose2d pose = unpacked.estimatedPose.toPose2d();
-      if (Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2)) < VisionConstants.maxDistance) {
         poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
-      }
       
 
     }
@@ -81,6 +79,7 @@ public class PoseEstimation extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run    
+    
     poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
     updateVision();
     

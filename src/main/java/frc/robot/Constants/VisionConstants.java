@@ -49,7 +49,7 @@ public class VisionConstants {
     // Pose Estimation Constants
     
     public static final int maxDistance = 2; // Maximum distance for vision to update in meters
-    public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5));
+    public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1));
     public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)); 
     
     //TODO CONSTANTS
