@@ -349,10 +349,10 @@ public class SwerveSubsystem extends SubsystemBase {
       DriveConstants.kBackLeftOffset = (double)json.get("backLeft");
       DriveConstants.kBackRightOffset = (double)json.get("backRight");
 
-      this.getRawModules()[0].setOffset(DriveConstants.kFrontLeftOffset);
-      this.getRawModules()[1].setOffset(DriveConstants.kFrontRightOffset);
-      this.getRawModules()[2].setOffset(DriveConstants.kBackLeftOffset);
-      this.getRawModules()[3].setOffset(DriveConstants.kBackRightOffset);
+      // this.getRawModules()[0].setOffset(DriveConstants.kFrontLeftOffset);
+      // this.getRawModules()[1].setOffset(DriveConstants.kFrontRightOffset);
+      // this.getRawModules()[2].setOffset(DriveConstants.kBackLeftOffset);
+      // this.getRawModules()[3].setOffset(DriveConstants.kBackRightOffset);
 
       ArmConstants.pivotInitOffset = (double)json.get("pivot");
       

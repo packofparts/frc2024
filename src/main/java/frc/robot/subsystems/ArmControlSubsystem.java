@@ -83,13 +83,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     if(ArmConstants.useAbsEncoderPiv){
       absPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPortPiv);
       absPivEncoder.setPositionOffset(ArmConstants.pivotInitOffset);
-      absPivEncoder.setDistancePerRotation(ArmConstants.pivotAbsEncToRotation);
+      absPivEncoder.setDistancePerRotation(-ArmConstants.pivotAbsEncToRotation);
+      
     }
 
     
    
     
-    setConfig(false);
+    setConfig(true);
 
 
     SmartDashboard.putBoolean("armCoastMode", isCoast);
@@ -129,8 +130,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   @Override
   public void periodic() {      
       if(!isCoast){
-        pivotPeriodic(); //maintains the desired pivot angle
-        extensionPeriodic();
+        //pivotPeriodic(); //maintains the desired pivot angle
+        //extensionPeriodic();
       }
 
       // Getting Current And Desired Distances
@@ -143,8 +144,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
       //Encoder Positions
       
-        SmartDashboard.putNumber("LeftPivotAbsPos",leftPivotController.getSensorCollection().getIntegratedSensorPosition());
-        SmartDashboard.putNumber("LeftPivotIntegratedRelPos",leftPivotController.getSelectedSensorPosition() / 2048 * ArmConstants.falconToFinalGear*360);
+        SmartDashboard.putNumber("PivotPos", getCurrentPivotRotation(false));
 
         SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
         SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches);
@@ -267,8 +267,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   public double getCurrentPivotRotation(boolean inRadians){
     //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
     double rotation;
-    if (ArmConstants.useAbsEncoderPiv && absPivEncoder.isConnected()){
-       rotation = absPivEncoder.getAbsolutePosition();
+    if (ArmConstants.useAbsEncoderPiv){
+       rotation = (absPivEncoder.getDistance()) - absPivEncoder.getPositionOffset();
     }else{
       rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + Units.radiansToRotations(ArmConstants.zeroAngleRad);
     }

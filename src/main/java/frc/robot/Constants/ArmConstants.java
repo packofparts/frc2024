@@ -6,15 +6,15 @@ import edu.wpi.first.wpilibj.DutyCycle;
 /** Add your docs here. */
 public class ArmConstants {
 
-    public static final boolean useAbsEncoderPiv = false;
+    public static final boolean useAbsEncoderPiv = true;
     public static final boolean useAbsEncoderTelescope = false; 
 
 
     //channel on dio port
-    public static final int DIOPortPiv = 0;
+    public static final int DIOPortPiv = 9;
 
-    public static final double pivotAbsEncToRotation = 0;
-    public static double pivotInitOffset = 0; //arbitrary. what the abs encoder returns when the arm is parallel to ground
+    public static final double pivotAbsEncToRotation = 1.0/3.7142857;
+    public static double pivotInitOffset = .250-.45;
 
 
 
