@@ -20,14 +20,7 @@ public class UpdateOffsets extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    SwerveModule[] modules = swerve.getRawModules();
-
-
-
-    for (SwerveModule module : modules) {
-      //module.setAbsoluteEncoderOffset(module.getAbsolutePosition());
-    }
-
+    swerve.updateAbsEncOffsets();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

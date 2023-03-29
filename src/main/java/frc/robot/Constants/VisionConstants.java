@@ -30,8 +30,9 @@ public class VisionConstants {
     public static final double camPitchOffsetDegrees = -15;
 
     public static final Transform3d robotToCam = new Transform3d(new Translation3d(camXOffsetMeters, camYOffsetMeters, 0),
-
-    new Rotation3d(0, Units.degreesToRadians(camPitchOffsetDegrees),0));
+        new Rotation3d(0, Units.degreesToRadians(camPitchOffsetDegrees),0));
+        
+    public static final double visionEstimateThresholdMeters = 1;
     
     //TODO
     public static final double LimelightConstantOffset = 2.617;

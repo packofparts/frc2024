@@ -30,6 +30,7 @@ public class PoseEstimation extends SubsystemBase {
  Limelight lime;
  SwerveDrivePoseEstimator poseEstimator;
  Field2d field;
+ boolean firstVisMeasurement = false;
  
   public PoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
     this.swerve = swerve;
@@ -63,11 +64,26 @@ public class PoseEstimation extends SubsystemBase {
       EstimatedRobotPose unpacked = result.get();
       Pose2d pose = unpacked.estimatedPose.toPose2d();
       if (Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2)) < VisionConstants.maxDistance) {
-        poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
+        if(!firstVisMeasurement){
+          poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
+        }else{
+          if(this.getValidEstimate()){
+            poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
+          }  
+        }
+
+
       }
       
 
     }
+  }
+
+  public boolean getValidEstimate(){
+    Pose2d visionEstimate = this.getPosition();
+    Pose2d odomEstimate = this.getOdometry();
+
+    return visionEstimate.minus(odomEstimate).getTranslation().getNorm() < VisionConstants.visionEstimateThresholdMeters;
   }
 
   public Pose2d getOdometry() {
