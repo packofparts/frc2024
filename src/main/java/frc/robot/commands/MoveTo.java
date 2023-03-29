@@ -140,10 +140,16 @@ public class MoveTo extends CommandBase {
   @Override
   public void initialize(){
 
-    xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
-    yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
-    rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + this.transform.getRotation().getRadians();
-
+    if (usePoseEstimator) {
+      xPoint = estimator.getPosition().getX() + this.transform.getX();
+      yPoint = estimator.getPosition().getY() + this.transform.getY();
+      rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
+    }
+    else {
+      xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();
+      yPoint = this.swerve.getRobotPose().getY() + this.transform.getY();
+      rotPoint = this.swerve.getRobotPose().getRotation().getRadians() + this.transform.getRotation().getRadians();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

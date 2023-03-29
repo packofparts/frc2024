@@ -7,6 +7,9 @@ package frc.robot;
 import com.revrobotics.CANSparkMaxLowLevel;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +23,7 @@ import frc.robot.AutoPaths.MakeShiftAutoMiddle;
 import frc.robot.AutoPaths.MobilityAuto;
 import frc.robot.AutoPaths.MobilityCharge;
 import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.Input;
 import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.SubstationAlignManual;
@@ -68,6 +72,9 @@ public class Robot extends TimedRobot {
 
     _commandSelector.addOption("ChargeStation",
          new AutoBalanceCommand(_robotContainer.drivetrain));
+    
+    _commandSelector.addOption("MoveTo Pose Estimation", 
+         new MoveTo(new Transform2d(new Translation2d(1, 0), new Rotation2d()), _robotContainer.drivetrain, _robotContainer.pose));
 
 
     // _commandSelector.addOption("SubstationAlignManuel", 

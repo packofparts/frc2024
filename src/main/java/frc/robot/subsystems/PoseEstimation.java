@@ -97,6 +97,7 @@ public class PoseEstimation extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run    
+    
     poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
     updateVision();
     
