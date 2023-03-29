@@ -15,6 +15,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -63,27 +64,23 @@ public class PoseEstimation extends SubsystemBase {
 
       EstimatedRobotPose unpacked = result.get();
       Pose2d pose = unpacked.estimatedPose.toPose2d();
-      if (Math.sqrt(Math.pow(pose.getX(), 2) + Math.pow(pose.getY(), 2)) < VisionConstants.maxDistance) {
-        if(!firstVisMeasurement){
+      if(firstVisMeasurement){
+        poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
+        firstVisMeasurement = false;
+      }else{
+        if(this.getValidEstimate(pose)){
           poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
-        }else{
-          if(this.getValidEstimate()){
-            poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
-          }  
-        }
-
-
+        }  
       }
-      
+
 
     }
   }
 
-  public boolean getValidEstimate(){
-    Pose2d visionEstimate = this.getPosition();
-    Pose2d odomEstimate = this.getOdometry();
+  public boolean getValidEstimate(Pose2d result){
+    Pose2d reference = this.getPosition();
 
-    return visionEstimate.minus(odomEstimate).getTranslation().getNorm() < VisionConstants.visionEstimateThresholdMeters;
+    return Math.abs(result.minus(reference).getTranslation().getNorm()) < VisionConstants.visionEstimateThresholdMeters;
   }
 
   public Pose2d getOdometry() {
