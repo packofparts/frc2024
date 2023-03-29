@@ -77,6 +77,10 @@ public class SwerveModule {
         return _transEncoder.getPosition();
     }
 
+    public void setOffset(double offset){
+        _universalEncoder.setPositionOffset(offset);
+    }
+
     /**
      * @return Returns rotations of rotation motor BEFORE GEAR RATIO
      */
