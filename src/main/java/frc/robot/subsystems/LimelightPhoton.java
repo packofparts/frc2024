@@ -22,7 +22,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import java.util.HashMap;
 import org.photonvision.PhotonUtils;
 
-public class Limelight extends SubsystemBase {
+public class LimelightPhoton extends SubsystemBase {
   /** Creates a new Limelight. */
   public //NetworkTable table = NetworkTableInstance.getDefault();
   PhotonCamera photonCamera;
@@ -44,7 +44,7 @@ public class Limelight extends SubsystemBase {
   public final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0));
   
 
-  public Limelight() {
+  public LimelightPhoton() {
     lime = net.getTable("photonvision");
 
     photonCamera = new PhotonCamera(net, "OV5647");

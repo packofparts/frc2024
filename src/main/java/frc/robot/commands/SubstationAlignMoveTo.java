@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.vision.PoseEstimation;
 
@@ -32,7 +32,7 @@ public class SubstationAlignMoveTo extends CommandBase {
 
 
   private SwerveSubsystem swerve;
-  private Limelight lime;
+  private LimelightPhoton lime;
 
   ArmControlSubsystem arm;
   ClawPnumatic claw;
@@ -49,7 +49,7 @@ public class SubstationAlignMoveTo extends CommandBase {
 
 
   /** Creates a new SubstationAlign. */
-  public SubstationAlignMoveTo(SwerveSubsystem swerve, Limelight lime) {
+  public SubstationAlignMoveTo(SwerveSubsystem swerve, LimelightPhoton lime) {
     this.swerve = swerve;
     this.lime = lime;
 

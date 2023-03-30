@@ -16,7 +16,7 @@ import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.LimelightAlign;
 import frc.robot.subsystems.ArmControlSubsystem;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.vision.PoseEstimation;
 
@@ -27,7 +27,7 @@ public class AutoMapConstants {
     public static PathPlannerTrajectory ConeCubeChargeTraj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
     public static HashMap<String,Command> m_EventMap =  new HashMap<>();
 
-    public static void populateHashMaps(SwerveSubsystem swerve, Limelight lime, ArmControlSubsystem arm, PoseEstimation pose){
+    public static void populateHashMaps(SwerveSubsystem swerve, LimelightPhoton lime, ArmControlSubsystem arm, PoseEstimation pose){
         m_EventMap.put("angle_N3", new InstantCommand(()->arm.setDesiredPivotRotation(ArmConstants.angleLevelsDeg[2]), arm));
         m_EventMap.put("angle_N2", new InstantCommand(()->arm.setDesiredPivotRotation(ArmConstants.angleLevelsDeg[1]), arm));
         m_EventMap.put("angle_N1", new InstantCommand(()->arm.setDesiredPivotRotation(ArmConstants.angleLevelsDeg[0]), arm));

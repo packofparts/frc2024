@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class PoseEstimationBase extends SubsystemBase {
@@ -27,15 +27,13 @@ public class PoseEstimationBase extends SubsystemBase {
   
    // Transformation from robot to 
    SwerveSubsystem swerve;
-   Limelight lime;
    SwerveDrivePoseEstimator poseEstimator;
    Field2d field;
 
 
   /** Creates a new PoseEstimationBase. */
-  public PoseEstimationBase(Limelight limelight, SwerveSubsystem swerve) {
+  public PoseEstimationBase(SwerveSubsystem swerve) {
     this.swerve = swerve;
-    lime = limelight;
     try {
       layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
     } catch (IOException e) {

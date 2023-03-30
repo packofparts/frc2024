@@ -9,14 +9,14 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Input;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class AimbotDriveCmd extends CommandBase {
   /** Creates a new DefaultDriveCmd. */
   SwerveSubsystem swerve;
-  Limelight lemon;
+  LimelightPhoton lemon;
 
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
@@ -25,7 +25,7 @@ public class AimbotDriveCmd extends CommandBase {
   PIDController angleController;
   
 
-  public AimbotDriveCmd(SwerveSubsystem swerve, Limelight lemon) {
+  public AimbotDriveCmd(SwerveSubsystem swerve, LimelightPhoton lemon) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     this.lemon = lemon;

@@ -17,14 +17,14 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.vision.PoseEstimation;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new AutoAlign. */
   boolean notfound = false;
-  public Limelight lime;
+  public LimelightPhoton lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
   public MoveTo move;
@@ -36,7 +36,7 @@ public class AutoAlign extends CommandBase {
 
   Optional<Pose3d> desiredPose3d;
 
-  public AutoAlign(PoseEstimation pose, Limelight limelight, SwerveSubsystem swerve, Transform2d offset) {
+  public AutoAlign(PoseEstimation pose, LimelightPhoton limelight, SwerveSubsystem swerve, Transform2d offset) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;
@@ -44,7 +44,7 @@ public class AutoAlign extends CommandBase {
     this.offset = offset;
   }
 
-  public AutoAlign(PoseEstimation pose, Limelight limelight, SwerveSubsystem swerve) {
+  public AutoAlign(PoseEstimation pose, LimelightPhoton limelight, SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;

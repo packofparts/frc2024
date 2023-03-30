@@ -17,6 +17,7 @@ import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 import frc.robot.vision.PoseEstimation;
+import frc.robot.vision.PoseEstimationBase;
 
 public class MoveTo extends CommandBase {
   /** Creates a new moveTo. */
@@ -26,7 +27,7 @@ public class MoveTo extends CommandBase {
   public PIDController yController, xController;
   public PIDController angleController;
   public SwerveSubsystem swerve;
-  public PoseEstimation estimator;
+  public PoseEstimationBase estimator;
 
 
   public SwerveDriveKinematics m_kinematics;
@@ -44,7 +45,7 @@ public class MoveTo extends CommandBase {
    * @param transform
    * @param swervesub
    */
-  public MoveTo(Transform2d transform, SwerveSubsystem swervesub, PoseEstimation estimator) {
+  public MoveTo(Transform2d transform, SwerveSubsystem swervesub, PoseEstimationBase estimator) {
     // Use addRequirements() here to declare subsystem dependencies.
     usePoseEstimator = true;
     
@@ -69,7 +70,7 @@ public class MoveTo extends CommandBase {
     rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
   }
 
-  public MoveTo(Pose2d desiredPose, SwerveSubsystem swervesub, PoseEstimation estimator) {
+  public MoveTo(Pose2d desiredPose, SwerveSubsystem swervesub, PoseEstimationBase estimator) {
     // Use addRequirements() here to declare subsystem dependencies.
     usePoseEstimator = true;
     

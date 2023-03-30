@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
@@ -25,12 +25,12 @@ public class SubstationAlignManual extends CommandBase {
   final double GOAL_RANGE_METERS = Units.feetToMeters(3);
 
   SwerveSubsystem swerve;
-  Limelight lime;
+  LimelightPhoton lime;
   ArmControlSubsystem arm;
   ClawPnumatic claw;
 
 
-  public SubstationAlignManual(SwerveSubsystem swerve, Limelight lime) {
+  public SubstationAlignManual(SwerveSubsystem swerve, LimelightPhoton lime) {
     this.swerve = swerve;
     this.lime = lime;
 
