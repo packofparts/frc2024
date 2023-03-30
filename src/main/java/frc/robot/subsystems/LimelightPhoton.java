@@ -24,7 +24,7 @@ import org.photonvision.PhotonUtils;
 
 public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
-  //NetworkTable table = NetworkTableInstance.getDefault();
+  public //NetworkTable table = NetworkTableInstance.getDefault();
   PhotonCamera photonCamera;
   NetworkTableInstance net =  NetworkTableInstance.getDefault();
   NetworkTable lime;

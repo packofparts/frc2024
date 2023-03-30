@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.vision;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -20,47 +20,27 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.LimelightPhoton;
+import frc.robot.subsystems.SwerveSubsystem;
 
-public class PoseEstimation extends SubsystemBase {
-  /** Creates a new PoseEstimation. */
-  public AprilTagFieldLayout layout;
-  public PhotonPoseEstimator estimator;
-
- // Transformation from robot to 
- SwerveSubsystem swerve;
- Limelight lime;
- SwerveDrivePoseEstimator poseEstimator;
- Field2d field;
+public class PoseEstimation extends PoseEstimationBase {
  Field2d field2;
  boolean firstVisMeasurement = true;
  int numVis = 0;
- 
-  public PoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
-    this.swerve = swerve;
-    lime = limelight;
-    try {
-      layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-
+ LimelightPhoton lime;
+  
+  public PoseEstimation(LimelightPhoton limelight, SwerveSubsystem swerve) {
+    super(swerve);
+    this.lime = limelight;
     estimator = new PhotonPoseEstimator(layout, PoseStrategy.AVERAGE_BEST_TARGETS, limelight.photonCamera, VisionConstants.robotToCam);
 
-    poseEstimator = new SwerveDrivePoseEstimator(swerve.m_kinematics,
-       swerve.getRotation2d(),
-       swerve.getModulePositions(),
-       getOdometry(),
-       VisionConstants.stateStdDevs,
-       VisionConstants.visionMeasurementStdDevs);
-    field = new Field2d();
     field2 = new Field2d();
-    SmartDashboard.putData("Field", field);
     SmartDashboard.putData("Field2", field2);
   }
 
+  @Override
   public void updateVision() {
-    estimator.setReferencePose(getPosition());
+    estimator.setReferencePose(super.getPosition());
     SmartDashboard.putBoolean("FirstVisMeasurement", firstVisMeasurement);
     SmartDashboard.putNumber("numVis", numVis);
     Optional<EstimatedRobotPose> result = estimator.update();
@@ -99,31 +79,10 @@ public class PoseEstimation extends SubsystemBase {
     return Math.abs(result.minus(reference).getTranslation().getNorm()) < VisionConstants.visionEstimateThresholdMeters;
   }
 
-  public Pose2d getOdometry() {
-    return swerve.getRobotPose();
-  }
-
-  public Pose2d getPosition() {
-    return poseEstimator.getEstimatedPosition();
-  }
-
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run    
-    
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
-    updateVision();
-    
 
-    Pose2d pose = getPosition();
-    field.setRobotPose(pose);
-
-    
-    
-    SmartDashboard.putNumber("X Pose", pose.getX());
-    SmartDashboard.putNumber("Y Pose", pose.getY());
-    SmartDashboard.putNumber("Rot Pose", pose.getRotation().getDegrees());
-    SmartDashboard.updateValues();
+    super.periodic();
   }
 
 

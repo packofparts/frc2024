@@ -18,8 +18,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.vision.PoseEstimation;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new AutoAlign. */
