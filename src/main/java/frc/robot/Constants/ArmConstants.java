@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DutyCycle;
 /** Add your docs here. */
 public class ArmConstants {
 
-    public static final boolean useAbsEncoderPiv = true;
+    public static final boolean useAbsEncoderPiv = false;
     public static final boolean useAbsEncoderTelescope = false; 
 
 
@@ -14,7 +14,7 @@ public class ArmConstants {
     public static final int DIOPortPiv = 9;
 
     public static final double pivotAbsEncToRotation = 1.0/3.7142857;
-    public static double pivotInitOffset = .250-.45;
+    public static double pivotInitOffset = 0;
 
 
 
