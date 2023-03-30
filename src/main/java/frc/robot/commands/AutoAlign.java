@@ -20,6 +20,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.vision.PoseEstimation;
+import frc.robot.vision.PoseEstimationBase;
 
 public class AutoAlign extends CommandBase {
   /** Creates a new AutoAlign. */
@@ -32,11 +33,11 @@ public class AutoAlign extends CommandBase {
   public Transform2d offset;
   public Transform2d moveby;
 
-  public PoseEstimation pose;
+  public PoseEstimationBase pose;
 
   Optional<Pose3d> desiredPose3d;
 
-  public AutoAlign(PoseEstimation pose, LimelightPhoton limelight, SwerveSubsystem swerve, Transform2d offset) {
+  public AutoAlign(PoseEstimationBase pose, LimelightPhoton limelight, SwerveSubsystem swerve, Transform2d offset) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;
