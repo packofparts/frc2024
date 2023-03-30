@@ -21,16 +21,20 @@ import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.vision.PoseEstimation;
+import frc.robot.vision.PoseEstimationBase;
 
 
 // CODE ISN'T FUNCTIONAL YET
 
 public class AutoMapConstants {
-    public static PathPlannerTrajectory ConeCubeChargeTraj = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
+    public static PathPlannerTrajectory ConeCubeChargeTraj = PathPlanner.loadPath("Cone+Ball+Charge", new PathConstraints(2, 1.5));
+    public static PathPlannerTrajectory move1Meter = PathPlanner.loadPath("MoveOneMeters", new PathConstraints(2, 1.5));
+    public static PathPlannerTrajectory move1MeterRotate = PathPlanner.loadPath("MoveOneMeters+180", new PathConstraints(2, 1.5));
+ 
     public static HashMap<String,Command> m_EventMap = new HashMap<>();
     public static HashMap<String,Command> emptyMap =  new HashMap<>();
 
-    public static void populateHashMaps(SwerveSubsystem swerve, LimelightPhoton lime, ArmControlSubsystem arm, PoseEstimation pose){
+    public static void populateHashMaps(SwerveSubsystem swerve, LimelightPhoton lime, ArmControlSubsystem arm, PoseEstimationBase pose){
         m_EventMap.put("angle_N3", new PivotCmd(arm, ArmConstants.angleLevelsDeg[2]));
         m_EventMap.put("angle_N2", new PivotCmd(arm, ArmConstants.angleLevelsDeg[1]));
         m_EventMap.put("angle_N1", new PivotCmd(arm, ArmConstants.angleLevelsDeg[0]));

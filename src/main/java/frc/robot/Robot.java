@@ -61,6 +61,7 @@ public class Robot extends TimedRobot {
 
     CameraServer.startAutomaticCapture();
 
+    AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.armControl, robotContainer.pose);
 
     robotContainer = new RobotContainer();
     substationCmd = new SubstationAlignMoveTo(robotContainer.drivetrain, robotContainer.limeLightSubSystem);
@@ -115,26 +116,26 @@ public class Robot extends TimedRobot {
     //       new Translation2d(2.5, 0), 
     //       new Rotation2d(0))));
     
-    commandSelector.addOption(
-      "Path Planner FULL PATH", 
-      new TGWithPPlib(
-        robotContainer.drivetrain,
-        AutoMapConstants.ConeCubeChargeTraj,
-        AutoMapConstants.m_EventMap));
+    // commandSelector.addOption(
+    //   "Path Planner FULL PATH", 
+    //   new TGWithPPlib(
+    //     robotContainer.drivetrain,
+    //     AutoMapConstants.ConeCubeChargeTraj,
+    //     AutoMapConstants.m_EventMap));
 
-    commandSelector.addOption(
-      "Path Planner Only DRIVE", 
-      new TGWithPPlib(
-      robotContainer.drivetrain,
-        AutoMapConstants.ConeCubeChargeTraj,
-        AutoMapConstants.m_EventMap));
+    // commandSelector.addOption(
+    //   "Path Planner Only DRIVE", 
+    //   new TGWithPPlib(
+    //   robotContainer.drivetrain,
+    //     AutoMapConstants.ConeCubeChargeTraj,
+    //     AutoMapConstants.m_EventMap));
 
-    commandSelector.addOption(
-      "Path Planner Only DRIVE", 
-      new TGWithPPlib(
-    robotContainer.drivetrain,
-        AutoMapConstants.ConeCubeChargeTraj,
-        AutoMapConstants.m_EventMap));    
+    // commandSelector.addOption(
+    //   "Path Planner Only DRIVE", 
+    //   new TGWithPPlib(
+    // robotContainer.drivetrain,
+    //     AutoMapConstants.ConeCubeChargeTraj,
+    //     AutoMapConstants.m_EventMap));    
     
     
     // _commandSelector.addOption(
@@ -147,7 +148,8 @@ public class Robot extends TimedRobot {
       armModeSelector.addOption("Brake", ArmControlSubsystem.ArmMotorMode.BRAKE);
       armModeSelector.addOption("Off", ArmControlSubsystem.ArmMotorMode.OFF);
 
-      PPLIBPathSelector.addOption("ConeNodeToCube", autonomousCommand);
+      PPLIBPathSelector.addOption("OneMeterForward", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
+      PPLIBPathSelector.addOption("TwoMeter+180",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1MeterRotate, AutoMapConstants.emptyMap));
 
 
     //commandSelector.addOption("PositionPID", new PositionPIDtuning(robotContainer.drivetrain));
