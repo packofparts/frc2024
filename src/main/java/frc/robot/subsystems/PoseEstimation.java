@@ -13,9 +13,11 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,6 +27,7 @@ public class PoseEstimation extends SubsystemBase {
   /** Creates a new PoseEstimation. */
   public AprilTagFieldLayout layout;
   public PhotonPoseEstimator estimator;
+  public KalmanFilter<N1, N1, N1> m_observer;
 
  // Transformation from robot to 
  SwerveSubsystem swerve;
@@ -35,6 +38,7 @@ public class PoseEstimation extends SubsystemBase {
  
   public PoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
     this.swerve = swerve;
+    m_observer = new KalmanFilter<>(null, null, null, null, null, 0);
     lime = limelight;
     try {
       layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);

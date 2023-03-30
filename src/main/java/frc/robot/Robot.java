@@ -22,12 +22,14 @@ import frc.robot.AutoPaths.AutoRightMid;
 import frc.robot.AutoPaths.MakeShiftAutoMiddle;
 import frc.robot.AutoPaths.MobilityAuto;
 import frc.robot.AutoPaths.MobilityCharge;
+import frc.robot.Constants.AutoMapConstants;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.Input;
 import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.SubstationAlignManual;
 import frc.robot.commands.SubstationAlignMoveTo;
+import frc.robot.commands.TGWithPPlib;
 
 public class Robot extends TimedRobot {
   
@@ -106,12 +108,28 @@ public class Robot extends TimedRobot {
     //       new Translation2d(2.5, 0), 
     //       new Rotation2d(0))));
     
-    // _commandSelector.addOption(
-    //   "Path Planner", 
-    //   new TGWithPPlib(
-    //     _robotContainer.drivetrain,
-    //     AutoMapConstants.ConeCubeChargeTraj,
-    //     AutoMapConstants.m_EventMap));
+    _commandSelector.addOption(
+      "Path Planner FULL PATH", 
+      new TGWithPPlib(
+        _robotContainer.drivetrain,
+        AutoMapConstants.ConeCubeChargeTraj,
+        AutoMapConstants.m_EventMap));
+
+    _commandSelector.addOption(
+      "Path Planner Only DRIVE", 
+      new TGWithPPlib(
+      _robotContainer.drivetrain,
+        AutoMapConstants.ConeCubeChargeTraj,
+        AutoMapConstants.m_EventMap));
+
+    _commandSelector.addOption(
+      "Path Planner Only DRIVE", 
+      new TGWithPPlib(
+      _robotContainer.drivetrain,
+        AutoMapConstants.ConeCubeChargeTraj,
+        AutoMapConstants.m_EventMap));    
+    
+    
     // _commandSelector.addOption(
     //   "Test Motor",
     //   new TestSpark(7, -0.3));
