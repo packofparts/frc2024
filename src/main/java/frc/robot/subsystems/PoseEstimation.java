@@ -31,7 +31,9 @@ public class PoseEstimation extends SubsystemBase {
  Limelight lime;
  SwerveDrivePoseEstimator poseEstimator;
  Field2d field;
- boolean firstVisMeasurement = false;
+ Field2d field2;
+ boolean firstVisMeasurement = true;
+ int numVis = 0;
  
   public PoseEstimation(Limelight limelight, SwerveSubsystem swerve) {
     this.swerve = swerve;
@@ -52,22 +54,35 @@ public class PoseEstimation extends SubsystemBase {
        VisionConstants.stateStdDevs,
        VisionConstants.visionMeasurementStdDevs);
     field = new Field2d();
+    field2 = new Field2d();
     SmartDashboard.putData("Field", field);
+    SmartDashboard.putData("Field2", field2);
   }
 
   public void updateVision() {
     estimator.setReferencePose(getPosition());
-    
+    SmartDashboard.putBoolean("FirstVisMeasurement", firstVisMeasurement);
+    SmartDashboard.putNumber("numVis", numVis);
     Optional<EstimatedRobotPose> result = estimator.update();
 
     if (result.isPresent()) {
 
       EstimatedRobotPose unpacked = result.get();
       Pose2d pose = unpacked.estimatedPose.toPose2d();
-      if(firstVisMeasurement){
+      field2.setRobotPose(pose);
+      if(firstVisMeasurement ){
+
         poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
-        firstVisMeasurement = false;
-      }else{
+        numVis += 1;
+        
+
+        if (numVis>30)
+          firstVisMeasurement = false;
+
+      }
+      else{
+        SmartDashboard.putBoolean("ValidEstimate", this.getValidEstimate(pose));
+
         if(this.getValidEstimate(pose)){
           poseEstimator.addVisionMeasurement(pose, unpacked.timestampSeconds);
         }  
@@ -78,7 +93,8 @@ public class PoseEstimation extends SubsystemBase {
   }
 
   public boolean getValidEstimate(Pose2d result){
-    Pose2d reference = this.getPosition();
+    Pose2d reference = estimator.getReferencePose().toPose2d();
+    SmartDashboard.putNumber("Distance from Reference", result.minus(reference).getTranslation().getNorm());
 
     return Math.abs(result.minus(reference).getTranslation().getNorm()) < VisionConstants.visionEstimateThresholdMeters;
   }
@@ -101,6 +117,8 @@ public class PoseEstimation extends SubsystemBase {
 
     Pose2d pose = getPosition();
     field.setRobotPose(pose);
+
+    
     
     SmartDashboard.putNumber("X Pose", pose.getX());
     SmartDashboard.putNumber("Y Pose", pose.getY());
