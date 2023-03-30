@@ -66,7 +66,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveDriveKinematics m_kinematics;
   private ChassisSpeeds chassisSpeeds1;
   public SwerveDriveOdometry m_odometry;
-  AHRS navx = new AHRS(Port.kMXP);
+  static AHRS navx = new AHRS(Port.kMXP);
   SwerveModule [] rawMods;
   
   public static enum DriveMode{
@@ -125,7 +125,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /**
    * Sets the current YAW heading as the 0'd heading
    */
-  public void resetGyro(){
+  public static void resetGyro(){
     navx.reset();
   }
 
@@ -133,7 +133,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * this gets the Yaw degrees of the gyro in continuous input (360 == 0) CCW (with neg)
    * @return the degrees at which the gyro is at
    */
-  public double getHeading(){
+  public static double getHeading(){
     SmartDashboard.putNumber("Gyro Heading",-navx.getAngle());
     return -navx.getAngle();
   }
@@ -145,11 +145,11 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the Rotation2d of the gyro
    * @see Rotation2d
    */
-  public Rotation2d getRotation2d(){
+  public static Rotation2d getRotation2d(){
     return Rotation2d.fromDegrees(getHeading());
   }
 
-  public Rotation2d geRotation2dNotCCW(){
+  public static Rotation2d geRotation2dNotCCW(){
     return Rotation2d.fromDegrees(-getHeading());
   }
 
@@ -317,24 +317,24 @@ public class SwerveSubsystem extends SubsystemBase {
    * 
    * @return returns roll in degrees (180,-180)
    */
-  public float getRoll(){
-    return this.navx.getRoll(); 
+  public static float getRoll(){
+    return SwerveSubsystem.navx.getRoll(); 
   }
 
   /**
    * 
    * @return returns yaw in degrees (180,-180)
    */
-  public float getYaw(){
-    return this.navx.getYaw();
+  public static float getYaw(){
+    return SwerveSubsystem.navx.getYaw();
   }
 
   /**
    * 
    * @return returns pitch in degrees (180,-180)
    */
-  public float getPitch(){
-    return this.navx.getPitch();
+  public static float getPitch(){
+    return SwerveSubsystem.navx.getPitch();
   }
 
   public void updateAbsEncOffsets(){
