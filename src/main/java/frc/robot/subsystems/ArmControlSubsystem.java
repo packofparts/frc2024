@@ -1,6 +1,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -53,7 +56,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   boolean isCoast = false;
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
-
+  private final DutyCycleEncoder absPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPortPiv);
   
   private final CANSparkMax extensionController = new CANSparkMax(ArmConstants.telescopicArmSpark, MotorType.kBrushless);
   private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
@@ -72,10 +75,13 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   SlewRateLimiter pivotRateLimiter;
   PIDController extensionPID;
-  DutyCycleEncoder absPivEncoder;
+
   DutyCycleEncoder absTelescopeEncoder;
 
-  
+  boolean gotOffset = false;
+
+  int i = 0;
+
   public ArmControlSubsystem() {
 
     pivotPID = new PIDController(1.4, 0, 0);
@@ -87,14 +93,22 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionPID.setTolerance(.2);
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
 
-    if(ArmConstants.useAbsEncoderPiv){
-      absPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPortPiv);
-      this.initialPivotEncoderOffset = -(absPivEncoder.getAbsolutePosition() + ArmConstants.pivotInitOffset) * ArmConstants.pivotAbsEncToRotation;
-      this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
-      this.currentPivotRotation = this.desiredPivotRotation;
-    }
+    absPivEncoder.setConnectedFrequencyThreshold(975);
+   
 
     
+
+
+    // if(ArmConstants.useAbsEncoderPiv && absPivEncoder.isConnected()){
+      
+      
+    //   this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation;
+      
+    //   this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
+    //   this.currentPivotRotation = this.desiredPivotRotation;
+    // }
+
+    this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation;
    
     
     setConfig(false);
@@ -140,28 +154,45 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {      
-      if(Robot.armModeSelector.getSelected() == ArmMotorMode.BRAKE){
-        pivotPeriodic(); //maintains the desired pivot angle
-        extensionPeriodic();
+      if(Robot.armModeSelector.getSelected() == ArmMotorMode.BRAKE && i >= 1){
+       pivotPeriodic(); //maintains the desired pivot angle
+       extensionPeriodic();
+      }else if(Robot.armModeSelector.getSelected() == ArmMotorMode.COAST){
+        desiredPivotRotation = currentPivotRotation;
+        desiredExtensionDistance = currentExtensionDistance;
+      }
+
+      if(i < 1 && -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation != 0 && absPivEncoder.isConnected()){
+        this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + 0.226 + 0.02777;
+        this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
+        this.desiredPivotRotation = this.currentPivotRotation;
+        
+        i++;
       }
 
       updateModes();
 
       // Getting Current And Desired Distances
-      SmartDashboard.putNumber("currentTelescopeOutput", currentExtensionDistance);
-      SmartDashboard.putNumber("CurrentPivotPoint", Units.radiansToDegrees(currentPivotRotation));
+      SmartDashboard.putNumber("CurrentExtension", currentExtensionDistance);
+      SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(currentPivotRotation));
 
       if (CompConstants.debug) {
-        SmartDashboard.putNumber("DesiredPivotPoint", Units.radiansToDegrees(desiredPivotRotation));
-        SmartDashboard.putNumber("desiredTelescopeOutput", desiredExtensionDistance);
+        SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(desiredPivotRotation));
+        SmartDashboard.putNumber("DesiredExtension", desiredExtensionDistance);
 
       //Encoder Positions
       
         SmartDashboard.putNumber("PivotPos", getCurrentPivotRotation(false));
+        SmartDashboard.putNumber("AbsPivot", -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation);
+        SmartDashboard.putNumber("InitialAbsPivot", this.initialPivotEncoderOffset);
+
+        //this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation;
 
         SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
         SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches);
       
+        SmartDashboard.putNumber("pivotfreq", absPivEncoder.getFrequency());
+
         SmartDashboard.putBoolean("isCoast", isCoast);
       }
 
@@ -263,8 +294,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atAngleSetpoint(){
-    //return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(2);
-    return true;
+    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(2);
+    //return true;
   }
 
 

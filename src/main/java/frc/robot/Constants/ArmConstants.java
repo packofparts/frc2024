@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.DutyCycle;
 /** Add your docs here. */
 public class ArmConstants {
 
-    public static final boolean useAbsEncoderPiv = false;
+    public static final boolean useAbsEncoderPiv = true;
     public static final boolean useAbsEncoderTelescope = false; 
 
 

@@ -21,7 +21,7 @@ public class MobilityCharge extends CommandBase {
   public MobilityCharge(SwerveSubsystem swerve) {
 
     path = new SequentialCommandGroup(
-      new InstantCommand(swerve::resetGyro),
+      new InstantCommand(() -> SwerveSubsystem.resetGyro()),
       new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d()), swerve),
       new WaitCommand(1),
       new AutoBalanceCommand(swerve)

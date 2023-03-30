@@ -27,7 +27,7 @@ public class AutoRightMid extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     path = new SequentialCommandGroup(
       new WaitCommand(3),
-      new InstantCommand(() -> swerve.resetGyro()),
+      new InstantCommand(() -> SwerveSubsystem.resetGyro()),
       new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[1])),
       new WaitCommand(2),
       new ExtensionCmd(arm, 5),
@@ -39,7 +39,7 @@ public class AutoRightMid extends CommandBase {
       new WaitCommand(1),
       new PivotCmd(arm, ArmConstants.minAngleRad),
       new MoveTo(new Transform2d(new Translation2d(-3, -0.05), new Rotation2d(-Math.PI)), swerve),
-      new InstantCommand(()->swerve.resetGyro())
+      new InstantCommand(()->SwerveSubsystem.resetGyro())
     );
     
   }
