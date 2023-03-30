@@ -7,14 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class LimelightAlign extends CommandBase {
   /** Creates a new CubeAlign. */
   public SwerveSubsystem swerve;
-  public Limelight lime;
+  public LimelightPhoton lime;
   public double yaw;
   public int index;
   public double offset;
@@ -26,7 +26,7 @@ public class LimelightAlign extends CommandBase {
  * @param PipelineIndex Check pipeline enums in limelight sub
  * @param Xoffset THIS SHOULD BE IN METERS
  */
-  public LimelightAlign(SwerveSubsystem swervesub, Limelight limelightsub, int PipelineIndex, double Xoffset) {
+  public LimelightAlign(SwerveSubsystem swervesub, LimelightPhoton limelightsub, int PipelineIndex, double Xoffset) {
     // Use addRequirements() here to declare subsystem dependencies.
     swerve = swervesub;
     lime = limelightsub;

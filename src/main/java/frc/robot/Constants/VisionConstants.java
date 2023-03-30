@@ -32,7 +32,7 @@ public class VisionConstants {
     public static final Transform3d robotToCam = new Transform3d(new Translation3d(camXOffsetMeters, camYOffsetMeters, 0),
         new Rotation3d(0, Units.degreesToRadians(camPitchOffsetDegrees),0));
         
-    public static final double visionEstimateThresholdMeters = 1;
+    public static final double visionEstimateThresholdMeters = .2;
     
     //TODO
     public static final double LimelightConstantOffset = 2.617;
@@ -51,7 +51,7 @@ public class VisionConstants {
     
     public static final int maxDistance = 2; // Maximum distance for vision to update in meters
     public static final Matrix<N3, N1> stateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1));
-    public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)); 
+    public static final Matrix<N3, N1> visionMeasurementStdDevs = VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(10)); 
     
     //TODO CONSTANTS
     public static final Transform2d substationAlign = new Transform2d();

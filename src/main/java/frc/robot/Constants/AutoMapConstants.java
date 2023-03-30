@@ -18,9 +18,9 @@ import frc.robot.commands.LimelightAlign;
 import frc.robot.commands.armcontrolcmds.ExtensionCmd;
 import frc.robot.commands.armcontrolcmds.PivotCmd;
 import frc.robot.subsystems.ArmControlSubsystem;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PoseEstimation;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.vision.PoseEstimation;
 
 
 // CODE ISN'T FUNCTIONAL YET
@@ -30,7 +30,7 @@ public class AutoMapConstants {
     public static HashMap<String,Command> m_EventMap = new HashMap<>();
     public static HashMap<String,Command> emptyMap =  new HashMap<>();
 
-    public static void populateHashMaps(SwerveSubsystem swerve, Limelight lime, ArmControlSubsystem arm, PoseEstimation pose){
+    public static void populateHashMaps(SwerveSubsystem swerve, LimelightPhoton lime, ArmControlSubsystem arm, PoseEstimation pose){
         m_EventMap.put("angle_N3", new PivotCmd(arm, ArmConstants.angleLevelsDeg[2]));
         m_EventMap.put("angle_N2", new PivotCmd(arm, ArmConstants.angleLevelsDeg[1]));
         m_EventMap.put("angle_N1", new PivotCmd(arm, ArmConstants.angleLevelsDeg[0]));

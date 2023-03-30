@@ -14,14 +14,15 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.VisionConstants;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PoseEstimation;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.vision.PoseEstimation;
+import frc.robot.vision.PoseEstimationBase;
 
 public class AutoAlignPE extends CommandBase {
   /** Creates a new AutoAlign. */
   boolean notfound = false;
-  public Limelight lime;
+  public LimelightPhoton lime;
   public SwerveSubsystem swerve;
   public PhotonTrackedTarget target;
   public MoveTo move;
@@ -29,12 +30,12 @@ public class AutoAlignPE extends CommandBase {
   public Transform2d offset;
   public Transform2d moveby;
 
-  public PoseEstimation pose;
+  public PoseEstimationBase pose;
 
   Optional<Pose3d> desiredPose3d;
   Pose2d desiredPose2d;
 
-  public AutoAlignPE(PoseEstimation pose, Limelight limelight, SwerveSubsystem swerve, Transform2d offset) {
+  public AutoAlignPE(PoseEstimationBase pose, LimelightPhoton limelight, SwerveSubsystem swerve, Transform2d offset) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;
@@ -42,7 +43,7 @@ public class AutoAlignPE extends CommandBase {
     this.offset = offset;
   }
 
-  public AutoAlignPE(PoseEstimation pose, Limelight limelight, SwerveSubsystem swerve) {
+  public AutoAlignPE(PoseEstimation pose, LimelightPhoton limelight, SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;

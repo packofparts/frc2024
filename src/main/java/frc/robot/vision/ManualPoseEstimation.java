@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.vision;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -22,49 +22,31 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.LimelightPhoton;
+import frc.robot.subsystems.SwerveSubsystem;
 
 
-public class ManualPoseEstimation extends SubsystemBase{
+public class ManualPoseEstimation extends PoseEstimationBase{
   /** Creates a new PoseEstimation. */
-  public AprilTagFieldLayout layout;
-  public PhotonPoseEstimator estimator;
-  public Field2d field;
+
   public static enum Strategy {
     BEST,
     AVERAGEALL,
   }
 
- // Transformation from robot to 
- SwerveSubsystem swervee;
- Limelight lime;
- SwerveDrivePoseEstimator poseEstimator;
+
  double visionTimestamp;
  Strategy strategy;
+ LimelightPhoton lime;
  
-  public ManualPoseEstimation(Limelight limelight, SwerveSubsystem swerve, Strategy strategy) {
+  public ManualPoseEstimation(LimelightPhoton limelight, SwerveSubsystem swerve, Strategy strategy) {
+    super(swerve);
     this.strategy = strategy;
     //Initializing Subsystems
-    this.swervee = swerve;
-    lime = limelight;
     lime.setPipeline(1);
-    // Getting Tag Layout
-    try {
-      layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    // Initializing poseEstimator
-    poseEstimator = new SwerveDrivePoseEstimator(swerve.m_kinematics,
-       swerve.getRotation2d(),
-       swerve.getModulePositions(),
-       getOdometry(),
-       VisionConstants.stateStdDevs,
-       VisionConstants.visionMeasurementStdDevs);
-      
-      field = new Field2d();
-      SmartDashboard.putData("Field", field);
   }
 
+  @Override
   public void updateVision() {
     PhotonPipelineResult image = lime.getImg();
     double timestamp = image.getTimestampSeconds();
@@ -118,7 +100,7 @@ public class ManualPoseEstimation extends SubsystemBase{
 
   
   public Pose2d getOdometry() {
-    return this.swervee.getRobotPose();
+    return swerve.getRobotPose();
   }
 
   
@@ -130,20 +112,7 @@ public class ManualPoseEstimation extends SubsystemBase{
   @Override
   public void periodic() {
 
-    // This method will be called once per scheduler run
-    poseEstimator.update(swervee.getRotation2d(), swervee.getModulePositions());
-    updateVision();
-
-
-    Pose2d pose = getPosition();
-    field.setRobotPose(pose);
-    SmartDashboard.putData("Field", field);
-
-    
-    SmartDashboard.putNumber("X Pose", pose.getX());
-    SmartDashboard.putNumber("Y Pose", pose.getY());
-    SmartDashboard.putNumber("Rot Pose", pose.getRotation().getDegrees());
-    SmartDashboard.updateValues();
+    super.periodic();
   }
 
 
