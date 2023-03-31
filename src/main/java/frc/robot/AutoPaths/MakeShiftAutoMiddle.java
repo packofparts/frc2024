@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoMapConstants.GamePiece;
 import frc.robot.commands.AutoBalanceCommand;
 
 import frc.robot.commands.MoveTo;
@@ -37,9 +38,7 @@ public class MakeShiftAutoMiddle extends CommandBase {
       new WaitCommand(1),
       new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(.5),
-      new InstantCommand(()->claw.togglePneumatics()),
-      new WaitCommand(1),
-      new InstantCommand(()->claw.togglePneumatics()),
+      claw.dropPiece(GamePiece.CONE),
       new ExtensionCmd(arm, 0),
       new WaitCommand(.1),
       new PivotCmd(arm, ArmConstants.minAngleRad),

@@ -13,12 +13,14 @@ import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.AutoMapConstants.GamePiece;
 
 public class ClawPnumatic extends SubsystemBase {
   /** Creates a new ClawPnumatic. */
@@ -123,6 +125,19 @@ public class ClawPnumatic extends SubsystemBase {
 
   public void spinOuttake(double speed){
     intakeMotor.set(TalonSRXControlMode.PercentOutput, -speed);
+  }
+  public Command dropPiece(GamePiece piece){
+    switch (piece){
+      case CUBE:
+        return(new SequentialCommandGroup(new InstantCommand(()->spinIntake(0.2)),new WaitCommand(0.2)));
+      case CONE:
+        return(new SequentialCommandGroup(new InstantCommand(this::openPneumatics),new WaitCommand(0.1),new InstantCommand(this::closePneumatics)));
+      default:
+        return null;
+    }
+
+
+
   }
   
 }
