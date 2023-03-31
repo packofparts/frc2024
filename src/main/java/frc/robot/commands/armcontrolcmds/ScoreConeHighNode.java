@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoMapConstants.GamePiece;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -26,12 +27,9 @@ public class ScoreConeHighNode extends CommandBase {
     addRequirements(this.arm,this.claw);
     path = new SequentialCommandGroup(
       new PivotCmd(this.arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
-      new WaitCommand(1),
       new ExtensionCmd(this.arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(.5),
-      new InstantCommand(()->this.claw.togglePneumatics()),
-      new WaitCommand(0.5),
-      new InstantCommand(()->this.claw.togglePneumatics()),
+      claw.dropPiece(GamePiece.CONE),
       new ExtensionCmd(this.arm, 0),
       new WaitCommand(.1),
       new PivotCmd(this.arm, ArmConstants.minAngleRad));

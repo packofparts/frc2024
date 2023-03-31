@@ -46,6 +46,7 @@ public class AutoMapConstants {
  
     public static HashMap<String,Command> m_EventMap = new HashMap<>();
     public static HashMap<String,Command> emptyMap =  new HashMap<>();
+    public static PathPlannerTrajectory backforth;
 
     public static void populateHashMaps(SwerveSubsystem swerve, LimelightPhoton lime, ArmControlSubsystem arm, PoseEstimationBase pose, ClawPnumatic clawPnumatic){
         m_EventMap.put("angle_N3", new PivotCmd(arm, ArmConstants.angleLevelsDeg[2]));
@@ -64,9 +65,12 @@ public class AutoMapConstants {
         m_EventMap.put("drop_cube", clawPnumatic.dropPiece(GamePiece.CUBE));
         m_EventMap.put("intake_cube", new SequentialCommandGroup(new InstantCommand(()->clawPnumatic.spinIntake(0.8)),new WaitCommand(0.8)));
 
-        m_EventMap.put("auto_balance",new AutoBalanceCommand(swerve));
+
+        m_EventMap.put("auto_balance",new WaitCommand(1));
         m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));
         m_EventMap.put("align_tag",new AutoAlign(pose, lime, swerve));
+
+        emptyMap.put("wait", new WaitCommand(1));
 
     }
 

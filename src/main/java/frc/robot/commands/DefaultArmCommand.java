@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.armcontrolcmds.ExtensionCmd;
 import frc.robot.commands.armcontrolcmds.PivotCmd;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
@@ -66,11 +67,12 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getX()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        //new PivotCmd(armControlSubsystem, )),
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]))),
+        new PivotCmd(this.armControlSubsystem, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
+        new ExtensionCmd(this.armControlSubsystem, ArmConstants.extensionLevelsIn[2])  
 
-        new WaitCommand(1.2),
-        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]))
+        // new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]))),
+        // new WaitCommand(1.2),
+        // new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]))
 
       );
       command.schedule();

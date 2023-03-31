@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoMapConstants.GamePiece;
 import frc.robot.commands.MoveTo;
 import frc.robot.commands.armcontrolcmds.ExtensionCmd;
 import frc.robot.commands.armcontrolcmds.PivotCmd;
@@ -29,12 +30,9 @@ public class AutoRightHigh extends CommandBase {
       new WaitCommand(3),
       new InstantCommand(() -> swerve.resetGyro()),
       new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
-      new WaitCommand(2),
       new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(1),
-      new InstantCommand(()->claw.togglePneumatics()),
-      new WaitCommand(1),
-      new InstantCommand(()->claw.togglePneumatics()),
+      claw.dropPiece(GamePiece.CONE),
       new ExtensionCmd(arm, 0),
       new WaitCommand(2),
       new PivotCmd(arm, ArmConstants.minAngleRad),
