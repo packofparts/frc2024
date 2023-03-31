@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.AutoPaths.AutoLeftMid;
 import frc.robot.AutoPaths.AutoLeftHigh;
 import frc.robot.AutoPaths.AutoRightHigh;
@@ -33,6 +34,7 @@ import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.SubstationAlignManual;
 import frc.robot.commands.SubstationAlignMoveTo;
 import frc.robot.commands.TGWithPPlib;
+import frc.robot.commands.armcontrolcmds.ScoreConeHighNode;
 
 public class Robot extends TimedRobot {
   
@@ -61,7 +63,7 @@ public class Robot extends TimedRobot {
 
     CameraServer.startAutomaticCapture();
 
-    AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.armControl, robotContainer.pose);
+    // AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.armControl, robotContainer.pose);
 
     robotContainer = new RobotContainer();
     substationCmd = new SubstationAlignMoveTo(robotContainer.drivetrain, robotContainer.limeLightSubSystem);
@@ -108,6 +110,10 @@ public class Robot extends TimedRobot {
     commandSelector.addOption("Right Mid", 
       new AutoRightMid(robotContainer.armControl, robotContainer.clawPnumatic, robotContainer.drivetrain));
     
+
+
+      commandSelector.addOption("PosPID", 
+      new PositionPIDtuning(robotContainer.drivetrain));
         // _commandSelector.addOption(
     //   "Move By with Trajecotry",
     //   new MoveByWithTrajectoryController(
@@ -147,14 +153,18 @@ public class Robot extends TimedRobot {
       armModeSelector.addOption("Coast", ArmControlSubsystem.ArmMotorMode.COAST);
       armModeSelector.addOption("Brake", ArmControlSubsystem.ArmMotorMode.BRAKE);
       armModeSelector.addOption("Off", ArmControlSubsystem.ArmMotorMode.OFF);
+      PPLIBPathSelector.addOption("Cone+Cube", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
 
       PPLIBPathSelector.addOption("OneMeterForward", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
       PPLIBPathSelector.addOption("TwoMeter+180",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1MeterRotate, AutoMapConstants.emptyMap));
+      PPLIBPathSelector.addOption("full bottem auto",  new ParallelCommandGroup(
+      new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeTraj, AutoMapConstants.emptyMap)));
+      PPLIBPathSelector.addOption("backForth",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
 
 
     //commandSelector.addOption("PositionPID", new PositionPIDtuning(robotContainer.drivetrain));
 
-
+    SmartDashboard.putData("PPLib Paths", PPLIBPathSelector);
     SmartDashboard.putData("ResetArmEncoders", new InstantCommand(() -> robotContainer.armControl.resetEncoders()));
     SmartDashboard.putData("ArmModes", armModeSelector);
     SmartDashboard.putData("Auto commands", commandSelector);
@@ -191,7 +201,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     autonomousCommand = commandSelector.getSelected();
-
+    //autonomousCommand = PPLIBPathSelector.getSelected();
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

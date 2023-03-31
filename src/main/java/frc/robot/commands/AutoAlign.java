@@ -45,7 +45,7 @@ public class AutoAlign extends CommandBase {
     this.offset = offset;
   }
 
-  public AutoAlign(PoseEstimation pose, LimelightPhoton limelight, SwerveSubsystem swerve) {
+  public AutoAlign(PoseEstimationBase pose, LimelightPhoton limelight, SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
     lime = limelight;

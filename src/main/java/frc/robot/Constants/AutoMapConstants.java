@@ -12,6 +12,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoAlign;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.LimelightAlign;
@@ -30,7 +31,7 @@ public class AutoMapConstants {
     public static PathPlannerTrajectory ConeCubeChargeTraj = PathPlanner.loadPath("Cone+Ball+Charge", new PathConstraints(2, 1.5));
     public static PathPlannerTrajectory move1Meter = PathPlanner.loadPath("MoveOneMeters", new PathConstraints(2, 1.5));
     public static PathPlannerTrajectory move1MeterRotate = PathPlanner.loadPath("MoveOneMeters+180", new PathConstraints(2, 1.5));
- 
+    public static PathPlannerTrajectory backforth = PathPlanner.loadPath("Back Forth", new PathConstraints(2, 1.5));
     public static HashMap<String,Command> m_EventMap = new HashMap<>();
     public static HashMap<String,Command> emptyMap =  new HashMap<>();
 
@@ -47,9 +48,12 @@ public class AutoMapConstants {
         m_EventMap.put("telescope_N0",new ExtensionCmd(arm, ArmConstants.groundPick[1]));
         m_EventMap.put("teloscope_neutral",new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]));
 
-        m_EventMap.put("auto_balance",new AutoBalanceCommand(swerve));
+
+        m_EventMap.put("auto_balance",new WaitCommand(1));
         m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));
         m_EventMap.put("align_tag",new AutoAlign(pose, lime, swerve));
+
+        emptyMap.put("wait", new WaitCommand(1));
 
     }
 

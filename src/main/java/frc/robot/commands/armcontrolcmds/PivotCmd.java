@@ -11,6 +11,14 @@ public class PivotCmd extends CommandBase {
   ArmControlSubsystem armControl;
   double desiredPivot;
 
+  
+
+  public PivotCmd(ArmControlSubsystem arm, double _desiredPivot, double conditionToFinish) {
+    this.desiredPivot = _desiredPivot;
+    this.armControl = arm;
+
+  }
+
   public PivotCmd(ArmControlSubsystem arm, double _desiredPivot) {
     this.desiredPivot = _desiredPivot;
     this.armControl = arm;

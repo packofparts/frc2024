@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.AutoMapConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
@@ -71,6 +72,7 @@ public class RobotContainer {
     // moduleSelector.addOption("Front Right", allModules[1]);
     // moduleSelector.addOption("Back Left", allModules[2]);
     // moduleSelector.addOption("Back Right", allModules[3]);
+    AutoMapConstants.populateHashMaps(drivetrain, limeLightSubSystem, armControl, pose);
     drivetrain.updateAbsEncOffsets();
     if (!DriveConstants.tuningPID){
       drivetrain.setDefaultCommand(defaultDrive);
@@ -86,6 +88,7 @@ public class RobotContainer {
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     
     configureButtonBindings();
+    
   }
 
   /**

@@ -29,7 +29,7 @@ public class AutoRightHigh extends CommandBase {
       new WaitCommand(3),
       new InstantCommand(() -> swerve.resetGyro()),
       new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
-      new WaitCommand(2),
+      new WaitCommand(2), //remove waits right after pivot
       new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(1),
       new InstantCommand(()->claw.togglePneumatics()),

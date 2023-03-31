@@ -194,6 +194,10 @@ public class ArmControlSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("pivotfreq", absPivEncoder.getFrequency());
 
         SmartDashboard.putBoolean("isCoast", isCoast);
+      
+        SmartDashboard.putBoolean("AtAnglePoint", this.atAngleSetpoint());
+        SmartDashboard.putBoolean("AtExtensionPoint", this.atTelescopeSetpoint());
+      
       }
 
       
@@ -294,14 +298,14 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atAngleSetpoint(){
-    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(2);
+    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(5);
     //return true;
   }
 
 
   public boolean atTelescopeSetpoint(){
-   // return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 1;
-    return true;
+    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 3.5;
+    //return true;
   }
 
 
