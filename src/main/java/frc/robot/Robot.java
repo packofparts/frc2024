@@ -8,9 +8,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMaxLowLevel;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -109,6 +111,9 @@ public class Robot extends TimedRobot {
     
     commandSelector.addOption("Right Mid", 
       new AutoRightMid(robotContainer.armControl, robotContainer.clawPnumatic, robotContainer.drivetrain));
+    
+    commandSelector.addOption("MoveTo Pose", 
+      new MoveTo(new Pose2d(3.565, 5.541, new Rotation2d(Units.degreesToRadians(177))), robotContainer.drivetrain, robotContainer.pose2));
     
 
 

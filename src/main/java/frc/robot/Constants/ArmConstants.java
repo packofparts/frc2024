@@ -8,7 +8,9 @@ public class ArmConstants {
 
     public static final boolean useAbsEncoderPiv = true;
     public static final boolean useAbsEncoderTelescope = false; 
+    public static boolean useFeedForward = false;
 
+    public static double kG = 0.01;
 
     //channel on dio port
     public static final int DIOPortPiv = 9;

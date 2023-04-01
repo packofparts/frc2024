@@ -12,6 +12,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightLime extends SubsystemBase {
@@ -40,7 +41,7 @@ public class LimelightLime extends SubsystemBase {
   }
 
   public boolean hasTargets() {
-    return tv == 1;
+    return tv != 0;
   
   }
   
@@ -58,10 +59,10 @@ public class LimelightLime extends SubsystemBase {
                 .getDoubleArray(new double[1]);
     }
 
+
     double bot_x = bot_pose[0];
     double bot_y = bot_pose[1];
     double rotation_z = (bot_pose[5] + 360) % 360;
-
 
     return new Pose2d(
             new Translation2d(bot_x, bot_y),
@@ -74,6 +75,15 @@ public class LimelightLime extends SubsystemBase {
   
   @Override
   public void periodic() {
+    tv = LimelightTable.getEntry("tv").getDouble(0);
+    ta = LimelightTable.getEntry("ta").getDouble(0);
+    tl = LimelightTable.getEntry("tl").getDouble(40);
+    
     // This method will be called once per scheduler run
+    double[] bot_pose;
+    bot_pose = LimelightTable.getEntry("botpose").getDoubleArray(new double[6]);
+    SmartDashboard.putNumberArray("Botpose Values", bot_pose);
+    SmartDashboard.putBoolean("Has Target(Spelled Right)", hasTargets());
+
   }
 }

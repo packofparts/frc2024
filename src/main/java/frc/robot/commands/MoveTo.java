@@ -39,6 +39,7 @@ public class MoveTo extends CommandBase {
 
   private boolean usePoseEstimator = false;
   private Pose2d currentPose;
+  private boolean usePose = false;
 
   /**
    * Constructor that moves a certain transform from the current position
@@ -73,6 +74,7 @@ public class MoveTo extends CommandBase {
   public MoveTo(Pose2d desiredPose, SwerveSubsystem swervesub, PoseEstimationBase estimator) {
     // Use addRequirements() here to declare subsystem dependencies.
     usePoseEstimator = true;
+    usePose = true;
     
     this.estimator = estimator;
     swerve = swervesub;
@@ -141,10 +143,13 @@ public class MoveTo extends CommandBase {
   @Override
   public void initialize(){
 
-    if (usePoseEstimator) {
+    if (usePoseEstimator && !usePose) {
       xPoint = estimator.getPosition().getX() + this.transform.getX();
       yPoint = estimator.getPosition().getY() + this.transform.getY();
       rotPoint = estimator.getPosition().getRotation().getRadians() + transform.getRotation().getRadians();
+    }
+    if (usePoseEstimator && usePose) {
+      
     }
     else {
       xPoint = this.swerve.getRobotPose().getX() + this.transform.getX();

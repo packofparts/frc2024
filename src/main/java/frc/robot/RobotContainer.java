@@ -16,10 +16,12 @@ import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCmd;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
+import frc.robot.subsystems.LimelightLime;
 import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.vision.PoseEstimation;
 import frc.robot.vision.PoseEstimationBase;
+import frc.robot.vision.PoseEstimationLimelight;
 
 
 /**
@@ -34,8 +36,10 @@ public class RobotContainer {
   public final SwerveSubsystem drivetrain = new SwerveSubsystem();
   
   public final LimelightPhoton limeLightSubSystem = new LimelightPhoton();
+  public final LimelightLime limelightLime = new LimelightLime("limelight");
 
   public final PoseEstimationBase pose = new PoseEstimation(limeLightSubSystem, drivetrain);
+  public final PoseEstimationBase pose2 = new PoseEstimationLimelight(limelightLime, drivetrain);
   //public final ManualPoseEstimation pose = new ManualPoseEstimation(limeLightSubSystem, drivetrain, ManualPoseEstimation.Strategy.BEST);
 
   

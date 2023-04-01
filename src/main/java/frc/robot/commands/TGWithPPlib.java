@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.vision.PoseEstimationBase;
+import frc.robot.vision.PoseEstimationLimelight;
 
 import java.util.HashMap;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -20,8 +22,10 @@ public class TGWithPPlib extends CommandBase {
   Command finalCMD;
   PathPlannerTrajectory traj;
   HashMap<String,Command> eventMap;
-  public TGWithPPlib(SwerveSubsystem swervee, PathPlannerTrajectory traj, HashMap<String,Command> eventMap) {
+  PoseEstimationBase pose;
+  public TGWithPPlib(SwerveSubsystem swervee, PathPlannerTrajectory traj, HashMap<String,Command> eventMape) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.pose = pose;
     this.swerve = swervee;
     this.eventMap = eventMap;
     this.traj = traj;
@@ -32,7 +36,7 @@ public class TGWithPPlib extends CommandBase {
   
   @Override
   public void initialize() {
-  cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose,this.swerve.m_kinematics,
+  cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose, this.swerve.m_kinematics,
    new PIDConstants(0.4, 0, 0),
     new PIDConstants(0.5, 0, 0),
     this.swerve::setModuleStates, this.eventMap, true, this.swerve);

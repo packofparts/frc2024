@@ -111,14 +111,15 @@ public class ArmControlSubsystem extends SubsystemBase {
     this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation;
    
     
-    setConfig(false);
+    setConfig();
 
-
+    SmartDashboard.putNumber("kG", ArmConstants.kG);
     SmartDashboard.putBoolean("armCoastMode", isCoast);
+
     
   }
 
-  public void setConfig(boolean isCoast){
+  public void setConfig(){
     rightPivotController.configFactoryDefault();
     leftPivotController.configFactoryDefault();
 
@@ -177,6 +178,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(currentPivotRotation));
 
       if (CompConstants.debug) {
+        ArmConstants.kG =  SmartDashboard.getNumber("kG", ArmConstants.kG);
+
         SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(desiredPivotRotation));
         SmartDashboard.putNumber("DesiredExtension", desiredExtensionDistance);
 
@@ -211,11 +214,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   private void pivotPeriodic(){    
-    // desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
-    
 
-    //set currentRotation with encoders
-    // currentPivotRotation = getCurrentPivotRotation(true);
 
     double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
 
@@ -232,22 +231,15 @@ public class ArmControlSubsystem extends SubsystemBase {
     if (CompConstants.rateLimitArm) {
       pivotPIDOutput = pivotRateLimiter.calculate(pivotPIDOutput);
     }
-
+    if(ArmConstants.useFeedForward){
+      pivotPIDOutput += ArmConstants.kG*Math.cos(getCurrentPivotRotation(true)+Math.PI);
+    }
     leftPivotController.set(pivotPIDOutput);
     rightPivotController.set(pivotPIDOutput);
   }
 
   private void extensionPeriodic(){
       
-
-
-    //desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
-    // if(desiredPivotRotation <= ArmConstants.minAngleRad ){
-    //   desiredExtensionDistance = ArmConstants.minExtensionIn;
-    // }
-
-
-    //currentExtensionDistance = getCurrentExtensionIn();
 
     double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
 

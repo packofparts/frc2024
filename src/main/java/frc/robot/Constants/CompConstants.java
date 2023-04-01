@@ -21,6 +21,8 @@ public class CompConstants {
     public static final double entrySpeed = 2.5;
     public static float pitchSpeedThreshold = 35;
 
+    
+
     public static final double kAngleDeadZoneDeg = 0.5;
 
     // Arm

@@ -25,7 +25,7 @@ public class DriveConstants {
     public static double kAutoDriveMaxAngularSpeedRadiansPerSecond = 2;
 
 
-    public static final double kDriveEncoderRot2Meter = 2*Math.PI * Units.inchesToMeters(2); //multiply by gearratio check gear ratio for trans encoder
+    public static final double kDriveEncoderRot2Meter = Math.PI * Units.inchesToMeters(4); //multiply by gearratio check gear ratio for trans encoder
     public static final double RPMtoMPS = kDriveEncoderRot2Meter/60;
 
 

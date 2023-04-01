@@ -65,8 +65,11 @@ public class SwerveModule {
             _transEncoder.setMeasurementPeriod(CompConstants.reducedRelativeFrameRate);
         }
 
-        //applySettings();
-        //burnSparks();
+        _transMotor.setIdleMode(IdleMode.kCoast);
+        _rotMotor.setIdleMode(IdleMode.kBrake);
+
+        applySettings();
+        burnSparks();
     }
 
     /**
@@ -214,10 +217,10 @@ public class SwerveModule {
         //shit dont work for some reason. conversions are fuqued
 
         if(_isAbsEncoder){
-            return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
+            return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.kDriveEncoderRot2Meter,
             new Rotation2d(getRotPosition()));
         }else{
-            return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.driveEncoderConversionFactortoRotations*DriveConstants.kDriveEncoderRot2Meter,
+            return new SwerveModulePosition(_transEncoder.getPosition()*DriveConstants.kDriveEncoderRot2Meter,
             new Rotation2d(getRotPosition()*DriveConstants.angleEncoderConversionFactortoRad));
         }
 
@@ -274,7 +277,7 @@ public class SwerveModule {
 
     public void applySettings(){
 
-        _transEncoder.setPositionConversionFactor(1.12195122);
+        _transEncoder.setPositionConversionFactor(1.0/8.31);
 
     }
 }

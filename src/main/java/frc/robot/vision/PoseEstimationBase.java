@@ -14,6 +14,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.estimator.KalmanFilter;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,6 +31,7 @@ public class PoseEstimationBase extends SubsystemBase {
    SwerveSubsystem swerve;
    SwerveDrivePoseEstimator poseEstimator;
    Field2d field;
+   Transform2d relativeTransform;
    
 
 
@@ -55,7 +57,7 @@ public class PoseEstimationBase extends SubsystemBase {
 
   @Override
   public void periodic() {
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
+    poseEstimator.update(SwerveSubsystem.getRotation2d(), swerve.getModulePositions());
     updateVision();
     
 
@@ -75,6 +77,14 @@ public class PoseEstimationBase extends SubsystemBase {
 
   public Pose2d getPosition() {
     return poseEstimator.getEstimatedPosition();
+  }
+
+  public Pose2d getRelativePose() {
+    return poseEstimator.getEstimatedPosition().plus(relativeTransform);
+  }
+
+  public void resetRobotPose() {
+    relativeTransform = new Pose2d().minus(getPosition());
   }
 
   public Pose2d getOdometry() {

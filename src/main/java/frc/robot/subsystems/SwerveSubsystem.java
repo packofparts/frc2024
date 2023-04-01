@@ -89,7 +89,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     resetRobotPose(new Pose2d());
     rawMods = getRawModules();
-    setIdleModeForAll(IdleMode.kBrake, IdleMode.kBrake);
+    setIdleModeForAll(IdleMode.kCoast, IdleMode.kBrake);
     headingController.setTolerance(Units.degreesToRadians(5));
     //rawMods[0].setModeTrans(IdleMode.kCoast);
     //rawMods[0].burnSparks();
@@ -106,7 +106,7 @@ public class SwerveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
         SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
-        SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition()/10);
+        SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition());
         SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity()*DriveConstants.driveEncoderConversionFactortoRotations);
       }
     }
