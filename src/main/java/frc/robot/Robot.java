@@ -65,7 +65,7 @@ public class Robot extends TimedRobot {
 
     CameraServer.startAutomaticCapture();
 
-    // AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.armControl, robotContainer.pose);
+    AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.armControl, robotContainer.pose,robotContainer.clawPnumatic);
 
     robotContainer = new RobotContainer();
     substationCmd = new SubstationAlignMoveTo(robotContainer.drivetrain, robotContainer.limeLightSubSystem);

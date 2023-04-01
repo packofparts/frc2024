@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -21,12 +22,23 @@ public class DefaultDriveCmd extends CommandBase {
   private SlewRateLimiter turningLimiter;
 
   boolean isPrecision = false;
+
+  boolean axisLock = false;
+  PIDController axisLockPid;
+  double axisLockSetpoint = 0;
+
+  double heading;
+
   public DefaultDriveCmd(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerveee = swerve;
     xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
     yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
     turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccRadPS);
+    
+    axisLockPid = new PIDController(1, 0, 0);
+    axisLockPid.enableContinuousInput(0, Math.PI);
+    
     addRequirements(swerve);
   }
 
@@ -37,8 +49,23 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    heading = (SwerveSubsystem.getHeading() % 180) * Math.PI / 180;
+
     if(Input.getPrecision()){
       isPrecision = !isPrecision;
+    }
+
+    if(Input.doAxisLock()){
+      axisLock = !axisLock;
+      this.axisLockSetpoint = heading;
+      
+      if (Math.PI - this.axisLockSetpoint > this.axisLockSetpoint){
+        this.axisLockSetpoint = 0;
+      }else{
+        this.axisLockSetpoint = Math.PI;
+      }
+
     }
 
 
@@ -47,7 +74,9 @@ public class DefaultDriveCmd extends CommandBase {
 
     SmartDashboard.putNumber("xInput", x);
     SmartDashboard.putNumber("yInput", y);
-    SmartDashboard.putBoolean("Precision", isPrecision);
+
+    SmartDashboard.putBoolean("PrecisionMode", isPrecision);
+    SmartDashboard.putBoolean("AxisLock", axisLock);
 
     double rot = -Input.getRot();
 
@@ -66,7 +95,9 @@ public class DefaultDriveCmd extends CommandBase {
     }
 
     
-    
+    if(axisLock){
+      rot = axisLockPid.calculate(heading, axisLockSetpoint);
+    }
 
 
 
@@ -74,7 +105,7 @@ public class DefaultDriveCmd extends CommandBase {
     // 3. Make the driving smoother
     x = xLimiter.calculate(x)* DriveConstants.kPhysicalMaxSpeedMPS;
     y = yLimiter.calculate(y)* DriveConstants.kPhysicalMaxSpeedMPS;
-    rot= turningLimiter.calculate(rot)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+    rot = turningLimiter.calculate(rot)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
     
     swerveee.setMotors(x, y, rot, DriveMode.TELEOP);
   }
@@ -82,11 +113,7 @@ public class DefaultDriveCmd extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //System.out.println("End");
-    //swerveee.goToOrigin();
-    //while (!getClose()){
-      //swerveee.goToOrigin();
-    //}   
+ 
   }
 
   public boolean getClose(){
