@@ -37,6 +37,8 @@ public class Input {
     public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
     public static boolean limelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}
     public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
+    public static boolean doAxisLock() {return tJoystick.getRawButtonPressed(4);}
+
     public static boolean armUp() {return tJoystick.getRawButtonPressed(10);}
     public static boolean armDown() {return tJoystick.getRawButtonPressed(11);}
 

@@ -22,7 +22,7 @@ public class AutoBalanceCommand extends CommandBase {
   
   private PIDController velocityController;
 
-
+  boolean reversed = false;
   
 
 
@@ -32,6 +32,16 @@ public class AutoBalanceCommand extends CommandBase {
     velocityController = CompConstants.velocityController;
     velocityController.setTolerance(CompConstants.kAngleDeadZoneDeg);
 
+
+    addRequirements(swervee);
+  }
+
+  public AutoBalanceCommand(SwerveSubsystem swervee, boolean reversed) {
+    this.swerveSubsystem = swervee;
+
+    velocityController = CompConstants.velocityController;
+    velocityController.setTolerance(CompConstants.kAngleDeadZoneDeg);
+    reversed = true;
 
     addRequirements(swervee);
   }
@@ -82,13 +92,12 @@ public class AutoBalanceCommand extends CommandBase {
     }
 
     this.swerveSubsystem.setMotors(CompConstants.entrySpeed, 0, 0,DriveMode.AUTO,false);
-
   }
 
 
 
   @Override
   public boolean isFinished() {
-    return false; // <- add an isFINISHED!
+    return false; // <- add an isFINISHED! <- not that necessary actually
   }
 }

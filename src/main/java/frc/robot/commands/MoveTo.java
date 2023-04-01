@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.CompConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -169,12 +170,15 @@ public class MoveTo extends CommandBase {
     double rot = angleController.calculate(currentPose.getRotation().getRadians(), rotPoint);
 
     
-    SmartDashboard.putNumber("xSpeedCalc", xSpeed);
-    SmartDashboard.putNumber("ySpeedCalc", ySpeed);
-    SmartDashboard.putNumber("rotSpeedCalc", rot);
-    SmartDashboard.putNumber("rotErr", angleController.getPositionError());
-    SmartDashboard.putNumber("rotSetpoint", rotPoint);
-    SmartDashboard.putBoolean("isAtRotSetpoint", angleController.atSetpoint());
+    if(CompConstants.debug){
+      SmartDashboard.putNumber("xSpeedCalc", xSpeed);
+      SmartDashboard.putNumber("ySpeedCalc", ySpeed);
+      SmartDashboard.putNumber("rotSpeedCalc", rot);
+      SmartDashboard.putNumber("rotErr", angleController.getPositionError());
+      SmartDashboard.putNumber("rotSetpoint", rotPoint);
+      SmartDashboard.putBoolean("isAtRotSetpoint", angleController.atSetpoint());
+    }
+
 
 
     double magnitude = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2));
@@ -190,8 +194,8 @@ public class MoveTo extends CommandBase {
     // Otherwise PID slows down too much when approaching angle
     // Could maybe be resolved by calculating good PID values
     // Maybe substantially increase kP and then increase kD to correct for the oscillation
-    if(Math.abs(rot) < .7 && !angleController.atSetpoint()){
-      rot = .7 * (rot/Math.abs(rot));
+    if(Math.abs(rot) < .4 && !angleController.atSetpoint()){
+      rot = .4 * (rot/Math.abs(rot));
     }
 
     if((!xController.atSetpoint() || !yController.atSetpoint()))
@@ -211,11 +215,7 @@ public class MoveTo extends CommandBase {
   public boolean isFinished() {
     //Transform2d difference = initPose.plus(transform).minus(swerve.getRobotPose());
     if (xController.atSetpoint() && yController.atSetpoint() && angleController.atSetpoint()){
-      SmartDashboard.putBoolean("IsMoveTo", false);
-      SmartDashboard.putBoolean("isAtRotSetpoint", angleController.atSetpoint());
       return true;
-    
-    
     }
       
     return false;
