@@ -9,37 +9,57 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.SwerveModule;
 import frc.robot.subsystems.Input;
+import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class DefaultDriveCmd extends CommandBase {
   /** Creates a new DefaultDriveCmd. */
-  SwerveSubsystem swerveee;
+  SwerveSubsystem swerve;
+  LimelightPhoton lime;
+
+
   private SlewRateLimiter xLimiter;
   private SlewRateLimiter yLimiter;
   private SlewRateLimiter turningLimiter;
 
   boolean isPrecision = false;
-
-  boolean axisLock = false;
-  PIDController axisLockPid;
+  boolean isAxisLock = false;
+  boolean isConeLock = false;
+  
+  PIDController aimLockPID;
   double axisLockSetpoint = 0;
 
   double heading;
 
+
+  PIDController coneLock;
+
   public DefaultDriveCmd(SwerveSubsystem swerve) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.swerveee = swerve;
+    this.swerve = swerve;
     xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
     yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
     turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccRadPS);
     
-    axisLockPid = new PIDController(1, 0, 0);
-    axisLockPid.enableContinuousInput(0, Math.PI);
+    aimLockPID = new PIDController(1, 0, 0);
+    aimLockPID.enableContinuousInput(0, Math.PI);
     
     addRequirements(swerve);
+  }
+
+  public DefaultDriveCmd(SwerveSubsystem swerve, LimelightPhoton lime){
+    this.swerve = swerve;
+    this.lime = lime;
+    
+    this.xLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
+    this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
+    this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccRadPS);
+    
+    this.aimLockPID = new PIDController(1, 0, 0);
+    this.aimLockPID.enableContinuousInput(0, Math.PI);
+
+    addRequirements(swerve, lime);
   }
 
   // Called when the command is initially scheduled.
@@ -50,23 +70,9 @@ public class DefaultDriveCmd extends CommandBase {
   @Override
   public void execute() {
 
-    heading = (SwerveSubsystem.getHeading() % 180) * Math.PI / 180;
+    this.heading = (SwerveSubsystem.getHeading() % 180) * Math.PI / 180;
 
-    if(Input.getPrecision()){
-      isPrecision = !isPrecision;
-    }
-
-    if(Input.doAxisLock()){
-      axisLock = !axisLock;
-      this.axisLockSetpoint = heading;
-      
-      if (Math.PI - this.axisLockSetpoint > this.axisLockSetpoint){
-        this.axisLockSetpoint = 0;
-      }else{
-        this.axisLockSetpoint = Math.PI;
-      }
-
-    }
+    this.handleInput();
 
 
     double x = -Input.getJoystickY();
@@ -75,12 +81,13 @@ public class DefaultDriveCmd extends CommandBase {
     SmartDashboard.putNumber("xInput", x);
     SmartDashboard.putNumber("yInput", y);
 
-    SmartDashboard.putBoolean("PrecisionMode", isPrecision);
-    SmartDashboard.putBoolean("AxisLock", axisLock);
+    SmartDashboard.putBoolean("PrecisionMode", this.isPrecision);
+    SmartDashboard.putBoolean("AxisLock", this.isAxisLock);
+    SmartDashboard.putBoolean("ConeLock", this.isConeLock);
 
     double rot = -Input.getRot();
 
-    if(isPrecision){
+    if(this.isPrecision){
       rot = rot/2;
       x = x/3;
       y = y/3;
@@ -95,19 +102,22 @@ public class DefaultDriveCmd extends CommandBase {
     }
 
     
-    if(axisLock){
-      rot = axisLockPid.calculate(heading, axisLockSetpoint);
+    if(this.isAxisLock){
+      rot = aimLockPID.calculate(heading, axisLockSetpoint);
     }
 
-
+    if(this.isConeLock){
+      double yaw = this.lime.getYaw() * Math.PI / 180;
+      rot = aimLockPID.calculate(yaw, 0);
+    }
 
       
     // 3. Make the driving smoother
-    x = xLimiter.calculate(x)* DriveConstants.kPhysicalMaxSpeedMPS;
-    y = yLimiter.calculate(y)* DriveConstants.kPhysicalMaxSpeedMPS;
-    rot = turningLimiter.calculate(rot)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+    x = this.xLimiter.calculate(x)* DriveConstants.kPhysicalMaxSpeedMPS;
+    y = this.yLimiter.calculate(y)* DriveConstants.kPhysicalMaxSpeedMPS;
+    rot = this.turningLimiter.calculate(rot)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
     
-    swerveee.setMotors(x, y, rot, DriveMode.TELEOP);
+    this.swerve.setMotors(x, y, rot, DriveMode.TELEOP);
   }
 
   // Called once the command ends or is interrupted.
@@ -116,20 +126,45 @@ public class DefaultDriveCmd extends CommandBase {
  
   }
 
-  public boolean getClose(){
-    boolean gf = true;
-    SwerveModule [] rawMods = swerveee.getRawModules();
-    for(SwerveModule mod  : rawMods){
-      if (!mod.getPIDController().atSetpoint()){
-        gf = false;
-      }
-    }
-    return gf;
-  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+
+
+
+  void handleInput(){
+
+    if(Input.cancelAllDriveModes()){
+      this.isPrecision = false;
+      this.isAxisLock = false;
+      this.isConeLock = false;
+    }
+
+
+    if(Input.doPrecision()){
+      this.isPrecision = !isPrecision;
+    }
+
+    if(Input.doAxisLock()){
+      this.isAxisLock = !this.isAxisLock;
+      this.isConeLock = false;
+
+      this.axisLockSetpoint = heading;
+      
+      if (Math.PI - this.axisLockSetpoint > this.axisLockSetpoint){
+        this.axisLockSetpoint = 0;
+      }else{
+        this.axisLockSetpoint = Math.PI;
+      }
+    }
+
+    if(Input.doAimbot()){
+      this.isConeLock = !this.isConeLock;
+      this.isAxisLock = false;
+    }
   }
 }

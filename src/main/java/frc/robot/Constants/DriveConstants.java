@@ -37,7 +37,6 @@ public class DriveConstants {
 
     public static final double kTrackWidthMeters = 0.54;
     public static double tuningSetpoint = 0;
-    public static final double weirdAssOdVal = 0.266807902319739;
     
     // Distance between front and back wheels
     public static final double kWheelBase = 0.54;

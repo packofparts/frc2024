@@ -93,20 +93,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionPID.setTolerance(.2);
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
 
-    absPivEncoder.setConnectedFrequencyThreshold(975);
+    absPivEncoder.setConnectedFrequencyThreshold(975); //do not change this number pls or else 
    
-
-    
-
-
-    // if(ArmConstants.useAbsEncoderPiv && absPivEncoder.isConnected()){
-      
-      
-    //   this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation;
-      
-    //   this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
-    //   this.currentPivotRotation = this.desiredPivotRotation;
-    // }
 
     this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation;
    

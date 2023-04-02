@@ -103,9 +103,9 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Roll", getRoll());
       for(int i = 0; i<getRawModules().length;i++){
         SmartDashboard.putNumber("RelativeEnc"+i, getRawModules()[i].getRotPosition());
-        SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition());
-        SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._universalEncoder.getAbsolutePosition()-getRawModules()[i]._universalEncoder.getPositionOffset());
-        SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._universalEncoder.getPositionOffset());
+        SmartDashboard.putNumber("TruePos"+i, getRawModules()[i]._analogEncoder.getAbsolutePosition());
+        SmartDashboard.putNumber("Generic"+i, getRawModules()[i]._analogEncoder.getAbsolutePosition()-getRawModules()[i]._analogEncoder.getPositionOffset());
+        SmartDashboard.putNumber("Offset"+i, getRawModules()[i]._analogEncoder.getPositionOffset());
         SmartDashboard.putNumber("TransEncoderPos"+i, getRawModules()[i].getTransPosition());
         SmartDashboard.putNumber("TransEncoderVelocity"+i, getRawModules()[i].getTransVelocity()*DriveConstants.driveEncoderConversionFactortoRotations);
       }

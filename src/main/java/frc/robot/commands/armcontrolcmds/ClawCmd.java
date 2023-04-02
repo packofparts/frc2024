@@ -46,7 +46,7 @@ public class ClawCmd extends CommandBase {
   @Override
   public void initialize() {
     clawPnumatic.changePneumatics(pneumatics);
-    clawPnumatic.changeIntake(intakeSpeed);
+    clawPnumatic.setIntake(intakeSpeed);
     
     if(this.useTime){
       timer.start();

@@ -19,8 +19,6 @@ public class Input {
 
 
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}
-   
-    public static Joystick getTJoystick(){return tJoystick;}
 
     public static double getJoystickX(){return tJoystick.getX();}
 
@@ -28,7 +26,7 @@ public class Input {
 
     public static double getRot(){return rJoystick.getX();}
 
-    public static boolean getPrecision(){return rJoystick.getTriggerPressed();}
+
 
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
@@ -36,13 +34,13 @@ public class Input {
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
     public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
     public static boolean limelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}
+    
+    
     public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
     public static boolean doAxisLock() {return tJoystick.getRawButtonPressed(4);}
+    public static boolean doPrecision(){return rJoystick.getTriggerPressed();}
 
-    public static boolean armUp() {return tJoystick.getRawButtonPressed(10);}
-    public static boolean armDown() {return tJoystick.getRawButtonPressed(11);}
-
-
+    public static boolean cancelAllDriveModes() {return tJoystick.getRawButtonPressed(5);}
 
     //xbox controller 
     public static boolean getA(){return xboxController.getAButtonPressed();}

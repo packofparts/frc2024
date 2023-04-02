@@ -32,6 +32,12 @@ public class ClawPnumatic extends SubsystemBase {
   AnalogPotentiometer pressureSensor;
 
 
+  double desiredSpeed = 0; 
+  // use setIntake to instead set the desiredSpeed above
+  // then constantly set the desiredSpeed to motors
+  // then check if the encoder is velocity is above a certain velocity,
+  // if it isn't lower the speed because that means a CUBE inside
+
   public ClawPnumatic() {
     
     hub = new PneumaticHub();
@@ -51,11 +57,11 @@ public class ClawPnumatic extends SubsystemBase {
       SmartDashboard.putBoolean("CompressorEnabled", phCompressor.isEnabled());
     }
 
-    SmartDashboard.putNumber("pressure", phCompressor.getPressure());
+    SmartDashboard.putNumber("Pressure", phCompressor.getPressure());
     SmartDashboard.putBoolean("Claw Closed", intakeSolenoid.get());
 
 
-    //change max to 105 and min to 85 for the actual game
+    
     phCompressor.enableAnalog(85, 105);
 
 
@@ -79,16 +85,15 @@ public class ClawPnumatic extends SubsystemBase {
       command.schedule();
     }
 
-    if(Input.getRightTrigger()!= 0){
-      spinIntake(Input.getRightTrigger());
+    if(Input.getRightTrigger() != 0){
+      setIntake(Input.getRightTrigger());
     }
-    else if (Input.getLeftTrigger()!=0){
-      spinOuttake(Input.getLeftTrigger());
-    } else {
-      changeIntake(0);
+    else if (Input.getLeftTrigger() != 0){
+      setIntake(-Input.getLeftTrigger());
+    } 
+    else {
+      setIntake(0);
     }
-
-    //spinIntake(1);
   }
 
   public void setConfig(){
@@ -115,7 +120,7 @@ public class ClawPnumatic extends SubsystemBase {
     intakeSolenoid.set(closed);
   }
 
-  public void changeIntake(double speed){
+  public void setIntake(double speed){
     intakeMotor.set(TalonSRXControlMode.PercentOutput, speed);
   }
 

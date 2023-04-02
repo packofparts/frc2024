@@ -6,14 +6,12 @@ package frc.robot.commands.armcontrolcmds;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoMapConstants.GamePiece;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.ClawPnumatic;
-import frc.robot.subsystems.SwerveSubsystem;
 
 public class ScoreConeHighNode extends CommandBase {
   /** Creates a new ScoreConeHighNode. */
@@ -41,7 +39,6 @@ public class ScoreConeHighNode extends CommandBase {
   @Override
   public void initialize() {
     path.schedule();
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.

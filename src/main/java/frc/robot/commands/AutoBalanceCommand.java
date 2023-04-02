@@ -60,9 +60,9 @@ public class AutoBalanceCommand extends CommandBase {
   public void execute() {
 
 
-    this.pitch = this.swerveSubsystem.getPitch();
-    this.roll = this.swerveSubsystem.getRoll();
-    this.yaw = this.swerveSubsystem.getYaw();
+    this.pitch = SwerveSubsystem.getPitch();
+    this.roll = SwerveSubsystem.getRoll();
+    this.yaw = SwerveSubsystem.getYaw();
 
 
     if (!this.isOnChargingStation){
@@ -81,7 +81,7 @@ public class AutoBalanceCommand extends CommandBase {
     SmartDashboard.putNumber("BalancePIDOutput", pidOutput);
 
 
-    this.swerveSubsystem.setMotors(pidOutput/18, 0, 0,DriveMode.AUTO,false);
+    this.swerveSubsystem.setMotors(pidOutput/18, 0, 0,DriveMode.AUTO,false); //try to speed up by lowering division
   }
   
 
