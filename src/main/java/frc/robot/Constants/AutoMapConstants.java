@@ -39,39 +39,70 @@ public class AutoMapConstants {
         CUBE
     }
 
-    public static PathPlannerTrajectory ConeCubeChargeTraj = PathPlanner.loadPath("Cone+Ball+Charge", new PathConstraints(2, 1.5));
+    public static boolean doAction = false;
+    public static double waitTime = 0.5;
+
+    public static PathPlannerTrajectory ConeCubeChargeBump = PathPlanner.loadPath("Cone+Ball+Charge", new PathConstraints(2, 1.5));
+    public static PathPlannerTrajectory ConeCubeBarrier = PathPlanner.loadPath("Cone+Cube Barrier", new PathConstraints(2, 1.5));
+    public static PathPlannerTrajectory ConeCubeBump = PathPlanner.loadPath("Cone+Cube Bump", new PathConstraints(2, 1.5));
+
+    
+    
     public static PathPlannerTrajectory move1Meter = PathPlanner.loadPath("MoveOneMeters", new PathConstraints(2, 1.5));
     public static PathPlannerTrajectory move1MeterRotate = PathPlanner.loadPath("MoveOneMeters+180", new PathConstraints(2, 1.5));
+    public static PathPlannerTrajectory backforth = PathPlanner.loadPath("backforth", new PathConstraints(2, 1.5));
 
  
     public static HashMap<String,Command> m_EventMap = new HashMap<>();
     public static HashMap<String,Command> emptyMap =  new HashMap<>();
-    public static PathPlannerTrajectory backforth;
 
     public static void populateHashMaps(SwerveSubsystem swerve, LimelightPhoton lime, ArmControlSubsystem arm, PoseEstimationBase pose, ClawPnumatic clawPnumatic){
-        m_EventMap.put("angle_N3", new PivotCmd(arm, ArmConstants.angleLevelsDeg[2]));
-        m_EventMap.put("angle_N2", new PivotCmd(arm, ArmConstants.angleLevelsDeg[1]));
-        m_EventMap.put("angle_N1", new PivotCmd(arm, ArmConstants.angleLevelsDeg[0]));
-        m_EventMap.put("angle_N0",new PivotCmd(arm, ArmConstants.groundPick[0]));
-        m_EventMap.put("angle_neutral",new PivotCmd(arm, ArmConstants.angleLevelsDeg[0]));
+        if (doAction){  
 
-        m_EventMap.put("telescope_N3", new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]));
-        m_EventMap.put("telescope_N2", new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[1]));
-        m_EventMap.put("telescope_N1", new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]));
-        m_EventMap.put("telescope_N0",new ExtensionCmd(arm, ArmConstants.groundPick[1]));
-        m_EventMap.put("telescope_neutral",new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]));
+            m_EventMap.put("angle_N3", new PivotCmd(arm, ArmConstants.angleLevelsDeg[2]));
+            m_EventMap.put("angle_N2", new PivotCmd(arm, ArmConstants.angleLevelsDeg[1]));
+            m_EventMap.put("angle_N1", new PivotCmd(arm, ArmConstants.angleLevelsDeg[0]));
+            m_EventMap.put("angle_N0",new PivotCmd(arm, ArmConstants.groundPick[0]));
+            m_EventMap.put("angle_neutral",new PivotCmd(arm, ArmConstants.angleLevelsDeg[0]));
 
-        m_EventMap.put("score_cone", new ScoreConeHighNode(arm, clawPnumatic));
-        m_EventMap.put("drop_cube", clawPnumatic.dropPiece(GamePiece.CUBE));
-        m_EventMap.put("intake_cube", new SequentialCommandGroup(new InstantCommand(()->clawPnumatic.spinIntake(0.8)),new WaitCommand(0.8)));
+            m_EventMap.put("telescope_N3", new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]));
+            m_EventMap.put("telescope_N2", new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[1]));
+            m_EventMap.put("telescope_N1", new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]));
+            m_EventMap.put("telescope_N0",new ExtensionCmd(arm, ArmConstants.groundPick[1]));
+            m_EventMap.put("telescope_neutral",new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]));
+
+            m_EventMap.put("score_cone", new ScoreConeHighNode(arm, clawPnumatic));
+            m_EventMap.put("drop_cube", clawPnumatic.dropPiece(GamePiece.CUBE));
+            m_EventMap.put("intake_cube", new SequentialCommandGroup(new InstantCommand(()->clawPnumatic.spinIntake(0.8)),new WaitCommand(0.8)));
 
 
-        m_EventMap.put("auto_balance",new WaitCommand(1));
-        m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));
-        m_EventMap.put("align_tag",new AutoAlign(pose, lime, swerve));
+            m_EventMap.put("auto_balance",new WaitCommand(1));
+            m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));
+            m_EventMap.put("align_tag",new AutoAlign(pose, lime, swerve));
 
-        emptyMap.put("wait", new WaitCommand(1));
+        }else{
+            
+            m_EventMap.put("angle_N3", new WaitCommand(waitTime));
+            m_EventMap.put("angle_N2", new WaitCommand(waitTime));
+            m_EventMap.put("angle_N1", new WaitCommand(waitTime));
+            m_EventMap.put("angle_N0", new WaitCommand(waitTime));
+            m_EventMap.put("angle_neutral",new WaitCommand(waitTime));
 
+            m_EventMap.put("telescope_N3", new WaitCommand(waitTime));
+            m_EventMap.put("telescope_N2", new WaitCommand(waitTime));
+            m_EventMap.put("telescope_N1", new WaitCommand(waitTime));
+            m_EventMap.put("telescope_N0", new WaitCommand(waitTime));
+            m_EventMap.put("telescope_neutral", new WaitCommand(waitTime));
+
+            m_EventMap.put("score_cone",  new WaitCommand(waitTime));
+            m_EventMap.put("drop_cube",  new WaitCommand(waitTime));
+            m_EventMap.put("intake_cube",  new WaitCommand(waitTime));
+
+
+            m_EventMap.put("auto_balance", new WaitCommand(waitTime));
+            m_EventMap.put("align_cube",  new WaitCommand(waitTime));
+            m_EventMap.put("align_tag", new WaitCommand(waitTime));
+        }
     }
 
 }

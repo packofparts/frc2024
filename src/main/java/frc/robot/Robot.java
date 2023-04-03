@@ -158,13 +158,18 @@ public class Robot extends TimedRobot {
       armModeSelector.addOption("Coast", ArmControlSubsystem.ArmMotorMode.COAST);
       armModeSelector.addOption("Brake", ArmControlSubsystem.ArmMotorMode.BRAKE);
       armModeSelector.addOption("Off", ArmControlSubsystem.ArmMotorMode.OFF);
-      PPLIBPathSelector.addOption("Cone+Cube", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
+      
+      PPLIBPathSelector.addOption("ConeCubeBump", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBump, AutoMapConstants.emptyMap));
+      PPLIBPathSelector.addOption("ConeCubeBarrier", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBarrier, AutoMapConstants.emptyMap));
+      PPLIBPathSelector.addOption("ConeCubeChargeBump",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeBump, AutoMapConstants.emptyMap));
 
       PPLIBPathSelector.addOption("OneMeterForward", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
+      
       PPLIBPathSelector.addOption("TwoMeter+180",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1MeterRotate, AutoMapConstants.emptyMap));
-      PPLIBPathSelector.addOption("full bottem auto",  new ParallelCommandGroup(
-      new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeTraj, AutoMapConstants.emptyMap)));
-      PPLIBPathSelector.addOption("backForth",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
+      
+
+      
+        PPLIBPathSelector.addOption("backForth",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
 
 
     //commandSelector.addOption("PositionPID", new PositionPIDtuning(robotContainer.drivetrain));

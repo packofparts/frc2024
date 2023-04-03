@@ -7,8 +7,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9693192025471065,
-        "y": 4.699973223056289
+        "x": 2.1583863557313956,
+        "y": 4.96198540474004
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -24,28 +24,24 @@
     },
     {
       "anchorPoint": {
-        "x": 6.632319610793068,
-        "y": 4.605493249448038
+        "x": 6.308531912838474,
+        "y": 4.57265308896815
       },
       "prevControl": {
-        "x": 4.772779449405054,
-        "y": 4.9427155585080405
+        "x": 6.956991107941754,
+        "y": 4.57265308896815
       },
       "nextControl": {
-        "x": 4.772779449405054,
-        "y": 4.9427155585080405
+        "x": 5.6600727177351935,
+        "y": 4.57265308896815
       },
       "holonomicAngle": 0,
-      "isReversal": true,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [
-          "align_cube",
-          "claw_close",
-          "telescope_neutral"
-        ],
+        "names": [],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
         "waitTime": 0
@@ -53,12 +49,12 @@
     },
     {
       "anchorPoint": {
-        "x": 1.8549646229107004,
-        "y": 4.436957689892555
+        "x": 1.848783838412748,
+        "y": 4.403295567154515
       },
       "prevControl": {
-        "x": 2.895591297601996,
-        "y": 4.848634176583617
+        "x": 2.9678823174454747,
+        "y": 4.403295567154515
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -82,10 +78,7 @@
     {
       "position": 0.0,
       "names": [
-        "event",
-        "telescope_N3",
-        "claw_open",
-        "telescope_N0"
+        "score_cone"
       ]
     },
     {
@@ -103,7 +96,8 @@
     {
       "position": 0.7563636363636308,
       "names": [
-        "event"
+        "angle_N0",
+        "telescope_N0"
       ]
     },
     {
