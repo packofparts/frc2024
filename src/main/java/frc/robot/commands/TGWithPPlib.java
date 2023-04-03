@@ -56,6 +56,10 @@ public class TGWithPPlib extends CommandBase {
     finalCMD.schedule();
   }
 
+  public Pose2d getRobotPose(){
+    return this.swerve.getRobotPose().plus(new Transform2d(new Translation2d(), new Rotation2d(Math.PI)));
+  }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}

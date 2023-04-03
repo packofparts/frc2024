@@ -1,0 +1,117 @@
+{
+  "waypoints": [
+    {
+      "anchorPoint": {
+        "x": 1.8328639820596155,
+        "y": 4.978676960866834
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.7770085346485796,
+        "y": 4.992355636498925
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [
+          "angle_N3",
+          "telescope_N3",
+          "drop_cube"
+        ],
+        "executionBehavior": "sequential",
+        "waitBehavior": "after",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.011713568566026,
+        "y": 4.799923018153871
+      },
+      "prevControl": {
+        "x": 6.012545939751167,
+        "y": 4.796723551576987
+      },
+      "nextControl": {
+        "x": 6.012545939751167,
+        "y": 4.796723551576987
+      },
+      "holonomicAngle": -2.4880884352691846,
+      "isReversal": true,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 6.52398385878586,
+        "y": 4.575589742271065
+      },
+      "prevControl": {
+        "x": 6.870944976698982,
+        "y": 4.705838943131337
+      },
+      "nextControl": {
+        "x": 6.106782378622361,
+        "y": 4.4189723099897185
+      },
+      "holonomicAngle": -4.953536723408216,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 1.8311327965836268,
+        "y": 4.426033162775961
+      },
+      "prevControl": {
+        "x": 4.9148911745902915,
+        "y": 4.5360164197162165
+      },
+      "nextControl": null,
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    }
+  ],
+  "markers": [
+    {
+      "position": 0.04,
+      "names": [
+        "telescope_N1",
+        "angle_N1"
+      ]
+    },
+    {
+      "position": 1.0334605823863638,
+      "names": [
+        "event"
+      ]
+    }
+  ]
+}

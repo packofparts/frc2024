@@ -42,7 +42,7 @@ public class ArmConstants {
     public static final double gearRatioExtension = 1.0/10.0;
 
     public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, maxExtensionIn}; //inches
-    public static final double[] angleLevelsDeg = {12, 87.0, 95}; //degrees
+    public static final double[] angleLevelsDeg = {14, 87.0, 95}; //degrees
     public static final double[] groundPick  = {40,9.5};
 
     public static final double[] offSubstation = {91, 0}; // angle, inches including claw

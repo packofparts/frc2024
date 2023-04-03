@@ -80,6 +80,12 @@ public class AutoMapConstants {
             m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));
             m_EventMap.put("align_tag",new AutoAlign(pose, lime, swerve));
 
+
+            m_EventMap.put("groundpick", new SequentialCommandGroup(
+                new PivotCmd(arm, ArmConstants.groundPick[0]),
+                new ExtensionCmd(arm, ArmConstants.groundPick[1])
+            ));
+
         }else{
             
             m_EventMap.put("angle_N3", new WaitCommand(waitTime));

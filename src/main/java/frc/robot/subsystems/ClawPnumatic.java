@@ -134,7 +134,7 @@ public class ClawPnumatic extends SubsystemBase {
   public Command dropPiece(GamePiece piece){
     switch (piece){
       case CUBE:
-        return(new SequentialCommandGroup(new InstantCommand(this::openPneumatics,this),new InstantCommand(()->spinIntake(0.2),this),new WaitCommand(0.2)));
+        return(new SequentialCommandGroup(new InstantCommand(this::openPneumatics,this),new InstantCommand(()->spinIntake(0.2),this),new WaitCommand(0.3), new InstantCommand(this::closePneumatics,this)));
       case CONE:
         return(new SequentialCommandGroup(new InstantCommand(this::openPneumatics,this),new WaitCommand(0.1),new InstantCommand(this::closePneumatics,this)));
       default:

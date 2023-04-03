@@ -20,7 +20,7 @@ public class DriveConstants {
     public static double kTeleDriveMaxAngularSpeedRadiansPerSecond = 8;
     public static double kDBHeightMeters = Units.inchesToMeters(3.75);
 
-    public static double kAutoDriveMaxAccMPS = 3.0;
+    public static double kAutoDriveMaxAccMPS = 4.0;
     public static double kAutoDriveMaxAngularAccRadPS = 2*Math.PI;
     public static double kAutoDriveMaxAngularSpeedRadiansPerSecond = 2;
 
@@ -35,11 +35,11 @@ public class DriveConstants {
 
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*driveEncoderConversionFactortoRotations/ 60.0;
 
-    public static final double kTrackWidthMeters = 0.54;
+    public static final double kTrackWidthMeters = 0.71;
     public static double tuningSetpoint = 0;
     
     // Distance between front and back wheels
-    public static final double kWheelBase = 0.54;
+    public static final double kWheelBase = 0.71; //previously .54
     public static boolean tuningPID = false;
 
     
