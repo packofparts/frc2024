@@ -84,7 +84,7 @@ public class SwerveModule {
     }
 
     /**
-     * @return Returns rotations of rotation motor BEFORE GEAR RATIO
+     * @return Returns radians of rotation motor BEFORE GEAR RATIO, relative probably won't work at the moment
      */
     public double getRotPosition(){
         if(_isAbsEncoder){
@@ -96,7 +96,7 @@ public class SwerveModule {
     }
 
     /**
-     * @return returns RPM of Translation BEFORE GEAR RATIO
+     * @return returns RPM of Translation (GEAR RATIO ALREADY APPLIED THROUGH POSITIONCONVERION FACTOR)
      */
     public double getTransVelocity(){        
         return _transEncoder.getVelocity(); 
@@ -134,7 +134,7 @@ public class SwerveModule {
     public SwerveModuleState getState(){
 
         // Returns SwerveModuleState
-        return new SwerveModuleState(getTransVelocity()*DriveConstants.RPMtoMPS*DriveConstants.driveEncoderConversionFactortoRotations,
+        return new SwerveModuleState(getTransVelocity()*DriveConstants.RPMtoMPS,
             new Rotation2d(getRotPosition()));  
     }
 

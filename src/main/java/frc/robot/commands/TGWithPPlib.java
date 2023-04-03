@@ -26,23 +26,32 @@ public class TGWithPPlib extends CommandBase {
   PathPlannerTrajectory traj;
   HashMap<String,Command> eventMap;
   PoseEstimationBase pose;
-  public TGWithPPlib(SwerveSubsystem swervee, PathPlannerTrajectory traj, HashMap<String,Command> eventMape) {
+  public TGWithPPlib(SwerveSubsystem swerve, PathPlannerTrajectory traj, HashMap<String,Command> eventMap) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.pose = pose;
-    this.swerve = swervee;
+    this.swerve = swerve;
     this.eventMap = eventMap;
     this.traj = traj;
-    addRequirements(this.swerve);
-    this.swerve.resetRobotPose(new Pose2d());
     
+    // initialize facing towards node
+    this.swerve.resetRobotPose(new Pose2d(0, 0, new Rotation2d(Math.PI)));
+    
+
+    addRequirements(this.swerve);
   }
   
   @Override
   public void initialize() {
+
+    //according to docs the resetrobotpose will be passed in the first pose of the path
+    //
+
   cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose, this.swerve.m_kinematics,
    new PIDConstants(0.4, 0, 0),
     new PIDConstants(0.5, 0, 0),
     this.swerve::setModuleStates, this.eventMap, true, this.swerve);
+    
+    
     finalCMD = cmd.fullAuto(traj);
     finalCMD.schedule();
   }
