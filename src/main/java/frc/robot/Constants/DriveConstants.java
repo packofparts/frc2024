@@ -35,11 +35,11 @@ public class DriveConstants {
 
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter*driveEncoderConversionFactortoRotations/ 60.0;
 
-    public static final double kTrackWidthMeters = 0.71;
+    public static final double kTrackWidthMeters = 0.54;
     public static double tuningSetpoint = 0;
     
     // Distance between front and back wheels
-    public static final double kWheelBase = 0.71; //previously .54
+    public static final double kWheelBase = 0.54; //previously .54
     public static boolean tuningPID = false;
 
     

@@ -56,10 +56,11 @@ public class DefaultDriveCmd extends CommandBase {
     this.yLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAccMPS);
     this.turningLimiter = new SlewRateLimiter(DriveConstants.kTeleDriveMaxAngularAccRadPS);
     
-    this.aimLockPID = new PIDController(1, 0, 0);
+    this.aimLockPID = new PIDController(.6, 0, 0);
     this.aimLockPID.enableContinuousInput(0, Math.PI);
 
     addRequirements(swerve, lime);
+    lime.setPipeline(1);
   }
 
   // Called when the command is initially scheduled.
@@ -69,7 +70,6 @@ public class DefaultDriveCmd extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     this.heading = (SwerveSubsystem.getHeading() % 180) * Math.PI / 180;
 
     this.handleInput();
@@ -106,9 +106,9 @@ public class DefaultDriveCmd extends CommandBase {
       rot = aimLockPID.calculate(heading, axisLockSetpoint);
     }
 
-    if(this.isConeLock){
+    if(this.isConeLock && this.lime.hasTarg()){
       double yaw = this.lime.getYaw() * Math.PI / 180;
-      rot = aimLockPID.calculate(yaw, 0);
+      rot = aimLockPID.calculate(yaw, -3 * Math.PI / 180);
     }
 
       

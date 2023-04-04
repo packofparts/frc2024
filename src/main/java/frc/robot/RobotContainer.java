@@ -47,7 +47,7 @@ public class RobotContainer {
   public final ClawPnumatic clawPnumatic = new ClawPnumatic();
 
   // Commands
-  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
+  public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain, limeLightSubSystem);
   //public final AimbotDriveCmd aimbot = new AimbotDriveCmd(drivetrain, limeLightSubSystem);
   //public final PIDtuning pid = new PIDtuning(drivetrain);
 

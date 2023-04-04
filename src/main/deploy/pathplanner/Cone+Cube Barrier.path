@@ -64,9 +64,9 @@
       "isStopPoint": false,
       "stopEvent": {
         "names": [
-          "align_tag",
+          "angle_N3",
           "telescope_N3",
-          "claw_open"
+          "drop_cube"
         ],
         "executionBehavior": "sequential",
         "waitBehavior": "none",
@@ -76,34 +76,18 @@
   ],
   "markers": [
     {
-      "position": 0.0,
-      "names": [
-        "score_cone"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "event"
-      ]
-    },
-    {
       "position": 0.7563636363636308,
       "names": [
         "angle_N0",
-        "telescope_N0"
+        "telescope_N0",
+        "intake_cube"
       ]
     },
     {
       "position": 1.309090909090956,
       "names": [
-        "event"
+        "telescope_neutral",
+        "angle_neutral"
       ]
     }
   ]

@@ -13,7 +13,7 @@ public class ArmConstants {
     public static double kG = 0.01;
 
     //channel on dio port
-    public static final int DIOPortPiv = 9;
+    public static final int DIOPortPiv = 0;
 
     public static final double pivotAbsEncToRotation = 1.0/3.7142857;
     public static double pivotInitOffset = 0;

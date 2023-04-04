@@ -152,7 +152,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       }
 
       if(i < 1 && -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation != 0 && absPivEncoder.isConnected()){
-        this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + 0.226 + 0.02777;
+        this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + 0.226 + 0.01355;
         this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
         this.desiredPivotRotation = this.currentPivotRotation;
         
@@ -208,10 +208,10 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
 
-    if(pivotPIDOutput > 0.6){
-      pivotPIDOutput = 0.6;
-    }else if(pivotPIDOutput < -0.6){
-      pivotPIDOutput = -0.6;
+    if(pivotPIDOutput > .7){
+      pivotPIDOutput = 0.7;
+    }else if(pivotPIDOutput < -.7){
+      pivotPIDOutput = -0.7;
     }
 
     if (CompConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}

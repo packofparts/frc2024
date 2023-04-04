@@ -36,15 +36,7 @@ public class AutoBalanceCommand extends CommandBase {
     addRequirements(swervee);
   }
 
-  public AutoBalanceCommand(SwerveSubsystem swervee, boolean reversed) {
-    this.swerveSubsystem = swervee;
 
-    velocityController = CompConstants.velocityController;
-    velocityController.setTolerance(CompConstants.kAngleDeadZoneDeg);
-    reversed = true;
-
-    addRequirements(swervee);
-  }
 
 
   @Override

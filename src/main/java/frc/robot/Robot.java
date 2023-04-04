@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.AutoPaths.AutoLeftMid;
 import frc.robot.AutoPaths.AutoLeftHigh;
 import frc.robot.AutoPaths.AutoRightHigh;
@@ -65,10 +66,12 @@ public class Robot extends TimedRobot {
 
     CameraServer.startAutomaticCapture();
 
-    AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.armControl, robotContainer.pose,robotContainer.clawPnumatic);
-
     robotContainer = new RobotContainer();
     substationCmd = new SubstationAlignMoveTo(robotContainer.drivetrain, robotContainer.limeLightSubSystem);
+
+    AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.armControl, robotContainer.pose,robotContainer.clawPnumatic);
+
+
 
 
     // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
@@ -76,6 +79,8 @@ public class Robot extends TimedRobot {
     // _commandSelector.addOption("Middle Auto",
     //     new MakeShiftAutoMiddle(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
     
+    commandSelector.addOption("null", null);
+
     commandSelector.addOption("Middle",
       new MakeShiftAutoMiddle(robotContainer.armControl, robotContainer.clawPnumatic, robotContainer.drivetrain));
 
@@ -160,7 +165,7 @@ public class Robot extends TimedRobot {
       armModeSelector.addOption("Off", ArmControlSubsystem.ArmMotorMode.OFF);
       
       PPLIBPathSelector.addOption("ConeCubeBump", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBump, AutoMapConstants.emptyMap));
-      PPLIBPathSelector.addOption("ConeCubeBarrier", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBarrier, AutoMapConstants.emptyMap));
+      PPLIBPathSelector.addOption("ConeCubeBarrier", new SequentialCommandGroup(new ScoreConeHighNode(robotContainer.armControl,robotContainer.clawPnumatic),new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBarrier, AutoMapConstants.emptyMap)));
       PPLIBPathSelector.addOption("ConeCubeChargeBump",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeBump, AutoMapConstants.emptyMap));
 
       PPLIBPathSelector.addOption("OneMeterForward", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
@@ -169,8 +174,8 @@ public class Robot extends TimedRobot {
       
 
       
-        PPLIBPathSelector.addOption("backForth",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
-
+      PPLIBPathSelector.addOption("backForth",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
+      PPLIBPathSelector.addOption("null", null);
 
     //commandSelector.addOption("PositionPID", new PositionPIDtuning(robotContainer.drivetrain));
 
@@ -210,8 +215,9 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = commandSelector.getSelected();
-    //autonomousCommand = PPLIBPathSelector.getSelected();
+    autonomousCommand = PPLIBPathSelector.getSelected();
+    //autonomousCommand = commandSelector.getSelected();
+    
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();

@@ -35,9 +35,9 @@ public class Input {
     public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
     public static boolean limelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}
     
-    
-    public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
-    public static boolean doAxisLock() {return tJoystick.getRawButtonPressed(4);}
+    //    public static boolean doAimbot() {return false;}
+    public static boolean doAimbot() {return tJoystick.getRawButtonPressed(4);}
+    public static boolean doAxisLock() {return tJoystick.getRawButtonPressed(2);}
     public static boolean doPrecision(){return rJoystick.getTriggerPressed();}
 
     public static boolean cancelAllDriveModes() {return tJoystick.getRawButtonPressed(5);}

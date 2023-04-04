@@ -39,7 +39,7 @@ public class AutoMapConstants {
         CUBE
     }
 
-    public static boolean doAction = false;
+    public static boolean doAction = true;
     public static double waitTime = 0.5;
 
     public static PathPlannerTrajectory ConeCubeChargeBump = PathPlanner.loadPath("Cone+Ball+Charge", new PathConstraints(2, 1.5));
@@ -73,8 +73,9 @@ public class AutoMapConstants {
 
             m_EventMap.put("score_cone", new ScoreConeHighNode(arm, clawPnumatic));
             m_EventMap.put("drop_cube", clawPnumatic.dropPiece(GamePiece.CUBE));
-            m_EventMap.put("intake_cube", new SequentialCommandGroup(new InstantCommand(()->clawPnumatic.spinIntake(0.8)),new WaitCommand(0.8)));
+            m_EventMap.put("intake_cube", new SequentialCommandGroup(new InstantCommand(()->clawPnumatic.spinIntake(0.8))));
 
+           
 
             m_EventMap.put("auto_balance",new WaitCommand(1));
             m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, 0));
