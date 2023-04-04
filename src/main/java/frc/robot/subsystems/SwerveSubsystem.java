@@ -341,7 +341,7 @@ public class SwerveSubsystem extends SubsystemBase {
     JSONParser parser = new JSONParser();
 
     try {
-      Object json1 = parser.parse(new FileReader(new File("src\\main\\deploy\\AbsolutEncoder.json")));
+      Object json1 = parser.parse(new FileReader(new File("src\\main\\deploy\\AbsolutEncoder.json"))); //TODO - get correct path
       JSONObject json = (JSONObject)json1;
 
       DriveConstants.kFrontLeftOffset = (double)json.get("frontLeft");

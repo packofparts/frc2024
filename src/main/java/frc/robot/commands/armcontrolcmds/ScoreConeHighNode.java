@@ -6,6 +6,7 @@ package frc.robot.commands.armcontrolcmds;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
@@ -25,12 +26,13 @@ public class ScoreConeHighNode extends CommandBase {
     addRequirements(this.arm,this.claw);
     path = new SequentialCommandGroup(
       new PivotCmd(this.arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
-      new ExtensionCmd(this.arm, ArmConstants.extensionLevelsIn[2]),
-      new WaitCommand(.5),
+      //new ExtensionCmd(this.arm, ArmConstants.extensionLevelsIn[2]),
+      new WaitCommand(1),
       claw.dropPiece(GamePiece.CONE),
-      new ExtensionCmd(this.arm, 0),
+      //new ExtensionCmd(this.arm, 0),
       new WaitCommand(.1),
-      new PivotCmd(this.arm, ArmConstants.minAngleRad));
+      new PivotCmd(this.arm, ArmConstants.minAngleRad),
+      new InstantCommand(() -> this.claw.closePneumatics(),this.claw));
     // Use addRequirements() here to declare subsystem dependencies.
 
   }
@@ -43,7 +45,9 @@ public class ScoreConeHighNode extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    System.out.println(path.isFinished());
+  }
 
   // Called once the command ends or is interrupted.
   @Override

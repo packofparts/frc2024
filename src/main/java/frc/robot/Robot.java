@@ -165,7 +165,7 @@ public class Robot extends TimedRobot {
       armModeSelector.addOption("Off", ArmControlSubsystem.ArmMotorMode.OFF);
       
       PPLIBPathSelector.addOption("ConeCubeBump", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBump, AutoMapConstants.emptyMap));
-      PPLIBPathSelector.addOption("ConeCubeBarrier", new SequentialCommandGroup(new ScoreConeHighNode(robotContainer.armControl,robotContainer.clawPnumatic),new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBarrier, AutoMapConstants.emptyMap)));
+      PPLIBPathSelector.addOption("ConeCubeBarrier",  new ScoreConeHighNode(robotContainer.armControl,robotContainer.clawPnumatic));//, new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBarrier, AutoMapConstants.emptyMap)));
       PPLIBPathSelector.addOption("ConeCubeChargeBump",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeBump, AutoMapConstants.emptyMap));
 
       PPLIBPathSelector.addOption("OneMeterForward", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
