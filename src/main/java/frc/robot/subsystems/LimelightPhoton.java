@@ -33,7 +33,7 @@ public class LimelightPhoton extends SubsystemBase {
     TAG,
     REFLECTION,
     DRIVE,
-    CUBE
+    CONE
   }
   HashMap <String, Integer> pipelineVals = new HashMap<>();
   HashMap <String, Pose2d> fiducialHashMap = new HashMap<>();
@@ -87,8 +87,21 @@ public class LimelightPhoton extends SubsystemBase {
     PhotonTrackedTarget targ = img.getBestTarget();
     return targ.getArea();
   }
-  public void setPipeline(int PipelineIndex){
-    photonCamera.setPipelineIndex(PipelineIndex);
+
+  public void setPipeline(Pipeline pipe){
+
+    switch(pipe){
+      case TAG:
+        //L
+        photonCamera.setPipelineIndex(2);
+      case CONE:
+        photonCamera.setPipelineIndex(0);
+      case REFLECTION:
+        photonCamera.setPipelineIndex(1);
+      case DRIVE:
+        photonCamera.setDriverMode(true);
+    }
+
   }
 
 public void addAprilTag(HashMap<String,Object>[]Tags){

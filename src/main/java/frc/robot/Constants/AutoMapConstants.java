@@ -77,7 +77,6 @@ public class AutoMapConstants {
 
 
             m_EventMap.put("auto_balance",new WaitCommand(1));
-            m_EventMap.put("align_cube", new LimelightAlign(swerve, lime, VisionConstants.CubePipelineID, LimelightAlign.MovementMode.ROTATE));
             m_EventMap.put("align_tag",new AutoAlign(pose, lime, swerve));
 
         }else{

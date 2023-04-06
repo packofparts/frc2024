@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.LimelightPhoton.Pipeline;
 
 
 public class LimelightAlign extends CommandBase {
@@ -22,7 +23,7 @@ public class LimelightAlign extends CommandBase {
   public SwerveSubsystem swerve;
   public LimelightPhoton lime;
   public double yaw;
-  public int index;
+  public Pipeline index;
   public double offset;
   public PIDController desiredPID;
   public PIDController secondaryPID;
@@ -34,14 +35,14 @@ public class LimelightAlign extends CommandBase {
  * @param PipelineIndex Check pipeline enums in limelight sub
  * @param Xoffset THIS SHOULD BE IN METERS
  */
-  public LimelightAlign(SwerveSubsystem swervesub, LimelightPhoton limelightsub, int PipelineIndex,MovementMode mode) {
+  public LimelightAlign(SwerveSubsystem swervesub, LimelightPhoton limelightsub, Pipeline pipeline,MovementMode mode) {
     // Use addRequirements() here to declare subsystem dependencies.
     swerve = swervesub;
     this.mode = mode;
     lime = limelightsub;
     addRequirements(swerve);
     addRequirements(lime);
-    index = PipelineIndex;
+    index = pipeline;
     switch (mode){
       case TRANSLATE_X:
         desiredPID = PIDConstants.XController;

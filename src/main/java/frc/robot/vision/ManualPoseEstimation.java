@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.LimelightPhoton.Pipeline;
 
 
 public class ManualPoseEstimation extends PoseEstimationBase{
@@ -43,7 +44,7 @@ public class ManualPoseEstimation extends PoseEstimationBase{
     super(swerve);
     this.strategy = strategy;
     //Initializing Subsystems
-    lime.setPipeline(1);
+    lime.setPipeline(Pipeline.TAG);
   }
 
   @Override

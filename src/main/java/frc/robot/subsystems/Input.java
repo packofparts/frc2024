@@ -39,6 +39,7 @@ public class Input {
     public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
     public static boolean doAxisLock() {return tJoystick.getRawButtonPressed(4);}
     public static boolean doPrecision(){return rJoystick.getTriggerPressed();}
+    public static boolean doLimeLock(){return tJoystick.getRawButton(0);}//CHANGE THIS
 
     public static boolean cancelAllDriveModes() {return tJoystick.getRawButtonPressed(5);}
 
@@ -56,6 +57,8 @@ public class Input {
 
     public static double getLeftStickY(){return -xboxController.getLeftY();}
     public static double getRightStickY(){return -xboxController.getRightY();}
+
+
     
     //public static double getRightStickY(){return xboxController.getRightStickY()}
     

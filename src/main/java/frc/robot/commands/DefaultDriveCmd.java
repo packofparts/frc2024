@@ -9,9 +9,11 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.LimelightPhoton.Pipeline;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class DefaultDriveCmd extends CommandBase {
@@ -27,14 +29,17 @@ public class DefaultDriveCmd extends CommandBase {
   boolean isPrecision = false;
   boolean isAxisLock = false;
   boolean isConeLock = false;
+  boolean isLimeLock = false;
   
   PIDController aimLockPID;
   double axisLockSetpoint = 0;
+  double yLockSetpoint = 0;
 
   double heading;
 
 
   PIDController coneLock;
+  PIDController limeLockPID;
 
   public DefaultDriveCmd(SwerveSubsystem swerve) {
     this.swerve = swerve;
@@ -44,7 +49,9 @@ public class DefaultDriveCmd extends CommandBase {
     
     aimLockPID = new PIDController(1, 0, 0);
     aimLockPID.enableContinuousInput(0, Math.PI);
-    
+
+    limeLockPID = PIDConstants.YController;
+
     addRequirements(swerve);
   }
 
@@ -58,6 +65,9 @@ public class DefaultDriveCmd extends CommandBase {
     
     this.aimLockPID = new PIDController(1, 0, 0);
     this.aimLockPID.enableContinuousInput(0, Math.PI);
+
+    limeLockPID = new PIDController(0.1, 0, 0);
+
 
     addRequirements(swerve, lime);
   }
@@ -107,9 +117,25 @@ public class DefaultDriveCmd extends CommandBase {
     }
 
     if(this.isConeLock){
+      lime.setPipeline(Pipeline.CONE);
       double yaw = this.lime.getYaw() * Math.PI / 180;
       rot = aimLockPID.calculate(yaw, 0);
+    } else{
+
+      if(this.isLimeLock){
+        lime.setPipeline(Pipeline.REFLECTION);
+        double fy = 0;
+        if(Math.abs(y)>0.3 && limeLockPID.atSetpoint()){
+          fy = 0.3* y/Math.abs(y);
+        }
+        y = this.lime.getYaw()+fy;
+      } else{
+        
+        lime.setPipeline(Pipeline.DRIVE);
+      }
     }
+
+
 
       
     // 3. Make the driving smoother
@@ -165,6 +191,10 @@ public class DefaultDriveCmd extends CommandBase {
     if(Input.doAimbot()){
       this.isConeLock = !this.isConeLock;
       this.isAxisLock = false;
+    }
+
+    if(Input.doLimeLock()){
+      this.isLimeLock = !this.isLimeLock;
     }
   }
 }
