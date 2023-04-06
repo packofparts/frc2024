@@ -60,10 +60,10 @@ public class MoveTo extends CommandBase {
     xController = PIDConstants.XController;
     angleController = PIDConstants.rotController;
 
-    yController.setTolerance(0.05);
-    xController.setTolerance(0.05);
+    yController.setTolerance(PIDConstants.YControllerTolerance);
+    xController.setTolerance(PIDConstants.XControllerTolerance);
 
-    angleController.setTolerance(0.001);
+    angleController.setTolerance(PIDConstants.rotControllerTolerance);
 
 
     
@@ -85,11 +85,11 @@ public class MoveTo extends CommandBase {
     xController = PIDConstants.XController;
     angleController = PIDConstants.rotController;
 
-    yController.setTolerance(0.05);
-    xController.setTolerance(0.05);
+    yController.setTolerance(PIDConstants.YControllerTolerance);
+    xController.setTolerance(PIDConstants.XControllerTolerance);
 
+    angleController.setTolerance(PIDConstants.rotControllerTolerance);
 
-    angleController.setTolerance(0.001);
 
     
     xPoint = desiredPose.getX();

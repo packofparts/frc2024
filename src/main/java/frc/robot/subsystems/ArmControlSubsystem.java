@@ -227,7 +227,6 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   private void extensionPeriodic(){
-      
 
     double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
 
@@ -247,7 +246,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     }else{
       extensionController.set(0);
     }
-
    
   }
 

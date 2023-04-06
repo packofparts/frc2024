@@ -5,6 +5,7 @@
 package frc.robot.Constants;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class PIDConstants {
     public static final PIDController kFrontLeftSteeringPIDControl = 
@@ -38,6 +39,16 @@ public class PIDConstants {
     public static PIDController YController = new PIDController(0.4, 0, 0);
     public static PIDController rotController =  new PIDController(1.4, 0, 0);
 
+    public static double XControllerTolerance = 0.05;
+    public static double YControllerTolerance = 0.05;
+    public static double rotControllerTolerance = 0.001;
+
+
+
+
+
     public static double[] transPIDValues = new double[]{0.7, 0, 0};
     public static double[] rotPIDValues = new double[]{2.2, 0, 0};
+
+    
 }

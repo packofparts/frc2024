@@ -7,18 +7,26 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.PIDConstants;
 import frc.robot.subsystems.LimelightPhoton;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class LimelightAlign extends CommandBase {
+  public enum MovementMode{
+    TRANSLATE_X,
+    ROTATE,
+
+  }
   /** Creates a new CubeAlign. */
   public SwerveSubsystem swerve;
   public LimelightPhoton lime;
   public double yaw;
   public int index;
   public double offset;
-  public PIDController rotPID;
+  public PIDController desiredPID;
+  public PIDController secondaryPID;
+  public MovementMode mode;
 /**
  * 
  * @param swervesub
@@ -26,18 +34,27 @@ public class LimelightAlign extends CommandBase {
  * @param PipelineIndex Check pipeline enums in limelight sub
  * @param Xoffset THIS SHOULD BE IN METERS
  */
-  public LimelightAlign(SwerveSubsystem swervesub, LimelightPhoton limelightsub, int PipelineIndex, double Xoffset) {
+  public LimelightAlign(SwerveSubsystem swervesub, LimelightPhoton limelightsub, int PipelineIndex,MovementMode mode) {
     // Use addRequirements() here to declare subsystem dependencies.
     swerve = swervesub;
+    this.mode = mode;
     lime = limelightsub;
     addRequirements(swerve);
     addRequirements(lime);
     index = PipelineIndex;
-    rotPID = new PIDController(3, 0, 0);
-    rotPID.setTolerance(0.001);
-    offset = Xoffset;
+    switch (mode){
+      case TRANSLATE_X:
+        desiredPID = PIDConstants.XController;
+        desiredPID.setTolerance(PIDConstants.XControllerTolerance);
+      case ROTATE:
+        desiredPID = PIDConstants.rotController;
+        desiredPID.setTolerance(PIDConstants.rotControllerTolerance);
+    }
     
   }
+
+    
+  
 
   // Called when the command is initially scheduled.
   @Override
@@ -47,15 +64,19 @@ public class LimelightAlign extends CommandBase {
   @Override
   public void execute() {
     lime.setPipeline(index);
-    double ballDist = lime.getForwardDistance(0.7);
-    double cubeSize = lime.getSize();
-    double sp = -(0.983*cubeSize-7.2608);
+
 
     if (lime.img.hasTargets()) {
       yaw = lime.getYaw();
+    
+      double outputSpeed = Units.degreesToRadians(desiredPID.calculate(yaw, 0));
+      switch(this.mode){
+        case TRANSLATE_X:
+          swerve.setMotors(0,outputSpeed, 0);
+        case ROTATE:
+          swerve.setMotors(0, 0, outputSpeed);
+      }
 
-      double rotSpeed = Units.degreesToRadians(rotPID.calculate(yaw, sp));
-      swerve.setMotors(0,0, rotSpeed);
     }
   }
   
@@ -66,7 +87,7 @@ public class LimelightAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (rotPID.atSetpoint()) {
+    if (desiredPID.atSetpoint()) {
       return true;
     }
     return false;

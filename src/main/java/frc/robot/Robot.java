@@ -164,12 +164,8 @@ public class Robot extends TimedRobot {
       PPLIBPathSelector.addOption("ConeCubeChargeBump",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeBump, AutoMapConstants.emptyMap));
 
       PPLIBPathSelector.addOption("OneMeterForward", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
-      
       PPLIBPathSelector.addOption("TwoMeter+180",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1MeterRotate, AutoMapConstants.emptyMap));
-      
-
-      
-        PPLIBPathSelector.addOption("backForth",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
+      PPLIBPathSelector.addOption("backForth",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
 
 
     //commandSelector.addOption("PositionPID", new PositionPIDtuning(robotContainer.drivetrain));
@@ -178,6 +174,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("ResetArmEncoders", new InstantCommand(() -> robotContainer.armControl.resetEncoders()));
     SmartDashboard.putData("ArmModes", armModeSelector);
     SmartDashboard.putData("Auto commands", commandSelector);
+    
   }
 
   /**
@@ -210,8 +207,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = commandSelector.getSelected();
-    //autonomousCommand = PPLIBPathSelector.getSelected();
+    if (PPLIBPathSelector.getSelected() != null){
+      autonomousCommand = PPLIBPathSelector.getSelected();
+    } else{
+      autonomousCommand = commandSelector.getSelected();
+    }
+
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
