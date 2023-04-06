@@ -285,13 +285,13 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atAngleSetpoint(){
-    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(5);
+    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(4);
     //return true;
   }
 
 
   public boolean atTelescopeSetpoint(){
-    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 3.5;
+    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 2.0;
     //return true;
   }
 

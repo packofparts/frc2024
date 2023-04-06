@@ -43,8 +43,8 @@ public class RobotContainer {
   //public final ManualPoseEstimation pose = new ManualPoseEstimation(limeLightSubSystem, drivetrain, ManualPoseEstimation.Strategy.BEST);
 
   
-  public final ArmControlSubsystem armControl = new ArmControlSubsystem();
-  public final ClawPnumatic clawPnumatic = new ClawPnumatic();
+  public final ArmControlSubsystem arm = new ArmControlSubsystem();
+  public final ClawPnumatic claw = new ClawPnumatic();
 
   // Commands
   public final DefaultDriveCmd defaultDrive = new DefaultDriveCmd(drivetrain);
@@ -76,7 +76,7 @@ public class RobotContainer {
     // moduleSelector.addOption("Front Right", allModules[1]);
     // moduleSelector.addOption("Back Left", allModules[2]);
     // moduleSelector.addOption("Back Right", allModules[3]);
-    AutoMapConstants.populateHashMaps(drivetrain, limeLightSubSystem, armControl, pose,clawPnumatic);
+    AutoMapConstants.populateHashMaps(drivetrain, limeLightSubSystem, arm, pose,claw);
     drivetrain.updateAbsEncOffsets();
     if (!DriveConstants.tuningPID){
       drivetrain.setDefaultCommand(defaultDrive);
@@ -87,7 +87,7 @@ public class RobotContainer {
       //     ));
     }
   
-    armControl.setDefaultCommand(new DefaultArmCommand(armControl));
+    arm.setDefaultCommand(new DefaultArmCommand(arm));
 
     SmartDashboard.putData("CHOOOSE", moduleSelector);
     

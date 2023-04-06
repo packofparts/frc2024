@@ -34,7 +34,7 @@ public class MoveToBarrierSideAuto extends CommandBase {
 
     path = new SequentialCommandGroup(
       new InstantCommand(() -> SwerveSubsystem.resetGyro()),
-      new PivotCmd(arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
+      new PivotCmd(arm, ArmConstants.angleLevelsRad[2]),
       new WaitCommand(1),
       new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(.5),
@@ -55,7 +55,7 @@ public class MoveToBarrierSideAuto extends CommandBase {
       new MoveTo(new Transform2d(new Translation2d(4, -0.3), new Rotation2d(Math.PI)), swerve),
       new ParallelCommandGroup(
         new MoveTo(new Transform2d(new Translation2d(1, 0), new Rotation2d(Math.PI)), swerve),
-        new PivotCmd(arm, ArmConstants.angleLevelsDeg[2])
+        new PivotCmd(arm, ArmConstants.angleLevelsRad[2])
       ),
       new InstantCommand(()->claw.spinOuttake(1))
     );

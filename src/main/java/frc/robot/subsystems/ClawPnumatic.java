@@ -46,6 +46,9 @@ public class ClawPnumatic extends SubsystemBase {
     intakeSolenoid = new Solenoid(PneumaticsModuleType.REVPH, 0); //extend
     phCompressor = new Compressor(1, PneumaticsModuleType.REVPH);
   
+
+
+    this.closePneumatics();
   }
 
   @Override
@@ -67,22 +70,7 @@ public class ClawPnumatic extends SubsystemBase {
 
 
     if (Input.getRightBumper()){
-      SequentialCommandGroup command;
-      if (!intakeSolenoid.get()) {
-        command = new SequentialCommandGroup(
-          new InstantCommand(()->spinIntake(0.3)),
-          new InstantCommand(()->togglePneumatics()),
-          new WaitCommand(0.5),
-          new InstantCommand(()->spinIntake(0))
-        );
-      } else {
-        command = new SequentialCommandGroup(
-          new InstantCommand(this::togglePneumatics)
-        );
-      }
-      //togglePneumatics();
-
-      command.schedule();
+      this.togglePneumatics();
     }
 
     if(Input.getRightTrigger() != 0){
@@ -109,10 +97,10 @@ public class ClawPnumatic extends SubsystemBase {
   }
 
   public void openPneumatics(){
-    intakeSolenoid.set(false);
+    intakeSolenoid.set(true); //these were previously switched around
   }
   public void closePneumatics(){
-    intakeSolenoid.set(true);
+    intakeSolenoid.set(false);
   }
 
 
@@ -134,13 +122,12 @@ public class ClawPnumatic extends SubsystemBase {
   public Command dropPiece(GamePiece piece){
     switch (piece){
       case CUBE:
-        return(new SequentialCommandGroup(new InstantCommand(this::openPneumatics,this),new InstantCommand(()->spinIntake(0.2),this),new WaitCommand(0.2)));
+        return new SequentialCommandGroup(new InstantCommand(() -> this.openPneumatics(), this),new InstantCommand(()->spinIntake(-0.3),this),new WaitCommand(0.4));
       case CONE:
-        return(new SequentialCommandGroup(new InstantCommand(this::openPneumatics,this),new WaitCommand(0.1),new InstantCommand(this::closePneumatics,this)));
+        return new SequentialCommandGroup(new InstantCommand(() -> this.openPneumatics(), this),new WaitCommand(0.7), new InstantCommand(() -> this.closePneumatics(), this));
       default:
         return null;
     }
-
   }
   
 }

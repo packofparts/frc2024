@@ -24,13 +24,12 @@ public class ScoreConeHighNode extends CommandBase {
     this.claw = claw;
     addRequirements(this.arm,this.claw);
     path = new SequentialCommandGroup(
-      new PivotCmd(this.arm, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
+      new PivotCmd(this.arm, ArmConstants.angleLevelsRad[2]),
       new ExtensionCmd(this.arm, ArmConstants.extensionLevelsIn[2]),
-      new WaitCommand(.5),
-      claw.dropPiece(GamePiece.CONE),
-      new ExtensionCmd(this.arm, 0),
-      new WaitCommand(.1),
-      new PivotCmd(this.arm, ArmConstants.minAngleRad));
+      new WaitCommand(.4),
+      claw.dropPiece(GamePiece.CONE)
+    
+      );
     // Use addRequirements() here to declare subsystem dependencies.
 
   }

@@ -51,7 +51,7 @@ public class DefaultArmCommand extends CommandBase {
     
     else if(Input.getA()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[0] + 4))),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.angleLevelsRad[0])),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]))
 
       );
@@ -59,7 +59,7 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getB()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[1]))),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.angleLevelsRad[1])),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[1]))
 
       );
@@ -67,19 +67,14 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getX()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new PivotCmd(this.armControlSubsystem, Units.degreesToRadians(ArmConstants.angleLevelsDeg[2])),
-        new ExtensionCmd(this.armControlSubsystem, ArmConstants.extensionLevelsIn[2])  
-
-        // new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.angleLevelsDeg[2]))),
-        // new WaitCommand(1.2),
-        // new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[2]))
-
+        new PivotCmd(this.armControlSubsystem, ArmConstants.angleLevelsRad[2]),
+        new ExtensionCmd(this.armControlSubsystem, ArmConstants.extensionLevelsIn[2])
       );
       command.schedule();
     }
     else if(Input.getY()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.offSubstation[0]))),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.offSubstation[0])),
         new WaitCommand(1),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.offSubstation[1]))
 
@@ -88,7 +83,7 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getDPad() == Input.DPADUP){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(Units.degreesToRadians(ArmConstants.groundPick[0]))),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.groundPick[0])),
         new WaitCommand(0.5),
         new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.groundPick[1]))
 

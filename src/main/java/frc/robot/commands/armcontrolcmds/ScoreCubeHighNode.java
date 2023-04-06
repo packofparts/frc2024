@@ -2,35 +2,36 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.AutoPaths;
+package frc.robot.commands.armcontrolcmds;
 
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.MoveTo;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoMapConstants.GamePiece;
+import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.ClawPnumatic;
 
-public class MobilityAuto extends CommandBase {
-  /** Creates a new MobilityAuto. */
+public class ScoreCubeHighNode extends CommandBase {
+  /** Creates a new ScoreConeHighNode. */
+  ArmControlSubsystem arm;
+  ClawPnumatic claw;
   SequentialCommandGroup path;
-  public MobilityAuto(SwerveSubsystem swerve) {
-
+  
+  public ScoreCubeHighNode(ArmControlSubsystem arm, ClawPnumatic claw) {
+    this.arm = arm;
+    this.claw = claw;
+    addRequirements(this.arm,this.claw);
     path = new SequentialCommandGroup(
-      new InstantCommand(()->SwerveSubsystem.resetGyro()),
-      new WaitCommand(1),
-      new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d(0)), swerve),
-      new WaitCommand(1),
-      new MoveTo(new Transform2d(new Translation2d(2.5, 0), new Rotation2d(0)), swerve)
-
-      
-
-    );
+      new PivotCmd(this.arm, ArmConstants.angleLevelsRad[2]),
+      new ExtensionCmd(this.arm, ArmConstants.extensionLevelsIn[2]),
+      new WaitCommand(.4),
+      claw.dropPiece(GamePiece.CUBE)
+    
+      );
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve);
+
   }
 
   // Called when the command is initially scheduled.
@@ -45,11 +46,14 @@ public class MobilityAuto extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return path.isFinished();
+    
   }
 }

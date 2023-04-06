@@ -26,29 +26,21 @@ public class TGWithPPlib extends CommandBase {
   PathPlannerTrajectory traj;
   HashMap<String,Command> eventMap;
   PoseEstimationBase pose;
+  
   public TGWithPPlib(SwerveSubsystem swerve, PathPlannerTrajectory traj, HashMap<String,Command> eventMap) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.pose = pose;
     this.swerve = swerve;
     this.eventMap = eventMap;
     this.traj = traj;
     
-    // initialize facing towards node
-    this.swerve.resetRobotPose(new Pose2d(0, 0, new Rotation2d(Math.PI)));
-    
-
     addRequirements(this.swerve);
   }
   
   @Override
   public void initialize() {
-
-    //according to docs the resetrobotpose will be passed in the first pose of the path
-    //
-
-  cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose, this.swerve.m_kinematics,
-   new PIDConstants(0.4, 0, 0),
-    new PIDConstants(0.5, 0, 0),
+  cmd = new SwerveAutoBuilder(this::getFlippedPose, this.swerve::resetRobotPose, this.swerve.m_kinematics,
+   new PIDConstants(1, 0, 0), //old .4
+    new PIDConstants(2, 0, 0), //old .5
     this.swerve::setModuleStates, this.eventMap, true, this.swerve);
     
     
@@ -56,7 +48,11 @@ public class TGWithPPlib extends CommandBase {
     finalCMD.schedule();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  public Pose2d getFlippedPose(){
+    return this.swerve.getRobotPose().plus(new Transform2d(new Translation2d(), new Rotation2d(Math.PI)));
+  }
+
+  // Called every time the schedulxer runs while the command is scheduled.
   @Override
   public void execute() {}
 

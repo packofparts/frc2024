@@ -10,10 +10,12 @@ import frc.robot.subsystems.ArmControlSubsystem;
 public class ExtensionCmd extends CommandBase {
   ArmControlSubsystem armControl;
   double desiredExtension;
+
   public ExtensionCmd(ArmControlSubsystem arm, double desiredExtension) {
     
-    armControl = arm;
+    this.armControl = arm;
     this.desiredExtension = desiredExtension;
+
 
     addRequirements(armControl);
   }
@@ -35,6 +37,8 @@ public class ExtensionCmd extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+
     return armControl.atTelescopeSetpoint();
+
   }
 }

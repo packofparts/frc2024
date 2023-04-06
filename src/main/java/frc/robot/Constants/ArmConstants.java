@@ -43,9 +43,10 @@ public class ArmConstants {
 
     public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, maxExtensionIn}; //inches
     public static final double[] angleLevelsDeg = {12, 87.0, 95}; //degrees
-    public static final double[] groundPick  = {40,9.5};
+    public static final double[] angleLevelsRad = {Units.degreesToRadians(angleLevelsDeg[0]), Units.degreesToRadians(angleLevelsDeg[1]), Units.degreesToRadians(angleLevelsDeg[2])};
+    public static final double[] groundPick  = {Units.degreesToRadians(40),9.5};
 
-    public static final double[] offSubstation = {91, 0}; // angle, inches including claw
+    public static final double[] offSubstation = {Units.degreesToRadians(91), 0}; // angle, inches including claw
 
 
 
