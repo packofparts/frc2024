@@ -141,6 +141,16 @@ public class Robot extends TimedRobot {
 
       ));
 
+      PPLIBPathSelector.addOption("Bump2Piece", new SequentialCommandGroup(
+        new ScoreConeHighNode(robotContainer.arm, robotContainer.claw),
+        new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.bump2Piece, AutoMapConstants.eventMap),
+        new ScoreCubeHighNode(robotContainer.arm, robotContainer.claw),
+        new InstantCommand(() -> robotContainer.claw.closePneumatics(), robotContainer.claw),
+        new ExtensionCmd(robotContainer.arm, 0),
+        new PivotCmd(robotContainer.arm, ArmConstants.minAngleRad)
+
+      ));
+
       PPLIBPathSelector.addOption("ConeCubeBump", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBump, AutoMapConstants.emptyMap));
       PPLIBPathSelector.addOption("ConeCubeBarrier", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBarrier, AutoMapConstants.emptyMap));
       PPLIBPathSelector.addOption("ConeCubeChargeBump",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeBump, AutoMapConstants.emptyMap));

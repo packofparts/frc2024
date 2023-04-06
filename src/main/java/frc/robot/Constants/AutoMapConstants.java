@@ -43,8 +43,8 @@ public class AutoMapConstants {
     public static boolean doAction = true;
     public static double waitTime = 0.5;
 
-    public static PathConstraints defaultSpeedConstrants = new PathConstraints(4, 3);
-    public static PathConstraints slowSpeedConstraints = new PathConstraints(2, 1.5);
+    public static PathConstraints defaultSpeedConstrants = new PathConstraints(4, 4);
+    public static PathConstraints slowSpeedConstraints = new PathConstraints(2, 2);
 
     public static PathPlannerTrajectory ConeCubeChargeBump = PathPlanner.loadPath("Cone+Ball+Charge", defaultSpeedConstrants);
     public static PathPlannerTrajectory ConeCubeBarrier = PathPlanner.loadPath("Cone+Cube Barrier", defaultSpeedConstrants);
@@ -57,6 +57,7 @@ public class AutoMapConstants {
     public static PathPlannerTrajectory backforth = PathPlanner.loadPath("backforth", defaultSpeedConstrants);
 
     public static PathPlannerTrajectory station2Piece = PathPlanner.loadPath("Station2Piece", defaultSpeedConstrants);
+    public static PathPlannerTrajectory bump2Piece = PathPlanner.loadPath("Bump2Piece", defaultSpeedConstrants);
  
     public static HashMap<String,Command> eventMap = new HashMap<>();
     public static HashMap<String,Command> emptyMap =  new HashMap<>();
