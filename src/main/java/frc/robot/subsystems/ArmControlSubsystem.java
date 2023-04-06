@@ -16,6 +16,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -196,8 +197,9 @@ public class ArmControlSubsystem extends SubsystemBase {
       desiredPivotRotation = Util.clamp(desiredPivotRotation, ArmConstants.minAngleRad, ArmConstants.maxAngleRad);
       currentPivotRotation = getCurrentPivotRotation(true);
 
-
-      desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+      if (!CompConstants.ultraInstinct) {
+        desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+      }
       currentExtensionDistance = getCurrentExtensionIn();
   }
 
@@ -240,11 +242,18 @@ public class ArmControlSubsystem extends SubsystemBase {
       extensionPIDOutput = -.8;
     }
 
-    double offset =  .12 * (difference > 0 ? 1 : -1);
-    if (Math.abs(difference) > .14){
-      extensionController.set(offset + extensionPIDOutput);
-    }else{
-      extensionController.set(0);
+    if (!CompConstants.extensionBroken) {
+      double offset =  .12 * (difference > 0 ? 1 : -1);
+      if (Math.abs(difference) > .14){
+        extensionController.set(offset + extensionPIDOutput);
+      }else{
+        extensionController.set(0);
+      }
+
+    } else if (CompConstants.extensionBroken) {
+      double x = Input.getRightStickY();
+      x = Math.abs(x) > 0.04 ? x : 0.0;
+      extensionController.set(Input.getRightStickY());
     }
    
   }
