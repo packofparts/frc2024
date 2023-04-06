@@ -63,15 +63,13 @@ public class LimelightPhoton extends SubsystemBase {
     img = photonCamera.getLatestResult();
     SmartDashboard.putBoolean("HasTargers", img.hasTargets());
 
-    
-
-
 
   }
   public double getYaw(){
     PhotonTrackedTarget targ = img.getBestTarget();
     return targ.getYaw();
   }
+
 
   public double getSkew(){
     PhotonTrackedTarget targ = img.getBestTarget();
@@ -113,10 +111,6 @@ public void addAprilTag(HashMap<String,Object>[]Tags){
   public PhotonPipelineResult getImg() {
     return photonCamera.getLatestResult();
   }
-
-
-
-
 
 
 }
