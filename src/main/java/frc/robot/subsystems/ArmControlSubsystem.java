@@ -278,8 +278,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atAngleSetpoint(){
-    //return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(5);
-    return true;
+    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(5);
+    //return true;
   }
 
 

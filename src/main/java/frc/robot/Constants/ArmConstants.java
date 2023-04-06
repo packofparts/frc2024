@@ -29,6 +29,7 @@ public class ArmConstants {
     public static final double extensionRotationToInches =  18.5/7.01;
     public static final double minExtensionIn = 0;//29.85+ 7.073; //basically the length of the first base //inches
     //when it is at zeroAngleRad
+    
     public static final double zeroExtensionIn = minExtensionIn;
 
     public static final double maxPivotRateRadSec = Units.degreesToRadians(70);
