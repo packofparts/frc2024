@@ -27,6 +27,8 @@ public class CompConstants {
 
     // Arm
     public static final boolean rateLimitArm = true;
+    public static final boolean extensionBroken = false;
+    public static boolean ultraInstinct = false;
 
 
 
