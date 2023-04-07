@@ -116,24 +116,24 @@ public class DefaultDriveCmd extends CommandBase {
       rot = aimLockPID.calculate(heading, axisLockSetpoint);
     }
 
-    if(this.isConeLock){
-      lime.setPipeline(Pipeline.CONE);
-      double yaw = this.lime.getYaw() * Math.PI / 180;
-      rot = aimLockPID.calculate(yaw, 0);
-    } else{
+    // if(this.isConeLock){
+    //   lime.setPipeline(Pipeline.CONE);
+    //   double yaw = this.lime.getYaw() * Math.PI / 180;
+    //   rot = aimLockPID.calculate(yaw, -5 * Math.PI / 180);
+    // } else{
 
-      if(this.isLimeLock){
-        lime.setPipeline(Pipeline.REFLECTION);
-        double fy = 0;
-        if(Math.abs(y)>0.3 && limeLockPID.atSetpoint()){
-          fy = 0.3* y/Math.abs(y);
-        }
-        y = this.lime.getYaw()+fy;
-      } else{
+    //   if(this.isLimeLock && this.lime.hasTarg()){
+    //     lime.setPipeline(Pipeline.REFLECTION);
+    //     double fy = 0;
+    //     if(Math.abs(y)>0.3 && limeLockPID.atSetpoint()){
+    //       fy = 0.3* y/Math.abs(y);
+    //     }
+    //     y = this.lime.getYaw()+fy;
+    //   } else{
         
-        lime.setPipeline(Pipeline.DRIVE);
-      }
-    }
+    //     lime.setPipeline(Pipeline.DRIVE);
+    //   }
+    // }
 
 
 
@@ -188,13 +188,13 @@ public class DefaultDriveCmd extends CommandBase {
       }
     }
 
-    if(Input.doAimbot()){
-      this.isConeLock = !this.isConeLock;
-      this.isAxisLock = false;
-    }
+    // if(Input.doAimbot()){
+    //   this.isConeLock = !this.isConeLock;
+    //   this.isAxisLock = false;
+    // }
 
-    if(Input.doLimeLock()){
-      this.isLimeLock = !this.isLimeLock;
-    }
+    // if(Input.doLimeLock()){
+    //   this.isLimeLock = !this.isLimeLock;
+    // }
   }
 }

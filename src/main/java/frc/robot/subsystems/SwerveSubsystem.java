@@ -89,7 +89,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     resetRobotPose(new Pose2d());
     rawMods = getRawModules();
-    setIdleModeForAll(IdleMode.kCoast, IdleMode.kBrake);
+    setIdleModeForAll(IdleMode.kBrake, IdleMode.kBrake);
     headingController.setTolerance(Units.degreesToRadians(5));
     //rawMods[0].setModeTrans(IdleMode.kCoast);
     //rawMods[0].burnSparks();
@@ -118,9 +118,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("RotationDegrees", getRobotPose().getRotation().getDegrees());
 
     if(Input.resetGyro()){resetGyro();}
-    if(Input.resetPose()){
-      this.resetRobotPose(new Pose2d());
-    }
+
   }
   /**
    * Sets the current YAW heading as the 0'd heading

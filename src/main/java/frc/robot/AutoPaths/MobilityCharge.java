@@ -11,24 +11,43 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.CompConstants;
+import frc.robot.Constants.AutoMapConstants.GamePiece;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.MoveTo;
+import frc.robot.commands.armcontrolcmds.ExtensionCmd;
+import frc.robot.commands.armcontrolcmds.PivotCmd;
+import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.ClawPnumatic;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class MobilityCharge extends CommandBase {
   /** Creates a new MobilityAuto. */
   SequentialCommandGroup path;
-  public MobilityCharge(SwerveSubsystem swerve) {
+  public MobilityCharge(SwerveSubsystem swerve, ArmControlSubsystem arm, ClawPnumatic claw) {
 
     path = new SequentialCommandGroup(
-      new InstantCommand(SwerveSubsystem::resetGyro),
-      new MoveTo(new Transform2d(new Translation2d(-3, 0), new Rotation2d()), swerve),
-      new WaitCommand(1),
+      new InstantCommand(() -> SwerveSubsystem.resetGyro()),
+      new PivotCmd(arm, ArmConstants.angleLevelsRad[2]),
+      new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
+      new WaitCommand(.3),
+      claw.dropPiece(GamePiece.CONE),
+      new ExtensionCmd(arm, 0),
+      new PivotCmd(arm, ArmConstants.minAngleRad),
+      new InstantCommand(() -> SwerveSubsystem.resetGyro(), swerve),
+      new InstantCommand(() -> swerve.setMotors(-2.0, 0.0, 0,  DriveMode.AUTO, false), swerve),
+      new WaitUntilCommand(() -> SwerveSubsystem.getRoll() <= -CompConstants.onChargeStationOrientation),
+      new InstantCommand(() -> swerve.setMotors(-.5, 0.0, 0,  DriveMode.AUTO, false), swerve),
+      new WaitCommand(2.5),
+      new InstantCommand(() -> swerve.setMotors(0, 0.0, 0,  DriveMode.AUTO, false), swerve),
       new AutoBalanceCommand(swerve)
 
     );
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(swerve);
+    addRequirements(swerve, arm, claw);
   }
 
   // Called when the command is initially scheduled.

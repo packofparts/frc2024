@@ -26,6 +26,8 @@ import frc.robot.AutoPaths.AutoRightHigh;
 import frc.robot.AutoPaths.AutoRightMid;
 import frc.robot.AutoPaths.MakeShiftAutoMiddle;
 import frc.robot.AutoPaths.MobilityAuto;
+import frc.robot.AutoPaths.MobilityCharge;
+import frc.robot.AutoPaths.ScoreAndShit;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoMapConstants;
 import frc.robot.commands.AutoBalanceCommand;
@@ -66,30 +68,32 @@ public class Robot extends TimedRobot {
 
     CameraServer.startAutomaticCapture();
 
-    AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.arm, robotContainer.pose,robotContainer.claw);
+    
 
     robotContainer = new RobotContainer();
     substationCmd = new SubstationAlignMoveTo(robotContainer.drivetrain, robotContainer.limeLightSubSystem);
 
 
+    AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.arm, robotContainer.pose,robotContainer.claw);
     // PathPlannerTrajectory trajectory = PathPlanner.loadPath("Test Path", new PathConstraints(2, 1.5));
     //_commandSelector.addOption("Auto Balance", new AutoBalanceCommand(_robotContainer.drivetrain));
     // _commandSelector.addOption("Middle Auto",
     //     new MakeShiftAutoMiddle(_robotContainer.armControl, _robotContainer.clawPnumatic, _robotContainer.drivetrain));
     
-    commandSelector.addOption("Middle",
+    commandSelector.addOption("MiddleNodeAndCharge",
       new MakeShiftAutoMiddle(robotContainer.arm, robotContainer.claw, robotContainer.drivetrain));
 
     commandSelector.addOption("OnlyMobilitySide", 
       new MobilityAuto(robotContainer.drivetrain));
     
-
+      commandSelector.addOption("MiddleNodeMobilityCharge",
+      new MobilityCharge(robotContainer.drivetrain, robotContainer.arm, robotContainer.claw));
 
     commandSelector.addOption("ChargeStation",
       new AutoBalanceCommand(robotContainer.drivetrain));
     
-    commandSelector.addOption("MoveTo Pose Estimation", 
-      new MoveTo(new Transform2d(new Translation2d(1, 0), new Rotation2d()), robotContainer.drivetrain, robotContainer.pose));
+    // commandSelector.addOption("MoveTo Pose Estimation", 
+    //   new MoveTo(new Transform2d(new Translation2d(1, 0), new Rotation2d()), robotContainer.drivetrain, robotContainer.pose));
 
 
     // _commandSelector.addOption("SubstationAlignManuel", 
@@ -116,6 +120,7 @@ public class Robot extends TimedRobot {
     commandSelector.addOption("MoveTo Pose", 
       new MoveTo(new Pose2d(3.565, 5.541, new Rotation2d(Units.degreesToRadians(177))), robotContainer.drivetrain, robotContainer.pose2));
     
+    commandSelector.addOption("ScoreConeSit", new ScoreAndShit(robotContainer.arm, robotContainer.claw));
 
 
       commandSelector.addOption("PosPID", 
@@ -149,6 +154,16 @@ public class Robot extends TimedRobot {
         new ExtensionCmd(robotContainer.arm, 0),
         new PivotCmd(robotContainer.arm, ArmConstants.minAngleRad)
 
+      ));
+
+      PPLIBPathSelector.addOption("Station2PieceCharge", new SequentialCommandGroup(
+        new ScoreConeHighNode(robotContainer.arm, robotContainer.claw),
+        new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.eventMap),
+        new ScoreCubeHighNode(robotContainer.arm, robotContainer.claw),
+        new InstantCommand(() -> robotContainer.claw.closePneumatics(), robotContainer.claw),
+        new ExtensionCmd(robotContainer.arm, 0),
+        new PivotCmd(robotContainer.arm, ArmConstants.minAngleRad),
+        new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.eventMap)
       ));
 
       PPLIBPathSelector.addOption("ConeCubeBump", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBump, AutoMapConstants.emptyMap));
@@ -199,11 +214,11 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    if (PPLIBPathSelector.getSelected() != null){
-      autonomousCommand = PPLIBPathSelector.getSelected();
-    } else{
+    // if (PPLIBPathSelector.getSelected() != null){
+    //   autonomousCommand = PPLIBPathSelector.getSelected();
+    // } else{
       autonomousCommand = commandSelector.getSelected();
-    }
+    // }
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {

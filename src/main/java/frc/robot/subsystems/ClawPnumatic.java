@@ -80,7 +80,7 @@ public class ClawPnumatic extends SubsystemBase {
       setIntake(-Input.getLeftTrigger());
     } 
     else {
-      setIntake(0);
+      setIntake(0.2);
     }
   }
 

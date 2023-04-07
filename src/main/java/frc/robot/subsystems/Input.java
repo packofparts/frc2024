@@ -32,14 +32,14 @@ public class Input {
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
-    public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
+    //public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
     public static boolean limelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}
     
     
-    public static boolean doAimbot() {return tJoystick.getRawButtonPressed(2);}
-    public static boolean doAxisLock() {return tJoystick.getRawButtonPressed(4);}
+    public static boolean doAimbot() {return tJoystick.getRawButtonPressed(4);}
+    public static boolean doAxisLock() {return tJoystick.getRawButtonPressed(3);}
     public static boolean doPrecision(){return rJoystick.getTriggerPressed();}
-    public static boolean doLimeLock(){return tJoystick.getRawButton(0);}//CHANGE THIS
+    public static boolean doLimeLock(){return tJoystick.getRawButton(2);}//CHANGE THIS
 
     public static boolean cancelAllDriveModes() {return tJoystick.getRawButtonPressed(5);}
 

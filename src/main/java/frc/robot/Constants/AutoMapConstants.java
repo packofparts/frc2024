@@ -57,6 +57,7 @@ public class AutoMapConstants {
     public static PathPlannerTrajectory backforth = PathPlanner.loadPath("backforth", defaultSpeedConstrants);
 
     public static PathPlannerTrajectory station2Piece = PathPlanner.loadPath("Station2Piece", defaultSpeedConstrants);
+    public static PathPlannerTrajectory afterStation2Piece = PathPlanner.loadPath("AfterStation2Piece", defaultSpeedConstrants);
     public static PathPlannerTrajectory bump2Piece = PathPlanner.loadPath("Bump2Piece", defaultSpeedConstrants);
  
     public static HashMap<String,Command> eventMap = new HashMap<>();
@@ -108,6 +109,7 @@ public class AutoMapConstants {
             ));
 
             eventMap.put("stow_cube", new SequentialCommandGroup(
+                new InstantCommand(() -> claw.openPneumatics(), claw),
                 new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]),   
                 new PivotCmd(arm, ArmConstants.angleLevelsRad[0]),
                 new InstantCommand(() -> claw.setIntake(.2))

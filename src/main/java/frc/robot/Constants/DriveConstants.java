@@ -61,7 +61,7 @@ public class DriveConstants {
     public static double kFrontLeftOffset = 0.480;
     public static double kFrontRightOffset = 0.731;
     public static double kBackLeftOffset = 0.775;
-    public static double kBackRightOffset = 0.552;
+    public static double kBackRightOffset = 0.427;
 
 
 

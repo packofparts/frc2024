@@ -8,12 +8,13 @@ public class ArmConstants {
 
     public static final boolean useAbsEncoderPiv = true;
     public static final boolean useAbsEncoderTelescope = false; 
-    public static boolean useFeedForward = false;
+    public static boolean useFeedForward = true;
 
-    public static double kG = 0.01;
+    public static double 
+    kG = 0.01;
 
     //channel on dio port
-    public static final int DIOPortPiv = 9;
+    public static final int DIOPortPiv = 0;
 
     public static final double pivotAbsEncToRotation = 1.0/3.7142857;
     public static double pivotInitOffset = 0;
@@ -27,14 +28,14 @@ public class ArmConstants {
     public static final double maxAngleRad = Units.degreesToRadians(115.0);
 
     public static final double extensionRotationToInches =  18.5/7.01;
-    public static final double minExtensionIn = 0;//29.85+ 7.073; //basically the length of the first base //inches
+    public static final double minExtensionIn = 0;
     //when it is at zeroAngleRad
     public static final double zeroExtensionIn = minExtensionIn;
 
     public static final double maxPivotRateRadSec = Units.degreesToRadians(70);
-    public static final double pysicalMaxPivotRadSec = Units.degreesToRadians(142);
+    public static final double physicalMaxPivotRadSec = Units.degreesToRadians(142);
     
-    public static final double maxPivotRatePercentSec = maxPivotRateRadSec/pysicalMaxPivotRadSec;
+    public static final double maxPivotRatePercentSec = maxPivotRateRadSec/physicalMaxPivotRadSec;
 
     public static final double maxExtensionIn = 18.5;
 
@@ -42,7 +43,7 @@ public class ArmConstants {
     public static final double gearRatioExtension = 1.0/10.0;
 
     public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, maxExtensionIn}; //inches
-    public static final double[] angleLevelsDeg = {12, 87.0, 95}; //degrees
+    public static final double[] angleLevelsDeg = {12, 87.0, 100}; //degrees
     public static final double[] angleLevelsRad = {Units.degreesToRadians(angleLevelsDeg[0]), Units.degreesToRadians(angleLevelsDeg[1]), Units.degreesToRadians(angleLevelsDeg[2])};
     public static final double[] groundPick  = {Units.degreesToRadians(40),9.5};
 

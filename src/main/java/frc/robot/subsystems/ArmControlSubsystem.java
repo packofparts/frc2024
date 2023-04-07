@@ -87,7 +87,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     pivotPID = new PIDController(1.4, 0, 0);
     
-    pivotPID.setTolerance(Units.degreesToRadians(2));
+    pivotPID.setTolerance(Units.degreesToRadians(0));
 
 
     extensionPID = new PIDController(0.0688, 0, 0);
@@ -222,7 +222,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       pivotPIDOutput = pivotRateLimiter.calculate(pivotPIDOutput);
     }
     if(ArmConstants.useFeedForward){
-      pivotPIDOutput += ArmConstants.kG*Math.cos(getCurrentPivotRotation(true)+Math.PI);
+      pivotPIDOutput += ArmConstants.kG*Math.cos(getCurrentPivotRotation(true)-(Math.PI/2));
     }
     leftPivotController.set(pivotPIDOutput);
     rightPivotController.set(pivotPIDOutput);
@@ -236,10 +236,10 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     double difference = desiredExtensionDistance - currentExtensionDistance;
 
-    if(extensionPIDOutput > .8){
-      extensionPIDOutput = .7;
-    }else if (extensionPIDOutput < -0.8){
-      extensionPIDOutput = -.8;
+    if(extensionPIDOutput > .6){
+      extensionPIDOutput = .6;
+    }else if (extensionPIDOutput < -0.6){
+      extensionPIDOutput = -.6;
     }
 
     if (!CompConstants.extensionBroken) {
@@ -285,7 +285,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atAngleSetpoint(){
-    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(4);
+    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(3);
     //return true;
   }
 
