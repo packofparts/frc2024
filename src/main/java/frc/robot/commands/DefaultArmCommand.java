@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.CompConstants;
 import frc.robot.commands.armcontrolcmds.ExtensionCmd;
 import frc.robot.commands.armcontrolcmds.PivotCmd;
 import frc.robot.subsystems.ArmControlSubsystem;
@@ -89,6 +90,10 @@ public class DefaultArmCommand extends CommandBase {
 
       );
       command.schedule();
+    }
+
+    if (Input.isUltraInstinct()) {
+      CompConstants.ultraInstinct = !CompConstants.ultraInstinct;
     }
 
   }

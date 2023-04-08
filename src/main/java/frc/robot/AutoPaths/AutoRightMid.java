@@ -29,11 +29,11 @@ public class AutoRightMid extends CommandBase {
     path = new SequentialCommandGroup(
       new WaitCommand(3),
       new InstantCommand(() -> SwerveSubsystem.resetGyro()),
-      new PivotCmd(arm, ArmConstants.angleLevelsRad[1]),
-      new ExtensionCmd(arm, 5),
+      new PivotCmd(arm, Units.degreesToRadians(90)),
+      //new ExtensionCmd(arm, 5),
       new WaitCommand(.3),
       claw.dropPiece(GamePiece.CONE),
-      new ExtensionCmd(arm, 0),
+      //new ExtensionCmd(arm, 0),
       new PivotCmd(arm, ArmConstants.minAngleRad),
       new MoveTo(new Transform2d(new Translation2d(-3, -0.05), new Rotation2d(-Math.PI)), swerve),
       new InstantCommand(()->SwerveSubsystem.resetGyro())

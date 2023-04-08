@@ -234,9 +234,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // if (PPLIBPathSelector.getSelected() != null){
-       autonomousCommand = PPLIBPathSelector.getSelected();
+       //autonomousCommand = PPLIBPathSelector.getSelected();
     // } else{
-      //autonomousCommand = commandSelector.getSelected();
+      autonomousCommand = commandSelector.getSelected();
     // }
 
     // schedule the autonomous command (example)

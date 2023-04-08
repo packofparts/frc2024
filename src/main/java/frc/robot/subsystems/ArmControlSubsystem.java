@@ -85,6 +85,8 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public ArmControlSubsystem() {
 
+
+
     pivotPID = new PIDController(1.4, 0, 0);
     
     pivotPID.setTolerance(Units.degreesToRadians(0));
@@ -146,7 +148,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   public void periodic() {      
       if(Robot.armModeSelector.getSelected() == ArmMotorMode.BRAKE && i >= 1){
        pivotPeriodic(); //maintains the desired pivot angle
-       extensionPeriodic();
+       //extensionPeriodic();
       }else if(Robot.armModeSelector.getSelected() == ArmMotorMode.COAST){
         desiredPivotRotation = currentPivotRotation;
         desiredExtensionDistance = currentExtensionDistance;
@@ -201,6 +203,7 @@ public class ArmControlSubsystem extends SubsystemBase {
         desiredExtensionDistance = Util.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
       }
       currentExtensionDistance = getCurrentExtensionIn();
+      currentExtensionDistance = desiredExtensionDistance;
   }
 
   private void pivotPeriodic(){    
@@ -210,10 +213,10 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
 
-    if(pivotPIDOutput > 0.6){
-      pivotPIDOutput = 0.6;
-    }else if(pivotPIDOutput < -0.6){
-      pivotPIDOutput = -0.6;
+    if(pivotPIDOutput > 0.55){
+      pivotPIDOutput = 0.55;
+    }else if(pivotPIDOutput < -0.55){
+      pivotPIDOutput = -0.55;
     }
 
     if (CompConstants.debug) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
@@ -236,10 +239,10 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     double difference = desiredExtensionDistance - currentExtensionDistance;
 
-    if(extensionPIDOutput > .6){
-      extensionPIDOutput = .6;
-    }else if (extensionPIDOutput < -0.6){
-      extensionPIDOutput = -.6;
+    if(extensionPIDOutput > .5){
+      extensionPIDOutput = .5;
+    }else if (extensionPIDOutput < -0.5){
+      extensionPIDOutput = -.5;
     }
 
     if (!CompConstants.extensionBroken) {

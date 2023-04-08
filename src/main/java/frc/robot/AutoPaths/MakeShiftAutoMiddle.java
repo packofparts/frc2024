@@ -34,8 +34,8 @@ public class MakeShiftAutoMiddle extends CommandBase {
     path = new SequentialCommandGroup(
       
       new InstantCommand(() -> SwerveSubsystem.resetGyro()),
-      new PivotCmd(arm, ArmConstants.angleLevelsRad[2]),
-      new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
+      new PivotCmd(arm, ArmConstants.angleLevelsRad[1]),
+      //new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(.3),
       claw.dropPiece(GamePiece.CONE),
       new ExtensionCmd(arm, 0),

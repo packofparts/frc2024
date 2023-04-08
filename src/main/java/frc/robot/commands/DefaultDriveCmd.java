@@ -117,24 +117,24 @@ public class DefaultDriveCmd extends CommandBase {
       rot = aimLockPID.calculate(heading, axisLockSetpoint);
     }
 
-    if(this.isConeLock){
-      lime.setPipeline(Pipeline.CONE);
-      double yaw = this.lime.getYaw() * Math.PI / 180;
-      rot = aimLockPID.calculate(yaw, -5 * Math.PI / 180);
-    } else{
+    // if(this.isConeLock && this.lime.hasTarg()){
+    //   lime.setPipeline(Pipeline.CONE);
+    //   double yaw = this.lime.getYaw() * Math.PI / 180;
+    //   rot = aimLockPID.calculate(yaw, -5 * Math.PI / 180);
+    // } else{
 
-      if(this.isLimeLock && this.lime.hasTarg()){
-        lime.setPipeline(Pipeline.REFLECTION);
-        double fy = 0;
-        if(Math.abs(y)>0.3 && !limeLockPID.atSetpoint()){
-          fy = 0.3* y/Math.abs(y);
-        }
-        y = limeLockPID.calculate(this.lime.getYaw(),-4)+fy;
-      } else{
+    //   if(this.isLimeLock && this.lime.hasTarg()){
+    //     lime.setPipeline(Pipeline.REFLECTION);
+    //     double fy = 0;
+    //     if(Math.abs(y)>0.3 && !limeLockPID.atSetpoint()){
+    //       fy = 0.3* y/Math.abs(y);
+    //     }
+    //     y = limeLockPID.calculate(this.lime.getYaw(),-4)+fy;
+    //   } else{
         
-        lime.setPipeline(Pipeline.DRIVE);
-      }
-    }
+    //     lime.setPipeline(Pipeline.DRIVE);
+    //   }
+    // }
 
 
 

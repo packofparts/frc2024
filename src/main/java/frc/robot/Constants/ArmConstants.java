@@ -11,7 +11,7 @@ public class ArmConstants {
     public static boolean useFeedForward = true;
 
     public static double 
-    kG = 0.01;
+    kG = 0.03;
 
     //channel on dio port
     public static final int DIOPortPiv = 0;
@@ -47,7 +47,7 @@ public class ArmConstants {
     public static final double[] angleLevelsRad = {Units.degreesToRadians(angleLevelsDeg[0]), Units.degreesToRadians(angleLevelsDeg[1]), Units.degreesToRadians(angleLevelsDeg[2])};
     public static final double[] groundPick  = {Units.degreesToRadians(40),9.5};
 
-    public static final double[] offSubstation = {Units.degreesToRadians(91), 0}; // angle, inches including claw
+    public static final double[] offSubstation = {Units.degreesToRadians(90), 0}; // angle, inches including claw
 
 
 

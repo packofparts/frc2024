@@ -58,6 +58,8 @@ public class Input {
     public static double getLeftStickY(){return -xboxController.getLeftY();}
     public static double getRightStickY(){return -xboxController.getRightY();}
 
+    public static boolean isUltraInstinct() {return xboxController.getStartButtonPressed();}
+
 
     
     //public static double getRightStickY(){return xboxController.getRightStickY()}
