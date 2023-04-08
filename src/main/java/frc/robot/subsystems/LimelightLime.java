@@ -82,6 +82,7 @@ public class LimelightLime extends SubsystemBase {
     // This method will be called once per scheduler run
     double[] bot_pose;
     bot_pose = LimelightTable.getEntry("botpose").getDoubleArray(new double[6]);
+    // TODO: Only ouptut on debug
     SmartDashboard.putNumberArray("Botpose Values", bot_pose);
     SmartDashboard.putBoolean("Has Target(Spelled Right)", hasTargets());
 

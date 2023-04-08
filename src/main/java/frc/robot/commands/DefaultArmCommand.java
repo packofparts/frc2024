@@ -51,16 +51,16 @@ public class DefaultArmCommand extends CommandBase {
     
     else if(Input.getA()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.angleLevelsRad[0])),
-        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]))
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.angleLevelsRad[0]),armControlSubsystem),
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[0]),armControlSubsystem)
 
       );
       command.schedule();
     }
     else if(Input.getB()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.angleLevelsRad[1])),
-        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[1]))
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.angleLevelsRad[1]),armControlSubsystem),
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.extensionLevelsIn[1]),armControlSubsystem)
 
       );
       command.schedule();
@@ -74,18 +74,18 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getY()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.offSubstation[0])),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.offSubstation[0]),armControlSubsystem),
         new WaitCommand(1),
-        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.offSubstation[1]))
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.offSubstation[1]),armControlSubsystem)
 
       );
       command.schedule();
     }
     else if(Input.getDPad() == Input.DPADUP){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.groundPick[0])),
+        new InstantCommand(()->armControlSubsystem.setDesiredPivotRotation(ArmConstants.groundPick[0]),armControlSubsystem),
         new WaitCommand(0.5),
-        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.groundPick[1]))
+        new InstantCommand(()->armControlSubsystem.setDesiredExtension(ArmConstants.groundPick[1]),armControlSubsystem)
 
       );
       command.schedule();

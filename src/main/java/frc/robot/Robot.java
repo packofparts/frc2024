@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMaxLowLevel;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.AutoPaths.AutoLeftMid;
 import frc.robot.AutoPaths.AutoLeftHigh;
 import frc.robot.AutoPaths.AutoRightHigh;
@@ -30,9 +33,12 @@ import frc.robot.AutoPaths.MobilityCharge;
 import frc.robot.AutoPaths.ScoreAndShit;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoMapConstants;
+import frc.robot.Constants.AutoMapConstants.GamePiece;
+import frc.robot.Constants.CompConstants;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.commands.PositionPIDtuning;
 import frc.robot.commands.SubstationAlignMoveTo;
 import frc.robot.commands.TGWithPPlib;
@@ -48,6 +54,7 @@ public class Robot extends TimedRobot {
   public SendableChooser <Command> commandSelector = new SendableChooser<>();
   public SendableChooser <Command> PPLIBPathSelector = new SendableChooser<>();
   public static SendableChooser <ArmControlSubsystem.ArmMotorMode> armModeSelector = new SendableChooser<>();
+
 
 
   public SubstationAlignMoveTo substationCmd;
@@ -66,12 +73,12 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
 
-    CameraServer.startAutomaticCapture();
 
     
 
     robotContainer = new RobotContainer();
     substationCmd = new SubstationAlignMoveTo(robotContainer.drivetrain, robotContainer.limeLightSubSystem);
+
 
 
     AutoMapConstants.populateHashMaps(robotContainer.drivetrain, robotContainer.limeLightSubSystem, robotContainer.arm, robotContainer.pose,robotContainer.claw);
@@ -134,6 +141,8 @@ public class Robot extends TimedRobot {
       armModeSelector.addOption("Coast", ArmControlSubsystem.ArmMotorMode.COAST);
       armModeSelector.addOption("Brake", ArmControlSubsystem.ArmMotorMode.BRAKE);
       armModeSelector.addOption("Off", ArmControlSubsystem.ArmMotorMode.OFF);
+
+     
       
 
       PPLIBPathSelector.addOption("Station2Piece", new SequentialCommandGroup(
@@ -147,7 +156,11 @@ public class Robot extends TimedRobot {
       ));
 
       PPLIBPathSelector.addOption("Bump2Piece", new SequentialCommandGroup(
-        new ScoreConeHighNode(robotContainer.arm, robotContainer.claw),
+        new InstantCommand(() -> SwerveSubsystem.resetGyro()),
+        new PivotCmd(robotContainer.arm, ArmConstants.angleLevelsRad[2]),
+        new ExtensionCmd(robotContainer.arm, ArmConstants.extensionLevelsIn[2]),
+        new WaitCommand(.3),
+        robotContainer.claw.dropPiece(GamePiece.CONE),
         new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.bump2Piece, AutoMapConstants.eventMap),
         new ScoreCubeHighNode(robotContainer.arm, robotContainer.claw),
         new InstantCommand(() -> robotContainer.claw.closePneumatics(), robotContainer.claw),
@@ -182,6 +195,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("ArmModes", armModeSelector);
     SmartDashboard.putData("Auto commands", commandSelector);
     
+    SmartDashboard.putData("Coast Drive", new InstantCommand(()->robotContainer.drivetrain.setIdleModeForAll(IdleMode.kCoast,IdleMode.kCoast)));
+    SmartDashboard.putData("Brake Drive", new InstantCommand(()->robotContainer.drivetrain.setIdleModeForAll(IdleMode.kBrake,IdleMode.kBrake)));
+
   }
 
   /**
@@ -193,6 +209,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    if (CompConstants.debug && DriverStation.isFMSAttached()) {
+      CompConstants.debug = false;
+    }
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -215,9 +234,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // if (PPLIBPathSelector.getSelected() != null){
-    //   autonomousCommand = PPLIBPathSelector.getSelected();
+       autonomousCommand = PPLIBPathSelector.getSelected();
     // } else{
-      autonomousCommand = commandSelector.getSelected();
+      //autonomousCommand = commandSelector.getSelected();
     // }
 
     // schedule the autonomous command (example)

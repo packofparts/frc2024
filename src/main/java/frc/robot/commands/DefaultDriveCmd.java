@@ -66,7 +66,8 @@ public class DefaultDriveCmd extends CommandBase {
     this.aimLockPID = new PIDController(1, 0, 0);
     this.aimLockPID.enableContinuousInput(0, Math.PI);
 
-    limeLockPID = new PIDController(0.1, 0, 0);
+    limeLockPID = new PIDController(0.025, 0, 0);
+    limeLockPID.setTolerance(1);
 
 
     addRequirements(swerve, lime);
@@ -116,24 +117,24 @@ public class DefaultDriveCmd extends CommandBase {
       rot = aimLockPID.calculate(heading, axisLockSetpoint);
     }
 
-    // if(this.isConeLock){
-    //   lime.setPipeline(Pipeline.CONE);
-    //   double yaw = this.lime.getYaw() * Math.PI / 180;
-    //   rot = aimLockPID.calculate(yaw, -5 * Math.PI / 180);
-    // } else{
+    if(this.isConeLock){
+      lime.setPipeline(Pipeline.CONE);
+      double yaw = this.lime.getYaw() * Math.PI / 180;
+      rot = aimLockPID.calculate(yaw, -5 * Math.PI / 180);
+    } else{
 
-    //   if(this.isLimeLock && this.lime.hasTarg()){
-    //     lime.setPipeline(Pipeline.REFLECTION);
-    //     double fy = 0;
-    //     if(Math.abs(y)>0.3 && limeLockPID.atSetpoint()){
-    //       fy = 0.3* y/Math.abs(y);
-    //     }
-    //     y = this.lime.getYaw()+fy;
-    //   } else{
+      if(this.isLimeLock && this.lime.hasTarg()){
+        lime.setPipeline(Pipeline.REFLECTION);
+        double fy = 0;
+        if(Math.abs(y)>0.3 && !limeLockPID.atSetpoint()){
+          fy = 0.3* y/Math.abs(y);
+        }
+        y = limeLockPID.calculate(this.lime.getYaw(),-4)+fy;
+      } else{
         
-    //     lime.setPipeline(Pipeline.DRIVE);
-    //   }
-    // }
+        lime.setPipeline(Pipeline.DRIVE);
+      }
+    }
 
 
 
@@ -188,13 +189,15 @@ public class DefaultDriveCmd extends CommandBase {
       }
     }
 
-    // if(Input.doAimbot()){
-    //   this.isConeLock = !this.isConeLock;
-    //   this.isAxisLock = false;
-    // }
+    if(Input.doAimbot()){
+      this.isConeLock = !this.isConeLock;
+      this.isAxisLock = false;
+    }
 
-    // if(Input.doLimeLock()){
-    //   this.isLimeLock = !this.isLimeLock;
-    // }
+    if(Input.doLimeLock()){
+      this.isLimeLock = true;
+    } else{
+      this.isLimeLock = false;
+    }
   }
 }

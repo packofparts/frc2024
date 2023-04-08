@@ -34,7 +34,7 @@ public class AutoRightHigh extends CommandBase {
       claw.dropPiece(GamePiece.CONE),
       new ExtensionCmd(arm, 0),
       new PivotCmd(arm, ArmConstants.minAngleRad),
-      new MoveTo(new Transform2d(new Translation2d(-3.5, -0.05), new Rotation2d(-Math.PI)), swerve),
+      new MoveTo(new Transform2d(new Translation2d(-4.5, -0.05), new Rotation2d(0)), swerve),
       new InstantCommand(()->SwerveSubsystem.resetGyro())
     );
     

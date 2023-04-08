@@ -57,6 +57,7 @@ public class PoseEstimationBase extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // TODO: If not using, only run in debug
     poseEstimator.update(SwerveSubsystem.getRotation2d(), swerve.getModulePositions());
     updateVision();
     

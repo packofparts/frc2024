@@ -32,6 +32,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CompConstants;
 import frc.robot.Constants .DriveConstants;
 import frc.robot.Constants.PIDConstants;
+import frc.robot.Robot;
 import frc.robot.SwerveModule;
 import java.io.*;
 import java.util.*;
@@ -90,6 +91,8 @@ public class SwerveSubsystem extends SubsystemBase {
     resetRobotPose(new Pose2d());
     rawMods = getRawModules();
     setIdleModeForAll(IdleMode.kBrake, IdleMode.kBrake);
+    // backRight.setModeRot(IdleMode.kCoast);
+    // backRight.setModeTrans(IdleMode.kCoast);
     headingController.setTolerance(Units.degreesToRadians(5));
     //rawMods[0].setModeTrans(IdleMode.kCoast);
     //rawMods[0].burnSparks();
@@ -112,7 +115,6 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     m_odometry.update(getRotation2d(), getModulePositions());
-    
     SmartDashboard.putNumber("OdometryX", getRobotPose().getX());
     SmartDashboard.putNumber("OdometryY", getRobotPose().getY());
     SmartDashboard.putNumber("RotationDegrees", getRobotPose().getRotation().getDegrees());
@@ -126,6 +128,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public static void resetGyro(){
     navx.reset();
   }
+
 
   /**
    * this gets the Yaw degrees of the gyro in continuous input (360 == 0) CCW (with neg)

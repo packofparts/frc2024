@@ -58,7 +58,7 @@ public class AutoMapConstants {
 
     public static PathPlannerTrajectory station2Piece = PathPlanner.loadPath("Station2Piece", defaultSpeedConstrants);
     public static PathPlannerTrajectory afterStation2Piece = PathPlanner.loadPath("AfterStation2Piece", defaultSpeedConstrants);
-    public static PathPlannerTrajectory bump2Piece = PathPlanner.loadPath("Bump2Piece", defaultSpeedConstrants);
+    public static PathPlannerTrajectory bump2Piece = PathPlanner.loadPath("Bump2Piece", slowSpeedConstraints);
  
     public static HashMap<String,Command> eventMap = new HashMap<>();
     public static HashMap<String,Command> emptyMap =  new HashMap<>();

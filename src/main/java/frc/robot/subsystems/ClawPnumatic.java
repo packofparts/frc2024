@@ -65,7 +65,7 @@ public class ClawPnumatic extends SubsystemBase {
 
 
     
-    phCompressor.enableAnalog(85, 105);
+    phCompressor.enableAnalog(85, 105); // TODO: Move to initialize method
 
 
 

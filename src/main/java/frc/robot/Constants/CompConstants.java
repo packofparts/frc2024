@@ -5,10 +5,10 @@ import edu.wpi.first.math.controller.PIDController;
 public class CompConstants {
 
     
-    public static final boolean debug = true; // Opens up ShuffleBoard Values
+    public static boolean debug = true;
 
     // CAN Bus Reduction
-    public static final boolean useAbsEncoder = true; // If we don't use the abs encoder, we don't even initialize them to reduce can traffic
+    public static final boolean useAbsEncoder = true;// If we don't use the abs encoder, we don't even initialize them to reduce can traffic
     public static final boolean reduceRelativeFrameRate = false; // Reducing the relative encoder sampling rate
     public static final int reducedRelativeFrameRate = 50; // Relative encoder frame rate if we reduce IN MILLISECONDS
 

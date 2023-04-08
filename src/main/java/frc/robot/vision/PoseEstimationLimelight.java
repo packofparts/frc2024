@@ -54,6 +54,7 @@ public class PoseEstimationLimelight extends PoseEstimationBase {
 
   @Override
   public void periodic() {
+    // TODO: Only run in debug if not using for match
     // This method will be called once per scheduler run
     poseEstimator.update(SwerveSubsystem.getRotation2d(), swerve.getModulePositions());
     updateVision();
