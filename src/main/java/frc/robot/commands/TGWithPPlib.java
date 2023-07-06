@@ -38,7 +38,7 @@ public class TGWithPPlib extends CommandBase {
   
   @Override
   public void initialize() {
-  cmd = new SwerveAutoBuilder(this::getFlippedPose, this.swerve::resetRobotPose, this.swerve.m_kinematics,
+  cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose, this.swerve.m_kinematics,
    new PIDConstants(1, 0, 0), //old .4
     new PIDConstants(2, 0, 0), //old .5
     this.swerve::setModuleStates, this.eventMap, true, this.swerve);

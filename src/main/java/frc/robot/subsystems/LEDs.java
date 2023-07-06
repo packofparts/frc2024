@@ -20,7 +20,7 @@ public class LEDs extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    led.set(desiredOutput);
+    led.set(.83);
   }
   public static void setLEDs(DesiredLED led){
     switch(led){

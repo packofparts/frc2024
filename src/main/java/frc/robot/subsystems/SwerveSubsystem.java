@@ -12,6 +12,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -100,6 +101,19 @@ public class SwerveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if(DriveConstants.isChild){
+      //DriveConstants.kTeleDriveMaxAccMPS *= DriveConstants.childFactor;
+      //DriveConstants.kTeleDriveMaxAngularAccRadPS *= DriveConstants.childFactor;
+      DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond = DriveConstants.childFactor;
+      DriveConstants.kTeleMaxSpeedMPS = 1.15;
+    } else{
+      DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond = 2*Math.PI;
+      DriveConstants.kTeleMaxSpeedMPS = 4;
+
+    }
+    if (Input.getChild()){
+      DriveConstants.isChild = !DriveConstants.isChild;
+    }
     if (CompConstants.debug) {
       SmartDashboard.putNumber("Pitch", getPitch());
       SmartDashboard.putNumber("Yaw", getYaw());
@@ -147,7 +161,12 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see Rotation2d
    */
   public static Rotation2d getRotation2d(){
-    return Rotation2d.fromDegrees(getHeading());
+    if(DriverStation.isAutonomous()){
+      return Rotation2d.fromDegrees(getHeading() + 180);
+    }else{
+      return Rotation2d.fromDegrees(getHeading());
+    }
+    
   }
 
   public static Rotation2d geRotation2dNotCCW(){

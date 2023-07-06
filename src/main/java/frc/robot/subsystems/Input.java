@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.JoystickConstants;
 
 /** Add your docs here. */
@@ -32,7 +33,7 @@ public class Input {
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     
     public static boolean getRobotOriented(){return tJoystick.getTrigger();}
-    //public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
+    public static boolean resetPose(){return tJoystick.getRawButtonPressed(3);}
     public static boolean limelightAlignTrigger(){return tJoystick.getRawButtonPressed(3);}
     
     
@@ -44,6 +45,7 @@ public class Input {
     public static boolean cancelAllDriveModes() {return tJoystick.getRawButtonPressed(5);}
 
     //xbox controller 
+    public static boolean getChild(){return rJoystick.getRawButtonPressed(9);}
     public static boolean getA(){return xboxController.getAButtonPressed();}
     public static boolean getB(){return xboxController.getBButtonPressed();}
     public static boolean getX(){return xboxController.getXButtonPressed();}

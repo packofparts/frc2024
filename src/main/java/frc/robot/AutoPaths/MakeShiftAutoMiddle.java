@@ -38,7 +38,6 @@ public class MakeShiftAutoMiddle extends CommandBase {
       //new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[2]),
       new WaitCommand(.3),
       claw.dropPiece(GamePiece.CONE),
-      new ExtensionCmd(arm, 0),
       new PivotCmd(arm, ArmConstants.minAngleRad),
       new WaitCommand(.7),
       new MoveTo(new Transform2d(new Translation2d(-0.3, 0), new Rotation2d(Math.PI)), swerve),

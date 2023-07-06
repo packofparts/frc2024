@@ -8,11 +8,13 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class DriveConstants {
-    
-    public static final double kPhysicalMaxSpeedMPS = 4.0;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2*Math.PI;
-    public static final double kAutoMaxSpeedMPS = 3.0;
-    public static final double kTeleMaxSpeedMPS = 4.0;
+    public static boolean isChild = false;
+    public static double childFactor = 1.2*Math.PI;
+    public static double kPhysicalMaxSpeedMPS = 4.0;
+    public static double kPhysicalMaxAngularSpeedRadiansPerSecond = 2*Math.PI;
+    public static double kAutoMaxSpeedMPS = 3.0;
+    public static
+     double kTeleMaxSpeedMPS = 4.0;
 
 
     public static double kTeleDriveMaxAccMPS = 5.0;
@@ -58,10 +60,10 @@ public class DriveConstants {
 
     // Encoder Offsets
 
-    public static double kFrontLeftOffset = 0.480;
-    public static double kFrontRightOffset = 0.731;
-    public static double kBackLeftOffset = 0.770;
-    public static double kBackRightOffset = 0.178;
+    public static double kFrontLeftOffset = 0.966-.5;
+    public static double kFrontRightOffset = 0.228+.5;
+    public static double kBackLeftOffset = 0.280+.5;
+    public static double kBackRightOffset = 0.045+.5;
 
 
 

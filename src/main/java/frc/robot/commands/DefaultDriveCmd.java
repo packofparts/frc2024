@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DriveConstants;
@@ -81,6 +82,7 @@ public class DefaultDriveCmd extends CommandBase {
   @Override
   public void execute() {
 
+    
     this.heading = (SwerveSubsystem.getHeading() % 180) * Math.PI / 180;
 
     this.handleInput();
@@ -140,8 +142,8 @@ public class DefaultDriveCmd extends CommandBase {
 
       
     // 3. Make the driving smoother
-    x = this.xLimiter.calculate(x)* DriveConstants.kPhysicalMaxSpeedMPS;
-    y = this.yLimiter.calculate(y)* DriveConstants.kPhysicalMaxSpeedMPS;
+    x = this.xLimiter.calculate(x) * DriveConstants.kPhysicalMaxSpeedMPS;
+    y = this.yLimiter.calculate(y) * DriveConstants.kPhysicalMaxSpeedMPS;
     rot = this.turningLimiter.calculate(rot)* DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
     
     this.swerve.setMotors(x, y, rot, DriveMode.TELEOP);
@@ -165,39 +167,46 @@ public class DefaultDriveCmd extends CommandBase {
 
   void handleInput(){
 
-    if(Input.cancelAllDriveModes()){
-      this.isPrecision = false;
-      this.isAxisLock = false;
-      this.isConeLock = false;
-    }
+    // if(Input.cancelAllDriveModes()){
+    //   this.isPrecision = false;
+    //   this.isAxisLock = false;
+    //   this.isConeLock = false;
+    // }
 
 
-    if(Input.doPrecision()){
-      this.isPrecision = !isPrecision;
-    }
+    // if(Input.doPrecision()){
+    //   this.isPrecision = !isPrecision;
+    // }
 
-    if(Input.doAxisLock()){
-      this.isAxisLock = !this.isAxisLock;
-      this.isConeLock = false;
+    // if(Input.doAxisLock()){
+    //   this.isAxisLock = !this.isAxisLock;
+    //   this.isConeLock = false;
 
-      this.axisLockSetpoint = heading;
+    //   this.axisLockSetpoint = heading;
       
-      if (Math.PI - this.axisLockSetpoint > this.axisLockSetpoint){
-        this.axisLockSetpoint = 0;
-      }else{
-        this.axisLockSetpoint = Math.PI;
-      }
+    //   if (Math.PI - this.axisLockSetpoint > this.axisLockSetpoint){
+    //     this.axisLockSetpoint = 0;
+    //   }else{
+    //     this.axisLockSetpoint = Math.PI;
+    //   }
+    // }
+
+    // if(Input.doAimbot()){
+    //   this.isConeLock = !this.isConeLock;
+    //   this.isAxisLock = false;
+    // }
+
+    // if(Input.doLimeLock()){
+    //   this.isLimeLock = true;
+    // } else{
+    //   this.isLimeLock = false;
+    // }
+
+
+    if (Input.resetPose()) {
+      this.swerve.resetRobotPose(new Pose2d());
     }
 
-    if(Input.doAimbot()){
-      this.isConeLock = !this.isConeLock;
-      this.isAxisLock = false;
-    }
-
-    if(Input.doLimeLock()){
-      this.isLimeLock = true;
-    } else{
-      this.isLimeLock = false;
-    }
   }
+
 }

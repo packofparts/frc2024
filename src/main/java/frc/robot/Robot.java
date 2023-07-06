@@ -35,6 +35,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoMapConstants;
 import frc.robot.Constants.AutoMapConstants.GamePiece;
 import frc.robot.Constants.CompConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.MoveTo;
 import frc.robot.subsystems.ArmControlSubsystem;
@@ -135,7 +136,7 @@ public class Robot extends TimedRobot {
 
 
 
-    
+      commandSelector.addOption("null", null);
 
 
       armModeSelector.addOption("Coast", ArmControlSubsystem.ArmMotorMode.COAST);
@@ -143,17 +144,22 @@ public class Robot extends TimedRobot {
       armModeSelector.addOption("Off", ArmControlSubsystem.ArmMotorMode.OFF);
 
      
-      
+      PPLIBPathSelector.addOption("nll", null);
 
-      PPLIBPathSelector.addOption("Station2Piece", new SequentialCommandGroup(
-        new ScoreConeHighNode(robotContainer.arm, robotContainer.claw),
-        new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.eventMap),
-        new ScoreCubeHighNode(robotContainer.arm, robotContainer.claw),
-        new InstantCommand(() -> robotContainer.claw.closePneumatics(), robotContainer.claw),
-        new ExtensionCmd(robotContainer.arm, 0),
-        new PivotCmd(robotContainer.arm, ArmConstants.minAngleRad)
+      // PPLIBPathSelector.addOption("Station2Piece", new SequentialCommandGroup(
+      //   new ScoreConeHighNode(robotContainer.arm, robotContainer.claw),
+      //   new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.eventMap),
+      //   new ScoreCubeHighNode(robotContainer.arm, robotContainer.claw),
+      //   new InstantCommand(() -> robotContainer.claw.closePneumatics(), robotContainer.claw),
+      //   new ExtensionCmd(robotContainer.arm, 0),
+      //   new PivotCmd(robotContainer.arm, ArmConstants.minAngleRad)
 
-      ));
+      // ));
+
+      PPLIBPathSelector.addOption("Station2Piece",          
+        new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.emptyMap)
+      );
+
 
       PPLIBPathSelector.addOption("Bump2Piece", new SequentialCommandGroup(
         new InstantCommand(() -> SwerveSubsystem.resetGyro()),
@@ -182,6 +188,8 @@ public class Robot extends TimedRobot {
       PPLIBPathSelector.addOption("ConeCubeBump", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBump, AutoMapConstants.emptyMap));
       PPLIBPathSelector.addOption("ConeCubeBarrier", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeBarrier, AutoMapConstants.emptyMap));
       PPLIBPathSelector.addOption("ConeCubeChargeBump",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.ConeCubeChargeBump, AutoMapConstants.emptyMap));
+
+      PPLIBPathSelector.addOption("BackForth", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.backforth, AutoMapConstants.emptyMap));
 
       //PPLIBPathSelector.addOption("OneMeterForward", new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1Meter, AutoMapConstants.emptyMap));
       //PPLIBPathSelector.addOption("TwoMeter+180",  new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.move1MeterRotate, AutoMapConstants.emptyMap));
@@ -212,6 +220,7 @@ public class Robot extends TimedRobot {
     if (CompConstants.debug && DriverStation.isFMSAttached()) {
       CompConstants.debug = false;
     }
+
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
@@ -233,16 +242,18 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // if (PPLIBPathSelector.getSelected() != null){
-       //autonomousCommand = PPLIBPathSelector.getSelected();
-    // } else{
+    if (PPLIBPathSelector.getSelected() != null){
+       autonomousCommand = PPLIBPathSelector.getSelected();
+    } else{
       autonomousCommand = commandSelector.getSelected();
-    // }
+    }
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+
   }
 
   /** This function is called periodically during autonomous. */
@@ -267,6 +278,8 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+
+ 
     // if(Input.limelightAlignTrigger()){
 
     //   if(isOn){

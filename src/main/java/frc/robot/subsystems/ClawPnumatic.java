@@ -65,23 +65,23 @@ public class ClawPnumatic extends SubsystemBase {
 
 
     
-    phCompressor.enableAnalog(85, 105); // TODO: Move to initialize method
+    //phCompressor.enableAnalog(100, 105); // TODO: Move to initialize method
 
 
 
-    if (Input.getRightBumper()){
-      this.togglePneumatics();
-    }
+    // if (Input.getRightBumper()){
+    //   this.togglePneumatics();
+    // }
 
-    if(Input.getRightTrigger() != 0){
-      setIntake(Input.getRightTrigger());
-    }
-    else if (Input.getLeftTrigger() != 0){
-      setIntake(-Input.getLeftTrigger());
-    } 
-    else {
-      setIntake(0.2);
-    }
+    // if(Input.getRightTrigger() != 0){
+    //   setIntake(Input.getRightTrigger());
+    // }
+    // else if (Input.getLeftTrigger() != 0){
+    //   setIntake(-Input.getLeftTrigger());
+    // } 
+    // else {
+    //   setIntake(0.2);
+    // }
   }
 
   public void setConfig(){

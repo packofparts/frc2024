@@ -148,7 +148,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   public void periodic() {      
       if(Robot.armModeSelector.getSelected() == ArmMotorMode.BRAKE && i >= 1){
        pivotPeriodic(); //maintains the desired pivot angle
-       //extensionPeriodic();
+       extensionPeriodic();
       }else if(Robot.armModeSelector.getSelected() == ArmMotorMode.COAST){
         desiredPivotRotation = currentPivotRotation;
         desiredExtensionDistance = currentExtensionDistance;
