@@ -6,13 +6,17 @@ package frc.robot.Constants;
 
 import java.util.HashMap;
 
+import javax.management.InstanceAlreadyExistsException;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -64,6 +68,7 @@ public class AutoMapConstants {
     public static HashMap<String,Command> emptyMap =  new HashMap<>();
 
     public static void populateHashMaps(SwerveSubsystem swerve, LimelightPhoton lime, ArmControlSubsystem arm, PoseEstimationBase pose, ClawPnumatic claw){
+        
         if (doAction){  
 
             eventMap.put("angle_N3", new PivotCmd(arm, ArmConstants.angleLevelsRad[2]));
@@ -77,8 +82,6 @@ public class AutoMapConstants {
             eventMap.put("telescope_N1", new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]));
             eventMap.put("telescope_N0",new ExtensionCmd(arm, ArmConstants.groundPick[1]));
             eventMap.put("telescope_neutral",new ExtensionCmd(arm, ArmConstants.extensionLevelsIn[0]));
-
-            
 
 
             eventMap.put("auto_balance",new WaitCommand(1));
@@ -145,5 +148,8 @@ public class AutoMapConstants {
             eventMap.put("align_tag", new WaitCommand(waitTime));
         }
     }
+
+
+    
 }
 

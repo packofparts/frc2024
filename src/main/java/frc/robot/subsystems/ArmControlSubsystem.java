@@ -413,7 +413,4 @@ public class ArmControlSubsystem extends SubsystemBase {
     setDesiredPivotRotation(rotation);
     setDesiredExtension(extension);
   }
-
-  
-
 }

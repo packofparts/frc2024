@@ -146,19 +146,19 @@ public class Robot extends TimedRobot {
      
       PPLIBPathSelector.addOption("nll", null);
 
-      // PPLIBPathSelector.addOption("Station2Piece", new SequentialCommandGroup(
-      //   new ScoreConeHighNode(robotContainer.arm, robotContainer.claw),
-      //   new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.eventMap),
-      //   new ScoreCubeHighNode(robotContainer.arm, robotContainer.claw),
-      //   new InstantCommand(() -> robotContainer.claw.closePneumatics(), robotContainer.claw),
-      //   new ExtensionCmd(robotContainer.arm, 0),
-      //   new PivotCmd(robotContainer.arm, ArmConstants.minAngleRad)
+      PPLIBPathSelector.addOption("Station2Piece", new SequentialCommandGroup(
+        //new ScoreConeHighNode(robotContainer.arm, robotContainer.claw),
+        new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.eventMap)
+        //new ScoreCubeHighNode(robotContainer.arm, robotContainer.claw),
+        //new InstantCommand(() -> robotContainer.claw.closePneumatics(), robotContainer.claw),
+        //new ExtensionCmd(robotContainer.arm, 0),
+        //new PivotCmd(robotContainer.arm, ArmConstants.minAngleRad)
 
-      // ));
+      ));
 
-      PPLIBPathSelector.addOption("Station2Piece",          
-        new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.emptyMap)
-      );
+      // PPLIBPathSelector.addOption("Station2Piece",          
+      //   new TGWithPPlib(robotContainer.drivetrain, AutoMapConstants.station2Piece, AutoMapConstants.emptyMap)
+      // );
 
 
       PPLIBPathSelector.addOption("Bump2Piece", new SequentialCommandGroup(

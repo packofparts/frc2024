@@ -56,6 +56,8 @@ public class SwerveSubsystem extends SubsystemBase {
   2,false,false,DriveConstants.kBackLeftOffset,false, CompConstants.useAbsEncoder,
   PIDConstants.kBackLeftSteeringPIDControl,PIDConstants.kBackLeftSteeringPIDControl);
 
+  public static double autoGyroInitValue = 0;
+
 //above 0.5
   private final SwerveModule backRight = new SwerveModule(DriveConstants.kBackRightDriveCANId, DriveConstants.kBackRightSteerCANId,
   3,true,false,DriveConstants.kBackRightOffset,false, CompConstants.useAbsEncoder,
@@ -162,7 +164,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public static Rotation2d getRotation2d(){
     if(DriverStation.isAutonomous()){
-      return Rotation2d.fromDegrees(getHeading() + 180);
+      return Rotation2d.fromDegrees(getHeading() + SwerveSubsystem.autoGyroInitValue);
     }else{
       return Rotation2d.fromDegrees(getHeading());
     }
