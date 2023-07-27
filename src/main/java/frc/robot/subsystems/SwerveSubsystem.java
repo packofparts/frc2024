@@ -8,11 +8,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
-  public static enum DriveMode{
-    AUTO,
-    TELEOP
+  public static enum DriveMode {
+    AUTO, TELEOP
   }
-  
+
   public SwerveSubsystem() {}
 
   @Override
