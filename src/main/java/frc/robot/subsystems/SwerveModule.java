@@ -119,7 +119,7 @@ public class SwerveModule {
 
         
         _rotMotor.set(
-            _rotPID.calculate((-getRotPosition()) * 2 * Math.PI,
+            _rotPID.calculate(getRotPosition() * 2 * Math.PI,
                 desiredState.angle.getRotations())
         );
   
@@ -131,7 +131,7 @@ public class SwerveModule {
      * @see SwerveModulePosition
      */
     public SwerveModulePosition getModulePos(){
-            return new SwerveModulePosition(getTransPosition(), new Rotation2d(getRotPosition()));
+            return new SwerveModulePosition(getTransPosition(), new Rotation2d.fromRotations(getRotPosition()));
     }
 
     // -------------------- Get Raw Values
@@ -175,7 +175,7 @@ public class SwerveModule {
      * @return Returns number rotations of rotation motor AFTER GEAR RATIO 
      */
     public double getRotPosition() {
-        return getRotPositionRaw();
+        return -getRotPositionRaw();
     }
 
     /**
