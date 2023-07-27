@@ -14,7 +14,7 @@ import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class SwerveModule {
-    // Parameters 
+    // Parameters
     private int _rotID;
     private int _transID;
     private int _rotEncoderID;
@@ -33,17 +33,9 @@ public class SwerveModule {
     private AnalogEncoder _rotEncoder;
     private RelativeEncoder _transEncoder;
 
-    public SwerveModule(
-        int rotID,
-        int transID,
-        int rotEncoderID,
-        int transEncoderID,
-        double rotEncoderOffset,
-        boolean rotInverse,
-        boolean transInverse,
-        PIDController rotPID,
-        PIDController transPID
-    ) {
+    public SwerveModule(int rotID, int transID, int rotEncoderID, int transEncoderID,
+            double rotEncoderOffset, boolean rotInverse, boolean transInverse, PIDController rotPID,
+            PIDController transPID) {
         // Setting Parameters
         _rotID = rotID;
         _transID = transID;
@@ -62,7 +54,7 @@ public class SwerveModule {
         _rotEncoder = new AnalogEncoder(_rotEncoderID);
         _transEncoder = _transMotor.getEncoder();
 
-        
+
         _rotEncoder.setPositionOffset(_rotEncoderOffset);
 
 
@@ -71,7 +63,7 @@ public class SwerveModule {
         _transPID = transPID;
 
         // ----Setting PID Parameters
-        _rotPID.enableContinuousInput(-Math.PI,Math.PI);
+        _rotPID.enableContinuousInput(-Math.PI, Math.PI);
 
 
 
@@ -84,54 +76,58 @@ public class SwerveModule {
 
     /**
      * 
-     * @return a swerve module state object describing the current speed of the translation and rotation motors
+     * @return a swerve module state object describing the current speed of the translation and
+     *         rotation motors
      * @see SwerveModuleState
      */
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getTransVelocity(), new Rotation2d(getRotPosition()));  
+        return new SwerveModuleState(getTransVelocity(), new Rotation2d(getRotPosition()));
     }
 
-        /**
+    /**
      * Sets the motor speeds passed into constructor
+     * 
      * @param desiredState takes in SwerveModule state
      * @see SwerveModuleState
      */
-    public void setDesiredState(SwerveModuleState desiredState, DriveMode dMode){
-        
+    public void setDesiredState(SwerveModuleState desiredState, DriveMode dMode) {
+
         // Stops returning to original rotation
         if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
             stop();
             return;
         }
 
-        //No turning motors over 90 degrees
+        // No turning motors over 90 degrees
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
-        //PID Controller for both translation and rotation
-        switch(dMode){
+        // PID Controller for both translation and rotation
+        switch (dMode) {
             case AUTO:
-                _transMotor.set(desiredState.speedMetersPerSecond/SwerveConstants.kPhysicalMaxSpeedMPS);
+                _transMotor.set(
+                        desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
                 break;
             case TELEOP:
-                _transMotor.set(desiredState.speedMetersPerSecond/SwerveConstants.kPhysicalMaxSpeedMPS);
+                _transMotor.set(
+                        desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
                 break;
         }
 
-        
-        _rotMotor.set(
-            _rotPID.calculate(getRotPosition() * 2 * Math.PI,
-                desiredState.angle.getRotations())
-        );
-  
+
+        _rotMotor.set(_rotPID.calculate(getRotPosition() * 2 * Math.PI,
+                desiredState.angle.getRotations()));
+
     }
 
     /**
      * 
-     * @return the total distance traveled by the module (Meters) and Rotation value (Rad) in the form of a SwerveModulePostion object
+     * @return the total distance traveled by the module (Meters) and Rotation value (Rad) in the
+     *         form of a SwerveModulePostion object
      * @see SwerveModulePosition
      */
-    public SwerveModulePosition getModulePos(){
-            return new SwerveModulePosition(getTransPosition(), new Rotation2d.fromRotations(getRotPosition()));
+    public SwerveModulePosition getModulePos() {
+        return new SwerveModulePosition(getTransPosition(),
+                Rotation2d.fromRotations(getRotPosition()));
     }
 
     // -------------------- Get Raw Values
@@ -167,12 +163,13 @@ public class SwerveModule {
      * @return Returns translation motor AFTER GEAR RATIO and Meters
      */
     public double getTransPosition() {
-        return  getTransPositionRaw() * SwerveConstants.transGearRatio * SwerveConstants.driveGearToMeters;
+        return getTransPositionRaw() * SwerveConstants.transGearRatio
+                * SwerveConstants.driveGearToMeters;
     }
 
     /**
      * 
-     * @return Returns number rotations of rotation motor AFTER GEAR RATIO 
+     * @return Returns number rotations of rotation motor AFTER GEAR RATIO
      */
     public double getRotPosition() {
         return -getRotPositionRaw();
@@ -193,7 +190,7 @@ public class SwerveModule {
      * @return Set the offset of the rotation encoder in rotations
      */
 
-    public void setRotationOffset(double offset){
+    public void setRotationOffset(double offset) {
         _rotEncoder.setPositionOffset(offset);
     }
 
@@ -205,7 +202,7 @@ public class SwerveModule {
         _transEncoder.setPosition(0);
     }
 
-        /**
+    /**
      * Stops the both motors
      */
     public void stop() {
@@ -217,35 +214,38 @@ public class SwerveModule {
      * 
      * @return steering PID controller.
      */
-    public PIDController getPIDController(){
+    public PIDController getPIDController() {
         return this._rotPID;
     }
 
     /**
      * Sets the mode of the translation motor
+     * 
      * @param mode use a spark max idle mode (brake or coast)
      * @see IdleMode
      */
-    public void setModeTrans(IdleMode mode){
+    public void setModeTrans(IdleMode mode) {
         _transMotor.setIdleMode(mode);
     }
 
     /**
      * Permanently burns settings into the sparks
+     * 
      * @see setModeRot
      * @see setModeTrans
      */
-    public void burnSparks(){
+    public void burnSparks() {
         _rotMotor.burnFlash();
         _transMotor.burnFlash();
     }
 
     /**
      * Sets the mode of the rotation motor
+     * 
      * @param mode use a spark max idle mode (brake or coast)
      * @see IdleMode
      */
-    public void setModeRot(IdleMode mode){
+    public void setModeRot(IdleMode mode) {
         _rotMotor.setIdleMode(mode);
     }
 }
