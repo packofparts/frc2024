@@ -5,14 +5,21 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.SwerveConfig;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
+
   public static enum DriveMode {
     AUTO, TELEOP
   }
 
-  public SwerveSubsystem() {}
+
+
+  public SwerveSubsystem(SwerveConfig config) {
+    
+
+  }
 
   @Override
   public void periodic() {

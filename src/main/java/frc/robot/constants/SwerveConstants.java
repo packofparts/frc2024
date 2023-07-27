@@ -17,10 +17,19 @@ public class SwerveConstants {
     // Conversion Factors
     public static final double kTransRPMtoMPS = (kTransGearRatio * kDriveGearToMeters) / 60;
 
+    // Track dimensions in meters
+    public static final double kTrackWidthMeters = 3;
+    public static final double kTrackLengthMeters = 3.5;
+
 
     // Physical Max
     public static final double kPhysicalMaxSpeedMPS = 4.0;
 
+    // Encoder Offsets
+    public static double frontRightRotEncoderOffset = 0;
+    public static double frontLeftRotEncoderOffset = 0;
+    public static double backRightRotEncoderOffset = 0;
+    public static double backLeftRotEncoderOffset = 0;
 
 
 }

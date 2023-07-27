@@ -18,12 +18,10 @@ public class SwerveModule {
     private int _rotID;
     private int _transID;
     private int _rotEncoderID;
-    private int _transEncoderID;
     private double _rotEncoderOffset;
     private boolean _rotInverse;
     private boolean _transInverse;
     private PIDController _rotPID;
-    private PIDController _transPID;
 
     // Hardware
     // Motor Controllers
@@ -33,14 +31,12 @@ public class SwerveModule {
     private AnalogEncoder _rotEncoder;
     private RelativeEncoder _transEncoder;
 
-    public SwerveModule(int rotID, int transID, int rotEncoderID, int transEncoderID,
-            double rotEncoderOffset, boolean rotInverse, boolean transInverse, PIDController rotPID,
-            PIDController transPID) {
+    public SwerveModule(int rotID, int transID, int rotEncoderID,
+            double rotEncoderOffset, boolean rotInverse, boolean transInverse, PIDController rotPID) {
         // Setting Parameters
         _rotID = rotID;
         _transID = transID;
         _rotEncoderID = rotEncoderID;
-        _transEncoderID = transEncoderID;
         _rotEncoderOffset = rotEncoderOffset;
         _rotInverse = rotInverse;
         _transInverse = transInverse;
@@ -60,7 +56,6 @@ public class SwerveModule {
 
         // ----Setting PID
         _rotPID = rotPID;
-        _transPID = transPID;
 
         // ----Setting PID Parameters
         _rotPID.enableContinuousInput(-Math.PI, Math.PI);
