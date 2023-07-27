@@ -163,8 +163,8 @@ public class SwerveModule {
      * @return Returns translation motor AFTER GEAR RATIO and Meters
      */
     public double getTransPosition() {
-        return getTransPositionRaw() * SwerveConstants.transGearRatio
-                * SwerveConstants.driveGearToMeters;
+        return getTransPositionRaw() * SwerveConstants.kTransGearRatio
+                * SwerveConstants.kDriveGearToMeters;
     }
 
     /**
@@ -180,7 +180,7 @@ public class SwerveModule {
      * @return Returns velocity of translation motor with conversion
      */
     public double getTransVelocity() {
-        return getTransVelocityRaw() * SwerveConstants.transRPMtoMPS;
+        return getTransVelocityRaw() * SwerveConstants.kTransRPMtoMPS;
     }
 
 
