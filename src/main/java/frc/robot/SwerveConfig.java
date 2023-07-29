@@ -15,42 +15,42 @@ import frc.robot.subsystems.SwerveModule;
 /** Add your docs here. */
 public class SwerveConfig {
         // ID's
-        public static int frontRightTransID = 0;
-        public static int frontRightRotID = 1;
-        public static int frontRightRotEncoderID = 2;
+        public static final int frontRightTransID = 0;
+        public static final int frontRightRotID = 1;
+        public static final int frontRightRotEncoderID = 2;
 
-        public static int frontLeftTransID = 3;
-        public static int frontLeftRotID = 4;
-        public static int frontLeftRotEncoderID = 5;
+        public static final int frontLeftTransID = 3;
+        public static final int frontLeftRotID = 4;
+        public static final int frontLeftRotEncoderID = 5;
 
-        public static int backRightTransID = 6;
-        public static int backRightRotID = 7;
-        public static int backRightRotEncoderID = 8;
+        public static final int backRightTransID = 6;
+        public static final int backRightRotID = 7;
+        public static final int backRightRotEncoderID = 8;
 
-        public static int backLeftRotID = 9;
-        public static int backLeftTransID = 10;
-        public static int backLeftRotEncoderID = 11;
+        public static final int backLeftRotID = 9;
+        public static final int backLeftTransID = 10;
+        public static final int backLeftRotEncoderID = 11;
 
 
         // Offsets
 
         // Inverse Booleans
-        public static boolean frontRightRotInverse = false;
-        public static boolean frontRightTransInverse = false;
-        public static boolean frontLeftRotInverse = false;
-        public static boolean frontLeftTransInverse = false;
+        public static final boolean frontRightRotInverse = false;
+        public static final boolean frontRightTransInverse = false;
+        public static final boolean frontLeftRotInverse = false;
+        public static final boolean frontLeftTransInverse = false;
 
-        public static boolean backRightRotInverse = false;
-        public static boolean backRightTransInverse = false;
-        public static boolean backLeftRotInverse = false;
-        public static boolean backLeftTransInverse = false;
+        public static final boolean backRightRotInverse = false;
+        public static final boolean backRightTransInverse = false;
+        public static final boolean backLeftRotInverse = false;
+        public static final boolean backLeftTransInverse = false;
 
 
         // PID Controllers
-        public static PIDController frontRightRotPID = new PIDController(0.5, 0, 0);
-        public static PIDController frontLeftRotPID = new PIDController(0.5, 0, 0);
-        public static PIDController backRightRotPID = new PIDController(0.5, 0, 0);
-        public static PIDController backLeftRotPID = new PIDController(0.5, 0, 0);
+        public static final PIDController frontRightRotPID = new PIDController(0.5, 0, 0);
+        public static final PIDController frontLeftRotPID = new PIDController(0.5, 0, 0);
+        public static final PIDController backRightRotPID = new PIDController(0.5, 0, 0);
+        public static final PIDController backLeftRotPID = new PIDController(0.5, 0, 0);
 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
@@ -66,28 +66,29 @@ public class SwerveConfig {
 
         // Swerve Modules and Other Hardware
 
-        public static AHRS navX = new AHRS(Port.kMXP);
+        public static final AHRS navX = new AHRS(Port.kMXP);
 
-        public static SwerveModule frontRightModule = new SwerveModule(frontRightRotID,
+        public static final SwerveModule frontRightModule = new SwerveModule(frontRightRotID,
                         frontRightTransID, frontRightRotEncoderID,
                         SwerveConstants.frontRightRotEncoderOffset, frontRightRotInverse,
                         frontRightTransInverse, frontRightRotPID);
 
-        public static SwerveModule frontLeftModule = new SwerveModule(frontLeftRotID,
+        public static final SwerveModule frontLeftModule = new SwerveModule(frontLeftRotID,
                         frontLeftTransID, frontLeftRotEncoderID,
                         SwerveConstants.frontLeftRotEncoderOffset, frontLeftRotInverse,
                         frontLeftTransInverse, frontLeftRotPID);
 
-        public static SwerveModule backRightModule = new SwerveModule(backRightRotID,
+        public static final SwerveModule backRightModule = new SwerveModule(backRightRotID,
                         backRightTransID, backRightRotEncoderID,
                         SwerveConstants.backRightRotEncoderOffset, backRightRotInverse,
                         backRightTransInverse, backRightRotPID);
 
-        public static SwerveModule backLeftModule = new SwerveModule(backLeftRotID, backLeftTransID,
-                        backLeftRotEncoderID, SwerveConstants.backLeftRotEncoderOffset,
-                        backLeftRotInverse, backLeftTransInverse, backLeftRotPID);
+        public static final SwerveModule backLeftModule =
+                        new SwerveModule(backLeftRotID, backLeftTransID, backLeftRotEncoderID,
+                                        SwerveConstants.backLeftRotEncoderOffset,
+                                        backLeftRotInverse, backLeftTransInverse, backLeftRotPID);
 
-        public static SwerveModule[] swerveModules =
+        public static final SwerveModule[] swerveModules =
                         {frontRightModule, frontLeftModule, backRightModule, backLeftModule};
 
 }
