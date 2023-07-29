@@ -11,7 +11,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class SwerveModule {
     // Parameters
@@ -31,8 +30,8 @@ public class SwerveModule {
     private AnalogEncoder _rotEncoder;
     private RelativeEncoder _transEncoder;
 
-    public SwerveModule(int rotID, int transID, int rotEncoderID,
-            double rotEncoderOffset, boolean rotInverse, boolean transInverse, PIDController rotPID) {
+    public SwerveModule(int rotID, int transID, int rotEncoderID, double rotEncoderOffset,
+            boolean rotInverse, boolean transInverse, PIDController rotPID) {
         // Setting Parameters
         _rotID = rotID;
         _transID = transID;
@@ -85,7 +84,7 @@ public class SwerveModule {
      * @param desiredState takes in SwerveModule state
      * @see SwerveModuleState
      */
-    public void setDesiredState(SwerveModuleState desiredState, DriveMode dMode) {
+    public void setDesiredState(SwerveModuleState desiredState) {
 
         // Stops returning to original rotation
         if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
@@ -97,16 +96,8 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
-        switch (dMode) {
-            case AUTO:
-                _transMotor.set(
-                        desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
-                break;
-            case TELEOP:
-                _transMotor.set(
-                        desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
-                break;
-        }
+        _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
+
 
 
         _rotMotor.set(_rotPID.calculate(getRotPosition() * 2 * Math.PI,
