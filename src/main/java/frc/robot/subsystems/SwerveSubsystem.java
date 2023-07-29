@@ -21,7 +21,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private SwerveDriveKinematics _kinematics;
   private SwerveDriveOdometry _odometry;
 
-  public static AHRS navx;
+  private AHRS _navx;
 
   private SwerveModule[] _modules;
 
@@ -32,7 +32,7 @@ public class SwerveSubsystem extends SubsystemBase {
     _kinematics = SwerveConfig.swerveKinematics;
     _odometry = new SwerveDriveOdometry(_kinematics, getRotation2d(), getModulePositions());
 
-    navx = SwerveConfig.navX;
+    _navx = SwerveConfig.navX;
 
     _modules = SwerveConfig.swerveModules;
   }
@@ -46,8 +46,8 @@ public class SwerveSubsystem extends SubsystemBase {
   /**
    * Sets the current YAW heading as the 0'd heading
    */
-  public static void resetGyro() {
-    navx.reset();
+  public void resetGyro() {
+    _navx.reset();
   }
 
   /**
@@ -55,8 +55,8 @@ public class SwerveSubsystem extends SubsystemBase {
    * 
    * @return the degrees at which the gyro is at
    */
-  public static double getHeading() {
-    return -navx.getAngle();
+  public double getHeading() {
+    return -_navx.getAngle();
   }
 
   /**
@@ -65,7 +65,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the Rotation2d of the gyro CCW POSITIVE(Unit Circle Rise UP)
    * @see Rotation2d
    */
-  public static Rotation2d getRotation2d() {
+  public Rotation2d getRotation2d() {
     return Rotation2d.fromDegrees(getHeading());
   }
 
