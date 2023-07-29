@@ -70,22 +70,22 @@ public class SwerveConfig {
 
         public static final SwerveModule frontRightModule = new SwerveModule(frontRightRotID,
                         frontRightTransID, frontRightRotEncoderID,
-                        SwerveConstants.frontRightRotEncoderOffset, frontRightRotInverse,
+                        SwerveConstants.kfrontRightRotEncoderOffset, frontRightRotInverse,
                         frontRightTransInverse, frontRightRotPID);
 
         public static final SwerveModule frontLeftModule = new SwerveModule(frontLeftRotID,
                         frontLeftTransID, frontLeftRotEncoderID,
-                        SwerveConstants.frontLeftRotEncoderOffset, frontLeftRotInverse,
+                        SwerveConstants.kfrontLeftRotEncoderOffset, frontLeftRotInverse,
                         frontLeftTransInverse, frontLeftRotPID);
 
         public static final SwerveModule backRightModule = new SwerveModule(backRightRotID,
                         backRightTransID, backRightRotEncoderID,
-                        SwerveConstants.backRightRotEncoderOffset, backRightRotInverse,
+                        SwerveConstants.kbackRightRotEncoderOffset, backRightRotInverse,
                         backRightTransInverse, backRightRotPID);
 
         public static final SwerveModule backLeftModule =
                         new SwerveModule(backLeftRotID, backLeftTransID, backLeftRotEncoderID,
-                                        SwerveConstants.backLeftRotEncoderOffset,
+                                        SwerveConstants.kbackLeftRotEncoderOffset,
                                         backLeftRotInverse, backLeftTransInverse, backLeftRotPID);
 
         public static final SwerveModule[] swerveModules =

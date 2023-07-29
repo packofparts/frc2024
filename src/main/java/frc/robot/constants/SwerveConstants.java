@@ -28,10 +28,10 @@ public class SwerveConstants {
   public static final double kAutoMaxSpeedMPS = 3.0;
 
   // Encoder Offsets
-  public static double frontRightRotEncoderOffset = 0;
-  public static double frontLeftRotEncoderOffset = 0;
-  public static double backRightRotEncoderOffset = 0;
-  public static double backLeftRotEncoderOffset = 0;
+  public static double kfrontRightRotEncoderOffset = 0;
+  public static double kfrontLeftRotEncoderOffset = 0;
+  public static double kbackRightRotEncoderOffset = 0;
+  public static double kbackLeftRotEncoderOffset = 0;
 
 
 }
