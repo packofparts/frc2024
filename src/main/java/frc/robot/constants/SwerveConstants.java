@@ -17,8 +17,8 @@ public class SwerveConstants {
   public static final double kTransRPMtoMPS = (kTransGearRatio * kDriveGearToMeters) / 60;
 
   // Track dimensions in meters
-  public static final double kTrackWidthMeters = 3;
-  public static final double kTrackLengthMeters = 3.5;
+  public static final double kTrackWidthMeters = .54;
+  public static final double kTrackLengthMeters = .54;
 
 
   // Physical Max

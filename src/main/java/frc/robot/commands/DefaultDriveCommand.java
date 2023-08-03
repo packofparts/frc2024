@@ -28,7 +28,11 @@ public class DefaultDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    swerve.setMotors(Input.getJoystickX(), Input.getJoystickY(), Input.getRot());
+
+    double x = -Input.getJoystickY();
+    double y = -Input.getJoystickX();
+
+    swerve.setMotors(x, y, -Input.getRot());
   }
 
   // Called once the command ends or is interrupted.
