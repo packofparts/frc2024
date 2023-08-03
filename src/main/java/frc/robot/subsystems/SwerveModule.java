@@ -11,19 +11,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.subsystems.SwerveSubsystem.DriveMode;
 
 public class SwerveModule {
     // Parameters
     private int _rotID;
     private int _transID;
     private int _rotEncoderID;
-    private int _transEncoderID;
     private double _rotEncoderOffset;
     private boolean _rotInverse;
     private boolean _transInverse;
     private PIDController _rotPID;
-    private PIDController _transPID;
 
     // Hardware
     // Motor Controllers
@@ -33,14 +30,12 @@ public class SwerveModule {
     private AnalogEncoder _rotEncoder;
     private RelativeEncoder _transEncoder;
 
-    public SwerveModule(int rotID, int transID, int rotEncoderID, int transEncoderID,
-            double rotEncoderOffset, boolean rotInverse, boolean transInverse, PIDController rotPID,
-            PIDController transPID) {
+    public SwerveModule(int rotID, int transID, int rotEncoderID, double rotEncoderOffset,
+            boolean rotInverse, boolean transInverse, PIDController rotPID) {
         // Setting Parameters
         _rotID = rotID;
         _transID = transID;
         _rotEncoderID = rotEncoderID;
-        _transEncoderID = transEncoderID;
         _rotEncoderOffset = rotEncoderOffset;
         _rotInverse = rotInverse;
         _transInverse = transInverse;
@@ -60,7 +55,6 @@ public class SwerveModule {
 
         // ----Setting PID
         _rotPID = rotPID;
-        _transPID = transPID;
 
         // ----Setting PID Parameters
         _rotPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -90,7 +84,7 @@ public class SwerveModule {
      * @param desiredState takes in SwerveModule state
      * @see SwerveModuleState
      */
-    public void setDesiredState(SwerveModuleState desiredState, DriveMode dMode) {
+    public void setDesiredState(SwerveModuleState desiredState) {
 
         // Stops returning to original rotation
         if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
@@ -102,16 +96,8 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
-        switch (dMode) {
-            case AUTO:
-                _transMotor.set(
-                        desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
-                break;
-            case TELEOP:
-                _transMotor.set(
-                        desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
-                break;
-        }
+        _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
+
 
 
         _rotMotor.set(_rotPID.calculate(getRotPosition() * 2 * Math.PI,
