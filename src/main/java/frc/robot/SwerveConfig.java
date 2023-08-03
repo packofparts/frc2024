@@ -15,21 +15,21 @@ import frc.robot.subsystems.SwerveModule;
 /** Add your docs here. */
 public class SwerveConfig {
         // ID's
-        public static final int frontRightTransID = 0;
-        public static final int frontRightRotID = 1;
-        public static final int frontRightRotEncoderID = 2;
+        public static final int frontRightTransID = 7;
+        public static final int frontRightRotID = 6;
+        public static final int frontRightRotEncoderID = 1;
 
-        public static final int frontLeftTransID = 3;
-        public static final int frontLeftRotID = 4;
-        public static final int frontLeftRotEncoderID = 5;
+        public static final int frontLeftTransID = 1;
+        public static final int frontLeftRotID = 3;
+        public static final int frontLeftRotEncoderID = 0;
 
-        public static final int backRightTransID = 6;
-        public static final int backRightRotID = 7;
-        public static final int backRightRotEncoderID = 8;
+        public static final int backRightTransID = 9;
+        public static final int backRightRotID = 8;
+        public static final int backRightRotEncoderID = 3;
 
-        public static final int backLeftRotID = 9;
-        public static final int backLeftTransID = 10;
-        public static final int backLeftRotEncoderID = 11;
+        public static final int backLeftTransID = 4;
+        public static final int backLeftRotID = 5;
+        public static final int backLeftRotEncoderID = 2;
 
 
         // Offsets
@@ -47,10 +47,10 @@ public class SwerveConfig {
 
 
         // PID Controllers
-        public static final PIDController frontRightRotPID = new PIDController(0.5, 0, 0);
-        public static final PIDController frontLeftRotPID = new PIDController(0.5, 0, 0);
-        public static final PIDController backRightRotPID = new PIDController(0.5, 0, 0);
-        public static final PIDController backLeftRotPID = new PIDController(0.5, 0, 0);
+        public static final PIDController frontRightRotPID = new PIDController(0.56, 0, 0.01);
+        public static final PIDController frontLeftRotPID = new PIDController(0.771, 0.025, 0.015);
+        public static final PIDController backRightRotPID = new PIDController(0.4, 0, 0.015);
+        public static final PIDController backLeftRotPID = new PIDController(0.56, 0, 0.01);
 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(

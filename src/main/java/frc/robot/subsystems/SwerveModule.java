@@ -75,7 +75,7 @@ public class SwerveModule {
      * @see SwerveModuleState
      */
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getTransVelocity(), new Rotation2d(getRotPosition()));
+        return new SwerveModuleState(getTransVelocity(), Rotation2d.fromRotations(getRotPosition()));
     }
 
     /**
@@ -101,7 +101,7 @@ public class SwerveModule {
 
 
         _rotMotor.set(_rotPID.calculate(getRotPosition() * 2 * Math.PI,
-                desiredState.angle.getRotations()));
+                desiredState.angle.getRadians()));
 
     }
 
