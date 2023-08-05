@@ -34,7 +34,7 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
-
+    // x, y, and rot are inverted because of the Joystick configurations
     double x = -Input.getJoystickY();
     double y = -Input.getJoystickX();
     double rot = -Input.getRot();

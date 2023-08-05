@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.constants.JoystickConstants;
 
-/** Add your docs here. */
+// Input Class For Joystick/Controller Input Functions
 public class Input {
 
     private static Joystick rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
