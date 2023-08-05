@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -18,6 +19,10 @@ public class DefaultDriveCommand extends CommandBase {
   private SlewRateLimiter turningLimiter;
   public DefaultDriveCommand(SwerveSubsystem swerve) {
     addRequirements(swerve);
+
+    xLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxSpeedMPS);
+    yLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxSpeedMPS);
+    turningLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxRotSpeedRadPerSeconds);
     this.swerve = swerve;
   }
 
@@ -29,10 +34,20 @@ public class DefaultDriveCommand extends CommandBase {
   @Override
   public void execute() {
 
+
     double x = -Input.getJoystickY();
     double y = -Input.getJoystickX();
+    double rot = -Input.getRot();
+  
+    x = Math.abs(x) > 0.10 ? x : 0.0;
+    y = Math.abs(y) > 0.10 ? y : 0.0;
+    rot = Math.abs(rot) > 0.15 ? rot : 0.0;
 
-    swerve.setMotors(x, y, -Input.getRot());
+    x *= SwerveConstants.kTeleMaxSpeedMPS;
+    y *= SwerveConstants.kTeleMaxSpeedMPS;
+    rot *= SwerveConstants.kTeleMaxRotSpeedRadPerSeconds;
+
+    swerve.setMotors(x, y, rot, true);
   }
 
   // Called once the command ends or is interrupted.

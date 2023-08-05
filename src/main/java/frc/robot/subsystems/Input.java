@@ -30,6 +30,8 @@ public class Input {
 
     public static double getRot(){return rJoystick.getX();}
 
+    public static boolean getResetGyro() {return rJoystick.getRawButton(3);}
+
 
 
     public static boolean getIncPID(){return tJoystick.getRawButton(5);}

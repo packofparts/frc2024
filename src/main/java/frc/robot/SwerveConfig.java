@@ -89,6 +89,6 @@ public class SwerveConfig {
                                         backLeftRotInverse, backLeftTransInverse, backLeftRotPID);
 
         public static final SwerveModule[] swerveModules =
-                        {frontRightModule, frontLeftModule, backRightModule, backLeftModule};
+                        {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
 
 }
