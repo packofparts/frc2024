@@ -1,5 +1,11 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.led.CANdleConfiguration;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.SensorTimeBase;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -27,7 +33,7 @@ public class SwerveModule {
     private CANSparkMax _rotMotor;
     private CANSparkMax _transMotor;
     // Encoders
-    private AnalogEncoder _rotEncoder;
+    private CANCoder _rotEncoder;
     private RelativeEncoder _transEncoder;
 
     public SwerveModule(int rotID, int transID, int rotEncoderID, double rotEncoderOffset,
@@ -46,11 +52,12 @@ public class SwerveModule {
         _transMotor = new CANSparkMax(_transID, MotorType.kBrushless);
 
         // Encoders
-        _rotEncoder = new AnalogEncoder(_rotEncoderID);
+        _rotEncoder = new CANCoder(_rotEncoderID);
         _transEncoder = _transMotor.getEncoder();
 
-
-        _rotEncoder.setPositionOffset(_rotEncoderOffset);
+        // Sets measurement to radians
+        CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
+        _rotEncoder.configAllSettings(configuration);
 
 
         // ----Setting PID
@@ -66,6 +73,19 @@ public class SwerveModule {
         _transMotor.setInverted(_transInverse);
     }
 
+    private CANCoderConfiguration getCANCoderConfig(double offset, boolean inverse){
+        CANCoderConfiguration config = new CANCoderConfiguration();
+        config.sensorCoefficient = 2 * Math.PI / 4096;
+        config.unitString = "rad";
+        config.sensorTimeBase = SensorTimeBase.PerSecond;
+        
+        config.magnetOffsetDegrees = offset*360;
+        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+        config.sensorDirection = inverse;
+
+        return config;
+    }
+    
     // ------------------- State Settings
 
     /**
@@ -75,7 +95,7 @@ public class SwerveModule {
      * @see SwerveModuleState
      */
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getTransVelocity(), Rotation2d.fromRotations(getRotPosition()));
+        return new SwerveModuleState(getTransVelocity(), Rotation2d.fromRadians(getRotPosition()));
     }
 
     /**
@@ -100,7 +120,7 @@ public class SwerveModule {
 
 
 
-        _rotMotor.set(_rotPID.calculate(getRotPosition() * 2 * Math.PI,
+        _rotMotor.set(_rotPID.calculate(getRotPosition(),
                 desiredState.angle.getRadians()));
 
     }
@@ -113,7 +133,7 @@ public class SwerveModule {
      */
     public SwerveModulePosition getModulePos() {
         return new SwerveModulePosition(getTransPosition(),
-                Rotation2d.fromRotations(getRotPosition()));
+                Rotation2d.fromRadians(getRotPosition()));
     }
 
     // -------------------- Get Raw Values
@@ -128,10 +148,10 @@ public class SwerveModule {
 
     /**
      * 
-     * @return Returns number rotations of rotation motor BEFORE GEAR RATIO
+     * @return Returns rotation position in radians
      */
     public double getRotPositionRaw() {
-        return _rotEncoder.getAbsolutePosition() - _rotEncoder.getPositionOffset();
+        return _rotEncoder.getAbsolutePosition();
     }
 
     /**
@@ -155,7 +175,7 @@ public class SwerveModule {
 
     /**
      * 
-     * @return Returns number rotations of rotation motor AFTER GEAR RATIO
+     * @return Returns rotation in RADIANS of rotation motor AFTER GEAR RATIO
      */
     public double getRotPosition() {
         return -getRotPositionRaw();
@@ -167,17 +187,6 @@ public class SwerveModule {
      */
     public double getTransVelocity() {
         return getTransVelocityRaw() * SwerveConstants.kTransRPMtoMPS;
-    }
-
-
-    /**
-     * 
-     * @param offset offset of rotation encoder in rotations from 0 to 1
-     * @return Set the offset of the rotation encoder in rotations
-     */
-
-    public void setRotationOffset(double offset) {
-        _rotEncoder.setPositionOffset(offset);
     }
 
 
