@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +27,8 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS _navx;
 
   private SwerveModule[] _modules;
+
+  public static double autoGyroInitValue = 0;
 
 
 
@@ -75,6 +78,9 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see Rotation2d
    */
   public Rotation2d getRotation2d() {
+    if (DriverStation.isAutonomous()) {
+      return Rotation2d.fromDegrees(getHeading() + autoGyroInitValue);
+    }
     return Rotation2d.fromDegrees(getHeading());
   }
 

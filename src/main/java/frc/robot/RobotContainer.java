@@ -56,6 +56,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new WaitCommand(0.2);
+    return null;
   }
 }
