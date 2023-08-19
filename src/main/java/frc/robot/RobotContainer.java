@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,10 +20,13 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-
+  DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    swerveSubsystem.setDefaultCommand(driveCommand);
     // Configure the trigger bindings
     configureBindings();
   }
@@ -51,6 +56,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return new WaitCommand(0.2);
+    return null;
   }
 }

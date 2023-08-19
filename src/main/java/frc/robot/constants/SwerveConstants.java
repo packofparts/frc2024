@@ -17,21 +17,25 @@ public class SwerveConstants {
   public static final double kTransRPMtoMPS = (kTransGearRatio * kDriveGearToMeters) / 60;
 
   // Track dimensions in meters
-  public static final double kTrackWidthMeters = 3;
-  public static final double kTrackLengthMeters = 3.5;
+  public static final double kTrackWidthMeters = .54;
+  public static final double kTrackLengthMeters = .54;
 
 
   // Physical Max
   public static final double kPhysicalMaxSpeedMPS = 4.0;
 
   public static final double kTeleMaxSpeedMPS = 4.0;
-  public static final double kAutoMaxSpeedMPS = 3.0;
+  public static final double kTeleMaxRotSpeedRadPerSeconds = 2*Math.PI;
+
+  public static final double kTeleMaxAccMPS = 5.0;
+  public static final double kTeleMaxRotAccRadPerSeconds = 4*Math.PI;
+
 
   // Encoder Offsets
-  public static double kfrontRightRotEncoderOffset = 0;
-  public static double kfrontLeftRotEncoderOffset = 0;
-  public static double kbackRightRotEncoderOffset = 0;
-  public static double kbackLeftRotEncoderOffset = 0;
+  public static double kfrontRightRotEncoderOffset = 0.228+.5;
+  public static double kfrontLeftRotEncoderOffset = 0.966-.5;
+  public static double kbackRightRotEncoderOffset = 0.045+.5;
+  public static double kbackLeftRotEncoderOffset = 0.28+.5;
 
 
 }
