@@ -17,19 +17,19 @@ public class SwerveConfig {
         // ID's
         public static final int frontRightTransID = 7;
         public static final int frontRightRotID = 6;
-        public static final int frontRightRotEncoderID = 1;
+        public static final int frontRightRotEncoderID = 23;
 
         public static final int frontLeftTransID = 1;
         public static final int frontLeftRotID = 3;
-        public static final int frontLeftRotEncoderID = 0;
+        public static final int frontLeftRotEncoderID = 22;
 
         public static final int backRightTransID = 9;
         public static final int backRightRotID = 8;
-        public static final int backRightRotEncoderID = 3;
+        public static final int backRightRotEncoderID = 20;
 
         public static final int backLeftTransID = 4;
         public static final int backLeftRotID = 5;
-        public static final int backLeftRotEncoderID = 2;
+        public static final int backLeftRotEncoderID = 21;
 
 
         // Offsets
