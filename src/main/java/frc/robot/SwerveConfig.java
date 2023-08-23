@@ -15,6 +15,7 @@ import frc.robot.subsystems.SwerveModule;
 /** Add your docs here. */
 public class SwerveConfig {
         // ID's
+        //Encoder IDs have been set
         public static final int frontRightTransID = 7;
         public static final int frontRightRotID = 6;
         public static final int frontRightRotEncoderID = 23;
@@ -47,10 +48,10 @@ public class SwerveConfig {
 
 
         // PID Controllers
-        public static final PIDController frontRightRotPID = new PIDController(0.771, 0.025, 0.015);
-        public static final PIDController frontLeftRotPID = new PIDController(0.56, 0., 0.01);
-        public static final PIDController backRightRotPID = new PIDController(0.56, 0, 0.01);
-        public static final PIDController backLeftRotPID = new PIDController(0.4, 0, 0.015);
+        public static final PIDController frontRightRotPID = new PIDController(0.1, 0.0, 0.1);
+        public static final PIDController frontLeftRotPID = new PIDController(0.1, 0., 0.1);
+        public static final PIDController backRightRotPID = new PIDController(0.1, 0, 0.1);
+        public static final PIDController backLeftRotPID = new PIDController(0.1, 0, 0.1);
 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
