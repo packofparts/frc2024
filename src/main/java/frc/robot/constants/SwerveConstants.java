@@ -8,6 +8,7 @@ public class SwerveConstants {
   // Found https://www.chiefdelphi.com/t/2910-mk2-swerve-module-release/335077
   // and https://www.swervedrivespecialties.com/products/mk2-module-kit?variant=31141088821361
   public static final double kTransGearRatio = 1 / 6.75;
+  public static final boolean kDebugMode = true;
 
   // Gear Conversions
   public static final double kDriveGearToMeters = (2 * Math.PI) * 2;
@@ -31,10 +32,10 @@ public class SwerveConstants {
 
 
   // Encoder Offsets
-  public static double kfrontRightRotEncoderOffset = 0.228+.5;
+  public static double kfrontRightRotEncoderOffset = 0.228+.5-0.79;
   public static double kfrontLeftRotEncoderOffset = 0.966-.5;
-  public static double kbackRightRotEncoderOffset = 0.045+.5;
-  public static double kbackLeftRotEncoderOffset = 0.28+.5;
+  public static double kbackRightRotEncoderOffset = 0.721;
+  public static double kbackLeftRotEncoderOffset = 0.699;
 
 
 }

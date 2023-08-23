@@ -48,6 +48,13 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     _odometry.update(getRotation2d(), getModulePositions());
+    if (SwerveConstants.kDebugMode){
+      SmartDashboard.putNumber("FLencoderDeg", _modules[0].getRotPosition()/(2*Math.PI));
+      SmartDashboard.putNumber("FRencoderDeg", _modules[1].getRotPosition()/(2*Math.PI));
+      SmartDashboard.putNumber("BLencoderDeg", _modules[2].getRotPosition()/(2*Math.PI));
+      SmartDashboard.putNumber("BRencoderDeg", _modules[3].getRotPosition()/(2*Math.PI));
+
+    }
 
 
     if (Input.resetGyro()){
@@ -98,6 +105,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
     for (int i = 0; i < desiredStates.length; i++) {
       _modules[i].setDesiredState(desiredStates[i]);
+
+      SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getDegrees());
     }
 
   }
@@ -140,6 +149,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
     this.setModuleStates(moduleStates);
+
   }
 
   public void setMotors(double x, double y, double rot) {

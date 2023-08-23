@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.SwerveConstants;
 
 public class SwerveModule {
@@ -56,15 +57,15 @@ public class SwerveModule {
         _transEncoder = _transMotor.getEncoder();
 
         // Sets measurement to radians
-        CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
-        _rotEncoder.configAllSettings(configuration);
+        // CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
+        // _rotEncoder.configAllSettings(configuration);
 
 
         // ----Setting PID
         _rotPID = rotPID;
 
         // ----Setting PID Parameters
-        _rotPID.enableContinuousInput(-Math.PI, Math.PI);
+        _rotPID.enableContinuousInput(0, 2*Math.PI);
 
 
 
@@ -75,11 +76,11 @@ public class SwerveModule {
 
     private CANCoderConfiguration getCANCoderConfig(double offset, boolean inverse){
         CANCoderConfiguration config = new CANCoderConfiguration();
-        config.sensorCoefficient = 2 * Math.PI / 4096;
-        config.unitString = "rad";
+        config.sensorCoefficient = 2*Math.PI / 4096;
+        config.unitString = "rot";
         config.sensorTimeBase = SensorTimeBase.PerSecond;
         
-        config.magnetOffsetDegrees = offset*360;
+        config.magnetOffsetDegrees = offset*360-180;
         config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
         config.sensorDirection = inverse;
 
@@ -117,7 +118,6 @@ public class SwerveModule {
 
         // PID Controller for both translation and rotation
         _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
-
 
 
         _rotMotor.set(_rotPID.calculate(getRotPosition(),
@@ -178,7 +178,7 @@ public class SwerveModule {
      * @return Returns rotation in RADIANS of rotation motor AFTER GEAR RATIO
      */
     public double getRotPosition() {
-        return -getRotPositionRaw();
+        return getRotPositionRaw();
     }
 
     /**
