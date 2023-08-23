@@ -28,8 +28,8 @@ public class SwerveConfig {
         public static final int backRightRotID = 8;
         public static final int backRightRotEncoderID = 20;
 
-        public static final int backLeftTransID = 4;
-        public static final int backLeftRotID = 5;
+        public static final int backLeftTransID = 5;
+        public static final int backLeftRotID = 4;
         public static final int backLeftRotEncoderID = 21;
 
 
