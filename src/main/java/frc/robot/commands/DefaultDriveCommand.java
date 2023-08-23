@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Input;
@@ -47,6 +48,9 @@ public class DefaultDriveCommand extends CommandBase {
     y *= SwerveConstants.kTeleMaxSpeedMPS;
     rot *= SwerveConstants.kTeleMaxRotSpeedRadPerSeconds;
 
+
+    SmartDashboard.putNumber("Rotation Janked", rot);
+    
     swerve.setMotors(x, y, rot, true);
   }
 

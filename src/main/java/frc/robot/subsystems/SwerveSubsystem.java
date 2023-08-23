@@ -54,6 +54,11 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("BLencoderDeg", _modules[2].getRotPosition()/(2*Math.PI));
       SmartDashboard.putNumber("BRencoderDeg", _modules[3].getRotPosition()/(2*Math.PI));
 
+      SmartDashboard.putNumber("FLPIDOutput", _modules[0].PIDOutput);
+      SmartDashboard.putNumber("FRPIDOutput", _modules[1].PIDOutput);
+      SmartDashboard.putNumber("BLPIDOutput", _modules[2].PIDOutput);
+      SmartDashboard.putNumber("BRPIDOutput", _modules[3].PIDOutput);
+
     }
 
 
@@ -106,7 +111,9 @@ public class SwerveSubsystem extends SubsystemBase {
     for (int i = 0; i < desiredStates.length; i++) {
       _modules[i].setDesiredState(desiredStates[i]);
 
-      SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getDegrees());
+      SwerveModuleState.optimize(desiredStates[i], _modules[i].getState().angle);
+
+      SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getRotations());
     }
 
   }

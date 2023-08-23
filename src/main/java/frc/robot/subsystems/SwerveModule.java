@@ -37,6 +37,8 @@ public class SwerveModule {
     private CANCoder _rotEncoder;
     private RelativeEncoder _transEncoder;
 
+
+    public double PIDOutput = 0.0;
     public SwerveModule(int rotID, int transID, int rotEncoderID, double rotEncoderOffset,
             boolean rotInverse, boolean transInverse, PIDController rotPID) {
         // Setting Parameters
@@ -51,6 +53,7 @@ public class SwerveModule {
         // Motor Controllers
         _rotMotor = new CANSparkMax(_rotID, MotorType.kBrushless);
         _transMotor = new CANSparkMax(_transID, MotorType.kBrushless);
+        
 
         // Encoders
         _rotEncoder = new CANCoder(_rotEncoderID);
@@ -108,20 +111,24 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState desiredState) {
 
         // Stops returning to original rotation
-        if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
-            stop();
-            return;
-        }
+        // if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+        //     stop();
+        //     return;
+        // }
 
         // No turning motors over 90 degrees
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
-        _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
+        // _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
+        
+        PIDOutput = _rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
+        _rotMotor.set(PIDOutput);
 
-        _rotMotor.set(_rotPID.calculate(getRotPosition(),
-                desiredState.angle.getRadians()));
+//        _rotMotor.set(0.1);
+
+        
 
     }
 
