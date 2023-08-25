@@ -68,7 +68,7 @@ public class SwerveModule {
         _rotPID = rotPID;
 
         // ----Setting PID Parameters
-        _rotPID.enableContinuousInput(0, 2*Math.PI);
+        _rotPID.enableContinuousInput(-Math.PI, Math.PI);
 
 
 
@@ -126,10 +126,15 @@ public class SwerveModule {
 
         _rotMotor.set(PIDOutput);
 
-//        _rotMotor.set(0.1);
+    //    _rotMotor.set(0.1);
 
         
 
+    }
+
+    public void setPID(double degrees){
+        PIDOutput = _rotPID.calculate(getRotPosition(),Math.toRadians(degrees));
+        _rotMotor.set(PIDOutput);
     }
 
     /**
