@@ -27,7 +27,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS _navx;
 
   private SwerveModule[] _modules;
-
+  public double tuningOutput = 0;
   public static double autoGyroInitValue = 0;
 
 
@@ -60,6 +60,16 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("BRPIDOutput", _modules[3].PIDOutput);
 
     }
+
+    // if (Input.getIncPID()){
+    //   tuningOutput += 3;
+    // } else if (Input.getDecPID()){
+    //   tuningOutput -=3;
+    // }
+
+    // for (SwerveModule mod: _modules){
+    //   mod.setPID(tuningOutput);
+    // }
 
 
     if (Input.resetGyro()){
