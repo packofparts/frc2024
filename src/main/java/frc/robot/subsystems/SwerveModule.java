@@ -117,7 +117,7 @@ public class SwerveModule {
         // }
 
         // No turning motors over 90 degrees
-        desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+        //desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
         // _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
