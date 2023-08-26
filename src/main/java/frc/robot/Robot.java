@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -78,16 +79,17 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    _autonomousCommand = _robotContainer.getAutonomousCommand();
+    // _autonomousCommand = _robotContainer.getAutonomousCommand();
 
-    if(pathSelector.getSelected() != null){
-      _autonomousCommand = pathSelector.getSelected();
-    }
+    // if(pathSelector.getSelected() != null){
+    //   _autonomousCommand = pathSelector.getSelected();
+    // }
 
-    // schedule the autonomous command (example)
-    if (_autonomousCommand != null) {
-      _autonomousCommand.schedule();
-    }
+    // // schedule the autonomous command (example)
+    // if (_autonomousCommand != null) {
+    //   _autonomousCommand.schedule();
+    // }
+    CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 
   /** This function is called periodically during autonomous. */
@@ -113,6 +115,8 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    CANSparkMaxLowLevel.enableExternalUSBControl(true);
+    _robotContainer.swerveSubsystem.setMotors(0, 0, 0);
   }
 
   /** This function is called periodically during test mode. */
