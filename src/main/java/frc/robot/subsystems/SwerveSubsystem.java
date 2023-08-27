@@ -49,16 +49,22 @@ public class SwerveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     _odometry.update(getRotation2d(), getModulePositions());
     if (SwerveConstants.kDebugMode){
-      SmartDashboard.putNumber("FLencoderDeg", _modules[0].getRotPosition()/(2*Math.PI));
-      SmartDashboard.putNumber("FRencoderDeg", _modules[1].getRotPosition()/(2*Math.PI));
-      SmartDashboard.putNumber("BLencoderDeg", _modules[2].getRotPosition()/(2*Math.PI));
-      SmartDashboard.putNumber("BRencoderDeg", _modules[3].getRotPosition()/(2*Math.PI));
+
 
       SmartDashboard.putNumber("FLPIDOutput", _modules[0].PIDOutput);
       SmartDashboard.putNumber("FRPIDOutput", _modules[1].PIDOutput);
       SmartDashboard.putNumber("BLPIDOutput", _modules[2].PIDOutput);
       SmartDashboard.putNumber("BRPIDOutput", _modules[3].PIDOutput);
 
+      
+
+    }
+
+    for (int i = 0; i < _modules.length; i++){
+      SmartDashboard.putNumber("AppliedOutput"+i, _modules[i].getAppliedOutput());
+      SmartDashboard.putNumber("DesiredStateAngle"+i, _modules[i].desiredRadians/Math.PI*180);
+      SmartDashboard.putNumber("RotRelativePosDeg"+i, _modules[i].getRotRelativePosition()*360);
+      SmartDashboard.putNumber("AbsEncoderDeg"+i, _modules[i].getRotPosition()/Math.PI*180);
     }
 
     // if (Input.getIncPID()){
@@ -67,9 +73,9 @@ public class SwerveSubsystem extends SubsystemBase {
     //   tuningOutput -=3;
     // }
 
-    // for (SwerveModule mod: _modules){
-    //   mod.setPID(tuningOutput);
-    // }
+    for (SwerveModule mod: _modules){
+      mod.setPID(tuningOutput);
+    }
 
 
     if (Input.resetGyro()){
@@ -121,9 +127,9 @@ public class SwerveSubsystem extends SubsystemBase {
     for (int i = 0; i < desiredStates.length; i++) {
       _modules[i].setDesiredState(desiredStates[i]);
 
-      SwerveModuleState.optimize(desiredStates[i], _modules[i].getState().angle);
+        // //SwerveModuleState.optimize(desiredStates[i], _modules[i].getState().angle);
 
-      SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getRotations());
+        // SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getDegrees());
     }
 
   }
