@@ -36,9 +36,10 @@ public class SwerveModule {
     // Encoders
     private CANCoder _rotEncoder;
     private RelativeEncoder _transEncoder;
-
+    private RelativeEncoder _rotRelativeEncoder;
 
     public double PIDOutput = 0.0;
+    public double desiredRadians = 0.0;
     public SwerveModule(int rotID, int transID, int rotEncoderID, double rotEncoderOffset,
             boolean rotInverse, boolean transInverse, PIDController rotPID) {
         // Setting Parameters
@@ -58,7 +59,9 @@ public class SwerveModule {
         // Encoders
         _rotEncoder = new CANCoder(_rotEncoderID);
         _transEncoder = _transMotor.getEncoder();
-
+        _rotRelativeEncoder = _rotMotor.getEncoder();
+        _rotRelativeEncoder.setPosition(0);
+        _rotMotor.setIdleMode(IdleMode.kBrake);
         // Sets measurement to radians
         // CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
         // _rotEncoder.configAllSettings(configuration);
@@ -69,8 +72,6 @@ public class SwerveModule {
 
         // ----Setting PID Parameters
         _rotPID.enableContinuousInput(-Math.PI, Math.PI);
-
-
 
         // ----Setting Inversion
         _rotMotor.setInverted(_rotInverse);
@@ -102,6 +103,10 @@ public class SwerveModule {
         return new SwerveModuleState(getTransVelocity(), Rotation2d.fromRadians(getRotPosition()));
     }
 
+    public double getAppliedOutput(){
+        return _rotMotor.getAppliedOutput();
+    }
+
     /**
      * Sets the motor speeds passed into constructor
      * 
@@ -111,30 +116,30 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState desiredState) {
 
         // Stops returning to original rotation
-        // if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
-        //     stop();
-        //     return;
-        // }
+        if (Math.abs(desiredState.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
 
         // No turning motors over 90 degrees
         //desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
         // _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
-        
+        desiredRadians = desiredState.angle.getRadians();
         PIDOutput = _rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
         _rotMotor.set(PIDOutput);
 
-    //    _rotMotor.set(0.1);
+        // _rotMotor.set(0.1);
 
         
 
     }
 
     public void setPID(double degrees){
-        PIDOutput = _rotPID.calculate(getRotPosition(),Math.toRadians(degrees));
-        _rotMotor.set(PIDOutput);
+        PIDOutput = _rotPID.calculate(getRotRelativePosition()*2*Math.PI,Math.toRadians(degrees));
+        _rotMotor.set(.1);
     }
 
     /**
@@ -191,6 +196,10 @@ public class SwerveModule {
      */
     public double getRotPosition() {
         return getRotPositionRaw();
+    }
+
+    public double getRotRelativePosition(){
+        return _rotRelativeEncoder.getPosition()/12.8;
     }
 
     /**

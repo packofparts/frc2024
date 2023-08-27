@@ -116,7 +116,7 @@ public class Robot extends TimedRobot {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
-    _robotContainer.swerveSubsystem.setMotors(0, 0, 0);
+    //_robotContainer.swerveSubsystem.setMotors(0, 0, 0);
   }
 
   /** This function is called periodically during test mode. */
