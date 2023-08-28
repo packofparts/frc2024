@@ -54,6 +54,30 @@ public class Drivetrain {
         }
     }
 
+    public void resetDriveEncoder(double v) {
+        for (var module : modules) {
+            module.resetDriveEncoder(v);
+        }
+    }
+
+    public void resetSteeringEncoder(double v) {
+        for (var module : modules) {
+            module.resetSteeringEncoder(v);
+        }
+    }
+
+    public double getDrivingEncoderPositionRaw(int id) {
+        return modules[id].getDrivingEncoderPositionRaw();
+    }
+
+    public double getDrivingEncoderVelocityRaw(int id) {
+        return modules[id].getDrivingEncoderVelocityRaw();
+    }
+    
+    public double getRotationEncoderPositionRaw(int id) {
+        return modules[id].getRotationEncoderPositionRaw();
+    }
+
     public double getModulePositionMeters(int id) {
         return modules[id].getPosition().distanceMeters;
     }
@@ -98,5 +122,9 @@ public class Drivetrain {
                 modules[3].getPosition()
             }
         );
+    }
+
+    public void debug(int id, String s, double v) {
+        modules[id].debug(s, v);
     }
 }

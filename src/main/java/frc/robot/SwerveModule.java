@@ -60,30 +60,42 @@ public class SwerveModule {
         return _config.moduleName;
     }
 
-    public double getDrivingPositionMeters() {
+    public double getDrivingEncoderPositionRaw() {
+        return _drivingEncoder.getPosition();
+    }
+
+    public double getDrivingEncoderVelocityRaw() {
+        return _drivingEncoder.getVelocity();
+    }
+    
+    public double getRotationEncoderPositionRaw() {
+        return _steeringRelativeEncoder.getPosition();
+    }
+    
+    public double getDrivingEncoderPositionMeters() {
         return _drivingEncoder.getPosition() * kDrivingEncoderPositionConversionFactor; 
     }
 
-    public double getDrivingSpeedMetersPerSecond() {
+    public double getDrivingEncoderSpeedMetersPerSecond() {
         return _drivingEncoder.getVelocity() * kDriveEncoderRPM2MetersPerSec; 
     }
-
-    public double getRotationPositionRadians(){
+    
+    public double getRotationEncoderPositionRadians(){
         return _steeringRelativeEncoder.getPosition() * kAngularEncoderConversionFactor;
     }
 
     public Rotation2d getRotation2d(){
-        double steeringRadians = getRotationPositionRadians();
+        double steeringRadians = getRotationEncoderPositionRadians();
         return Rotation2d.fromRadians(steeringRadians);
     }
 
     public SwerveModuleState getState() {
-        double driveSpeedMPS = getDrivingSpeedMetersPerSecond();
+        double driveSpeedMPS = getDrivingEncoderSpeedMetersPerSecond();
         return new SwerveModuleState(driveSpeedMPS, getRotation2d());
     }
 
     public SwerveModulePosition getPosition() {
-        double distanceMeters = getDrivingPositionMeters();
+        double distanceMeters = getDrivingEncoderPositionMeters();
         return new SwerveModulePosition(distanceMeters, getRotation2d());
     }
     
@@ -107,7 +119,7 @@ public class SwerveModule {
         debug("SetDrivingMotorOutput", driveOutput);
         _drivingMotor.set(driveOutput);
 
-        double turnOutput = _steeringPIDController.calculate(getRotationPositionRadians(), desiredState.angle.getRadians());
+        double turnOutput = _steeringPIDController.calculate(getRotationEncoderPositionRadians(), desiredState.angle.getRadians());
         debug("SetTurnMotorOutput", turnOutput);
         _steeringMotor.set(turnOutput);
     }
@@ -133,7 +145,7 @@ public class SwerveModule {
         _steeringMotor.set(speed);
     }
 
-    public void debug(String s, double x) {
-        SmartDashboard.putNumber(_config.moduleName + "-" + s, x);
+    public void debug(String s, double v) {
+        SmartDashboard.putNumber(_config.moduleName + "-" + s, v);
     }
 }
