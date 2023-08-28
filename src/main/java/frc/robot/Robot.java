@@ -5,74 +5,49 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class Robot extends TimedRobot {
 
-  @Override
-  public void robotInit() {
-    /* To be defined */ 
-  }
+  private final Drivetrain _swerveDrivetrain = new Drivetrain();
+  private final XboxController _xboxController = new XboxController(0);
+  
+  private final SlewRateLimiter _xspeedLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter _yspeedLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter _rotLimiter = new SlewRateLimiter(3);
 
-  @Override
-  public void robotPeriodic() {
-    /* To be defined */ 
-  }
-
-  /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {
-    /* To be defined */ 
-  }
-
-  @Override
-  public void disabledPeriodic() {
-    /* To be defined */ 
-  }
-
-  @Override
-  public void autonomousInit() {
-    // Enable CANSparkMaxLowLevel.enableExternalUSBControl(true)
-    throw new UnsupportedOperationException();
-  }
-
+  int[] testModules = {0, 1, 2, 3};
   @Override
   public void autonomousPeriodic() {
-    throw new UnsupportedOperationException();
+    drive(false);
+    _swerveDrivetrain.updateOdometry();
   }
 
   @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-  }
-
-  @Override
-  public void teleopPeriodic() { 
-    /* To be defined */ 
+  public void teleopPeriodic() {
+    drive(true);
   }
 
   @Override
   public void testInit() {
-    // Cancels all running commands at the start of test mode.
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
-    // Enable _robotContainer.swerveSubsystem.setMotors(0, 0, 0)
+    _swerveDrivetrain.stopMotors();
   }
+  
+  
+  private void drive(boolean fieldRelative) {
+    double xSpeed = MathUtil.applyDeadband(_xboxController.getLeftY(), 0.02);
+    xSpeed = Drivetrain.kMaxSpeedMPS * -_xspeedLimiter.calculate(xSpeed);
 
-  @Override
-  public void testPeriodic() {
-    // To be defined
-  }
+    double ySpeed = MathUtil.applyDeadband(_xboxController.getLeftX(), 0.02);
+    ySpeed = Drivetrain.kMaxSpeedMPS * -_yspeedLimiter.calculate(ySpeed);
 
-  @Override
-  public void simulationInit() {
-    // To be defined
-  }
+    double rotSpeed = MathUtil.applyDeadband(_xboxController.getRightX(), 0.02);
+    rotSpeed = Drivetrain.kMaxAngularSpeedRadPerSec * -_rotLimiter.calculate(rotSpeed);
 
-  @Override
-  public void simulationPeriodic() {
-    // To be defined
+    _swerveDrivetrain.drive(xSpeed, ySpeed, rotSpeed, fieldRelative);
   }
 }
