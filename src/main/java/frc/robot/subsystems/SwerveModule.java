@@ -61,7 +61,7 @@ public class SwerveModule {
         _transEncoder = _transMotor.getEncoder();
         _rotRelativeEncoder = _rotMotor.getEncoder();
         _rotRelativeEncoder.setPosition(0);
-        _rotMotor.setIdleMode(IdleMode.kBrake);
+        _rotMotor.setIdleMode(IdleMode.kCoast);
         // Sets measurement to radians
         // CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
         // _rotEncoder.configAllSettings(configuration);
@@ -122,7 +122,7 @@ public class SwerveModule {
         }
 
         // No turning motors over 90 degrees
-        //desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+        // desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
         // _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
