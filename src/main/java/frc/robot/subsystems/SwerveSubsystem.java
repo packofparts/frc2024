@@ -73,9 +73,9 @@ public class SwerveSubsystem extends SubsystemBase {
     //   tuningOutput -=3;
     // }
 
-    for (SwerveModule mod: _modules){
-      mod.setPID(tuningOutput);
-    }
+    // for (SwerveModule mod: _modules){
+    //   mod.setPID(tuningOutput);
+    // }
 
 
     if (Input.resetGyro()){
