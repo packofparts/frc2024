@@ -31,11 +31,12 @@ public class SwerveConstants {
   public static final double kTeleMaxRotAccRadPerSeconds = 4*Math.PI;
 
 
-  // Encoder Offsets
+  //mk2 Encoder Offsets remove
   public static double kfrontRightRotEncoderOffset = 0.228+.5-0.79;
   public static double kfrontLeftRotEncoderOffset = 0.966-.5;
   public static double kbackRightRotEncoderOffset = 0.721;
   public static double kbackLeftRotEncoderOffset = 0.699;
 
+  public static boolean kPIDTuneMode = true;
 
 }

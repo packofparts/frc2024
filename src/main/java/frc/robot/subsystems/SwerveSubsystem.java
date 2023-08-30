@@ -76,6 +76,8 @@ public class SwerveSubsystem extends SubsystemBase {
     // for (SwerveModule mod: _modules){
     //   mod.setPID(tuningOutput);
     // }
+    // SwerveConfig.frontRightModule.setTransMotorRaw(0.3);
+    
 
 
     if (Input.resetGyro()){
