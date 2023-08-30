@@ -48,7 +48,7 @@ public class SwerveConfig {
 
 
         // PID Controllers
-        public static final PIDController frontRightRotPID = new PIDController(0.2, 0.0, 0.);
+        public static final PIDController frontRightRotPID = new PIDController(0.1, 0.0, 0.);
         public static final PIDController frontLeftRotPID = new PIDController(0.1, 0., 0.);
         public static final PIDController backRightRotPID = new PIDController(0.1, 0, 0.);
         public static final PIDController backLeftRotPID = new PIDController(0.1, 0, 0);
@@ -91,5 +91,8 @@ public class SwerveConfig {
 
         public static final SwerveModule[] swerveModules =
                         {frontLeftModule, frontRightModule, backLeftModule, backRightModule};
+
+        public static final PIDController[] swerveModulePIDs =
+                        {frontLeftRotPID, frontRightRotPID, backLeftRotPID, backLeftRotPID};
 
 }

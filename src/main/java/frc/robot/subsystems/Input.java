@@ -34,8 +34,9 @@ public class Input {
 
 
 
-    public static boolean getIncPID(){return tJoystick.getRawButton(5);}
+    public static boolean getIncPID(){return rJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
+    public static boolean togglePIDTuning(){return rJoystick.getTriggerReleased();}
 
 }
     
