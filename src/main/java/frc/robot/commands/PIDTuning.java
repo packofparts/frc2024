@@ -39,6 +39,7 @@ public class PIDTuning extends CommandBase {
     SmartDashboard.putNumber("kI",0);
     SmartDashboard.putNumber("kD",0);
     SmartDashboard.putNumber("increment",2);
+    SmartDashboard.putNumber("measurement", curModule.getRotPosition()/Math.PI*180);
     SmartDashboard.putNumber("setpoint",setPoint);
     SmartDashboard.putBoolean("toggled", toggled);
   }
@@ -71,7 +72,8 @@ public class PIDTuning extends CommandBase {
     }else if(Input.getDecPID()){
       setPoint -= increment;
     }
-    SmartDashboard.putNumber("setpoint",setPoint);
+    SmartDashboard.putNumber("setpoint", setPoint);
+    SmartDashboard.putNumber("measurement", curModule.getRotPosition()/Math.PI*180);
     SmartDashboard.updateValues();
   }
 

@@ -61,7 +61,8 @@ public class SwerveModule {
         _transEncoder = _transMotor.getEncoder();
         _rotRelativeEncoder = _rotMotor.getEncoder();
         _rotRelativeEncoder.setPosition(0);
-        _rotMotor.setIdleMode(IdleMode.kCoast);
+        _rotMotor.setIdleMode(IdleMode.kBrake);
+        _rotMotor.burnFlash();
         // Sets measurement to radians
         // CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
         // _rotEncoder.configAllSettings(configuration);
