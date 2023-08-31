@@ -37,21 +37,21 @@ public class SwerveConfig {
 
         // Inverse Booleans
         public static final boolean frontRightRotInverse = false;
-        public static final boolean frontRightTransInverse = true;
+        public static final boolean frontRightTransInverse = false;
         public static final boolean frontLeftRotInverse = false;
-        public static final boolean frontLeftTransInverse = false;
+        public static final boolean frontLeftTransInverse = true;
 
         public static final boolean backRightRotInverse = false;
-        public static final boolean backRightTransInverse = true;
+        public static final boolean backRightTransInverse = false;
         public static final boolean backLeftRotInverse = false;
-        public static final boolean backLeftTransInverse = false;
+        public static final boolean backLeftTransInverse = true;
 
 
         // PID Controllers
-        public static final PIDController frontRightRotPID = new PIDController(0.1, 0.0, 0.);
-        public static final PIDController frontLeftRotPID = new PIDController(0.1, 0., 0.);
-        public static final PIDController backRightRotPID = new PIDController(0.1, 0, 0.);
-        public static final PIDController backLeftRotPID = new PIDController(0.1, 0, 0);
+        public static final PIDController frontRightRotPID = new PIDController(0.35, 0.0, 0.);
+        public static final PIDController frontLeftRotPID = new PIDController(0.35, 0., 0.);
+        public static final PIDController backRightRotPID = new PIDController(0.35, 0, 0.);
+        public static final PIDController backLeftRotPID = new PIDController(0.35, 0, 0);
 
 
         public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(

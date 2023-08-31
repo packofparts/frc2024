@@ -22,9 +22,9 @@ public class SwerveConstants {
 
 
   // Physical Max
-  public static final double kPhysicalMaxSpeedMPS = 4.0;
+  public static final double kPhysicalMaxSpeedMPS = 1.0;
 
-  public static final double kTeleMaxSpeedMPS = 4.0;
+  public static final double kTeleMaxSpeedMPS = 8.0;
   public static final double kTeleMaxRotSpeedRadPerSeconds = 2*Math.PI;
 
   public static final double kTeleMaxAccMPS = 5.0;
@@ -37,6 +37,6 @@ public class SwerveConstants {
   public static double kbackRightRotEncoderOffset = 0.721;
   public static double kbackLeftRotEncoderOffset = 0.699;
 
-  public static boolean kPIDTuneMode = true;
+  public static boolean kPIDTuneMode = false;
 
 }

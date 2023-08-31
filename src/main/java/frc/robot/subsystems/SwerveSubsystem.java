@@ -56,7 +56,9 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("BLPIDOutput", _modules[2].PIDOutput);
       SmartDashboard.putNumber("BRPIDOutput", _modules[3].PIDOutput);
 
-      
+      SmartDashboard.putNumber("XPos", _odometry.getPoseMeters().getX());
+      SmartDashboard.putNumber("YPos", _odometry.getPoseMeters().getY());
+      SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
 
     }
 
