@@ -51,7 +51,7 @@ public class DefaultDriveCommand extends CommandBase {
 
     SmartDashboard.putNumber("Rotation Janked", rot);
     
-    swerve.setMotors(x, y, rot, true);
+    swerve.setMotors(x/4, y/8, rot/8, true);
   }
 
   // Called once the command ends or is interrupted.
