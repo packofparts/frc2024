@@ -12,6 +12,8 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class VisionConstants {
+    public static final String kLimelightName = "limelight";
+
     public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1));
     public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(10)); 
 }
