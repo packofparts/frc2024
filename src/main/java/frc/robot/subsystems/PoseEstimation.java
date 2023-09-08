@@ -41,8 +41,8 @@ public class PoseEstimation extends SubsystemBase {
        swerve.getRotation2d(),
        swerve.getModulePositions(),
        swerve.getRobotPose(),
-       VisionConstants.stateStdDevs,
-       VisionConstants.visionMeasurementStdDevs);
+       VisionConstants.kStateStdDevs,
+       VisionConstants.kVisionMeasurementStdDevs);
 
     field = new Field2d();
     SmartDashboard.putData("Field", field);
