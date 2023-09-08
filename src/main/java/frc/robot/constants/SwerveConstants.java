@@ -32,10 +32,10 @@ public class SwerveConstants {
 
 
   //mk2 Encoder Offsets remove
-  public static double kfrontRightRotEncoderOffset = 0.228+.5-0.79;
-  public static double kfrontLeftRotEncoderOffset = 0.966-.5;
-  public static double kbackRightRotEncoderOffset = 0.721;
-  public static double kbackLeftRotEncoderOffset = 0.699;
+  public static double kFrontRightRotEncoderOffset = 0.228+.5-0.79;
+  public static double kFrontLeftRotEncoderOffset = 0.966-.5;
+  public static double kBackRightRotEncoderOffset = 0.721;
+  public static double kBackLeftRotEncoderOffset = 0.699;
 
   public static boolean kPIDTuneMode = false;
 
