@@ -106,6 +106,7 @@ Temporary Items
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
+!.vscode/extensions.json
 
 ### Windows ###
 # Windows thumbnail cache files
