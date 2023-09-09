@@ -38,5 +38,31 @@ public class Input {
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean togglePIDTuning(){return rJoystick.getTriggerReleased();}
 
+    public static boolean getA() {
+        return false;
+    }
+
+    public static double getRightStickY() {return xboxController.getRightY();}
+
+    public static double getLeftStickY() {return xboxController.getLeftY();}
+
+    public static int getDPad() {return xboxController.getPOV();}
+
+    public static boolean isUltraInstinct() {
+        return false;
+    }
+
+    public static boolean getY() {
+        return xboxController.getYButton();
+    }
+
+    public static boolean getB() {
+        return false;
+    }
+
+    public static boolean getX() {
+        return false;
+    }
+
 }
     

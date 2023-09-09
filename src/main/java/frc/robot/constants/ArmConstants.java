@@ -6,21 +6,36 @@ import edu.wpi.first.wpilibj.DutyCycle;
 /** Add your docs here. */
 public class ArmConstants {
 
+    public static enum ArmState {
+        UNDEFINED(10000,10000),
+        STOW(minAngleRad,minExtensionIn),
+        GROUND_PICKUP(Units.degreesToRadians(40),9.5),
+        LOWER_NODE(Units.degreesToRadians(12),0),
+        MID_NODE(Units.degreesToRadians(87.0),0),
+        UPPER_NODE(Units.degreesToRadians(100),18.5),
+        SUBSTATION(Units.degreesToRadians(90),0);
+    
+        public double pivotAngleRad;
+        public double extentionDistIn;
+        ArmState(double piv, double ext){
+          this.pivotAngleRad = piv;
+          this.extentionDistIn = ext;
+        }
+      }
+    
+    public static ArmState curArmState = ArmState.STOW;
+    public static double armStatePivDeadzoneRad = Units.degreesToRadians(3);
+    public static double armStateExtDeadzoneIn = 2; 
     public static final boolean useAbsEncoderPiv = true;
     public static final boolean useAbsEncoderTelescope = false; 
     public static boolean useFeedForward = true;
 
-    public static double 
-    kG = 0.03;
+    public static double kG = 0.03;
 
     //channel on dio port
     public static final int DIOPortPiv = 0;
-
     public static final double pivotAbsEncToRotation = 1.0/3.7142857;
     public static double pivotInitOffset = 0;
-
-
-
 
     public static final double zeroAngleRad = Units.degreesToRadians(14);//11.5
 
@@ -29,6 +44,7 @@ public class ArmConstants {
 
     public static final double extensionRotationToInches =  18.5/7.01;
     public static final double minExtensionIn = 0;
+
     //when it is at zeroAngleRad
     public static final double zeroExtensionIn = minExtensionIn;
 
@@ -41,18 +57,6 @@ public class ArmConstants {
 
     // Setpoints
     public static final double gearRatioExtension = 1.0/10.0;
-
-    public static final double[] extensionLevelsIn = {minExtensionIn, minExtensionIn, maxExtensionIn}; //inches
-    public static final double[] angleLevelsDeg = {12, 87.0, 100}; //degrees
-    public static final double[] angleLevelsRad = {Units.degreesToRadians(angleLevelsDeg[0]), Units.degreesToRadians(angleLevelsDeg[1]), Units.degreesToRadians(angleLevelsDeg[2])};
-    public static final double[] groundPick  = {Units.degreesToRadians(40),9.5};
-
-    public static final double[] offSubstation = {Units.degreesToRadians(90), 0}; // angle, inches including claw
-
-
-
-
-    
     public static final double pivotPosInMetersY = Units.inchesToMeters(45.75);
 
 

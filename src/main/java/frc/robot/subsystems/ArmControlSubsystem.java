@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.constants.ArmConstants;
 import frc.robot.constants.CompConstants;
+import frc.robot.constants.ArmConstants.ArmState;
 import frc.robot.Robot;
 
 public class ArmControlSubsystem extends SubsystemBase {
@@ -34,6 +35,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     BRAKE,
     OFF
   }
+
 
   public static enum MoveArmConfig {
     SIMULTANEOUS,
@@ -113,14 +115,11 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     this.updateModes();
 
-  
-
     rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
     leftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 
     leftPivotController.setSelectedSensorPosition(0);
     rightPivotController.setSelectedSensorPosition(0);
-
     
     //extensionController.setIdleMode(IdleMode.kBrake); //ccheck if needed
     extensionController.setInverted(false);
@@ -133,7 +132,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() {      
+  public void periodic() { 
+    updateCurrentState();     
       if(chooser.getSelected() == ArmMotorMode.BRAKE && isInitilized){
        pivotPeriodic(); //maintains the desired pivot angle
        extensionPeriodic();
@@ -143,7 +143,9 @@ public class ArmControlSubsystem extends SubsystemBase {
       }
 
       if(!isInitilized && -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation != 0 && absPivEncoder.isConnected()){
+        //What does this line do?
         this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + 0.226 + 0.02777;
+        
         this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
         this.desiredPivotRotation = this.currentPivotRotation;
         
@@ -151,6 +153,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       }
       
       updateModes();
+      
 
       // Getting Current And Desired Distances
       SmartDashboard.putNumber("CurrentExtension", currentExtensionDistance);
@@ -199,8 +202,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
 
-
-
+    //Desaturating PID output
     if(pivotPIDOutput > 0.55){
       pivotPIDOutput = 0.55;
     }else if(pivotPIDOutput < -0.55){
@@ -215,6 +217,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     if(ArmConstants.useFeedForward){
       pivotPIDOutput += ArmConstants.kG*Math.cos(getCurrentPivotRotation(true)-(Math.PI/2));
     }
+
     leftPivotController.set(pivotPIDOutput);
     rightPivotController.set(pivotPIDOutput);
   }
@@ -222,27 +225,24 @@ public class ArmControlSubsystem extends SubsystemBase {
   private void extensionPeriodic(){
 
     double extensionPIDOutput = extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
-
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
-
     double difference = desiredExtensionDistance - currentExtensionDistance;
 
+    //Desaturating PID output
     if(extensionPIDOutput > .5){
       extensionPIDOutput = .5;
     }else if (extensionPIDOutput < -0.5){
       extensionPIDOutput = -.5;
     }
 
+    //This is for handling the friction in the extension
     double offset =  .12 * (difference > 0 ? 1 : -1);
     if (Math.abs(difference) > .14){
       extensionController.set(offset + extensionPIDOutput);
     }else{
       extensionController.set(0);
     }
-   
   }
-
-
 
   public void setDesiredPivotRotation(double _desiredRotation){
     desiredPivotRotation = _desiredRotation;
@@ -273,12 +273,10 @@ public class ArmControlSubsystem extends SubsystemBase {
     //return true;
   }
 
-
   public boolean atTelescopeSetpoint(){
     return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 3.0;
     //return true;
   }
-
 
   public Command waitUntilSpPivot(double sp){
     return new FunctionalCommand(()->setDesiredPivotRotation(sp), null, null, this::atAngleSetpoint, this);
@@ -286,13 +284,11 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
   public Command waitUntilSpTelescope(double sp){
-  
     return new FunctionalCommand(()->setDesiredExtension(sp), null, null, this::atTelescopeSetpoint, this);
   }
   
 
   public double getCurrentPivotRotation(boolean inRadians){
-    //double rotation = pivotEncoder.getAbsolutePosition() - ArmConstants.pivotInitOffset;
     double rotation;
     if (ArmConstants.useAbsEncoderPiv){
       rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + this.initialPivotEncoderOffset;
@@ -339,6 +335,14 @@ public class ArmControlSubsystem extends SubsystemBase {
       rightPivotController.setNeutralMode(NeutralMode.Coast);
       leftPivotController.setNeutralMode(NeutralMode.Coast);
       extensionController.setIdleMode(IdleMode.kCoast);
+    }
+  }
+
+  void updateCurrentState(){
+    for (ArmState arm:ArmConstants.ArmState.values()){
+      if (Math.abs(this.getCurrentPivotRotation(true)-arm.pivotAngleRad)<ArmConstants.armStatePivDeadzoneRad && Math.abs(this.getCurrentExtensionIn()-arm.extentionDistIn)<ArmConstants.armStateExtDeadzoneIn){
+        ArmConstants.curArmState = arm;
+      }
     }
   }
   
