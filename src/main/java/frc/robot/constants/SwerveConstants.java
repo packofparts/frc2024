@@ -11,10 +11,11 @@ public class SwerveConstants {
   public static final boolean kDebugMode = true;
 
   // Gear Conversions
-  public static final double kDriveGearToMeters = (2 * Math.PI) * 2;
+  public static final double kWheelDiamMeters = .1016;
+  public static final double kWheelCircumference = Math.PI * kWheelDiamMeters;
 
   // Conversion Factors
-  public static final double kTransRPMtoMPS = (kTransGearRatio * kDriveGearToMeters) / 60;
+  public static final double kTransRPMtoMPS = (kTransGearRatio * kWheelCircumference) / 60;
 
   // Track dimensions in meters
   public static final double kTrackWidthMeters = .54;
@@ -22,9 +23,9 @@ public class SwerveConstants {
 
 
   // Physical Max
-  public static final double kPhysicalMaxSpeedMPS = 1.0;
+  public static final double kPhysicalMaxSpeedMPS = 4.3;
 
-  public static final double kTeleMaxSpeedMPS = 8.0;
+  public static final double kTeleMaxSpeedMPS = 4.3;
   public static final double kTeleMaxRotSpeedRadPerSeconds = 2*Math.PI;
 
   public static final double kTeleMaxAccMPS = 5.0;

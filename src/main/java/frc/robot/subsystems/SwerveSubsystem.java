@@ -60,6 +60,8 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("YPos", _odometry.getPoseMeters().getY());
       SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
 
+
+
     }
 
     for (int i = 0; i < _modules.length; i++){
@@ -67,6 +69,8 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("DesiredStateAngle"+i, _modules[i].desiredRadians/Math.PI*180);
       SmartDashboard.putNumber("RotRelativePosDeg"+i, _modules[i].getRotRelativePosition()*360);
       SmartDashboard.putNumber("AbsEncoderDeg"+i, _modules[i].getRotPosition()/Math.PI*180);
+      SmartDashboard.putNumber("SpeedMeters"+i, _modules[i].getTransVelocity());
+      SmartDashboard.putNumber("PosMeters"+i, _modules[i].getTransPosition());
     }
 
     // if (Input.getIncPID()){

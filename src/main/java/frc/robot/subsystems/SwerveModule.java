@@ -61,8 +61,7 @@ public class SwerveModule {
         _transEncoder = _transMotor.getEncoder();
         _rotRelativeEncoder = _rotMotor.getEncoder();
         _rotRelativeEncoder.setPosition(0);
-        _rotMotor.setIdleMode(IdleMode.kBrake);
-        _rotMotor.burnFlash();
+
         // Sets measurement to radians
         // CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
         // _rotEncoder.configAllSettings(configuration);
@@ -77,6 +76,11 @@ public class SwerveModule {
         // ----Setting Inversion
         _rotMotor.setInverted(_rotInverse);
         _transMotor.setInverted(_transInverse);
+
+        _transMotor.setIdleMode(IdleMode.kBrake);
+        _rotMotor.setIdleMode(IdleMode.kCoast);
+
+        _transEncoder.setPosition(0);
     }
 
     private CANCoderConfiguration getCANCoderConfig(double offset, boolean inverse){
@@ -197,7 +201,7 @@ public class SwerveModule {
      */
     public double getTransPosition() {
         return getTransPositionRaw() * SwerveConstants.kTransGearRatio
-                * SwerveConstants.kDriveGearToMeters;
+                * SwerveConstants.kWheelCircumference;
     }
 
     /**
