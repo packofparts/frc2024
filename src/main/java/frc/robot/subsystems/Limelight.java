@@ -15,31 +15,34 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
-  NetworkTable table;
-  String limelightName;
+  private NetworkTable table;
+  private final String limelightName;
 
-  double tv;
-  double tl;
-  double cl;
-  double[] botPose;
+  private boolean _hasTargets;
+  private double _latency;
+  private double[] botPose;
 
   public Limelight(String name) {
-    this.limelightName = name;
-    this.table = NetworkTableInstance.getDefault().getTable(limelightName);
+    limelightName = name;
+    table = NetworkTableInstance.getDefault().getTable(limelightName);
   }
 
   public void updateValues() {
-    tv = table.getEntry("tv").getDouble(0);
-    tl = table.getEntry("tl").getDouble(0);
-    cl = table.getEntry("cl").getDouble(0);
+    _hasTargets = table.getEntry("tv").getDouble(0) == 1;
+    // Pipeline and camera latency in milliseconds
+    double tl = table.getEntry("tl").getDouble(0);
+    double cl = table.getEntry("cl").getDouble(0);
+    _latency = tl + cl;
+
+    // Here we always use botpose_wpilib blue to establish a constant coordinate system that works
+    // similarly to PathPlanner and Photonvision, where the bottom of blue is considered (0, 0)
     botPose = table
                 .getEntry("botpose_wpiblue")
-                .getDoubleArray(new double[1]);
-  
+                .getDoubleArray(new double[6]);
   }
 
   public boolean hasTargets() {
-    return tv == 1.0;
+    return _hasTargets;
   }
 
   public Pose2d getVisionEstimatedPose(){
@@ -53,7 +56,7 @@ public class Limelight extends SubsystemBase {
     );
   }
   public double getTimestamp() {
-        return Timer.getFPGATimestamp() - Units.millisecondsToSeconds(tl)-Units.millisecondsToSeconds(cl);
+        return Timer.getFPGATimestamp() - Units.millisecondsToSeconds(_latency);
   }
 
 

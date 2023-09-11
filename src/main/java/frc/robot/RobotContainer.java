@@ -26,13 +26,13 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //Physical Systems
-  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
   //Vision
-  Limelight limelight = new Limelight(VisionConstants.kLimelightName);
-  PoseEstimation poseEstimation = new PoseEstimation(swerveSubsystem, limelight);
+  private final Limelight limelight = new Limelight(VisionConstants.kLimelightName);
+  private final PoseEstimation poseEstimation = new PoseEstimation(swerveSubsystem, limelight);
 
-  DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
+  private final DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 

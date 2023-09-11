@@ -18,26 +18,19 @@ import frc.robot.constants.VisionConstants;
 public class PoseEstimation extends SubsystemBase {
   
   // Subsystems
-  SwerveSubsystem swerve;
-  Limelight lime;
+  private SwerveSubsystem _swerve;
+  private Limelight _lime;
 
   // Fields
-  AprilTagFieldLayout layout;
-  Field2d field;
+  private Field2d field;
 
   // Estimator
-  SwerveDrivePoseEstimator poseEstimator;
+  private SwerveDrivePoseEstimator _poseEstimator;
   public PoseEstimation(SwerveSubsystem swerve, Limelight limelight) {
-    this.swerve = swerve;
-    this.lime = limelight;
+    _swerve = swerve;
+    _lime = limelight;
 
-    try {
-      layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-
-    poseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.swerveKinematics,
+    _poseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.swerveKinematics,
        swerve.getRotation2d(),
        swerve.getModulePositions(),
        swerve.getRobotPose(),
@@ -53,7 +46,7 @@ public class PoseEstimation extends SubsystemBase {
   @Override
   public void periodic() {
     // Updating pose estimator
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
+    _poseEstimator.update(_swerve.getRotation2d(), _swerve.getModulePositions());
     updateVision();
 
     // Updating Field
@@ -61,14 +54,14 @@ public class PoseEstimation extends SubsystemBase {
   }
 
   public Pose2d getPosition() {
-    return poseEstimator.getEstimatedPosition();
+    return _poseEstimator.getEstimatedPosition();
   }
   
   public void updateVision() {
-    if (this.lime.hasTargets()) {
-      Pose2d pose = this.lime.getVisionEstimatedPose();
-      double time = this.lime.getTimestamp();
-      poseEstimator.addVisionMeasurement(pose, time);
+    if (_lime.hasTargets()) {
+      Pose2d pose = _lime.getVisionEstimatedPose();
+      double time = _lime.getTimestamp();
+      _poseEstimator.addVisionMeasurement(pose, time);
 
     }
   }
