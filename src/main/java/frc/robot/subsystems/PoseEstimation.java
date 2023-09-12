@@ -39,8 +39,6 @@ public class PoseEstimation extends SubsystemBase {
 
     field = new Field2d();
     SmartDashboard.putData("Field", field);
-
-    
   }
 
   @Override

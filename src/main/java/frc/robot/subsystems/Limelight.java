@@ -29,16 +29,16 @@ public class Limelight extends SubsystemBase {
 
   public void updateValues() {
     _hasTargets = table.getEntry("tv").getDouble(0) == 1;
-    // Pipeline and camera latency in milliseconds
-    double tl = table.getEntry("tl").getDouble(0);
-    double cl = table.getEntry("cl").getDouble(0);
-    _latency = tl + cl;
 
     // Here we always use botpose_wpilib blue to establish a constant coordinate system that works
     // similarly to PathPlanner and Photonvision, where the bottom of blue is considered (0, 0)
+
+    // Robot transform in field-space (blue driverstation WPILIB origin). Translation (X,Y,Z) Rotation(Roll,Pitch,Yaw), total latency (cl+tl)
     botPose = table
                 .getEntry("botpose_wpiblue")
-                .getDoubleArray(new double[6]);
+                .getDoubleArray(new double[7]);
+    
+    _latency = botPose[7];
   }
 
   public boolean hasTargets() {

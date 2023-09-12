@@ -26,7 +26,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //Physical Systems
-  private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
   //Vision
   private final Limelight limelight = new Limelight(VisionConstants.kLimelightName);
