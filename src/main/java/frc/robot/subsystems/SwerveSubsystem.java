@@ -27,7 +27,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS _navx;
 
   private SwerveModule[] _modules;
-  public double tuningOutput = 0;
+  public static double tuningOutput = 0;
   public static double autoGyroInitValue = 0;
 
 
@@ -72,18 +72,6 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("SpeedMeters"+i, _modules[i].getTransVelocity());
       SmartDashboard.putNumber("PosMeters"+i, _modules[i].getTransPosition());
     }
-
-    // if (Input.getIncPID()){
-    //   tuningOutput += 3;
-    // } else if (Input.getDecPID()){
-    //   tuningOutput -=3;
-    // }
-
-    // for (SwerveModule mod: _modules){
-    //   mod.setPID(tuningOutput);
-    // }
-    // SwerveConfig.frontRightModule.setTransMotorRaw(0.3);
-    
 
 
     if (Input.resetGyro()){
@@ -131,13 +119,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.kTeleMaxSpeedMPS);
 
-
     for (int i = 0; i < desiredStates.length; i++) {
       _modules[i].setDesiredState(desiredStates[i]);
-
-        // //SwerveModuleState.optimize(desiredStates[i], _modules[i].getState().angle);
-
-        // SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getDegrees());
     }
 
   }

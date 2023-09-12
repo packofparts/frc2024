@@ -16,35 +16,35 @@ import frc.robot.subsystems.SwerveModule;
 public class SwerveConfig {
         // ID's
         //Encoder IDs have been set
-        public static final int frontRightTransID = 7;
-        public static final int frontRightRotID = 3;
-        public static final int frontRightRotEncoderID = 23;
+        private static final int kfrontRightTransID = 7;
+        private static final int kfrontRightRotID = 3;
+        private static final int kfrontRightRotEncoderID = 23;
 
-        public static final int frontLeftTransID = 1;
-        public static final int frontLeftRotID = 8;
-        public static final int frontLeftRotEncoderID = 22;
+        private static final int kfrontLeftTransID = 1;
+        private static final int kfrontLeftRotID = 8;
+        private static final int kfrontLeftRotEncoderID = 22;
 
-        public static final int backRightTransID = 9;
-        public static final int backRightRotID = 6;
-        public static final int backRightRotEncoderID = 20;
+        private static final int kbackRightTransID = 9;
+        private static final int kbackRightRotID = 6;
+        private static final int kbackRightRotEncoderID = 20;
 
-        public static final int backLeftTransID = 5;
-        public static final int backLeftRotID = 4;
-        public static final int backLeftRotEncoderID = 21;
+        private static final int kbackLeftTransID = 5;
+        private static final int kbackLeftRotID = 4;
+        private static final int kbackLeftRotEncoderID = 21;
 
 
         // Offsets
 
         // Inverse Booleans
-        public static final boolean frontRightRotInverse = false;
-        public static final boolean frontRightTransInverse = false;
-        public static final boolean frontLeftRotInverse = false;
-        public static final boolean frontLeftTransInverse = true;
+        private static final boolean kfrontRightRotInverse = false;
+        private static final boolean kfrontRightTransInverse = false;
+        private static final boolean kfrontLeftRotInverse = false;
+        private static final boolean kfrontLeftTransInverse = true;
 
-        public static final boolean backRightRotInverse = false;
-        public static final boolean backRightTransInverse = false;
-        public static final boolean backLeftRotInverse = false;
-        public static final boolean backLeftTransInverse = true;
+        private static final boolean kbackRightRotInverse = false;
+        private static final boolean kbackRightTransInverse = false;
+        private static final boolean kbackLeftRotInverse = false;
+        private static final boolean kbackLeftTransInverse = true;
 
 
         // PID Controllers
@@ -69,25 +69,25 @@ public class SwerveConfig {
 
         public static final AHRS navX = new AHRS(Port.kMXP);
 
-        public static final SwerveModule frontRightModule = new SwerveModule(frontRightRotID,
-                        frontRightTransID, frontRightRotEncoderID,
-                        SwerveConstants.kfrontRightRotEncoderOffset, frontRightRotInverse,
-                        frontRightTransInverse, frontRightRotPID);
+        public static final SwerveModule frontRightModule = new SwerveModule(kfrontRightRotID,
+                        kfrontRightTransID, kfrontRightRotEncoderID,
+                        SwerveConstants.kfrontRightRotEncoderOffset, kfrontRightRotInverse,
+                        kfrontRightTransInverse, frontRightRotPID);
 
-        public static final SwerveModule frontLeftModule = new SwerveModule(frontLeftRotID,
-                        frontLeftTransID, frontLeftRotEncoderID,
-                        SwerveConstants.kfrontLeftRotEncoderOffset, frontLeftRotInverse,
-                        frontLeftTransInverse, frontLeftRotPID);
+        public static final SwerveModule frontLeftModule = new SwerveModule(kfrontLeftRotID,
+                        kfrontLeftTransID, kfrontLeftRotEncoderID,
+                        SwerveConstants.kfrontLeftRotEncoderOffset, kfrontLeftRotInverse,
+                        kfrontLeftTransInverse, frontLeftRotPID);
 
-        public static final SwerveModule backRightModule = new SwerveModule(backRightRotID,
-                        backRightTransID, backRightRotEncoderID,
-                        SwerveConstants.kbackRightRotEncoderOffset, backRightRotInverse,
-                        backRightTransInverse, backRightRotPID);
+        public static final SwerveModule backRightModule = new SwerveModule(kbackRightRotID,
+                        kbackRightTransID, kbackRightRotEncoderID,
+                        SwerveConstants.kbackRightRotEncoderOffset, kbackRightRotInverse,
+                        kbackRightTransInverse, backRightRotPID);
 
         public static final SwerveModule backLeftModule =
-                        new SwerveModule(backLeftRotID, backLeftTransID, backLeftRotEncoderID,
+                        new SwerveModule(kbackLeftRotID, kbackLeftTransID, kbackLeftRotEncoderID,
                                         SwerveConstants.kbackLeftRotEncoderOffset,
-                                        backLeftRotInverse, backLeftTransInverse, backLeftRotPID);
+                                        kbackLeftRotInverse, kbackLeftTransInverse, backLeftRotPID);
 
         public static final SwerveModule[] swerveModules =
                         {frontLeftModule, frontRightModule, backLeftModule, backRightModule};

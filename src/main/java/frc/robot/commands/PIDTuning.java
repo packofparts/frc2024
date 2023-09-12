@@ -53,12 +53,7 @@ public class PIDTuning extends CommandBase {
     }
 
     if (toggled){
-
       curModule.setPID(setPoint);
-
-      // SmartDashboard.putNumber("kP", SmartDashboard.getNumber("kP", 0));
-      // SmartDashboard.putNumber("kI", SmartDashboard.getNumber("kI", 0));
-      // SmartDashboard.putNumber("kD", SmartDashboard.getNumber("kD", 0));
     }
     SmartDashboard.putBoolean("toggled", toggled);
     curModPID.setP(SmartDashboard.getNumber("kP", 0));
@@ -79,7 +74,9 @@ public class PIDTuning extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // For now we are keeping this empty to handle interruptions
+  }
 
   // Returns true when the command should end.
   @Override

@@ -15,21 +15,17 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class DefaultDriveCommand extends CommandBase {
   SwerveSubsystem swerve;
   
-  private SlewRateLimiter xLimiter;
-  private SlewRateLimiter yLimiter;
-  private SlewRateLimiter turningLimiter;
+  private SlewRateLimiter _xLimiter;
+  private SlewRateLimiter _yLimiter;
+  private SlewRateLimiter _turningLimiter;
   public DefaultDriveCommand(SwerveSubsystem swerve) {
     addRequirements(swerve);
 
-    xLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxSpeedMPS);
-    yLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxSpeedMPS);
-    turningLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxRotSpeedRadPerSeconds);
+    _xLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxSpeedMPS);
+    _yLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxSpeedMPS);
+    _turningLimiter = new SlewRateLimiter(SwerveConstants.kTeleMaxRotSpeedRadPerSeconds);
     this.swerve = swerve;
   }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -56,7 +52,9 @@ public class DefaultDriveCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // For now we are keeping this empty to handle interruptions in the future
+  }
 
   // Returns true when the command should end.
   @Override

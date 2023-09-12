@@ -62,9 +62,6 @@ public class SwerveModule {
         _rotRelativeEncoder = _rotMotor.getEncoder();
         _rotRelativeEncoder.setPosition(0);
         // Sets measurement to radians
-        // CANCoderConfiguration configuration = getCANCoderConfig(rotEncoderOffset, rotInverse);
-        // _rotEncoder.configAllSettings(configuration);
-
 
         // ----Setting PID
         _rotPID = rotPID;
@@ -80,19 +77,6 @@ public class SwerveModule {
         _rotMotor.setIdleMode(IdleMode.kBrake);
 
         _transEncoder.setPosition(0);
-    }
-
-    private CANCoderConfiguration getCANCoderConfig(double offset, boolean inverse){
-        CANCoderConfiguration config = new CANCoderConfiguration();
-        config.sensorCoefficient = 2*Math.PI / 4096;
-        config.unitString = "rot";
-        config.sensorTimeBase = SensorTimeBase.PerSecond;
-        
-        config.magnetOffsetDegrees = offset*360-180;
-        config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
-        config.sensorDirection = inverse;
-
-        return config;
     }
     
     // ------------------- State Settings
@@ -143,9 +127,6 @@ public class SwerveModule {
         PIDOutput = _rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
         _rotMotor.set(PIDOutput);
-
-        // _rotMotor.set(0.1);
-
         
 
     }
@@ -258,7 +239,7 @@ public class SwerveModule {
     }
 
     /**
-     * Permanently burns settings into the sparks
+     * Permanently burnCs settings into the sparks
      * 
      * @see setModeRot
      * @see setModeTrans

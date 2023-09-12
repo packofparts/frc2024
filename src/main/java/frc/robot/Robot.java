@@ -70,31 +70,18 @@ public class Robot extends TimedRobot {
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {}
-
-  @Override
-  public void disabledPeriodic() {}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // _autonomousCommand = _robotContainer.getAutonomousCommand();
-
-    // if(pathSelector.getSelected() != null){
-    //   _autonomousCommand = pathSelector.getSelected();
-    // }
-
-    // // schedule the autonomous command (example)
-    // if (_autonomousCommand != null) {
-    //   _autonomousCommand.schedule();
-    // }
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    //empty for now but will add auton paths here
+  }
 
   @Override
   public void teleopInit() {
@@ -109,25 +96,14 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    //We will add things to here shortly
+  }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
-    //_robotContainer.swerveSubsystem.setMotors(0, 0, 0);
   }
-
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
-
-  /** This function is called once when the robot is first started up. */
-  @Override
-  public void simulationInit() {}
-
-  /** This function is called periodically whilst in simulation. */
-  @Override
-  public void simulationPeriodic() {}
 }
