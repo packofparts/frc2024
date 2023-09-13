@@ -71,23 +71,23 @@ public class SwerveConfig {
 
         public static final SwerveModule frontRightModule = new SwerveModule(kfrontRightRotID,
                         kfrontRightTransID, kfrontRightRotEncoderID,
-                        SwerveConstants.kfrontRightRotEncoderOffset, kfrontRightRotInverse,
+                        kfrontRightRotInverse,
                         kfrontRightTransInverse, frontRightRotPID);
 
         public static final SwerveModule frontLeftModule = new SwerveModule(kfrontLeftRotID,
                         kfrontLeftTransID, kfrontLeftRotEncoderID,
-                        SwerveConstants.kfrontLeftRotEncoderOffset, kfrontLeftRotInverse,
+                        kfrontLeftRotInverse,
                         kfrontLeftTransInverse, frontLeftRotPID);
 
         public static final SwerveModule backRightModule = new SwerveModule(kbackRightRotID,
                         kbackRightTransID, kbackRightRotEncoderID,
-                        SwerveConstants.kbackRightRotEncoderOffset, kbackRightRotInverse,
+                        kbackRightRotInverse,
                         kbackRightTransInverse, backRightRotPID);
 
-        public static final SwerveModule backLeftModule =
-                        new SwerveModule(kbackLeftRotID, kbackLeftTransID, kbackLeftRotEncoderID,
-                                        SwerveConstants.kbackLeftRotEncoderOffset,
-                                        kbackLeftRotInverse, kbackLeftTransInverse, backLeftRotPID);
+        public static final SwerveModule backLeftModule = new SwerveModule(kbackLeftRotID,
+                        kbackLeftTransID, kbackLeftRotEncoderID,
+                        kbackLeftRotInverse, 
+                        kbackLeftTransInverse, backLeftRotPID);
 
         public static final SwerveModule[] swerveModules =
                         {frontLeftModule, frontRightModule, backLeftModule, backRightModule};

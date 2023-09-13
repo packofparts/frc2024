@@ -24,7 +24,6 @@ public class SwerveModule {
     private int _rotID;
     private int _transID;
     private int _rotEncoderID;
-    private double _rotEncoderOffset;
     private boolean _rotInverse;
     private boolean _transInverse;
     private PIDController _rotPID;
@@ -40,13 +39,12 @@ public class SwerveModule {
 
     public double PIDOutput = 0.0;
     public double desiredRadians = 0.0;
-    public SwerveModule(int rotID, int transID, int rotEncoderID, double rotEncoderOffset,
+    public SwerveModule(int rotID, int transID, int rotEncoderID,
             boolean rotInverse, boolean transInverse, PIDController rotPID) {
         // Setting Parameters
         _rotID = rotID;
         _transID = transID;
         _rotEncoderID = rotEncoderID;
-        _rotEncoderOffset = rotEncoderOffset;
         _rotInverse = rotInverse;
         _transInverse = transInverse;
 
