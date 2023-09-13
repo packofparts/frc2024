@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.PIDTuning;
+import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -26,7 +28,10 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    swerveSubsystem.setDefaultCommand(driveCommand);
+    if(SwerveConstants.kPIDTuneMode)
+      swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
+    else
+      swerveSubsystem.setDefaultCommand(driveCommand);
     // Configure the trigger bindings
     configureBindings();
   }

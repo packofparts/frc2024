@@ -27,7 +27,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS _navx;
 
   private SwerveModule[] _modules;
-
+  public static double tuningOutput = 0;
   public static double autoGyroInitValue = 0;
 
 
@@ -48,6 +48,30 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     _odometry.update(getRotation2d(), getModulePositions());
+    if (SwerveConstants.kDebugMode){
+
+
+      SmartDashboard.putNumber("FLPIDOutput", _modules[0].PIDOutput);
+      SmartDashboard.putNumber("FRPIDOutput", _modules[1].PIDOutput);
+      SmartDashboard.putNumber("BLPIDOutput", _modules[2].PIDOutput);
+      SmartDashboard.putNumber("BRPIDOutput", _modules[3].PIDOutput);
+
+      SmartDashboard.putNumber("XPos", _odometry.getPoseMeters().getX());
+      SmartDashboard.putNumber("YPos", _odometry.getPoseMeters().getY());
+      SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
+
+
+
+    }
+
+    for (int i = 0; i < _modules.length; i++){
+      SmartDashboard.putNumber("AppliedOutput"+i, _modules[i].getAppliedOutput());
+      SmartDashboard.putNumber("DesiredStateAngle"+i, _modules[i].desiredRadians/Math.PI*180);
+      SmartDashboard.putNumber("RotRelativePosDeg"+i, _modules[i].getRotRelativePosition()*360);
+      SmartDashboard.putNumber("AbsEncoderDeg"+i, _modules[i].getRotPosition()/Math.PI*180);
+      SmartDashboard.putNumber("SpeedMeters"+i, _modules[i].getTransVelocity());
+      SmartDashboard.putNumber("PosMeters"+i, _modules[i].getTransPosition());
+    }
 
 
     if (Input.resetGyro()){
@@ -95,7 +119,6 @@ public class SwerveSubsystem extends SubsystemBase {
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.kTeleMaxSpeedMPS);
 
-
     for (int i = 0; i < desiredStates.length; i++) {
       _modules[i].setDesiredState(desiredStates[i]);
     }
@@ -140,6 +163,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
     this.setModuleStates(moduleStates);
+
   }
 
   public void setMotors(double x, double y, double rot) {
