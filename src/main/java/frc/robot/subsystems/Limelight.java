@@ -38,7 +38,7 @@ public class Limelight extends SubsystemBase {
                 .getEntry("botpose_wpiblue")
                 .getDoubleArray(new double[7]);
     
-    _latency = botPose[7];
+    _latency = botPose[6];
   }
 
   public boolean hasTargets() {
@@ -49,6 +49,7 @@ public class Limelight extends SubsystemBase {
     double botX = botPose[0];
     double botY = botPose[1];
     double yaw = botPose[5];
+
 
     return new Pose2d(
       new Translation2d(botX, botY),
