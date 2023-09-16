@@ -44,7 +44,6 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
   
 
-  boolean isCoast = false;
   private final WPI_TalonFX leftPivotController = new WPI_TalonFX(ArmConstants.leftArmPivot);
   private final WPI_TalonFX rightPivotController = new WPI_TalonFX(ArmConstants.rightArmPivot);
   private final DutyCycleEncoder absPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPortPiv);
@@ -61,15 +60,12 @@ public class ArmControlSubsystem extends SubsystemBase {
   double currentExtensionDistance = 0.0;
   double desiredExtensionDistance = currentExtensionDistance;
 
-
   PIDController pivotPID; 
 
   SlewRateLimiter pivotRateLimiter;
   PIDController extensionPID;
 
   DutyCycleEncoder absTelescopeEncoder;
-
-  boolean gotOffset = false;
 
   boolean isInitilized = false;
 
@@ -90,12 +86,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     absPivEncoder.setConnectedFrequencyThreshold(975); //do not change this number pls or else 
    
 
-    this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation;
+    this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + ArmConstants.pivotInitOffset;
    
     
     setConfig();
 
     SmartDashboard.putNumber("kG", ArmConstants.kG);
+    SmartDashboard.putData("ArmMotorMode", chooser);
+    
     chooser.addOption("Brake", ArmMotorMode.BRAKE);
     chooser.addOption("Coast", ArmMotorMode.COAST);
     
@@ -110,9 +108,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     rightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
     leftPivotController.setInverted(ArmConstants.leftPivotInverted);
 
-    // rightPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-    // leftPivotController.setNeutralMode(isCoast ? NeutralMode.Coast : NeutralMode.Brake);
-
     this.updateModes();
 
     rightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
@@ -121,7 +116,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     leftPivotController.setSelectedSensorPosition(0);
     rightPivotController.setSelectedSensorPosition(0);
     
-    //extensionController.setIdleMode(IdleMode.kBrake); //ccheck if needed
     extensionController.setInverted(false);
 
     extensionEncoder.setPosition(0);
@@ -177,8 +171,6 @@ public class ArmControlSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches);
       
         SmartDashboard.putNumber("pivotfreq", absPivEncoder.getFrequency());
-
-        SmartDashboard.putBoolean("isCoast", isCoast);
       
         SmartDashboard.putBoolean("AtAnglePoint", this.atAngleSetpoint());
         SmartDashboard.putBoolean("AtExtensionPoint", this.atTelescopeSetpoint());
@@ -198,8 +190,6 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   private void pivotPeriodic(){    
-
-
     double pivotPIDOutput = pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
 
     //Desaturating PID output
@@ -253,21 +243,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     desiredExtensionDistance = _extension;
   }
 
-  //these functions assume the camera is on the front of the drivebase 
-  public double getDistanceFromPivotToPose(double distanceFromCamera){
-    return Math.sqrt(Math.pow(distanceFromCamera, 2) + Math.pow(ArmConstants.pivotPosInMetersY, 2));
-  }
-  /**
-   * 
-   * @param distanceFromCamera in meters
-   * @return the desired angle in radians
-   */
-
-
-  public double getDesiredPivotAngle(double distanceFromCamera){
-    return Math.atan(distanceFromCamera / ArmConstants.pivotPosInMetersY); //in radians
-  }
-
   public boolean atAngleSetpoint(){
     return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(4);
     //return true;
@@ -290,11 +265,8 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public double getCurrentPivotRotation(boolean inRadians){
     double rotation;
-    if (ArmConstants.useAbsEncoderPiv){
-      rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + this.initialPivotEncoderOffset;
-    }else{
-      rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + Units.radiansToRotations(ArmConstants.zeroAngleRad);
-    }
+
+    rotation = (leftPivotController.getSelectedSensorPosition()) * ArmConstants.encoderResolution * ArmConstants.falconToFinalGear + this.initialPivotEncoderOffset;
     
     if(inRadians){
       return rotation * 2 * Math.PI;
@@ -353,14 +325,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionEncoder.setPosition(0);
 
     
-    if (ArmConstants.useAbsEncoderPiv){
-      this.initialPivotEncoderOffset = -(absPivEncoder.getAbsolutePosition() + ArmConstants.pivotInitOffset) * ArmConstants.pivotAbsEncToRotation;
-      this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
-      this.currentPivotRotation = this.desiredPivotRotation;
-    }else{
-      this.currentPivotRotation = ArmConstants.zeroAngleRad;
-      this.currentPivotRotation = this.desiredPivotRotation;
-    }
-
+    this.initialPivotEncoderOffset = -(absPivEncoder.getAbsolutePosition() + ArmConstants.pivotInitOffset) * ArmConstants.pivotAbsEncToRotation;
+    this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
+    this.currentPivotRotation = this.desiredPivotRotation;
   }
 }

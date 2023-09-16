@@ -14,6 +14,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PIDTuning;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -26,6 +27,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
   ArmControlSubsystem armControlSubsystem = new ArmControlSubsystem();
+  IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

@@ -38,31 +38,21 @@ public class Input {
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}
     public static boolean togglePIDTuning(){return rJoystick.getTriggerReleased();}
 
-    public static boolean getA() {
-        return false;
-    }
+    public static boolean getA(){return xboxController.getAButtonPressed();}
+    public static boolean getB(){return xboxController.getBButtonPressed();}
+    public static boolean getX(){return xboxController.getXButtonPressed();}
+    public static boolean getY(){return xboxController.getYButtonPressed();}
+    public static double getDPad(){return xboxController.getPOV();}
+    public static boolean getRightBumper(){return xboxController.getRightBumperPressed();}
+    public static boolean getLeftBumper(){return xboxController.getLeftBumper();}
 
-    public static double getRightStickY() {return xboxController.getRightY();}
+    public static double getLeftTrigger(){return xboxController.getLeftTriggerAxis();}
+    public static double getRightTrigger(){return xboxController.getRightTriggerAxis();}
 
-    public static double getLeftStickY() {return xboxController.getLeftY();}
+    public static double getLeftStickY(){return xboxController.getLeftY();}
+    public static double getRightStickY(){return -xboxController.getRightY();}
 
-    public static int getDPad() {return xboxController.getPOV();}
-
-    public static boolean isUltraInstinct() {
-        return false;
-    }
-
-    public static boolean getY() {
-        return xboxController.getYButton();
-    }
-
-    public static boolean getB() {
-        return false;
-    }
-
-    public static boolean getX() {
-        return false;
-    }
+    public static boolean isUltraInstinct() {return xboxController.getStartButtonPressed();}
 
 }
     
