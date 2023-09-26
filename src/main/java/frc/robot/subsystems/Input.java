@@ -49,7 +49,7 @@ public class Input {
     public static double getLeftTrigger(){return xboxController.getLeftTriggerAxis();}
     public static double getRightTrigger(){return xboxController.getRightTriggerAxis();}
 
-    public static double getLeftStickY(){return xboxController.getLeftY();}
+    public static double getLeftStickY(){return -xboxController.getLeftY();}
     public static double getRightStickY(){return -xboxController.getRightY();}
 
     public static boolean isUltraInstinct() {return xboxController.getStartButtonPressed();}

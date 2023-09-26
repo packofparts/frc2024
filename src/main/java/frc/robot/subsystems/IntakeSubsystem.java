@@ -8,12 +8,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final WPI_TalonFX _intakeMotor = new WPI_TalonFX(ArmConstants.kIntakeID);
+  private final WPI_TalonSRX _intakeMotor = new WPI_TalonSRX(ArmConstants.kIntakeID);
 
   public IntakeSubsystem() {
-    _intakeMotor.setInverted(ArmConstants.kIntakeInverted);
+  
   }
   public void runIntake(double percentOutput){
     _intakeMotor.set(ControlMode.PercentOutput, percentOutput);
@@ -21,10 +22,12 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // _intakeMotor.set(ControlMode.PercentOutput, -1);
     if (Input.getRightTrigger()>ArmConstants.kIntakeDeadZone){runIntake(Input.getRightTrigger());}
     
-    else if (Input.getLeftTrigger()>ArmConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger());}
+    if (Input.getLeftTrigger()>ArmConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger());}
 
-    else{runIntake(ArmConstants.kIntakeStallSpeed);}
+    if (Input.getLeftTrigger()<ArmConstants.kIntakeDeadZone && Input.getRightTrigger()<ArmConstants.kIntakeDeadZone){runIntake(-ArmConstants.kIntakeStallSpeed);}
   }
+
 }

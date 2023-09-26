@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -92,10 +93,13 @@ public class ArmControlSubsystem extends SubsystemBase {
     setConfig();
 
     SmartDashboard.putNumber("kG", ArmConstants.kG);
-    SmartDashboard.putData("ArmMotorMode", chooser);
+
     
     chooser.addOption("Brake", ArmMotorMode.BRAKE);
-    chooser.addOption("Coast", ArmMotorMode.COAST);
+    chooser.addOption("Coast", ArmMotorMode.COAST); 
+    chooser.setDefaultOption("Brake", ArmMotorMode.BRAKE);
+
+    SmartDashboard.putData("ArmMotorMode", chooser);
     
   }
 
@@ -147,10 +151,10 @@ public class ArmControlSubsystem extends SubsystemBase {
       }
       
       updateModes();
-      
+    
 
       // Getting Current And Desired Distances
-      SmartDashboard.putNumber("CurrentExtension", currentExtensionDistance);
+      SmartDashboard.putNumber("CurrentExtension", this.getCurrentExtensionIn());
       SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(currentPivotRotation));
 
       if (CompConstants.kDebugMode) {
@@ -183,7 +187,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       currentPivotRotation = getCurrentPivotRotation(true);
 
       if (!CompConstants.ultraInstinct) {
-        desiredExtensionDistance = MathUtil.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+        //desiredExtensionDistance = MathUtil.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
       }
       currentExtensionDistance = getCurrentExtensionIn();
       currentExtensionDistance = desiredExtensionDistance;
@@ -226,7 +230,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     }
 
     //This is for handling the friction in the extension
-    double offset =  .12 * (difference > 0 ? 1 : -1);
+    double offset =  .25 * (difference > 0 ? 1 : -1);
     if (Math.abs(difference) > .14){
       extensionController.set(offset + extensionPIDOutput);
     }else{
@@ -277,7 +281,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
-    return extensionEncoder.getPosition()*ArmConstants.extensionRotationToInches* ArmConstants.gearRatioExtension;
+    return extensionEncoder.getPosition()*8.333/8.113;
   }
   
   public void changeDesiredPivotRotation(double i){
@@ -298,6 +302,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   // }
 
   void updateModes(){
+    SmartDashboard.updateValues();
     if(chooser.getSelected() == ArmMotorMode.BRAKE){
       rightPivotController.setNeutralMode(NeutralMode.Brake);
       leftPivotController.setNeutralMode(NeutralMode.Brake);
