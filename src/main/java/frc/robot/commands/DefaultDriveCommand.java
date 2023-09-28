@@ -52,9 +52,7 @@ public class DefaultDriveCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    // For now we are keeping this empty to handle interruptions in the future
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

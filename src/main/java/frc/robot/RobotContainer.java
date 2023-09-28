@@ -9,9 +9,12 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PIDTuning;
 import frc.robot.constants.SwerveConstants;
+import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -24,10 +27,15 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
+  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+
+
+  ArmControlSubsystem armControlSubsystem = new ArmControlSubsystem();
+  IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
+    armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
     if(SwerveConstants.kPIDTuneMode)
       swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
     else

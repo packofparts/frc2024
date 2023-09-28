@@ -121,6 +121,10 @@ public class SwerveSubsystem extends SubsystemBase {
 
     for (int i = 0; i < desiredStates.length; i++) {
       _modules[i].setDesiredState(desiredStates[i]);
+
+        // //SwerveModuleState.optimize(desiredStates[i], _modules[i].getState().angle);
+
+        // SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getDegrees());
     }
 
   }

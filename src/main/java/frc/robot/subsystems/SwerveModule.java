@@ -125,14 +125,19 @@ public class SwerveModule {
         PIDOutput = _rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
         _rotMotor.set(PIDOutput);
-        
+
 
     }
 
     public void setPID(double degrees){
         PIDOutput = _rotPID.calculate(getRotPosition(),Math.toRadians(degrees));
         _rotMotor.set(PIDOutput);
+
+
+        // _rotMotor.set(0.1);
+
     }
+
 
     /**
      * 

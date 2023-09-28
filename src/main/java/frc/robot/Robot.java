@@ -74,6 +74,16 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    // _autonomousCommand = _robotContainer.getAutonomousCommand();
+
+    // if(pathSelector.getSelected() != null){
+    //   _autonomousCommand = pathSelector.getSelected();
+    // }
+
+    // // schedule the autonomous command (example)
+    // if (_autonomousCommand != null) {
+    //   _autonomousCommand.schedule();
+    // }
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 
