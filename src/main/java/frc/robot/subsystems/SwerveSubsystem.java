@@ -77,6 +77,9 @@ public class SwerveSubsystem extends SubsystemBase {
     if (Input.resetGyro()){
       resetGyro();
     }
+    if(Input.resetOdo()){
+      _odometry.resetPosition(getRotation2d(), getModulePositions(), new Pose2d());
+    }
   }
 
   /**

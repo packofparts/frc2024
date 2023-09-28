@@ -45,6 +45,12 @@ public class Robot extends TimedRobot {
       AutoConstants.emptyMap
     ));
 
+    pathSelector.addOption("OneMeter", new FollowPath(
+      _robotContainer.swerveSubsystem, 
+      AutoConstants.moveOneMeters,
+      AutoConstants.emptyMap
+    ));
+
 
     SmartDashboard.putData("PP Autos", pathSelector);
   }
@@ -74,16 +80,16 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // _autonomousCommand = _robotContainer.getAutonomousCommand();
+    _autonomousCommand = _robotContainer.getAutonomousCommand();
 
-    // if(pathSelector.getSelected() != null){
-    //   _autonomousCommand = pathSelector.getSelected();
-    // }
+    if(pathSelector.getSelected() != null){
+      _autonomousCommand = pathSelector.getSelected();
+    }
 
-    // // schedule the autonomous command (example)
-    // if (_autonomousCommand != null) {
-    //   _autonomousCommand.schedule();
-    // }
+    // schedule the autonomous command (example)
+    if (_autonomousCommand != null) {
+      _autonomousCommand.schedule();
+    }
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 

@@ -23,6 +23,7 @@ public class Input {
 
 
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}
+    public static boolean resetOdo() {return tJoystick.getRawButton(3);}
 
     public static double getJoystickX(){return tJoystick.getX();}
 

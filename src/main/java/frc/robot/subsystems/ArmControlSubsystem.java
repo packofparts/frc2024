@@ -80,7 +80,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotPID.setTolerance(Units.degreesToRadians(0));
 
 
-    extensionPID = new PIDController(0.0688, 0, 0);
+    extensionPID = new PIDController(0.2, 0, 0);
     extensionPID.setTolerance(.2);
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
 
@@ -230,7 +230,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     }
 
     //This is for handling the friction in the extension
-    double offset =  .25 * (difference > 0 ? 1 : -1);
+    double offset =  .5 * (difference > 0 ? 1 : -1);
     if (Math.abs(difference) > .14){
       extensionController.set(offset + extensionPIDOutput);
     }else{
