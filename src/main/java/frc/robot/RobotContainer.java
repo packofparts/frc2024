@@ -13,8 +13,11 @@ import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PIDTuning;
 import frc.robot.constants.SwerveConstants;
+import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /**
@@ -33,6 +36,9 @@ public class RobotContainer {
   ArmControlSubsystem armControlSubsystem = new ArmControlSubsystem();
   IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
+
+  Limelight limelight = new Limelight(VisionConstants.kLimelightName);
+  PoseEstimation pose = new PoseEstimation(swerveSubsystem, limelight);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
