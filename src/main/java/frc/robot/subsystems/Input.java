@@ -33,7 +33,7 @@ public class Input {
 
     public static boolean getResetGyro() {return rJoystick.getRawButton(3);}
 
-
+    public static boolean getPrecisionToggle(){return tJoystick.getTriggerPressed();}
 
     public static boolean getIncPID(){return rJoystick.getRawButton(5);}
     public static boolean getDecPID(){return rJoystick.getRawButton(4);}

@@ -18,6 +18,7 @@ public class DefaultDriveCommand extends CommandBase {
   private SlewRateLimiter _xLimiter;
   private SlewRateLimiter _yLimiter;
   private SlewRateLimiter _turningLimiter;
+  private boolean isPrecisionToggle = false;
   public DefaultDriveCommand(SwerveSubsystem swerve) {
     addRequirements(swerve);
 
@@ -35,11 +36,24 @@ public class DefaultDriveCommand extends CommandBase {
     double x = -Input.getJoystickY();
     double y = -Input.getJoystickX();
     double rot = -Input.getRot();
-  
-    x = Math.abs(x) > 0.10 ? x : 0.0;
-    y = Math.abs(y) > 0.10 ? y : 0.0;
-    rot = Math.abs(rot) > 0.15 ? rot : 0.0;
 
+    if (Input.getPrecisionToggle()){isPrecisionToggle = !isPrecisionToggle;}
+
+    if (isPrecisionToggle){
+      x = x/3;
+      y = y/3;
+      rot = rot/6;
+
+      x = Math.abs(x) > 0.04 ? x : 0.0;
+      y = Math.abs(y) > 0.04 ? y :0.0;
+      rot = Math.abs(rot) > 0.02 ? rot : 0.0;
+
+    } else{
+      x = Math.abs(x) > 0.10 ? x : 0.0;
+      y = Math.abs(y) > 0.10 ? y : 0.0;
+      rot = Math.abs(rot) > 0.15 ? rot : 0.0;
+    }
+    
     x *= SwerveConstants.kTeleMaxSpeedMPS;
     y *= SwerveConstants.kTeleMaxSpeedMPS;
     rot *= SwerveConstants.kTeleMaxRotSpeedRadPerSeconds;
@@ -52,7 +66,9 @@ public class DefaultDriveCommand extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    // For now we are keeping this empty to handle interruptions in the future
+  }
 
   // Returns true when the command should end.
   @Override
