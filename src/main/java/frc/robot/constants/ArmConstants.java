@@ -13,7 +13,7 @@ public class ArmConstants {
         GROUND_PICKUP(Units.degreesToRadians(40),9.5),
         LOWER_NODE(Units.degreesToRadians(12),0),
         MID_NODE(Units.degreesToRadians(87.0),0),
-        UPPER_NODE(Units.degreesToRadians(100),18.5),
+        UPPER_NODE(Units.degreesToRadians(100),17.2),
         SUBSTATION(Units.degreesToRadians(90),0);
     
         public double pivotAngleRad;
@@ -51,7 +51,7 @@ public class ArmConstants {
     
     // Limit to Extension
     public static final double minExtensionIn = 0;
-    public static final double maxExtensionIn = 18.5;
+    public static final double maxExtensionIn = 17.2;
 
     // Max Speeds
     public static final double maxPivotRateRadSec = Units.degreesToRadians(70);

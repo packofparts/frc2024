@@ -37,7 +37,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     OFF
   }
 
-
   public static enum MoveArmConfig {
     SIMULTANEOUS,
     SEQ_EXTEND_THEN_PIVOT,
@@ -52,7 +51,6 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final CANSparkMax extensionController = new CANSparkMax(ArmConstants.telescopicArmSpark, MotorType.kBrushless);
   private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
 
-  
 
   double initialPivotEncoderOffset;
   double currentPivotRotation = ArmConstants.zeroAngleRad;
@@ -230,7 +228,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     }
 
     //This is for handling the friction in the extension
-    double offset =  .5 * (difference > 0 ? 1 : -1);
+    double offset = .5 * (difference > 0 ? 1 : -1);
     if (Math.abs(difference) > .14){
       extensionController.set(offset + extensionPIDOutput);
     }else{
@@ -253,7 +251,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atTelescopeSetpoint(){
-    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 3.0;
+    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 2.0;
     //return true;
   }
 
@@ -329,7 +327,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     leftPivotController.setSelectedSensorPosition(0);
     extensionEncoder.setPosition(0);
 
-    
     this.initialPivotEncoderOffset = -(absPivEncoder.getAbsolutePosition() + ArmConstants.pivotInitOffset) * ArmConstants.pivotAbsEncToRotation;
     this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
     this.currentPivotRotation = this.desiredPivotRotation;
