@@ -5,7 +5,7 @@ package frc.robot.constants;
  */
 public class CompConstants {
 
-    public static final boolean kDebugMode = false;
+    public static final boolean kDebugMode = true;
     public static boolean ultraInstinct = false;
 
 }

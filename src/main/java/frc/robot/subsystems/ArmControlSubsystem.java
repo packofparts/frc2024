@@ -78,7 +78,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotPID.setTolerance(Units.degreesToRadians(0));
 
 
-    extensionPID = new PIDController(0.2, 0, 0);
+    extensionPID = new PIDController(0.25, 0, 0);
     extensionPID.setTolerance(.2);
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
 
@@ -176,7 +176,9 @@ public class ArmControlSubsystem extends SubsystemBase {
       
         SmartDashboard.putBoolean("AtAnglePoint", this.atAngleSetpoint());
         SmartDashboard.putBoolean("AtExtensionPoint", this.atTelescopeSetpoint());
-      
+        SmartDashboard.putBoolean("IsInititilized", isInitilized);
+        SmartDashboard.putBoolean("absreconnectioned", absPivEncoder.isConnected());
+
       }
 
       
@@ -185,10 +187,9 @@ public class ArmControlSubsystem extends SubsystemBase {
       currentPivotRotation = getCurrentPivotRotation(true);
 
       if (!CompConstants.ultraInstinct) {
-        //desiredExtensionDistance = MathUtil.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
+        desiredExtensionDistance = MathUtil.clamp(desiredExtensionDistance, ArmConstants.minExtensionIn, ArmConstants.maxExtensionIn);
       }
       currentExtensionDistance = getCurrentExtensionIn();
-      currentExtensionDistance = desiredExtensionDistance;
   }
 
   private void pivotPeriodic(){    
@@ -221,14 +222,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     double difference = desiredExtensionDistance - currentExtensionDistance;
 
     //Desaturating PID output
-    if(extensionPIDOutput > .5){
-      extensionPIDOutput = .5;
-    }else if (extensionPIDOutput < -0.5){
-      extensionPIDOutput = -.5;
+    if(extensionPIDOutput > .8){
+      extensionPIDOutput = .8;
+    }else if (extensionPIDOutput < -0.8){
+      extensionPIDOutput = -.8;
     }
 
     //This is for handling the friction in the extension
-    double offset = .5 * (difference > 0 ? 1 : -1);
+    double offset = .01 * (difference > 0 ? 1 : -1);
     if (Math.abs(difference) > .14){
       extensionController.set(offset + extensionPIDOutput);
     }else{
