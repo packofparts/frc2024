@@ -37,8 +37,8 @@ public class RobotContainer {
   IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
 
-  Limelight limelight = new Limelight(VisionConstants.kLimelightName);
-  PoseEstimation pose = new PoseEstimation(swerveSubsystem, limelight);
+  Limelight limelight = new Limelight();
+  PoseEstimation pose = new PoseEstimation(limelight, swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
@@ -60,12 +60,6 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
   }
 
   /**
@@ -74,7 +68,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
     return null;
   }
 }

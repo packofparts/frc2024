@@ -31,7 +31,6 @@ public class PoseEstimation extends SubsystemBase{
 
   private  SwerveDrivePoseEstimator _poseEstimator;
   private  Field2d _field = new Field2d();
-  private  AprilTagFieldLayout _layout;
 
 
   public PoseEstimation(Limelight lime, SwerveSubsystem swerveSubsystem) {
@@ -77,4 +76,12 @@ public class PoseEstimation extends SubsystemBase{
     }
     return true;
   }
+
+  public void resetPose() {
+    _poseEstimator.resetPosition(_swerve.getRotation2d(), _swerve.getModulePositions(), new Pose2d());
+  }
+  public void resetPose(Pose2d pose) {
+    _poseEstimator.resetPosition(_swerve.getRotation2d(), _swerve.getModulePositions(), pose);
+  }
+
 }
