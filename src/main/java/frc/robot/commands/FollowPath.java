@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.SwerveConfig;
+import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
@@ -21,21 +22,23 @@ public class FollowPath extends CommandBase {
   Command finalCMD;
   PathPlannerTrajectory traj;
   HashMap<String,Command> eventMap;
+  PoseEstimation pose;
   
-  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj, HashMap<String,Command> eventMap) {
+  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj, HashMap<String,Command> eventMap, PoseEstimation pose) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
     this.eventMap = eventMap;
     this.traj = traj;
+    this.pose = pose;
     
     addRequirements(this.swerve);
   }
   
   @Override
   public void initialize() {
-    cmd = new SwerveAutoBuilder(this.swerve::getRobotPose, this.swerve::resetRobotPose, SwerveConfig.swerveKinematics,
-            new PIDConstants(1, 0, 0), //old .4
-            new PIDConstants(2, 0, 0), //old .5
+    cmd = new SwerveAutoBuilder(this.pose::getRobotPose, this.pose::resetPose, SwerveConfig.swerveKinematics,
+            new PIDConstants(3, 0, 0), //old .4
+            new PIDConstants(5, 0, 0), //old .5
             this.swerve::setModuleStates, this.eventMap, true, this.swerve
         );
     

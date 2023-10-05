@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
-
+import javax.print.attribute.standard.PrinterMoreInfo;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.constants.ArmConstants;
@@ -78,7 +79,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotPID.setTolerance(Units.degreesToRadians(0));
 
 
-    extensionPID = new PIDController(0.25, 0, 0);
+    extensionPID = new PIDController(0.19, 0, 0);
     extensionPID.setTolerance(.2);
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
 
@@ -222,14 +223,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     double difference = desiredExtensionDistance - currentExtensionDistance;
 
     //Desaturating PID output
-    if(extensionPIDOutput > .8){
-      extensionPIDOutput = .8;
-    }else if (extensionPIDOutput < -0.8){
-      extensionPIDOutput = -.8;
+    if(extensionPIDOutput > .5){
+      extensionPIDOutput = .5;
+    }else if (extensionPIDOutput < -0.5){
+      extensionPIDOutput = -.5;
     }
 
     //This is for handling the friction in the extension
-    double offset = .01 * (difference > 0 ? 1 : -1);
+    double offset = .005 * (difference > 0 ? 1 : -1);
     if (Math.abs(difference) > .14){
       extensionController.set(offset + extensionPIDOutput);
     }else{
@@ -252,17 +253,17 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public boolean atTelescopeSetpoint(){
-    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 2.0;
+    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 0.5;
     //return true;
   }
 
   public Command waitUntilSpPivot(double sp){
-    return new FunctionalCommand(()->setDesiredPivotRotation(sp), null, null, this::atAngleSetpoint, this);
+    return new FunctionalCommand(()->setDesiredPivotRotation(sp), ()->new PrintCommand("getName()"), (Boolean bool)->new PrintCommand("Finished Pivot"), this::atAngleSetpoint, this);
   }
 
 
   public Command waitUntilSpTelescope(double sp){
-    return new FunctionalCommand(()->setDesiredExtension(sp), null, null, this::atTelescopeSetpoint, this);
+    return new FunctionalCommand(()->setDesiredExtension(sp), ()->new PrintCommand("fuck"), (Boolean bool)-> new PrintCommand("getName()"), this::atTelescopeSetpoint, this);
   }
   
 

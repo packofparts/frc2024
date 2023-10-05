@@ -42,13 +42,15 @@ public class Robot extends TimedRobot {
     pathSelector.addOption("Station2PieceNOEVENT", new FollowPath(
       _robotContainer.swerveSubsystem, 
       AutoConstants.station2Piece,
-      AutoConstants.emptyMap
+      AutoConstants.emptyMap,
+      _robotContainer.pose
     ));
 
     pathSelector.addOption("OneMeter", new FollowPath(
       _robotContainer.swerveSubsystem, 
       AutoConstants.moveOneMeters,
-      AutoConstants.emptyMap
+      AutoConstants.emptyMap,
+      _robotContainer.pose
     ));
 
 

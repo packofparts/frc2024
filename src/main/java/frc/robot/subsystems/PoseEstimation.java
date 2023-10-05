@@ -50,7 +50,7 @@ public class PoseEstimation extends SubsystemBase{
 
   public void periodic() {
     _poseEstimator.update(_swerve.getRotation2d(), _swerve.getModulePositions());
-    updateVision();
+    // updateVision();
 
     _field.setRobotPose(_poseEstimator.getEstimatedPosition());
     SmartDashboard.putData("Field", _field);
@@ -75,6 +75,11 @@ public class PoseEstimation extends SubsystemBase{
       return false;
     }
     return true;
+  }
+
+  public Pose2d getRobotPose() {
+    return _poseEstimator.getEstimatedPosition();
+    
   }
 
   public void resetPose() {

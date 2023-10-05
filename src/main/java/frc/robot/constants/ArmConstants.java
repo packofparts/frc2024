@@ -13,7 +13,7 @@ public class ArmConstants {
         GROUND_PICKUP(Units.degreesToRadians(40),9.5),
         LOWER_NODE(Units.degreesToRadians(12),0),
         MID_NODE(Units.degreesToRadians(87.0),0),
-        UPPER_NODE(Units.degreesToRadians(100),17.2),
+        UPPER_NODE(Units.degreesToRadians(100),17.1),
         SUBSTATION(Units.degreesToRadians(90),0);
     
         public double pivotAngleRad;
@@ -81,7 +81,7 @@ public class ArmConstants {
     public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
     
     public static final double kIntakeDeadZone = 0.05;
-    public static final double kIntakeStallSpeed = 0.2;
+    public static final double kIntakeStallSpeed = 0.0;
 
     //Change this
     public static boolean leftPivotInverted = true;

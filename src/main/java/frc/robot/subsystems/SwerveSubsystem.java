@@ -40,7 +40,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
 
     _odometry = new SwerveDriveOdometry(_kinematics, getRotation2d(), getModulePositions());
-
+    resetGyro();
+    resetRobotPose(new Pose2d());
 
   }
 
@@ -105,9 +106,9 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see Rotation2d
    */
   public Rotation2d getRotation2d() {
-    if (DriverStation.isAutonomous()) {
-      return Rotation2d.fromDegrees(getHeading() + autoGyroInitValue);
-    }
+    // if (DriverStation.isAutonomous()) {
+    //   return Rotation2d.fromDegrees(getHeading() + autoGyroInitValue);
+    // }
     return Rotation2d.fromDegrees(getHeading());
   }
 

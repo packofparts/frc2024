@@ -36,9 +36,9 @@ public class DefaultArmCommand extends CommandBase {
   void handleInput(){
 
     if(Input.getLeftStickY() > 0.15){
-      armControlSubsystem.changeDesiredPivotRotation(.03 * (Input.getLeftStickY()-0.15));
+      armControlSubsystem.changeDesiredPivotRotation(.05 * (Input.getLeftStickY()-0.15));
     }else if(Input.getLeftStickY() < -0.15){
-      armControlSubsystem.changeDesiredPivotRotation(.03 * (Input.getLeftStickY()+0.15));
+      armControlSubsystem.changeDesiredPivotRotation(.05 * (Input.getLeftStickY()+0.15));
     }
 
     if(Input.getRightStickY() > 0.05){
