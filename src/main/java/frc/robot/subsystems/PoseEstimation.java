@@ -50,7 +50,7 @@ public class PoseEstimation extends SubsystemBase{
 
   public void periodic() {
     _poseEstimator.update(_swerve.getRotation2d(), _swerve.getModulePositions());
-    // updateVision();
+    updateVision();
 
     _field.setRobotPose(_poseEstimator.getEstimatedPosition());
     SmartDashboard.putData("Field", _field);
@@ -62,8 +62,11 @@ public class PoseEstimation extends SubsystemBase{
       EstimatedRobotPose camPose = pose.get();
       if (isValidPose(camPose)) {
         _poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+        SmartDashboard.putBoolean("isUpdatingVision", true);
+        return;
       }
     }
+    SmartDashboard.putBoolean("isUpdatingVision", false);
   }
 
   public boolean isValidPose(EstimatedRobotPose pose) {
