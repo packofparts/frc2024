@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 public class AutoConstants {
 
-    public static PathConstraints defaultSpeedConstraints = new PathConstraints(2, 1);
+    public static PathConstraints defaultSpeedConstraints = new PathConstraints(4, 3);
 
     public static PathPlannerTrajectory station2Piece = PathPlanner.loadPath("Station2Piece", defaultSpeedConstraints);
     public static PathPlannerTrajectory moveOneMeters = PathPlanner.loadPath("MoveOneMeters", defaultSpeedConstraints);
