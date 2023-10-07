@@ -14,7 +14,8 @@ public class ArmConstants {
         LOWER_NODE(Units.degreesToRadians(12),0),
         MID_NODE(Units.degreesToRadians(87.0),0),
         UPPER_NODE(Units.degreesToRadians(100),17.1),
-        SUBSTATION(Units.degreesToRadians(90),0);
+        SUBSTATION(Units.degreesToRadians(90),0),
+        GROUND_PICKUP_CONE(Units.degreesToRadians(47),16.7);
     
         public double pivotAngleRad;
         public double extentionDistIn;
@@ -35,6 +36,7 @@ public class ArmConstants {
     public static final int DIOPortPiv = 0;
     public static final double pivotAbsEncToRotation = 1.0/3.7142857;
     public static final double extensionRotationToInches =  18.5/7.01;
+
 
 
     // Offset For Pivot
@@ -81,7 +83,7 @@ public class ArmConstants {
     public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
     
     public static final double kIntakeDeadZone = 0.05;
-    public static final double kIntakeStallSpeed = -0.1;
+    public static final double kIntakeStallSpeed = -0;
 
     //Change this
     public static boolean leftPivotInverted = true;

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveConfig;
+import frc.robot.Util;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -61,7 +62,8 @@ public class PoseEstimation extends SubsystemBase{
     if (pose.isPresent()) {
       EstimatedRobotPose camPose = pose.get();
       if (isValidPose(camPose)) {
-        _poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+        _poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
+                                            camPose.timestampSeconds);
         SmartDashboard.putBoolean("isUpdatingVision", true);
         return;
       }
@@ -72,11 +74,14 @@ public class PoseEstimation extends SubsystemBase{
   public boolean isValidPose(EstimatedRobotPose pose) {
     List<PhotonTrackedTarget> targets = pose.targetsUsed;
     if (targets.size() == 1){
-      if (targets.get(0).getPoseAmbiguity() < VisionConstants.kSingleTagAmbiguityThreshold){
+      if (targets.get(0).getPoseAmbiguity() < VisionConstants.kSingleTagAmbiguityThreshold &&
+          Util.magnitude(targets.get(0).getAlternateCameraToTarget()) < 3){
         return true;
       }
       return false;
     }
+
+
     return true;
   }
 
