@@ -37,8 +37,8 @@ public class FollowPath extends CommandBase {
   @Override
   public void initialize() {
     cmd = new SwerveAutoBuilder(this.pose::getRobotPose, this.pose::resetPose, SwerveConfig.swerveKinematics,
-            new PIDConstants(4, 0, 0), //old .4
-            new PIDConstants(6, 0, 0), //old .5
+            new PIDConstants(7, 0.1, 0), //old .4
+            new PIDConstants(9, 0.1, 0), //old .5
             this.swerve::setModuleStates, this.eventMap, true, this.swerve
         );
     

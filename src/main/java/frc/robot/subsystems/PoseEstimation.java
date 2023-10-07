@@ -33,7 +33,6 @@ public class PoseEstimation extends SubsystemBase{
   private  SwerveDrivePoseEstimator _poseEstimator;
   private  Field2d _field = new Field2d();
 
-
   public PoseEstimation(Limelight lime, SwerveSubsystem swerveSubsystem) {
     _limelight = lime;
     _swerve = swerveSubsystem;
@@ -53,8 +52,14 @@ public class PoseEstimation extends SubsystemBase{
     _poseEstimator.update(_swerve.getRotation2d(), _swerve.getModulePositions());
     updateVision();
 
-    _field.setRobotPose(_poseEstimator.getEstimatedPosition());
+    Pose2d pose = _poseEstimator.getEstimatedPosition();
+    _field.setRobotPose(pose);
     SmartDashboard.putData("Field", _field);
+
+    SmartDashboard.putNumber("PoseEst X", pose.getX());
+    SmartDashboard.putNumber("PoseEst Y", pose.getY());
+    SmartDashboard.putNumber("PoseEst Rot", pose.getRotation().getDegrees());
+
   }
 
   public void updateVision() {
