@@ -81,7 +81,7 @@ public class ArmConstants {
     public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
     
     public static final double kIntakeDeadZone = 0.05;
-    public static final double kIntakeStallSpeed = 0.0;
+    public static final double kIntakeStallSpeed = -0.1;
 
     //Change this
     public static boolean leftPivotInverted = true;

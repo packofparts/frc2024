@@ -9,18 +9,20 @@ import frc.robot.constants.ArmConstants;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final WPI_TalonSRX _intakeMotor = new WPI_TalonSRX(ArmConstants.kIntakeID);
+  private final CANSparkMax _intakeMotor = new CANSparkMax(29,MotorType.kBrushless);
 
   public IntakeSubsystem() {
   
   }
   public void runIntake(double percentOutput){
 
-    _intakeMotor.set(ControlMode.PercentOutput, percentOutput);
+    _intakeMotor.set(percentOutput);
 
    // SmartDashboard.putData("Intake data", new Double(percentOutput));
 
@@ -34,6 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
     if (Input.getLeftTrigger()>ArmConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger());}
 
     if (Input.getLeftTrigger()<ArmConstants.kIntakeDeadZone && Input.getRightTrigger()<ArmConstants.kIntakeDeadZone){runIntake(-ArmConstants.kIntakeStallSpeed);}
+
   }
 
 }
