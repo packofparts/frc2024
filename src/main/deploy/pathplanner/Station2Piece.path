@@ -96,7 +96,7 @@
     }
   ],
   "maxVelocity": null,
-  "maxAcceleration": 0.25,
+  "maxAcceleration": 4.0,
   "isReversed": null,
   "markers": [
     {
@@ -108,13 +108,13 @@
     {
       "position": 1.0334605823863638,
       "names": [
-        "ground_pickup_cube"
+        "ground_pickup_cone"
       ]
     },
     {
       "position": 2.30618674538352,
       "names": [
-        "stow_cube"
+        "stow_cone"
       ]
     }
   ]
