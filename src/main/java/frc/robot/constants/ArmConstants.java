@@ -11,20 +11,21 @@ public class ArmConstants {
         UNDEFINED(10000,10000),
         STOW(minAngleRad,minExtensionIn),
 
-        LOWER_NODE_CONE(Units.degreesToRadians(12),0),
-        LOWER_NODE_CUBE(Units.degreesToRadians(12),0),
+        LOWER_NODE_CONE(Units.degreesToRadians(12),0), //TBD
+        LOWER_NODE_CUBE(Units.degreesToRadians(12),0), //TBD
 
-        MID_NODE_CONE(Units.degreesToRadians(87.0),0),
-        MID_NODE_CUBE(Units.degreesToRadians(87.0),0),
+        MID_NODE_CONE(Units.degreesToRadians(87.0),0), // TBD
+        MID_NODE_CUBE(Units.degreesToRadians(87.0),0), // TBD
 
-        UPPER_NODE_CONE(Units.degreesToRadians(100),17.1),
-        UPPER_NODE_CUBE(Units.degreesToRadians(100),17.1),
+        UPPER_NODE_CONE(Units.degreesToRadians(100),13.4), // EXT Calulated
+        UPPER_NODE_CUBE(Units.degreesToRadians(100),17.1), //TBD
 
-        SUBSTATION_CONE(Units.degreesToRadians(90),0),
-        SUBSTATION_CUBE(Units.degreesToRadians(90),0),
-        
-        GROUND_PICKUP_CONE(Units.degreesToRadians(47),16.7),
-        GROUND_PICKUP_CUBE(Units.degreesToRadians(40),9.5);
+        SUBSTATION_CONE(Units.degreesToRadians(90),0), //TBD
+        SUBSTATION_CUBE(Units.degreesToRadians(90),0), //TBD
+
+        GROUND_PICKUP_CONE(Units.degreesToRadians(47),16.7), //Calculated
+        //125 cm away from center
+        GROUND_PICKUP_CUBE(Units.degreesToRadians(40),9.5); //Not popssible
     
         public double pivotAngleRad;
         public double extentionDistIn;
