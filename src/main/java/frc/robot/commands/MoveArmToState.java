@@ -32,73 +32,73 @@ public class MoveArmToState extends CommandBase {
         switch(ArmConstants.curArmState){
             case STOW:
               return new PrintCommand("Dumbass");
-            case LOWER_NODE:
+            case LOWER_NODE_CONE:
               return new InstantCommand(()->this.arm.setDesiredPivotRotation(armm.pivotAngleRad));
-            case MID_NODE:
+            case MID_NODE_CONE:
               return new SequentialCommandGroup(null);
-            case UPPER_NODE:
+            case UPPER_NODE_CONE:
               return new SequentialCommandGroup(null);
-            case GROUND_PICKUP:
+            case GROUND_PICKUP_CONE:
               return new SequentialCommandGroup(null);
             case UNDEFINED:
               return new SequentialCommandGroup(null);
         }
-      case LOWER_NODE:
+      case LOWER_NODE_CONE:
         switch(ArmConstants.curArmState){
             case STOW:
               return new SequentialCommandGroup(null);
-            case LOWER_NODE:
+            case LOWER_NODE_CONE:
               return new PrintCommand("Dumbass");
-            case MID_NODE:
+            case MID_NODE_CONE:
               return new SequentialCommandGroup(null);
-            case UPPER_NODE:
+            case UPPER_NODE_CONE:
               return new SequentialCommandGroup(null);
-            case GROUND_PICKUP:
+            case GROUND_PICKUP_CONE:
               return new SequentialCommandGroup(null);
             case UNDEFINED:
               return new SequentialCommandGroup(null);
         }
-      case MID_NODE:
+      case MID_NODE_CONE:
         switch(ArmConstants.curArmState){
           case STOW:
             return new SequentialCommandGroup(null);
-          case LOWER_NODE:
+          case LOWER_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case MID_NODE:
+          case MID_NODE_CONE:
             return new PrintCommand("Dumbass");
-          case UPPER_NODE:
+          case UPPER_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case GROUND_PICKUP:
+          case GROUND_PICKUP_CONE:
             return new SequentialCommandGroup(null);
           case UNDEFINED:
             return new SequentialCommandGroup(null);
       }
-      case UPPER_NODE:
+      case UPPER_NODE_CONE:
         switch(ArmConstants.curArmState){
           case STOW:
             return new SequentialCommandGroup(null);
-          case LOWER_NODE:
+          case LOWER_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case MID_NODE:
+          case MID_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case UPPER_NODE:
+          case UPPER_NODE_CONE:
             return new PrintCommand("Dumbass");
-          case GROUND_PICKUP:
+          case GROUND_PICKUP_CONE:
             return new SequentialCommandGroup(null);
           case UNDEFINED:
             return new SequentialCommandGroup(null);
       }
-      case GROUND_PICKUP:
+      case GROUND_PICKUP_CONE:
         switch(ArmConstants.curArmState){
           case STOW:
             return new SequentialCommandGroup(null);
-          case LOWER_NODE:
+          case LOWER_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case MID_NODE:
+          case MID_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case UPPER_NODE:
+          case UPPER_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case GROUND_PICKUP:
+          case GROUND_PICKUP_CONE:
             return new PrintCommand("Dumbass");
           case UNDEFINED:
             return new SequentialCommandGroup(null);
@@ -107,13 +107,13 @@ public class MoveArmToState extends CommandBase {
         switch(ArmConstants.curArmState){
           case STOW:
             return new SequentialCommandGroup(null);
-          case LOWER_NODE:
+          case LOWER_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case MID_NODE:
+          case MID_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case UPPER_NODE:
+          case UPPER_NODE_CONE:
             return new SequentialCommandGroup(null);
-          case GROUND_PICKUP:
+          case GROUND_PICKUP_CONE:
             return new SequentialCommandGroup(null);
           case UNDEFINED:
             return new PrintCommand("Dumbass");

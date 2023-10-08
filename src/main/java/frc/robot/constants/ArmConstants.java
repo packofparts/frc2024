@@ -10,12 +10,21 @@ public class ArmConstants {
     public static enum ArmState {
         UNDEFINED(10000,10000),
         STOW(minAngleRad,minExtensionIn),
-        GROUND_PICKUP(Units.degreesToRadians(40),9.5),
-        LOWER_NODE(Units.degreesToRadians(12),0),
-        MID_NODE(Units.degreesToRadians(87.0),0),
-        UPPER_NODE(Units.degreesToRadians(100),17.1),
-        SUBSTATION(Units.degreesToRadians(90),0),
-        GROUND_PICKUP_CONE(Units.degreesToRadians(47),16.7);
+
+        LOWER_NODE_CONE(Units.degreesToRadians(12),0),
+        LOWER_NODE_CUBE(Units.degreesToRadians(12),0),
+
+        MID_NODE_CONE(Units.degreesToRadians(87.0),0),
+        MID_NODE_CUBE(Units.degreesToRadians(87.0),0),
+
+        UPPER_NODE_CONE(Units.degreesToRadians(100),17.1),
+        UPPER_NODE_CUBE(Units.degreesToRadians(100),17.1),
+
+        SUBSTATION_CONE(Units.degreesToRadians(90),0),
+        SUBSTATION_CUBE(Units.degreesToRadians(90),0),
+        
+        GROUND_PICKUP_CONE(Units.degreesToRadians(47),16.7),
+        GROUND_PICKUP_CUBE(Units.degreesToRadians(40),9.5);
     
         public double pivotAngleRad;
         public double extentionDistIn;
