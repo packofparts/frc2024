@@ -258,12 +258,12 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   public Command waitUntilSpPivot(double sp){
-    return new FunctionalCommand(()->setDesiredPivotRotation(sp), ()->new PrintCommand("getName()"), (Boolean bool)->new PrintCommand("Finished Pivot"), this::atAngleSetpoint, this);
+    return new FunctionalCommand(()->setDesiredPivotRotation(sp), ()->new PrintCommand("getName()"), (Boolean bool)->new PrintCommand("Finished Pivot"), this::atAngleSetpoint);
   }
 
 
   public Command waitUntilSpTelescope(double sp){
-    return new FunctionalCommand(()->setDesiredExtension(sp), ()->new PrintCommand("fuck"), (Boolean bool)-> new PrintCommand("getName()"), this::atTelescopeSetpoint, this);
+    return new FunctionalCommand(()->setDesiredExtension(sp), ()->new PrintCommand("finished"), (Boolean bool)-> new PrintCommand("getName()"), this::atTelescopeSetpoint);
   }
   
 

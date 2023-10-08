@@ -52,7 +52,6 @@ public class AutoConstants {
                 new RunCommand(()->intake.runIntake(1), intake).withTimeout(2)
             ));
 
-
         }else{
             
             eventMap.put("angle_N3", new WaitCommand(waitTime));
