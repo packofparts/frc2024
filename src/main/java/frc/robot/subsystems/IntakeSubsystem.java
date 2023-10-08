@@ -32,9 +32,10 @@ public class IntakeSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // _intakeMotor.set(ControlMode.PercentOutput, -1);
+    // Intake Cone Outtake Cube
     if (Input.getRightTrigger() > ArmConstants.kIntakeDeadZone) {runIntake(Input.getRightTrigger());}
     
+    // Intake Cube Outtake Cone
     if (Input.getLeftTrigger()>ArmConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger());}
 
     if (Input.getLeftTrigger()<ArmConstants.kIntakeDeadZone && Input.getRightTrigger()<ArmConstants.kIntakeDeadZone){runIntake(-ArmConstants.kIntakeStallSpeed);}

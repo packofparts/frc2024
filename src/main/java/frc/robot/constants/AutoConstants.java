@@ -37,23 +37,22 @@ public class AutoConstants {
         if (doAction){  
 
             emptyMap.put("stow_arm",new SequentialCommandGroup(
-                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),arm),
-                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad),arm)
+                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn)),
+                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad))
               ));
 
             emptyMap.put("stow_cone",new SequentialCommandGroup(
-                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),arm),
-                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad),arm)
+                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn)),
+                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad))
               ));
 
             emptyMap.put("ground_pickup_cone", new SequentialCommandGroup(
                 new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad)),
                 new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn)),
-                new RunCommand(()->intake.runIntake(1), intake).withTimeout(2)
+                new RunCommand(()->intake.runIntake(1)).withTimeout(2)
             ));
 
         }else{
-            
             eventMap.put("angle_N3", new WaitCommand(waitTime));
             eventMap.put("angle_N2", new WaitCommand(waitTime));
             eventMap.put("angle_N1", new WaitCommand(waitTime));
