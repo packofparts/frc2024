@@ -16,7 +16,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoConstants {
 
-    public static PathConstraints defaultSpeedConstraints = new PathConstraints(2, 1);
+    public static PathConstraints defaultSpeedConstraints = new PathConstraints(1, .25);
 
     public static PathPlannerTrajectory station2Piece = PathPlanner.loadPath("Station2Piece", defaultSpeedConstraints);
     public static PathPlannerTrajectory moveOneMeters = PathPlanner.loadPath("MoveOneMeters", defaultSpeedConstraints);
@@ -25,7 +25,7 @@ public class AutoConstants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
 
-    private static boolean doAction = false;
+    private static boolean doAction = true;
 
     private static double waitTime = 10;
 
@@ -33,7 +33,21 @@ public class AutoConstants {
         
         if (doAction){  
 
-            // eventMap.put("ground_pickup_cone", );
+            emptyMap.put("stow_arm",new SequentialCommandGroup(
+                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),arm),
+                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad),arm)
+              ));
+
+
+            emptyMap.put("stow_cone",new SequentialCommandGroup(
+                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),arm),
+                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad),arm)
+              ));
+
+            emptyMap.put("ground_pickup_cone", new SequentialCommandGroup(
+                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad)),
+                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn))   
+            ));
 
 
         }else{

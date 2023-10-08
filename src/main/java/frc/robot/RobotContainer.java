@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PIDTuning;
+import frc.robot.constants.AutoConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
@@ -41,6 +42,7 @@ public class RobotContainer {
   PoseEstimation pose = new PoseEstimation(limelight, swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    AutoConstants.populateHashMaps(swerveSubsystem, limelight, armControlSubsystem, pose, intakeSubsystem);
     armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
     if(SwerveConstants.kPIDTuneMode)
       swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
