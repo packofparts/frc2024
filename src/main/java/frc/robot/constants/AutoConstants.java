@@ -6,8 +6,11 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PerpetualCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -38,7 +41,6 @@ public class AutoConstants {
                 new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad),arm)
               ));
 
-
             emptyMap.put("stow_cone",new SequentialCommandGroup(
                 new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),arm),
                 new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad),arm)
@@ -46,7 +48,8 @@ public class AutoConstants {
 
             emptyMap.put("ground_pickup_cone", new SequentialCommandGroup(
                 new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad)),
-                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn))   
+                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn)),
+                new RunCommand(()->intake.runIntake(1), intake).withTimeout(2)
             ));
 
 

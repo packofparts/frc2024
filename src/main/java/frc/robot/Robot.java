@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
 
 
     pathSelector.addOption("NONE", null);
-    pathSelector.addOption("Station2PieceNOEVENT", new FollowPath(
+    pathSelector.addOption("Station2Piece", new FollowPath(
       _robotContainer.swerveSubsystem, 
       AutoConstants.station2Piece,
       AutoConstants.eventMap,
