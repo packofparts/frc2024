@@ -28,7 +28,7 @@ public class AutoConstants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
 
-    private static boolean doAction = false;
+    private static boolean doAction = true;
 
     private static double waitTime = 10;
 
@@ -37,18 +37,18 @@ public class AutoConstants {
         if (doAction){  
 
             eventMap.put("stow_arm",new SequentialCommandGroup(
-                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn)),
-                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad))
+                arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
+                arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)
               ));
 
             eventMap.put("stow_cone",new SequentialCommandGroup(
-                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn)),
-                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad))
+                arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
+                arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)
               ));
 
             eventMap.put("ground_pickup_cone", new SequentialCommandGroup(
-                new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad)),
-                new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn)),
+               arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),
+               arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),
                 new RunCommand(()->intake.runIntake(1)).withTimeout(2)
             ));
 
