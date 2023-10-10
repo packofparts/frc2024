@@ -36,7 +36,7 @@ public class IntakeSubsystem extends SubsystemBase {
     if (Input.getRightTrigger() > ArmConstants.kIntakeDeadZone) {runIntake(Input.getRightTrigger());}
     
     // Intake Cube Outtake Cone
-    if (Input.getLeftTrigger()>ArmConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger());}
+    if (Input.getLeftTrigger()>ArmConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger()/1.5);}
 
     if (Input.getLeftTrigger()<ArmConstants.kIntakeDeadZone && Input.getRightTrigger()<ArmConstants.kIntakeDeadZone){runIntake(-ArmConstants.kIntakeStallSpeed);}
 

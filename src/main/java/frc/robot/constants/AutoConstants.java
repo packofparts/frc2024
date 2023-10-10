@@ -28,7 +28,7 @@ public class AutoConstants {
     public static HashMap<String, Command> eventMap = new HashMap<>();
 
 
-    private static boolean doAction = true;
+    private static boolean doAction = false;
 
     private static double waitTime = 10;
 
@@ -36,25 +36,25 @@ public class AutoConstants {
         
         if (doAction){  
 
-            emptyMap.put("stow_arm",new SequentialCommandGroup(
+            eventMap.put("stow_arm",new SequentialCommandGroup(
                 new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn)),
                 new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad))
               ));
 
-            emptyMap.put("stow_cone",new SequentialCommandGroup(
+            eventMap.put("stow_cone",new SequentialCommandGroup(
                 new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn)),
                 new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad))
               ));
 
-            emptyMap.put("ground_pickup_cone", new SequentialCommandGroup(
+            eventMap.put("ground_pickup_cone", new SequentialCommandGroup(
                 new InstantCommand(()->arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad)),
                 new InstantCommand(()->arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn)),
                 new RunCommand(()->intake.runIntake(1)).withTimeout(2)
             ));
 
         }else{
-            eventMap.put("angle_N3", new WaitCommand(waitTime));
-            eventMap.put("angle_N2", new WaitCommand(waitTime));
+            emptyMap.put("angle_N3", new WaitCommand(waitTime));
+            emptyMap.put("angle_N2", new WaitCommand(waitTime));
             eventMap.put("angle_N1", new WaitCommand(waitTime));
             eventMap.put("angle_N0", new WaitCommand(waitTime));
             eventMap.put("angle_neutral",new WaitCommand(waitTime));

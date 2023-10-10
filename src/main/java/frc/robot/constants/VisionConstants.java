@@ -19,7 +19,7 @@ public class VisionConstants {
 
     // These are tunable constants for the reliability of odometry and vision measurements in the form of a vector of (x, y, theta), in meters, meters, and radians respectively
     public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(1));
-    public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.15, 0.15, Units.degreesToRadians(10)); 
+    public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.15, 0.15, Units.degreesToRadians(7)); 
 
     public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(0.1, 0.05, 1.24), new Rotation3d(0,0,0));
 

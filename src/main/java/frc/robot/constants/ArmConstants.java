@@ -14,13 +14,14 @@ public class ArmConstants {
         LOWER_NODE_CONE(Units.degreesToRadians(12),0), //TBD
         LOWER_NODE_CUBE(Units.degreesToRadians(12),0), //TBD
 
-        MID_NODE_CONE(Units.degreesToRadians(87.0),0), // TBD
+        
+        MID_NODE_CONE(Units.degreesToRadians(66.05),0), // TBD
         MID_NODE_CUBE(Units.degreesToRadians(87.0),0), // TBD
 
-        UPPER_NODE_CONE(Units.degreesToRadians(100),13.4), // EXT Calulated
+        UPPER_NODE_CONE(Units.degreesToRadians(88.6),12.98), // EXT Calulated
         UPPER_NODE_CUBE(Units.degreesToRadians(100),17.1), //TBD
 
-        SUBSTATION_CONE(Units.degreesToRadians(90),0), //TBD
+        SUBSTATION_CONE(Units.degreesToRadians(85.19),0), //TBD
         SUBSTATION_CUBE(Units.degreesToRadians(90),0), //TBD
 
         GROUND_PICKUP_CONE(Units.degreesToRadians(47),16.7), //Calculated
@@ -93,7 +94,7 @@ public class ArmConstants {
     public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
     
     public static final double kIntakeDeadZone = 0.05;
-    public static final double kIntakeStallSpeed = -0;
+    public static final double kIntakeStallSpeed = -0.1;
 
     //Change this
     public static boolean leftPivotInverted = true;
