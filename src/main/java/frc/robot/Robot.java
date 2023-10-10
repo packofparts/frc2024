@@ -10,8 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.FollowPath;
+import frc.robot.commands.ScoreCone;
 import frc.robot.constants.AutoConstants;
+import frc.robot.constants.ArmConstants.ArmState;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -39,12 +42,17 @@ public class Robot extends TimedRobot {
 
 
     pathSelector.addOption("NONE", null);
-    pathSelector.addOption("Station2Piece", new FollowPath(
-      _robotContainer.swerveSubsystem, 
-      AutoConstants.station2Piece,
-      AutoConstants.emptyMap,
-      _robotContainer.pose
-    ));
+    pathSelector.addOption("Station2Piece", new SequentialCommandGroup(
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.UPPER_NODE_CONE),
+        new FollowPath(
+          _robotContainer.swerveSubsystem, 
+          AutoConstants.station2Piece,
+          AutoConstants.emptyMap,
+          _robotContainer.pose
+        ),
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.MID_NODE_CONE)
+      )
+    );
 
     pathSelector.addOption("OneMeter", new FollowPath(
       _robotContainer.swerveSubsystem, 
