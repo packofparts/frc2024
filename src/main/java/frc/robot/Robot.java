@@ -47,7 +47,7 @@ public class Robot extends TimedRobot {
         new FollowPath(
           _robotContainer.swerveSubsystem, 
           AutoConstants.station2Piece,
-          AutoConstants.emptyMap,
+          AutoConstants.eventMap,
           _robotContainer.pose
         ),
         new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.MID_NODE_CONE)
