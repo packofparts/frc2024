@@ -24,10 +24,8 @@ public class ScoreCone extends CommandBase {
     path = new SequentialCommandGroup(
       arm.waitUntilSpPivot(state.pivotAngleRad),
       arm.waitUntilSpTelescope(state.extentionDistIn),
-      new WaitCommand(.4),
-      new InstantCommand(() -> intake.runIntake(.5)),
       new WaitCommand(.5),
-      new InstantCommand(()->intake.runIntake(ArmConstants.kIntakeStallSpeed))   
+      new InstantCommand(() -> intake.runIntake(1)).withTimeout(0.5)
       );
 
   }
