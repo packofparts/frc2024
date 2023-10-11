@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.SwerveConfig;
@@ -32,10 +33,12 @@ public class FollowPath extends CommandBase {
     this.pose = pose;
     
     addRequirements(this.swerve);
+
   }
   
   @Override
   public void initialize() {
+
     cmd = new SwerveAutoBuilder(this.pose::getRobotPose, this.pose::resetPose, SwerveConfig.swerveKinematics,
             new PIDConstants(7, 0.1, 0), //old .4
             new PIDConstants(9, 0.1, 0), //old .5
@@ -47,6 +50,11 @@ public class FollowPath extends CommandBase {
     SwerveSubsystem.autoGyroInitValue = traj.getInitialHolonomicPose().getRotation().getDegrees();
 
     finalCMD.schedule();
+    SmartDashboard.putBoolean("pathFinished", finalCMD.isFinished());
+  }
+  @Override
+  public void execute(){
+    SmartDashboard.updateValues();
   }
 
 

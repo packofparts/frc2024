@@ -17,14 +17,13 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class ScoreCone extends CommandBase {
   /** Creates a new ScoreConeHighNode. */
   ArmControlSubsystem arm;
-  SequentialCommandGroup path;
+  public SequentialCommandGroup path;
   
   public ScoreCone(ArmControlSubsystem arm, IntakeSubsystem intake, ArmState state) {
     this.arm = arm;
     path = new SequentialCommandGroup(
       arm.waitUntilSpPivot(state.pivotAngleRad),
       arm.waitUntilSpTelescope(state.extentionDistIn),
-      new WaitCommand(.5),
       new InstantCommand(() -> intake.runIntake(1)).withTimeout(0.5)
       );
 
