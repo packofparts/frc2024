@@ -35,13 +35,12 @@ public class FollowPath extends CommandBase {
     addRequirements(this.swerve);
 
   }
-  
   @Override
   public void initialize() {
 
     cmd = new SwerveAutoBuilder(this.pose::getRobotPose, this.pose::resetPose, SwerveConfig.swerveKinematics,
-            new PIDConstants(7, 0.1, 0), //old .4
-            new PIDConstants(9, 0.1, 0), //old .5
+            new PIDConstants(7, 0.5, 0), //old .4
+            new PIDConstants(9, 0.5, 0), //old .5
             this.swerve::setModuleStates, this.eventMap, true, this.swerve
         );
     
@@ -51,6 +50,7 @@ public class FollowPath extends CommandBase {
 
     finalCMD.schedule();
     SmartDashboard.putBoolean("pathFinished", finalCMD.isFinished());
+    SmartDashboard.putBoolean("pathSchedules", finalCMD.isScheduled());
   }
   @Override
   public void execute(){

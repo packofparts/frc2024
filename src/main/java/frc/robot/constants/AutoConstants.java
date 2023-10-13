@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.commands.ScoreCone;
+import frc.robot.constants.ArmConstants.ArmState;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -19,7 +21,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class AutoConstants {
 
-    public static PathConstraints defaultSpeedConstraints = new PathConstraints(1, .25);
+    public static PathConstraints defaultSpeedConstraints = new PathConstraints(3, .75);
 
     public static PathPlannerTrajectory station2Piece = PathPlanner.loadPath("Station2Piece", defaultSpeedConstraints);
     public static PathPlannerTrajectory moveOneMeters = PathPlanner.loadPath("MoveOneMeters", defaultSpeedConstraints);
@@ -51,6 +53,7 @@ public class AutoConstants {
                arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),
                 new RunCommand(()->intake.runIntake(1)).withTimeout(2)
             ));
+            eventMap.put("score_cone", new ScoreCone(arm, intake, ArmState.MID_NODE_CONE));
 
         }else{
             emptyMap.put("angle_N3", new WaitCommand(waitTime));

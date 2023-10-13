@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.ArmConstants;
@@ -24,9 +25,8 @@ public class ScoreCone extends CommandBase {
     path = new SequentialCommandGroup(
       arm.waitUntilSpPivot(state.pivotAngleRad),
       arm.waitUntilSpTelescope(state.extentionDistIn),
-      new InstantCommand(() -> intake.runIntake(1)).withTimeout(0.5)
+      new RunCommand(() -> intake.runIntake(1)).withTimeout(3)
       );
-
   }
 
   // Called when the command is initially scheduled.
