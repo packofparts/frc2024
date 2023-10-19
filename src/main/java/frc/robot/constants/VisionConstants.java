@@ -21,7 +21,7 @@ public class VisionConstants {
     public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(1));
     public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.15, 0.15, Units.degreesToRadians(7)); 
 
-    public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(.0626872, .0496, 1.28), new Rotation3d(0,-Math.toRadians(15),0));
+    public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(.0496, .0626872, 1.28), new Rotation3d(0,-Math.toRadians(15),0));
 
     public static final double kSingleTagAmbiguityThreshold = 0.15;
 }
