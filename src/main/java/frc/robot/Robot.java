@@ -42,16 +42,31 @@ public class Robot extends TimedRobot {
 
 
     pathSelector.addOption("NONE", null);
-    pathSelector.addOption("Station2Piece", new SequentialCommandGroup(
+    pathSelector.addOption("Station2PieceBlue", 
+        new SequentialCommandGroup(
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
         new FollowPath(
           _robotContainer.swerveSubsystem, 
-          AutoConstants.station2Piece,
+          AutoConstants.station2PieceBlue,
           AutoConstants.eventMap,
           _robotContainer.pose
-        ), 
-        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.MID_NODE_CONE).path
+        )
+        
       )
     );
+
+    pathSelector.addOption("Station2PieceRed", 
+    new SequentialCommandGroup(
+    new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+    new FollowPath(
+      _robotContainer.swerveSubsystem, 
+      AutoConstants.station2PieceRed,
+      AutoConstants.eventMap,
+      _robotContainer.pose
+    )
+    
+  )
+);
 
     pathSelector.addOption("OneMeter", new FollowPath(
       _robotContainer.swerveSubsystem, 
