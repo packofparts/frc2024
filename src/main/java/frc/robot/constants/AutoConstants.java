@@ -23,7 +23,9 @@ public class AutoConstants {
 
     public static PathConstraints defaultSpeedConstraints = new PathConstraints(3, .75);
 
-    public static PathPlannerTrajectory station2Piece = PathPlanner.loadPath("Station2Piece", defaultSpeedConstraints);
+    public static PathPlannerTrajectory station2PieceBlue = PathPlanner.loadPath("Station2PieceBlue", defaultSpeedConstraints);
+    public static PathPlannerTrajectory station2PieceRed = PathPlanner.loadPath("Station2PieceRed", defaultSpeedConstraints);
+
     public static PathPlannerTrajectory moveOneMeters = PathPlanner.loadPath("MoveOneMeters", defaultSpeedConstraints);
 
     public static HashMap<String, Command> emptyMap = new HashMap<>();
@@ -51,9 +53,9 @@ public class AutoConstants {
             eventMap.put("ground_pickup_cone", new SequentialCommandGroup(
                arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),
                arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),
-                new RunCommand(()->intake.runIntake(1)).withTimeout(2)
+                new RunCommand(()->intake.runIntake(1)).withTimeout(3)
             ));
-            eventMap.put("score_cone", new ScoreCone(arm, intake, ArmState.MID_NODE_CONE));
+            eventMap.put("score_cone_low", new ScoreCone(arm, intake, ArmState.LOWER_NODE_CONE));
 
         }else{
             emptyMap.put("angle_N3", new WaitCommand(waitTime));
