@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.FollowPath;
+import frc.robot.commands.Mobility;
 import frc.robot.commands.ScoreCone;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ArmConstants.ArmState;
@@ -65,8 +66,21 @@ public class Robot extends TimedRobot {
       _robotContainer.pose
     )
     
-  )
-);
+    )
+  );
+    
+    pathSelector.addOption("ScoreHybridMobility", 
+      new SequentialCommandGroup(
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new Mobility(_robotContainer.swerveSubsystem)
+      )
+    );
+
+    pathSelector.addOption("ScoreHybrid", 
+      new SequentialCommandGroup(
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE)
+      )
+    );
 
     pathSelector.addOption("OneMeter", new FollowPath(
       _robotContainer.swerveSubsystem, 
