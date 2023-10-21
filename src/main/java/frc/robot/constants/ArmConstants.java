@@ -11,8 +11,8 @@ public class ArmConstants {
         UNDEFINED(10000,10000),
         STOW(minAngleRad,minExtensionIn),
 
-        LOWER_NODE_CONE(Units.degreesToRadians(12),0), //TBD
-        LOWER_NODE_CUBE(Units.degreesToRadians(12),0), //TBD
+        LOWER_NODE_CONE(Units.degreesToRadians(30),0), //TBD
+        LOWER_NODE_CUBE(Units.degreesToRadians(30),0), //TBD
 
         
         MID_NODE_CONE(Units.degreesToRadians(66.05),0), // TBD
