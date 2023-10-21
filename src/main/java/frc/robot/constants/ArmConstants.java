@@ -15,7 +15,7 @@ public class ArmConstants {
         LOWER_NODE_CUBE(Units.degreesToRadians(30),0), //TBD
 
         
-        MID_NODE_CONE(Units.degreesToRadians(66.05),0), // TBD
+        MID_NODE_CONE(Units.degreesToRadians(66.05),0), // Done
         MID_NODE_CUBE(Units.degreesToRadians(87.0),0), // TBD
 
         UPPER_NODE_CONE(Units.degreesToRadians(88.6),12.98), // EXT Calulated
