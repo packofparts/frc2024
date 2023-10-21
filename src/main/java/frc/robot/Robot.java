@@ -72,9 +72,7 @@ public class Robot extends TimedRobot {
     pathSelector.addOption("ScoreHybridMobility", 
       new SequentialCommandGroup(
         new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
-        new Mobility(_robotContainer.swerveSubsystem)
-      )
-    );
+        new Mobility(_robotContainer.swerveSubsystem)));
 
     pathSelector.addOption("ScoreHybrid", 
       new SequentialCommandGroup(
@@ -89,7 +87,8 @@ public class Robot extends TimedRobot {
       _robotContainer.pose
     ));
 
-
+    pathSelector.addOption("MobilityOnly", new Mobility(_robotContainer.swerveSubsystem));
+    
     SmartDashboard.putData("PP Autos", pathSelector);
   }
 

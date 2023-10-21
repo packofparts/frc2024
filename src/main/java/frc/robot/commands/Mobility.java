@@ -25,7 +25,9 @@ public class Mobility extends CommandBase {
   @Override
   public void initialize() {
     commands = new SequentialCommandGroup(
-      new RunCommand(() -> {_swerve.setMotors(-1, 0, 0);}).withTimeout(4.2)
+      new RunCommand(() -> {_swerve.setMotors(-1, 0, 0);}).withTimeout(4.2),
+      new RunCommand(() -> {_swerve.setMotors(0, 0, 0);})
+
     );
 
   }
