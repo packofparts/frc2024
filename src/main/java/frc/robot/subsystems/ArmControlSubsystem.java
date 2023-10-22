@@ -141,7 +141,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
       if(!isInitilized && -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation != 0 && absPivEncoder.isConnected()){
         //What does this line do?
-        this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + 0.226 + 0.02777;
+        this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation +.032;
         
         this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
         this.desiredPivotRotation = this.currentPivotRotation;
