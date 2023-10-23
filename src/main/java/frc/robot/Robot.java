@@ -24,10 +24,8 @@ import frc.robot.constants.ArmConstants.ArmState;
  * project.
  */
 public class Robot extends TimedRobot {
+
   private Command _autonomousCommand;
-
-  private RobotContainer _robotContainer;
-
   public SendableChooser<Command> pathSelector = new SendableChooser<>();
 
   /**
@@ -39,9 +37,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
-    _robotContainer = new RobotContainer();
-
-
+    RobotContainer _robotContainer = new RobotContainer();
     pathSelector.addOption("NONE", null);
     pathSelector.addOption("Station2PieceBlue", 
         new SequentialCommandGroup(
@@ -117,12 +113,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    _autonomousCommand = _robotContainer.getAutonomousCommand();
 
     if(pathSelector.getSelected() != null){
       _autonomousCommand = pathSelector.getSelected();
     }
-
     // schedule the autonomous command (example)
     if (_autonomousCommand != null) {
       _autonomousCommand.schedule();

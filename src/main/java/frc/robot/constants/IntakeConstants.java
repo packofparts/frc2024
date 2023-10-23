@@ -8,6 +8,9 @@ import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 
 /** Add your docs here. */
 public class IntakeConstants {
+    private IntakeConstants(){
+        throw new IllegalStateException("Constants Class");
+      }
     public static final int kIntakeID = 6;
     public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
     

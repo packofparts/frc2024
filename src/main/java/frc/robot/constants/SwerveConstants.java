@@ -1,6 +1,9 @@
 package frc.robot.constants;
 
 public class SwerveConstants {
+  private SwerveConstants(){
+    throw new IllegalStateException("Constants Class");
+  }
 
   // Ratio for Mk2 Swerve Modules
   // Found https://www.chiefdelphi.com/t/2910-mk2-swerve-module-release/335077

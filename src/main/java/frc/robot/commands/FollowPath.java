@@ -7,47 +7,45 @@ import frc.robot.SwerveConfig;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
-
-import java.util.HashMap;
+import java.util.Map;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 public class FollowPath extends CommandBase {
   /** Creates a new TGWithPPlib. */
-  SwerveSubsystem swerve;
-  SwerveAutoBuilder cmd;
-  Command finalCMD;
-  PathPlannerTrajectory traj;
-  HashMap<String,Command> eventMap;
-  PoseEstimation pose;
+  private SwerveSubsystem _swerve;
+  private Command _finalCMD;
+  private PathPlannerTrajectory _traj;
+  private Map<String,Command> _eventMap;
+  private PoseEstimation _pose;
   
-  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj, HashMap<String,Command> eventMap, PoseEstimation pose) {
+  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj, Map<String,Command> eventMap, PoseEstimation pose) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.swerve = swerve;
-    this.eventMap = eventMap;
-    this.traj = traj;
-    this.pose = pose;
+    this._swerve = swerve;
+    this._eventMap = eventMap;
+    this._traj = traj;
+    this._pose = pose;
     
-    addRequirements(this.swerve);
+    addRequirements(this._swerve);
 
   }
   @Override
   public void initialize() {
 
-    cmd = new SwerveAutoBuilder(this.pose::getRobotPose, this.pose::resetPose, SwerveConfig.swerveKinematics,
+    SwerveAutoBuilder cmd = new SwerveAutoBuilder(this._pose::getRobotPose, this._pose::resetPose, SwerveConfig.swerveKinematics,
             new PIDConstants(7, 0.5, 0), //old .4
             new PIDConstants(9, 0.5, 0), //old .5
-            this.swerve::setModuleStates, this.eventMap, true, this.swerve
+            this._swerve::setModuleStates, this._eventMap, true, this._swerve
         );
     
-    finalCMD = cmd.fullAuto(traj);
+    _finalCMD = cmd.fullAuto(_traj);
 
-    SwerveSubsystem.autoGyroInitValue = traj.getInitialHolonomicPose().getRotation().getDegrees();
+    SwerveSubsystem.autoGyroInitValue = _traj.getInitialHolonomicPose().getRotation().getDegrees();
 
-    finalCMD.schedule();
-    SmartDashboard.putBoolean("pathFinished", finalCMD.isFinished());
-    SmartDashboard.putBoolean("pathSchedules", finalCMD.isScheduled());
+    _finalCMD.schedule();
+    SmartDashboard.putBoolean("pathFinished", _finalCMD.isFinished());
+    SmartDashboard.putBoolean("pathSchedules", _finalCMD.isScheduled());
   }
   @Override
   public void execute(){
@@ -66,6 +64,6 @@ public class FollowPath extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished(){
-    return finalCMD.isFinished();
+    return _finalCMD.isFinished();
   }
 }

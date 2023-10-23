@@ -21,7 +21,6 @@ import frc.robot.constants.VisionConstants;
 public class PoseEstimation extends SubsystemBase{
   private  Limelight _limelight;
   private  SwerveSubsystem _swerve;
-
   private  SwerveDrivePoseEstimator _poseEstimator;
   private  Field2d _field = new Field2d();
 
@@ -41,7 +40,8 @@ public class PoseEstimation extends SubsystemBase{
     _field = new Field2d();
     SmartDashboard.putData("Field", _field);
   }
-
+  
+  @Override
   public void periodic() {
     _poseEstimator.update(_swerve.getRotation2d(), _swerve.getModulePositions());
     updateVision();
@@ -76,10 +76,7 @@ public class PoseEstimation extends SubsystemBase{
   public boolean isValidPose(EstimatedRobotPose pose) {
     List<PhotonTrackedTarget> targets = pose.targetsUsed;
     if (targets.size() == 1){
-      if (targets.get(0).getPoseAmbiguity() < VisionConstants.kSingleTagAmbiguityThreshold){
-        return true;
-      }
-      return false;
+      return targets.get(0).getPoseAmbiguity() < VisionConstants.kSingleTagAmbiguityThreshold;
     }
 
 

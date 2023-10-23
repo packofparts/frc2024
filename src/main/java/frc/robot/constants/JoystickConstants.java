@@ -6,6 +6,9 @@ package frc.robot.constants;
 
 /** Add your docs here. */
 public class JoystickConstants {
+    private JoystickConstants(){
+        throw new IllegalStateException("Constants Class");
+    }
     public static int rotJoystickPort = 0;
     public static int transJoystickPort = 2;
     public static int xboxControllerPort = 1;

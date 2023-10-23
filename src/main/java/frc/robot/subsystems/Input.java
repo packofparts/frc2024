@@ -10,16 +10,19 @@ import frc.robot.constants.JoystickConstants;
 
 // Input Class For Joystick/Controller Input Functions
 public class Input {
+    private Input(){
+        throw new IllegalStateException("Input Class");
+      }
 
     private static Joystick rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
     private static Joystick tJoystick = new Joystick (JoystickConstants.transJoystickPort);
     
     private static XboxController xboxController = new XboxController(JoystickConstants.xboxControllerPort);
 
-    public static int DPADUP = 0;
-    public static int DPADRIGHT = 90;
-    public static int DPADDOWN = 180;
-    public static int DPADLEFT = 270;
+    public static final int DPADUP = 0;
+    public static final int DPADRIGHT = 90;
+    public static final int DPADDOWN = 180;
+    public static final int DPADLEFT = 270;
 
 
     public static boolean resetGyro(){return rJoystick.getRawButton(3);}

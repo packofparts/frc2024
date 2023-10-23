@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import java.util.HashMap;
+import java.util.Map;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
@@ -12,31 +13,32 @@ import frc.robot.commands.ScoreCone;
 import frc.robot.constants.ArmConstants.ArmState;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PoseEstimation;
-import frc.robot.subsystems.SwerveSubsystem;
+
 
 public class AutoConstants {
 
-    public static PathConstraints defaultSpeedConstraints = new PathConstraints(3, .75);
+    private AutoConstants(){
+        throw new IllegalStateException("Constants Class");
+    }
 
-    public static PathPlannerTrajectory station2PieceBlue = PathPlanner.loadPath("Station2PieceBlue", defaultSpeedConstraints);
-    public static PathPlannerTrajectory station2PieceRed = PathPlanner.loadPath("Station2PieceRed", defaultSpeedConstraints);
+    public static final PathConstraints defaultSpeedConstraints = new PathConstraints(3, .75);
 
-    public static PathPlannerTrajectory moveOneMeters = PathPlanner.loadPath("MoveOneMeters", defaultSpeedConstraints);
+    public static final PathPlannerTrajectory station2PieceBlue = PathPlanner.loadPath("Station2PieceBlue", defaultSpeedConstraints);
+    public static final PathPlannerTrajectory station2PieceRed = PathPlanner.loadPath("Station2PieceRed", defaultSpeedConstraints);
 
-    public static HashMap<String, Command> emptyMap = new HashMap<>();
-    public static HashMap<String, Command> eventMap = new HashMap<>();
+    public static final PathPlannerTrajectory moveOneMeters = PathPlanner.loadPath("MoveOneMeters", defaultSpeedConstraints);
+
+    public static final Map<String, Command> emptyMap = new HashMap<>();
+    public static final Map<String, Command> eventMap = new HashMap<>();
 
 
-    private static boolean doAction = true;
+    public static final boolean doAction = true;
 
-    private static double waitTime = 10;
+    public static final double waitTime = 1;
 
-    public static void populateHashMaps(SwerveSubsystem swerve, Limelight lime, ArmControlSubsystem arm, PoseEstimation pose, IntakeSubsystem intake){
+    public static void populateHashMaps(ArmControlSubsystem arm, IntakeSubsystem intake){
         
         if (doAction){  
-
             eventMap.put("stow_arm",new SequentialCommandGroup(
                 arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
                 arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)

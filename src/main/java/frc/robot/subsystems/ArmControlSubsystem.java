@@ -25,30 +25,31 @@ import frc.robot.constants.CompConstants;
 
 public class ArmControlSubsystem extends SubsystemBase {
 
-  public static enum ArmMotorMode {
+  public enum ArmMotorMode {
     COAST,
     BRAKE,
     OFF
   }
 
-  public static enum MoveArmConfig {
+  public enum MoveArmConfig {
     SIMULTANEOUS,
     SEQ_EXTEND_THEN_PIVOT,
     SEQ_PIVOT_THEN_EXTEND
   }
   
-
+  
   private final WPI_TalonFX _leftPivotController = new WPI_TalonFX(ArmConstants.kleftArmPivotID);
   private final WPI_TalonFX _rightPivotController = new WPI_TalonFX(ArmConstants.kRightArmPivotID);
   private final CANSparkMax extensionController = new CANSparkMax(ArmConstants.kTelescopicArmSparkID, MotorType.kBrushless);
 
   private final DutyCycleEncoder _absPivEncoder = new DutyCycleEncoder(ArmConstants.kDIOPortPiv);
   private final RelativeEncoder extensionEncoder = extensionController.getEncoder();
-  
 
   private final SlewRateLimiter _pivotRateLimiter;
   private final PIDController _extensionPID;
   private final PIDController _pivotPID;
+
+  public static boolean ultraInstinct = false;
 
   double pivotRelEncoderOffsetRot;
   double currentPivotRotation;
@@ -164,7 +165,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     desiredPivotRotation = MathUtil.clamp(desiredPivotRotation, ArmConstants.kMinAngleRad, ArmConstants.kMaxAngleRad);
     currentPivotRotation = getCurrentPivotRotation(true);
 
-    if (!CompConstants.ultraInstinct) {
+    if (!ultraInstinct) {
       desiredExtensionDistance = MathUtil.clamp(desiredExtensionDistance, ArmConstants.kMinExtensionIn, ArmConstants.kMaxExtensionIn);
     }
     currentExtensionDistance = getCurrentExtensionIn();
@@ -228,13 +229,11 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public boolean atAngleSetpoint(){
     return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(4);
-    //return true;
   }
 
 
   public boolean atTelescopeSetpoint(){
     return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 0.5;
-    //return true;
   }
 
 

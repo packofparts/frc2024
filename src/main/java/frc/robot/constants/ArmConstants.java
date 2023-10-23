@@ -4,7 +4,11 @@ import edu.wpi.first.math.util.Units;
 /** Add your docs here. */
 public class ArmConstants {
 
-    public static enum ArmState {
+  private ArmConstants(){
+    throw new IllegalStateException("Constants Class");
+  }
+  
+    public enum ArmState {
         UNDEFINED(10000,10000),
         STOW(kMinAngleRad,kMinExtensionIn),
 
@@ -24,12 +28,11 @@ public class ArmConstants {
         GROUND_PICKUP_CONE(Units.degreesToRadians(47),16.7), //Calculated
         //125 cm away from center
         GROUND_PICKUP_CUBE(Units.degreesToRadians(40),9.5); //Not popssible
-    
         public double pivotAngleRad;
         public double extentionDistIn;
         ArmState(double piv, double ext){
-          this.pivotAngleRad = piv;
-          this.extentionDistIn = ext;
+          pivotAngleRad = piv;
+          extentionDistIn = ext;
         }
       }
         

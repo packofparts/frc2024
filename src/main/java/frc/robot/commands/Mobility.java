@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.SwerveSubsystem;
 
+
+
 public class Mobility extends CommandBase {
   /** Creates a new ScoreMobility. */
   private SwerveSubsystem _swerve;
-  private SequentialCommandGroup commands;
+  private SequentialCommandGroup _commands;
   public Mobility(SwerveSubsystem swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this._swerve = swerve;
@@ -23,9 +25,9 @@ public class Mobility extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    commands = new SequentialCommandGroup(
-      new RunCommand(() -> {_swerve.setMotors(-1, 0, 0);}).withTimeout(4.2),
-      new RunCommand(() -> {_swerve.setMotors(0, 0, 0);})
+    _commands = new SequentialCommandGroup(
+      new RunCommand(() -> _swerve.setMotors(-1, 0, 0)).withTimeout(4.2),
+      new RunCommand(() -> _swerve.setMotors(0, 0, 0))
 
     );
 
@@ -34,16 +36,12 @@ public class Mobility extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    commands.schedule();
+    _commands.schedule();
   }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return commands.isFinished();
+    return _commands.isFinished();
   }
 }

@@ -18,14 +18,11 @@ public class IntakeSubsystem extends SubsystemBase {
   public IntakeSubsystem() {
     _intakeMotor.setIdleMode(IdleMode.kBrake);
     _intakeMotor.burnFlash();
-    //_intakeMotor.enableSoftLimit(SoftLimitDirection.kForward, true);
   
   }
   public void runIntake(double percentOutput){
     
    _intakeMotor.set(percentOutput);
-
-   // SmartDashboard.putData("Intake data", new Double(percentOutput));
 
   }
 
@@ -38,6 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // Intake Cube Outtake Cone
     if (Input.getLeftTrigger()>IntakeConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger()/1.2);}
 
+    //Set Intake to Stall Speed if Neither
     if (Input.getLeftTrigger()<IntakeConstants.kIntakeDeadZone && Input.getRightTrigger()<IntakeConstants.kIntakeDeadZone){runIntake(IntakeConstants.kIntakeStallSpeed);}
   }
 

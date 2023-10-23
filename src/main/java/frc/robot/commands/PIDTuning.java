@@ -54,12 +54,6 @@ public class PIDTuning extends CommandBase {
 
     if (toggled){
       curModule.setPID(setPoint);
-
-      //curModule.setPID(setPoint);
-
-      // SmartDashboard.putNumber("kP", SmartDashboard.getNumber("kP", 0));
-      // SmartDashboard.putNumber("kI", SmartDashboard.getNumber("kI", 0));
-      // SmartDashboard.putNumber("kD", SmartDashboard.getNumber("kD", 0));
     }
     SmartDashboard.putBoolean("toggled", toggled);
     curModPID.setP(SmartDashboard.getNumber("kP", 0));

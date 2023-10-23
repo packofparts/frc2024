@@ -26,9 +26,8 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS _navx;
 
   private SwerveModule[] _modules;
-  public static double tuningOutput = 0;
+  public static final double tuningOutput = 0;
   public static double autoGyroInitValue = 0;
-
 
 
   public SwerveSubsystem() {
@@ -105,9 +104,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see Rotation2d
    */
   public Rotation2d getRotation2d() {
-    // if (DriverStation.isAutonomous()) {
-    //   return Rotation2d.fromDegrees(getHeading() + autoGyroInitValue);
-    // }
+
     return Rotation2d.fromDegrees(getHeading());
   }
 
@@ -124,10 +121,6 @@ public class SwerveSubsystem extends SubsystemBase {
 
     for (int i = 0; i < desiredStates.length; i++) {
       _modules[i].setDesiredState(desiredStates[i]);
-
-        // //SwerveModuleState.optimize(desiredStates[i], _modules[i].getState().angle);
-
-        // SmartDashboard.putNumber(i + "DesiredStateAngle", desiredStates[i].angle.getDegrees());
     }
 
   }
