@@ -5,8 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultArmCommand;
@@ -14,7 +12,6 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.PIDTuning;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;

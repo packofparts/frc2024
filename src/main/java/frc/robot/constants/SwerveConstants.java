@@ -1,7 +1,5 @@
 package frc.robot.constants;
 
-import edu.wpi.first.math.controller.PIDController;
-
 public class SwerveConstants {
 
   // Ratio for Mk2 Swerve Modules

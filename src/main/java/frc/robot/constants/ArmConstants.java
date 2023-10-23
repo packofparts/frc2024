@@ -1,8 +1,5 @@
 package frc.robot.constants;
-
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycle;
 
 /** Add your docs here. */
 public class ArmConstants {
@@ -88,13 +85,9 @@ public class ArmConstants {
     //Inversions
     public static final boolean kLeftPivotInverted = true;
     public static final boolean kRightPivotInverted = false;
-    
+
     //Change ID and Inverted
-    public static final int kIntakeID = 6;
-    public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
-    
-    public static final double kIntakeDeadZone = 0.05; //.05
-    public static final double kIntakeStallSpeed = 0.0; //.1
+
 
     //Change this
     
