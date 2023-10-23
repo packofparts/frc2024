@@ -21,24 +21,25 @@ public class AutoConstants {
         throw new IllegalStateException("Constants Class");
     }
 
-    public static final PathConstraints defaultSpeedConstraints = new PathConstraints(3, .75);
+    public static final PathConstraints kDefaultSpeedConstraints = new PathConstraints(3, .75);
 
-    public static final PathPlannerTrajectory station2PieceBlue = PathPlanner.loadPath("Station2PieceBlue", defaultSpeedConstraints);
-    public static final PathPlannerTrajectory station2PieceRed = PathPlanner.loadPath("Station2PieceRed", defaultSpeedConstraints);
+    public static final PathPlannerTrajectory kStation2PieceBlue = PathPlanner.loadPath("Station2PieceBlue", kDefaultSpeedConstraints);
+    public static final PathPlannerTrajectory kStation2PieceRed = PathPlanner.loadPath("Station2PieceRed", kDefaultSpeedConstraints);
 
-    public static final PathPlannerTrajectory moveOneMeters = PathPlanner.loadPath("MoveOneMeters", defaultSpeedConstraints);
+    public static final PathPlannerTrajectory kMoveOneMeter = PathPlanner.loadPath("MoveOneMeters", kDefaultSpeedConstraints);
 
-    public static final Map<String, Command> emptyMap = new HashMap<>();
-    public static final Map<String, Command> eventMap = new HashMap<>();
+    public static Map<String, Command> emptyMap = new HashMap<>();
+    public static Map<String, Command> eventMap = new HashMap<>();
 
+    //Determines if event map should be populated
+    public static final boolean kDoAction = true;
 
-    public static final boolean doAction = true;
-
-    public static final double waitTime = 1;
+    //If not populated determines the wait times of former events
+    public static final double kWaitTime = 1;
 
     public static void populateHashMaps(ArmControlSubsystem arm, IntakeSubsystem intake){
         
-        if (doAction){  
+        if (kDoAction){  
             eventMap.put("stow_arm",new SequentialCommandGroup(
                 arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
                 arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)
@@ -57,25 +58,25 @@ public class AutoConstants {
             eventMap.put("score_cone_low", new ScoreCone(arm, intake, ArmState.LOWER_NODE_CONE));
 
         }else{
-            emptyMap.put("angle_N3", new WaitCommand(waitTime));
-            emptyMap.put("angle_N2", new WaitCommand(waitTime));
-            eventMap.put("angle_N1", new WaitCommand(waitTime));
-            eventMap.put("angle_N0", new WaitCommand(waitTime));
-            eventMap.put("angle_neutral",new WaitCommand(waitTime));
+            emptyMap.put("angle_N3", new WaitCommand(kWaitTime));
+            emptyMap.put("angle_N2", new WaitCommand(kWaitTime));
+            eventMap.put("angle_N1", new WaitCommand(kWaitTime));
+            eventMap.put("angle_N0", new WaitCommand(kWaitTime));
+            eventMap.put("angle_neutral",new WaitCommand(kWaitTime));
 
-            eventMap.put("telescope_N3", new WaitCommand(waitTime));
-            eventMap.put("telescope_N2", new WaitCommand(waitTime));
-            eventMap.put("telescope_N1", new WaitCommand(waitTime));
-            eventMap.put("telescope_N0", new WaitCommand(waitTime));
-            eventMap.put("telescope_neutral", new WaitCommand(waitTime));
+            eventMap.put("telescope_N3", new WaitCommand(kWaitTime));
+            eventMap.put("telescope_N2", new WaitCommand(kWaitTime));
+            eventMap.put("telescope_N1", new WaitCommand(kWaitTime));
+            eventMap.put("telescope_N0", new WaitCommand(kWaitTime));
+            eventMap.put("telescope_neutral", new WaitCommand(kWaitTime));
 
-            eventMap.put("score_cone",  new WaitCommand(waitTime));
-            eventMap.put("drop_cube",  new WaitCommand(waitTime));
-            eventMap.put("intake_cube",  new WaitCommand(waitTime));
+            eventMap.put("score_cone",  new WaitCommand(kWaitTime));
+            eventMap.put("drop_cube",  new WaitCommand(kWaitTime));
+            eventMap.put("intake_cube",  new WaitCommand(kWaitTime));
 
-            eventMap.put("auto_balance", new WaitCommand(waitTime));
-            eventMap.put("align_cube",  new WaitCommand(waitTime));
-            eventMap.put("align_tag", new WaitCommand(waitTime));
+            eventMap.put("auto_balance", new WaitCommand(kWaitTime));
+            eventMap.put("align_cube",  new WaitCommand(kWaitTime));
+            eventMap.put("align_tag", new WaitCommand(kWaitTime));
         }
     }
 

@@ -15,6 +15,10 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class VisionConstants {
+    private VisionConstants(){
+        throw new IllegalStateException("Constants Class");
+      }
+      
     public static final String kCameraName = "OV5647";
 
     // These are tunable constants for the reliability of odometry and vision measurements in the form of a vector of (x, y, theta), in meters, meters, and radians respectively

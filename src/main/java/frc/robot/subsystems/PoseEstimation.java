@@ -24,7 +24,7 @@ public class PoseEstimation extends SubsystemBase{
   private  SwerveDrivePoseEstimator _poseEstimator;
   private  Field2d _field = new Field2d();
 
-  private boolean hasUpdated = false; 
+  private boolean _hasUpdated = false; 
 
   public PoseEstimation(Limelight lime, SwerveSubsystem swerveSubsystem) {
     _limelight = lime;
@@ -64,11 +64,11 @@ public class PoseEstimation extends SubsystemBase{
         _poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
                                             camPose.timestampSeconds);
         SmartDashboard.putBoolean("isUpdatingVision", true);
-        hasUpdated = true;
+        _hasUpdated = true;
         return;
       }
     }
-    SmartDashboard.putBoolean("hasUpdatedVision", hasUpdated);
+    SmartDashboard.putBoolean("hasUpdatedVision", _hasUpdated);
     SmartDashboard.putBoolean("isUpdatingVision", false);
 
   }

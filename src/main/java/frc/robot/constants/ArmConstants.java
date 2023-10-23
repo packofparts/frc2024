@@ -7,7 +7,7 @@ public class ArmConstants {
   private ArmConstants(){
     throw new IllegalStateException("Constants Class");
   }
-  
+
     public enum ArmState {
         UNDEFINED(10000,10000),
         STOW(kMinAngleRad,kMinExtensionIn),
@@ -89,9 +89,4 @@ public class ArmConstants {
     public static final boolean kLeftPivotInverted = true;
     public static final boolean kRightPivotInverted = false;
 
-    //Change ID and Inverted
-
-
-    //Change this
-    
 }

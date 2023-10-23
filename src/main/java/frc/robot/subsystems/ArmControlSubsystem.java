@@ -51,12 +51,12 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public static boolean ultraInstinct = false;
 
-  double pivotRelEncoderOffsetRot;
-  double currentPivotRotation;
-  double desiredPivotRotation = ArmConstants.kMinAngleRad;
+  private double _pivotRelEncoderOffsetRot;
+  private double _currentPivotRotation;
+  private double _desiredPivotRotation = ArmConstants.kMinAngleRad;
 
-  double currentExtensionDistance = ArmConstants.kZeroExtensionIn;
-  double desiredExtensionDistance = ArmConstants.kMinExtensionIn;
+  private double _currentExtensionDistance = ArmConstants.kZeroExtensionIn;
+  private double _desiredExtensionDistance = ArmConstants.kMinExtensionIn;
 
 
 
@@ -77,7 +77,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     _absPivEncoder.setConnectedFrequencyThreshold(975); //do not change this number pls or else 
    
-    this.pivotRelEncoderOffsetRot = -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation + ArmConstants.kPivotInitOffsetRot;
+    this._pivotRelEncoderOffsetRot = -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation + ArmConstants.kPivotInitOffsetRot;
    
     setConfig();
 
@@ -123,8 +123,8 @@ public class ArmControlSubsystem extends SubsystemBase {
       pivotPeriodic();
       extensionPeriodic();
     }else if(chooser.getSelected() == ArmMotorMode.COAST){
-      desiredPivotRotation = currentPivotRotation;
-      desiredExtensionDistance = currentExtensionDistance;
+      _desiredPivotRotation = _currentPivotRotation;
+      _desiredExtensionDistance = _currentExtensionDistance;
     }
 
     if(!isInitilized && -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation != 0 && _absPivEncoder.isConnected()){
@@ -137,12 +137,12 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     // Getting Current And Desired Distances
     SmartDashboard.putNumber("CurrentExtension", this.getCurrentExtensionIn());
-    SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(currentPivotRotation));
+    SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(_currentPivotRotation));
 
     if (CompConstants.kDebugMode) {
       //Encoder Positions
       SmartDashboard.putNumber("PivotPos", getCurrentPivotRotation(false));
-      SmartDashboard.putNumber("InitialAbsPivot", this.pivotRelEncoderOffsetRot);
+      SmartDashboard.putNumber("InitialAbsPivot", this._pivotRelEncoderOffsetRot);
 
       SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
       SmartDashboard.putNumber("extensionEncoderPos", extensionEncoder.getPosition()*ArmConstants.kExtensionRotationToInches);
@@ -156,23 +156,23 @@ public class ArmControlSubsystem extends SubsystemBase {
       //Setpoint Debugging
       SmartDashboard.putBoolean("AtAnglePoint", this.atAngleSetpoint());
       SmartDashboard.putBoolean("AtExtensionPoint", this.atTelescopeSetpoint());
-      SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(desiredPivotRotation));
-      SmartDashboard.putNumber("DesiredExtension", desiredExtensionDistance);
+      SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(_desiredPivotRotation));
+      SmartDashboard.putNumber("DesiredExtension", _desiredExtensionDistance);
 
 
     }
     
-    desiredPivotRotation = MathUtil.clamp(desiredPivotRotation, ArmConstants.kMinAngleRad, ArmConstants.kMaxAngleRad);
-    currentPivotRotation = getCurrentPivotRotation(true);
+    _desiredPivotRotation = MathUtil.clamp(_desiredPivotRotation, ArmConstants.kMinAngleRad, ArmConstants.kMaxAngleRad);
+    _currentPivotRotation = getCurrentPivotRotation(true);
 
     if (!ultraInstinct) {
-      desiredExtensionDistance = MathUtil.clamp(desiredExtensionDistance, ArmConstants.kMinExtensionIn, ArmConstants.kMaxExtensionIn);
+      _desiredExtensionDistance = MathUtil.clamp(_desiredExtensionDistance, ArmConstants.kMinExtensionIn, ArmConstants.kMaxExtensionIn);
     }
-    currentExtensionDistance = getCurrentExtensionIn();
+    _currentExtensionDistance = getCurrentExtensionIn();
   }
 
   private void pivotPeriodic(){    
-    double pivotPIDOutput = _pivotPID.calculate(currentPivotRotation, desiredPivotRotation);
+    double pivotPIDOutput = _pivotPID.calculate(_currentPivotRotation, _desiredPivotRotation);
 
     //Desaturating PID output
     if(pivotPIDOutput > 0.55){
@@ -195,9 +195,9 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   private void extensionPeriodic(){
-    double extensionPIDOutput = _extensionPID.calculate(currentExtensionDistance, desiredExtensionDistance);
+    double extensionPIDOutput = _extensionPID.calculate(_currentExtensionDistance, _desiredExtensionDistance);
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
-    double difference = desiredExtensionDistance - currentExtensionDistance;
+    double difference = _desiredExtensionDistance - _currentExtensionDistance;
 
     //Desaturating PID output
     if(extensionPIDOutput > .5){
@@ -216,29 +216,29 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
 
-  public void setDesiredPivotRotation(double _desiredRotation){
-    desiredPivotRotation = _desiredRotation;
+  public void setDesiredPivotRot(double _desiredRotation){
+    _desiredPivotRotation = _desiredRotation;
   }
 
 
   //in inches
   public void setDesiredExtension(double _extension){
-    desiredExtensionDistance = _extension;
+    _desiredExtensionDistance = _extension;
   }
 
 
   public boolean atAngleSetpoint(){
-    return Math.abs(desiredPivotRotation - currentPivotRotation) < Units.degreesToRadians(4);
+    return Math.abs(_desiredPivotRotation - _currentPivotRotation) < Units.degreesToRadians(4);
   }
 
 
   public boolean atTelescopeSetpoint(){
-    return Math.abs(desiredExtensionDistance - currentExtensionDistance) < 0.5;
+    return Math.abs(_desiredExtensionDistance - _currentExtensionDistance) < 0.5;
   }
 
 
   public Command waitUntilSpPivot(double sp){
-    return new FunctionalCommand(()->setDesiredPivotRotation(sp), ()->new PrintCommand("getName()"), (Boolean bool)->new PrintCommand("Finished Pivot"), this::atAngleSetpoint, this);
+    return new FunctionalCommand(()->setDesiredPivotRot(sp), ()->new PrintCommand("getName()"), (Boolean bool)->new PrintCommand("Finished Pivot"), this::atAngleSetpoint, this);
   }
 
 
@@ -250,7 +250,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   public double getCurrentPivotRotation(boolean inRadians){
     double rotation;
 
-    rotation = (_leftPivotController.getSelectedSensorPosition()) * ArmConstants.kEncoderResolution * ArmConstants.kFalconToFinalGear + this.pivotRelEncoderOffsetRot;
+    rotation = (_leftPivotController.getSelectedSensorPosition()) * ArmConstants.kEncoderResolution * ArmConstants.kFalconToFinalGear + this._pivotRelEncoderOffsetRot;
     
     if(inRadians){
       return rotation * 2 * Math.PI;
@@ -266,17 +266,17 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   
   public void changeDesiredPivotRotation(double i){
-    this.desiredPivotRotation += i;
+    this._desiredPivotRotation += i;
   }
 
 
   public void changeDesiredExtension(double i){
-    this.desiredExtensionDistance += i;
+    this._desiredExtensionDistance += i;
   }
 
 
   private double getPivotAbsEncoderAngleRot(){
-    return -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation + this.pivotRelEncoderOffsetRot;
+    return -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation + this._pivotRelEncoderOffsetRot;
   }
 
   private void updateModes(){
@@ -298,8 +298,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     _leftPivotController.setSelectedSensorPosition(0);
     extensionEncoder.setPosition(0);
 
-    this.pivotRelEncoderOffsetRot = getPivotAbsEncoderAngleRot();
-    this.currentPivotRotation = Units.rotationsToRadians(this.pivotRelEncoderOffsetRot);
-    this.currentPivotRotation = this.desiredPivotRotation;
+    this._pivotRelEncoderOffsetRot = getPivotAbsEncoderAngleRot();
+    this._currentPivotRotation = Units.rotationsToRadians(this._pivotRelEncoderOffsetRot);
+    this._currentPivotRotation = this._desiredPivotRotation;
   }
 }

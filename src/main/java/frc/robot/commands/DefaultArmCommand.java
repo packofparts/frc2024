@@ -16,7 +16,7 @@ import frc.robot.subsystems.Input;
 
 public class DefaultArmCommand extends CommandBase {
   
-  ArmControlSubsystem _armControlSubsystem;
+  private ArmControlSubsystem _armControlSubsystem;
 
   public DefaultArmCommand(ArmControlSubsystem armControlSubsystem) {
     this._armControlSubsystem = armControlSubsystem;
@@ -46,7 +46,7 @@ public class DefaultArmCommand extends CommandBase {
     
     else if(Input.getA()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRotation(ArmConstants.ArmState.STOW.pivotAngleRad),_armControlSubsystem),
+        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.STOW.pivotAngleRad),_armControlSubsystem),
         new InstantCommand(()->_armControlSubsystem.setDesiredExtension(ArmConstants.ArmState.STOW.extentionDistIn),_armControlSubsystem)
 
       );
@@ -54,7 +54,7 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getB()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRotation(ArmConstants.ArmState.MID_NODE_CONE.pivotAngleRad),_armControlSubsystem),
+        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.MID_NODE_CONE.pivotAngleRad),_armControlSubsystem),
         new InstantCommand(()->_armControlSubsystem.setDesiredExtension(ArmConstants.ArmState.MID_NODE_CONE.extentionDistIn),_armControlSubsystem)
 
       );
@@ -69,7 +69,7 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getY()){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRotation(ArmConstants.ArmState.SUBSTATION_CONE.pivotAngleRad),_armControlSubsystem),
+        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.SUBSTATION_CONE.pivotAngleRad),_armControlSubsystem),
         new WaitCommand(1),
         new InstantCommand(()->_armControlSubsystem.setDesiredExtension(ArmConstants.ArmState.SUBSTATION_CONE.extentionDistIn),_armControlSubsystem)
 
@@ -78,7 +78,7 @@ public class DefaultArmCommand extends CommandBase {
     }
     else if(Input.getDPad() == Input.DPADUP){
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRotation(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),_armControlSubsystem),
+        new InstantCommand(()->_armControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),_armControlSubsystem),
         new WaitCommand(0.5),
         new InstantCommand(()->_armControlSubsystem.setDesiredExtension(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),_armControlSubsystem)
 

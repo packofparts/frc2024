@@ -13,22 +13,20 @@ import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class PIDTuning extends CommandBase {
-  SwerveSubsystem driveBase;
-  SwerveModule curModule;
-  PIDController curModPID;
-  double increment = 0;
-
-  double setPoint = 0;
-
-  boolean toggled = false;
+  private SwerveSubsystem _driveBase;
+  private SwerveModule _curModule;
+  private PIDController _curModPID;
+  
+  private double _setPoint = 0;
+  private boolean _toggled = false;
 
   /** Creates a new PIDTuning. */
   public PIDTuning(int modID, SwerveSubsystem swerve) {
-    driveBase = swerve;
-    curModule = SwerveConfig.swerveModules[modID];
-    curModPID = SwerveConfig.swerveModulePIDs[modID];
+    _driveBase = swerve;
+    _curModule = SwerveConfig.swerveModules[modID];
+    _curModPID = SwerveConfig.swerveModulePIDs[modID];
 
-    addRequirements(driveBase);
+    addRequirements(_driveBase);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -39,36 +37,37 @@ public class PIDTuning extends CommandBase {
     SmartDashboard.putNumber("kI",0);
     SmartDashboard.putNumber("kD",0);
     SmartDashboard.putNumber("increment",2);
-    SmartDashboard.putNumber("measurement", curModule.getRotPosition()/Math.PI*180);
-    SmartDashboard.putNumber("setpoint",setPoint);
-    SmartDashboard.putBoolean("toggled", toggled);
+    SmartDashboard.putNumber("measurement", _curModule.getRotPosition()/Math.PI*180);
+    SmartDashboard.putNumber("setpoint",_setPoint);
+    SmartDashboard.putBoolean("toggled", _toggled);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double _increment = 0;
 
     if(Input.togglePIDTuning()){
-      toggled = !toggled;
+      _toggled = !_toggled;
     }
 
-    if (toggled){
-      curModule.setPID(setPoint);
+    if (_toggled){
+      _curModule.setPID(_setPoint);
     }
-    SmartDashboard.putBoolean("toggled", toggled);
-    curModPID.setP(SmartDashboard.getNumber("kP", 0));
-    curModPID.setI(SmartDashboard.getNumber("kI", 0));
-    curModPID.setD(SmartDashboard.getNumber("kD", 0));
+    SmartDashboard.putBoolean("toggled", _toggled);
+    _curModPID.setP(SmartDashboard.getNumber("kP", 0));
+    _curModPID.setI(SmartDashboard.getNumber("kI", 0));
+    _curModPID.setD(SmartDashboard.getNumber("kD", 0));
     
-    increment = SmartDashboard.getNumber("increment", 2);
+    _increment = SmartDashboard.getNumber("increment", 2);
     
     if(Input.getIncPID()){
-      setPoint += increment;
+      _setPoint += _increment;
     }else if(Input.getDecPID()){
-      setPoint -= increment;
+      _setPoint -= _increment;
     }
-    SmartDashboard.putNumber("setpoint", setPoint);
-    SmartDashboard.putNumber("measurement", curModule.getRotPosition()/Math.PI*180);
+    SmartDashboard.putNumber("setpoint", _setPoint);
+    SmartDashboard.putNumber("measurement", _curModule.getRotPosition()/Math.PI*180);
     SmartDashboard.updateValues();
   }
 

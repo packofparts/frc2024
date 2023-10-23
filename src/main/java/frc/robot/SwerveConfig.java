@@ -14,6 +14,9 @@ import frc.robot.subsystems.SwerveModule;
 
 /** Add your docs here. */
 public class SwerveConfig {
+        private SwerveConfig(){
+                throw new IllegalStateException("Static Config Class");
+        }
         // ID's
         //Encoder IDs have been set
         private static final int kfrontRightTransID = 7;

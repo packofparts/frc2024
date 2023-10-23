@@ -8,6 +8,9 @@ import edu.wpi.first.math.geometry.Transform3d;
 
 /** Add your docs here. */
 public class Util{
+    private Util(){
+        throw new IllegalStateException("Util Class");
+    }
     public static double magnitude(Transform3d transform) {
         double x = transform.getX();
         double y = transform.getY();

@@ -17,26 +17,26 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Limelight {
-    PhotonCamera photonCamera;
-    PhotonPoseEstimator photonPoseEstimator;
+    private PhotonCamera _photonCamera;
+    private PhotonPoseEstimator _photonPoseEstimator;
 
     public Limelight() {
         // Change the name of your camera here to whatever it is in the PhotonVision UI.
-        photonCamera = new PhotonCamera(VisionConstants.kCameraName);
+        _photonCamera = new PhotonCamera(VisionConstants.kCameraName);
 
         try {
             // Attempt to load the AprilTagFieldLayout that will tell us where the tags are on the field.
             AprilTagFieldLayout fieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
             // Create pose estimator
-            photonPoseEstimator =
+            _photonPoseEstimator =
                     new PhotonPoseEstimator(
-                            fieldLayout, PoseStrategy.MULTI_TAG_PNP, photonCamera, VisionConstants.kRobotToCam);
-            photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+                            fieldLayout, PoseStrategy.MULTI_TAG_PNP, _photonCamera, VisionConstants.kRobotToCam);
+            _photonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
         } catch (IOException e) {
             // The AprilTagFieldLayout failed to load. We won't be able to estimate poses if we don't know
             // where the tags are.
             DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
-            photonPoseEstimator = null;
+            _photonPoseEstimator = null;
         }
     }
 
@@ -46,11 +46,11 @@ public class Limelight {
      *     the estimate
      */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-        if (photonPoseEstimator == null) {
+        if (_photonPoseEstimator == null) {
             // The field layout failed to load, so we cannot estimate poses.
             return Optional.empty();
         }
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
-        return photonPoseEstimator.update();
+        _photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+        return _photonPoseEstimator.update();
     }
 }

@@ -14,10 +14,10 @@ public class Input {
         throw new IllegalStateException("Input Class");
       }
 
-    private static Joystick rJoystick = new Joystick (JoystickConstants.rotJoystickPort);
-    private static Joystick tJoystick = new Joystick (JoystickConstants.transJoystickPort);
+    private static Joystick _rJoystick = new Joystick (JoystickConstants.kRotJoystickPort);
+    private static Joystick _tJoystick = new Joystick (JoystickConstants.kTransJoystickPort);
     
-    private static XboxController xboxController = new XboxController(JoystickConstants.xboxControllerPort);
+    private static XboxController _xboxController = new XboxController(JoystickConstants.kXboxControllerPort);
 
     public static final int DPADUP = 0;
     public static final int DPADRIGHT = 90;
@@ -25,38 +25,38 @@ public class Input {
     public static final int DPADLEFT = 270;
 
 
-    public static boolean resetGyro(){return rJoystick.getRawButton(3);}
-    public static boolean resetOdo() {return tJoystick.getRawButton(3);}
+    public static boolean resetGyro(){return _rJoystick.getRawButton(3);}
+    public static boolean resetOdo() {return _tJoystick.getRawButton(3);}
 
-    public static double getJoystickX(){return tJoystick.getX();}
+    public static double getJoystickX(){return _tJoystick.getX();}
 
-    public static double getJoystickY(){return tJoystick.getY();}
+    public static double getJoystickY(){return _tJoystick.getY();}
 
-    public static double getRot(){return rJoystick.getX();}
+    public static double getRot(){return _rJoystick.getX();}
 
-    public static boolean getResetGyro() {return rJoystick.getRawButton(3);}
+    public static boolean getResetGyro() {return _rJoystick.getRawButton(3);}
 
-    public static boolean getPrecisionToggle(){return tJoystick.getTriggerPressed();}
+    public static boolean getPrecisionToggle(){return _tJoystick.getTriggerPressed();}
 
-    public static boolean getIncPID(){return rJoystick.getRawButton(5);}
-    public static boolean getDecPID(){return rJoystick.getRawButton(4);}
-    public static boolean togglePIDTuning(){return rJoystick.getTriggerReleased();}
+    public static boolean getIncPID(){return _rJoystick.getRawButton(5);}
+    public static boolean getDecPID(){return _rJoystick.getRawButton(4);}
+    public static boolean togglePIDTuning(){return _rJoystick.getTriggerReleased();}
 
-    public static boolean getA(){return xboxController.getAButtonPressed();}
-    public static boolean getB(){return xboxController.getBButtonPressed();}
-    public static boolean getX(){return xboxController.getXButtonPressed();}
-    public static boolean getY(){return xboxController.getYButtonPressed();}
-    public static double getDPad(){return xboxController.getPOV();}
-    public static boolean getRightBumper(){return xboxController.getRightBumperPressed();}
-    public static boolean getLeftBumper(){return xboxController.getLeftBumper();}
+    public static boolean getA(){return _xboxController.getAButtonPressed();}
+    public static boolean getB(){return _xboxController.getBButtonPressed();}
+    public static boolean getX(){return _xboxController.getXButtonPressed();}
+    public static boolean getY(){return _xboxController.getYButtonPressed();}
+    public static double getDPad(){return _xboxController.getPOV();}
+    public static boolean getRightBumper(){return _xboxController.getRightBumperPressed();}
+    public static boolean getLeftBumper(){return _xboxController.getLeftBumper();}
 
-    public static double getLeftTrigger(){return xboxController.getLeftTriggerAxis();}
-    public static double getRightTrigger(){return xboxController.getRightTriggerAxis();}
+    public static double getLeftTrigger(){return _xboxController.getLeftTriggerAxis();}
+    public static double getRightTrigger(){return _xboxController.getRightTriggerAxis();}
 
-    public static double getLeftStickY(){return -xboxController.getLeftY();}
-    public static double getRightStickY(){return -xboxController.getRightY();}
+    public static double getLeftStickY(){return -_xboxController.getLeftY();}
+    public static double getRightStickY(){return -_xboxController.getRightY();}
 
-    public static boolean isUltraInstinct() {return xboxController.getStartButtonPressed();}
+    public static boolean isUltraInstinct() {return _xboxController.getStartButtonPressed();}
 
 }
     
