@@ -51,10 +51,9 @@ public class ArmConstants {
 
 
     // Offset For Pivot
-    public static double pivotInitOffset = 0.053+0.025;
+    public static final double pivotInitOffsetRot = .032;
     
     //Initial Value
-    public static final double zeroAngleRad = Units.degreesToRadians(14);//11.5
     public static final double zeroExtensionIn = 0.0;
 
     

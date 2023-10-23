@@ -54,11 +54,11 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
   double initialPivotEncoderOffset;
-  double currentPivotRotation = ArmConstants.zeroAngleRad;
+  double currentPivotRotation;
   double desiredPivotRotation = ArmConstants.minAngleRad;
 
-  double currentExtensionDistance = 0.0;
-  double desiredExtensionDistance = currentExtensionDistance;
+  double currentExtensionDistance = ArmConstants.zeroExtensionIn;
+  double desiredExtensionDistance = ArmConstants.minExtensionIn;
 
   PIDController pivotPID; 
 
@@ -75,24 +75,20 @@ public class ArmControlSubsystem extends SubsystemBase {
   public ArmControlSubsystem() {
 
     pivotPID = new PIDController(1.4, 0, 0);
-    
     pivotPID.setTolerance(Units.degreesToRadians(0));
-
 
     extensionPID = new PIDController(0.19, 0, 0);
     extensionPID.setTolerance(.2);
+
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.maxPivotRateRadSec);
 
     absPivEncoder.setConnectedFrequencyThreshold(975); //do not change this number pls or else 
    
-
-    this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + ArmConstants.pivotInitOffset;
+    this.initialPivotEncoderOffset = -absPivEncoder.getAbsolutePosition() * ArmConstants.pivotAbsEncToRotation + ArmConstants.pivotInitOffsetRot;
    
-    
     setConfig();
 
     SmartDashboard.putNumber("kG", ArmConstants.kG);
-
     
     chooser.addOption("Brake", ArmMotorMode.BRAKE);
     chooser.addOption("Coast", ArmMotorMode.COAST); 
@@ -329,7 +325,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     leftPivotController.setSelectedSensorPosition(0);
     extensionEncoder.setPosition(0);
 
-    this.initialPivotEncoderOffset = -(absPivEncoder.getAbsolutePosition() + ArmConstants.pivotInitOffset) * ArmConstants.pivotAbsEncToRotation;
+    this.initialPivotEncoderOffset = -(absPivEncoder.getAbsolutePosition() + ArmConstants.pivotInitOffsetRot) * ArmConstants.pivotAbsEncToRotation;
     this.currentPivotRotation = Units.rotationsToRadians(this.initialPivotEncoderOffset);
     this.currentPivotRotation = this.desiredPivotRotation;
   }
