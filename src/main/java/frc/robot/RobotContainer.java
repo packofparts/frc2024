@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DefaultIntakeCommand;
 import frc.robot.commands.PIDTuning;
 import frc.robot.constants.AutoConstants;
 import frc.robot.constants.SwerveConstants;
@@ -23,27 +24,24 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  ArmControlSubsystem m_armControlSubsystem = new ArmControlSubsystem();
+  IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
+  Limelight m_limelight = new Limelight();
+  PoseEstimation m_pose = new PoseEstimation(m_limelight, m_swerveSubsystem);
 
-
-  ArmControlSubsystem armControlSubsystem = new ArmControlSubsystem();
-  IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  
-  DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
-
-  Limelight limelight = new Limelight();
-  PoseEstimation pose = new PoseEstimation(limelight, swerveSubsystem);
+  DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(m_swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    AutoConstants.populateHashMaps(armControlSubsystem, intakeSubsystem);
-    armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
+    AutoConstants.populateHashMaps(m_armControlSubsystem, m_intakeSubsystem);
+    m_armControlSubsystem.setDefaultCommand(new DefaultArmCommand(m_armControlSubsystem));
+    m_intakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(m_intakeSubsystem));
+
     if(SwerveConstants.kPIDTuneMode)
-      swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
+      m_swerveSubsystem.setDefaultCommand(new PIDTuning(0, m_swerveSubsystem));
     else
-      swerveSubsystem.setDefaultCommand(driveCommand);
-    // Configure the trigger bindings
+      m_swerveSubsystem.setDefaultCommand(m_driveCommand);
   }
 
 

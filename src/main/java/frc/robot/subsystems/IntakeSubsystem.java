@@ -26,17 +26,4 @@ public class IntakeSubsystem extends SubsystemBase {
 
   }
 
-
-  @Override
-  public void periodic() {
-    // Intake Cone Outtake Cube
-    if (Input.getRightTrigger() > IntakeConstants.kIntakeDeadZone) {runIntake(Input.getRightTrigger()/1.75);}
-    
-    // Intake Cube Outtake Cone
-    if (Input.getLeftTrigger()>IntakeConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger()/1.2);}
-
-    //Set Intake to Stall Speed if Neither
-    if (Input.getLeftTrigger()<IntakeConstants.kIntakeDeadZone && Input.getRightTrigger()<IntakeConstants.kIntakeDeadZone){runIntake(IntakeConstants.kIntakeStallSpeed);}
-  }
-
 }
