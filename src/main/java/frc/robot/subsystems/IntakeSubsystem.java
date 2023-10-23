@@ -4,17 +4,12 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.constants.ArmConstants;
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.constants.IntakeConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 
 public class IntakeSubsystem extends SubsystemBase {
@@ -38,12 +33,12 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // Intake Cone Outtake Cube
-    if (Input.getRightTrigger() > ArmConstants.kIntakeDeadZone) {runIntake(Input.getRightTrigger()/1.75);}
+    if (Input.getRightTrigger() > IntakeConstants.kIntakeDeadZone) {runIntake(Input.getRightTrigger()/1.75);}
     
     // Intake Cube Outtake Cone
-    if (Input.getLeftTrigger()>ArmConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger()/1.2);}
+    if (Input.getLeftTrigger()>IntakeConstants.kIntakeDeadZone){runIntake(-Input.getLeftTrigger()/1.2);}
 
-    if (Input.getLeftTrigger()<ArmConstants.kIntakeDeadZone && Input.getRightTrigger()<ArmConstants.kIntakeDeadZone){runIntake(ArmConstants.kIntakeStallSpeed);}
+    if (Input.getLeftTrigger()<IntakeConstants.kIntakeDeadZone && Input.getRightTrigger()<IntakeConstants.kIntakeDeadZone){runIntake(IntakeConstants.kIntakeStallSpeed);}
   }
 
 }
