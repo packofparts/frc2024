@@ -9,7 +9,7 @@ public class ArmConstants {
 
     public static enum ArmState {
         UNDEFINED(10000,10000),
-        STOW(minAngleRad,minExtensionIn),
+        STOW(kMinAngleRad,kMinExtensionIn),
 
         LOWER_NODE_CONE(Units.degreesToRadians(30),0), //TBD
         LOWER_NODE_CUBE(Units.degreesToRadians(30),0), //TBD
@@ -36,58 +36,59 @@ public class ArmConstants {
         }
       }
         
-    public static ArmState curArmState = ArmState.STOW;
-    public static double armStatePivDeadzoneRad = Units.degreesToRadians(3);
-    public static double armStateExtDeadzoneIn = 2; 
+    public static final double kArmStatePivDeadzoneRad = Units.degreesToRadians(3);
+    public static final double kArmStateExtDeadzoneIn = 2; 
 
-    public static boolean useFeedForward = true;
-    public static double kG = 0.03;
+    // Common Configurables
+    public static final boolean kRateLimitArm = false;
+    public static final boolean kUseFeedForward = true;
+    public static final double kG = 0.03;
 
     //channel on dio port
-    public static final int DIOPortPiv = 0;
-    public static final double pivotAbsEncToRotation = 1.0/3.7142857;
-    public static final double extensionRotationToInches =  18.5/7.01;
+    public static final int kDIOPortPiv = 0;
+    public static final double kPivotAbsEncToRotation = 1.0/3.7142857;
+    public static final double kExtensionRotationToInches =  18.5/7.01;
 
 
 
     // Offset For Pivot
-    public static final double pivotInitOffsetRot = .032;
+    public static final double kPivotInitOffsetRot = .032;
     
     //Initial Value
-    public static final double zeroExtensionIn = 0.0;
+    public static final double kZeroExtensionIn = 0.0;
 
     
     // Limits To Angles
-    public static final double minAngleRad = Units.degreesToRadians(14); //33
-    public static final double maxAngleRad = Units.degreesToRadians(115.0);
+    public static final double kMinAngleRad = Units.degreesToRadians(14); //33
+    public static final double kMaxAngleRad = Units.degreesToRadians(115.0);
     
     // Limit to Extension
-    public static final double minExtensionIn = 0;
-    public static final double maxExtensionIn = 17.2;
+    public static final double kMinExtensionIn = 0;
+    public static final double kMaxExtensionIn = 17.2;
 
     // Max Speeds
-    public static final double maxPivotRateRadSec = Units.degreesToRadians(70);
-    public static final double physicalMaxPivotRadSec = Units.degreesToRadians(142);
-    
-    public static final double maxPivotRatePercentSec = maxPivotRateRadSec/physicalMaxPivotRadSec;
+    public static final double kMaxPivotRateRadSec = Units.degreesToRadians(70);
+    public static final double kPhysicalMaxPivotRadSec = Units.degreesToRadians(142);
+    public static final double kMaxPivotRatePercentSec = kMaxPivotRateRadSec/kPhysicalMaxPivotRadSec;
 
     // Setpoints
-    public static final double gearRatioExtension = 1.0/10.0;
-    public static final double pivotPosInMetersY = Units.inchesToMeters(45.75);
+    public static final double kGearRatioExtension = 1.0/10.0;
+    public static final double kPivotPosInMetersY = Units.inchesToMeters(45.75);
 
+    //IDs
+    public static final int kRightArmPivotID = 16;
+    public static final int kleftArmPivotID = 15;
+    public static final int kTelescopicArmSparkID = 10;
+    public static final int kArmPivotAbsEncoderPort = 17;
+    
+    //Gear Ratios
+    public static final double kFalconToFinalGear = 1.0/240;
+    public static final double kEncoderResolution = 1.0/2048;
 
-    //TBD
-    public static final int rightArmPivot = 16;
-    public static final int leftArmPivot = 15;
-    public static final int telescopicArmSpark = 10;
-    public static final int armPivotEncoderPort = 17;
-
-    public static final int extensionPort = 0;
-
-    public static final double falconToFinalGear = 1.0/240;
-    public static final double encoderResolution = 1.0/2048;
-    public static final boolean kRateLimitArm = false;
-
+    //Inversions
+    public static final boolean kLeftPivotInverted = true;
+    public static final boolean kRightPivotInverted = false;
+    
     //Change ID and Inverted
     public static final int kIntakeID = 6;
     public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
@@ -96,5 +97,5 @@ public class ArmConstants {
     public static final double kIntakeStallSpeed = 0.0; //.1
 
     //Change this
-    public static boolean leftPivotInverted = true;
+    
 }
