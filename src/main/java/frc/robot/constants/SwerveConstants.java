@@ -5,9 +5,6 @@ public class SwerveConstants {
     throw new IllegalStateException("Constants Class");
   }
 
-  // Ratio for Mk2 Swerve Modules
-  // Found https://www.chiefdelphi.com/t/2910-mk2-swerve-module-release/335077
-  // and https://www.swervedrivespecialties.com/products/mk2-module-kit?variant=31141088821361
   public static final double kTransGearRatio = 1 / 6.75;
   public static final boolean kDebugMode = true;
 
@@ -32,12 +29,6 @@ public class SwerveConstants {
   public static final double kTeleMaxAccMPS = 5.0;
   public static final double kTeleMaxRotAccRadPerSeconds = 4*Math.PI;
 
-  //mk2 Encoder Offsets remove
-  public static double kfrontRightRotEncoderOffset = 0.228+.5-0.79;
-  public static double kfrontLeftRotEncoderOffset = 0.966-.5;
-  public static double kbackRightRotEncoderOffset = 0.721;
-  public static double kbackLeftRotEncoderOffset = 0.699;
-
-  public static boolean kPIDTuneMode = false;
+  public static final boolean kPIDTuneMode = false;
 
 }

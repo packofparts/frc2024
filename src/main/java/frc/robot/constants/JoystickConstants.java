@@ -9,10 +9,10 @@ public class JoystickConstants {
     private JoystickConstants(){
         throw new IllegalStateException("Constants Class");
     }
-    public static int kRotJoystickPort = 0;
-    public static int kTransJoystickPort = 2;
-    public static int kXboxControllerPort = 1;
+    public static final int kRotJoystickPort = 0;
+    public static final int kTransJoystickPort = 2;
+    public static final int kXboxControllerPort = 1;
 
-    public static double kDeadZone = 0.2;
-    public static double kRadDeadZone = 0.05;
+    public static final double kDeadZone = 0.2;
+    public static final double kRadDeadZone = 0.05;
 }
