@@ -14,7 +14,6 @@ public class ArmConstants {
 
         LOWER_NODE_CONE(Units.degreesToRadians(30),0), //TBD
         LOWER_NODE_CUBE(Units.degreesToRadians(30),0), //TBD
-
         
         MID_NODE_CONE(Units.degreesToRadians(66.05),0), // Done
         MID_NODE_CUBE(Units.degreesToRadians(87.0),0), // TBD
@@ -71,8 +70,8 @@ public class ArmConstants {
     public static final double kPhysicalMaxPivotRadSec = Units.degreesToRadians(142);
     public static final double kMaxPivotRatePercentSec = kMaxPivotRateRadSec/kPhysicalMaxPivotRadSec;
 
-    // Setpoints
-    public static final double kGearRatioExtension = 1.0/10.0;
+    // Setpoints  
+    public static final double kGearRatioExtensionIn = 8.333/8.113;
     public static final double kPivotPosInMetersY = Units.inchesToMeters(45.75);
 
     //IDs

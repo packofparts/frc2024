@@ -114,7 +114,6 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     extensionEncoder.setPosition(0);
 
-
     extensionController.burnFlash();
     
   }
@@ -263,7 +262,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   //convert encoder rotations to distance inches
   public double getCurrentExtensionIn(){
-    return extensionEncoder.getPosition()*8.333/8.113;
+    return extensionEncoder.getPosition()*ArmConstants.kGearRatioExtensionIn;
   }
 
   
