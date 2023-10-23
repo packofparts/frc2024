@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.constants.ArmConstants.ArmState;
@@ -21,7 +22,8 @@ public class ScoreCone extends CommandBase {
     _path = new SequentialCommandGroup(
       this._arm.waitUntilSpPivot(state.pivotAngleRad),
       this._arm.waitUntilSpTelescope(state.extentionDistIn),
-      new RunCommand(() -> intake.runIntake(-1)).withTimeout(3)
+      new RunCommand(() -> intake.runIntake(-1)).withTimeout(3),
+      new InstantCommand(()-> intake.runIntake(0))
       );
   }
 
