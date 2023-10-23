@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveConfig;
+import frc.robot.constants.CompConstants;
 import frc.robot.constants.VisionConstants;
 
 
@@ -50,9 +51,11 @@ public class PoseEstimation extends SubsystemBase{
     _field.setRobotPose(pose);
     SmartDashboard.putData("Field", _field);
 
-    SmartDashboard.putNumber("PoseEst X", pose.getX());
-    SmartDashboard.putNumber("PoseEst Y", pose.getY());
-    SmartDashboard.putNumber("PoseEst Rot", pose.getRotation().getDegrees());
+    if (CompConstants.kDebugMode) {
+      SmartDashboard.putNumber("PoseEst X", pose.getX());
+      SmartDashboard.putNumber("PoseEst Y", pose.getY());
+      SmartDashboard.putNumber("PoseEst Rot", pose.getRotation().getDegrees());
+    }
 
   }
 
@@ -78,7 +81,6 @@ public class PoseEstimation extends SubsystemBase{
     if (targets.size() == 1){
       return targets.get(0).getPoseAmbiguity() < VisionConstants.kSingleTagAmbiguityThreshold;
     }
-
 
     return true;
   }

@@ -49,7 +49,9 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final PIDController _extensionPID;
   private final PIDController _pivotPID;
 
-  public static boolean ultraInstinct = false;
+  // This is called Ultra Instinct because setting this boolean to true removes the clamps
+  // so that if the belt skips, the operator can still run manually without the bad offsets
+  public static boolean _ultraInstinct = false;
 
   private double _pivotRelEncoderOffsetRot;
   private double _currentPivotRotation;
@@ -60,7 +62,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
 
-  boolean isInitilized = false;
+  private boolean _isInitialized = false;
 
   public SendableChooser<ArmMotorMode> chooser = new SendableChooser<>();
 
@@ -119,7 +121,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() { 
-    if(chooser.getSelected() == ArmMotorMode.BRAKE && isInitilized){
+    if(chooser.getSelected() == ArmMotorMode.BRAKE && _isInitialized){
       pivotPeriodic();
       extensionPeriodic();
     }else if(chooser.getSelected() == ArmMotorMode.COAST){
@@ -127,9 +129,9 @@ public class ArmControlSubsystem extends SubsystemBase {
       _desiredExtensionDistance = _currentExtensionDistance;
     }
 
-    if(!isInitilized && -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation != 0 && _absPivEncoder.isConnected()){
+    if(!_isInitialized && -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation != 0 && _absPivEncoder.isConnected()){
       resetEncoders();   
-      isInitilized = true;
+      _isInitialized = true;
     }
     
     updateModes();
@@ -149,7 +151,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     
       //Abs Encoder Debugging
       SmartDashboard.putNumber("pivotfreq", _absPivEncoder.getFrequency());
-      SmartDashboard.putBoolean("IsInititilized", isInitilized);
+      SmartDashboard.putBoolean("IsInititilized", _isInitialized);
       SmartDashboard.putBoolean("absreconnectioned", _absPivEncoder.isConnected());
       SmartDashboard.putNumber("AbsPivot", -_absPivEncoder.getAbsolutePosition() * ArmConstants.kPivotAbsEncToRotation);
 
@@ -165,7 +167,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     _desiredPivotRotation = MathUtil.clamp(_desiredPivotRotation, ArmConstants.kMinAngleRad, ArmConstants.kMaxAngleRad);
     _currentPivotRotation = getCurrentPivotRotation(true);
 
-    if (!ultraInstinct) {
+    if (!_ultraInstinct) {
       _desiredExtensionDistance = MathUtil.clamp(_desiredExtensionDistance, ArmConstants.kMinExtensionIn, ArmConstants.kMaxExtensionIn);
     }
     _currentExtensionDistance = getCurrentExtensionIn();

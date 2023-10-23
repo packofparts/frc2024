@@ -65,7 +65,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     for (int i = 0; i < _modules.length; i++){
       SmartDashboard.putNumber("AppliedOutput"+i, _modules[i].getAppliedOutput());
-      SmartDashboard.putNumber("DesiredStateAngle"+i, _modules[i].desiredRadians/Math.PI*180);
+      SmartDashboard.putNumber("DesiredStateAngleDeg"+i, _modules[i].desiredRadians/Math.PI*180);
       SmartDashboard.putNumber("RotRelativePosDeg"+i, _modules[i].getRotRelativePosition()*360);
       SmartDashboard.putNumber("AbsEncoderDeg"+i, _modules[i].getRotPosition()/Math.PI*180);
       SmartDashboard.putNumber("SpeedMeters"+i, _modules[i].getTransVelocity());

@@ -26,7 +26,7 @@ import frc.robot.constants.ArmConstants.ArmState;
 public class Robot extends TimedRobot {
 
   private Command _autonomousCommand;
-  public SendableChooser<Command> pathSelector = new SendableChooser<>();
+  private SendableChooser<Command> _pathSelector = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,8 +38,8 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     RobotContainer _robotContainer = new RobotContainer();
-    pathSelector.addOption("NONE", null);
-    pathSelector.addOption("Station2PieceBlue", 
+    _pathSelector.addOption("NONE", null);
+    _pathSelector.addOption("Station2PieceBlue", 
         new SequentialCommandGroup(
         new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE),
         new FollowPath(
@@ -52,7 +52,7 @@ public class Robot extends TimedRobot {
       )
     );
 
-    pathSelector.addOption("Station2PieceRed", 
+    _pathSelector.addOption("Station2PieceRed", 
     new SequentialCommandGroup(
     new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE),
     new FollowPath(
@@ -65,27 +65,27 @@ public class Robot extends TimedRobot {
     )
   );
     
-    pathSelector.addOption("ScoreHybridMobility", 
+    _pathSelector.addOption("ScoreHybridMobility", 
       new SequentialCommandGroup(
         new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE),
         new Mobility(_robotContainer.m_swerveSubsystem)));
 
-    pathSelector.addOption("ScoreHybrid", 
+    _pathSelector.addOption("ScoreHybrid", 
       new SequentialCommandGroup(
         new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE)
       )
     );
 
-    pathSelector.addOption("OneMeter", new FollowPath(
+    _pathSelector.addOption("OneMeter", new FollowPath(
       _robotContainer.m_swerveSubsystem, 
       AutoConstants.kMoveOneMeter,
       AutoConstants.emptyMap,
       _robotContainer.m_pose
     ));
 
-    pathSelector.addOption("MobilityOnly", new Mobility(_robotContainer.m_swerveSubsystem));
+    _pathSelector.addOption("MobilityOnly", new Mobility(_robotContainer.m_swerveSubsystem));
     
-    SmartDashboard.putData("PP Autos", pathSelector);
+    SmartDashboard.putData("PP Autos", _pathSelector);
   }
 
   /**
@@ -114,8 +114,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    if(pathSelector.getSelected() != null){
-      _autonomousCommand = pathSelector.getSelected();
+    if(_pathSelector.getSelected() != null){
+      _autonomousCommand = _pathSelector.getSelected();
     }
     // schedule the autonomous command (example)
     if (_autonomousCommand != null) {
