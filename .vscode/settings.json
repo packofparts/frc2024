@@ -1,3 +1,4 @@
 {
-    "java.format.settings.url": "google-style-formatter.xml"
+    "java.format.settings.url": "google-style-formatter.xml",
+    "editor.formatOnSave": true
 }
