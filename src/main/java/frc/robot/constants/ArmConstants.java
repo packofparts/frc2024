@@ -42,9 +42,12 @@ public class ArmConstants {
 
     //channel on dio port
     public static final int DIOPORTPIV = 0;
+    public static final int CONNECTION_THRESH_HZ = 975;
+
+
     public static final double PIVOT_ABS_ENC_TO_ROTATION = 1.0/3.7142857;
     public static final double EXTENSION_ROTATION_TO_INCHES =  18.5/7.01;
-
+    
 
 
     // Offset For Pivot
@@ -85,4 +88,7 @@ public class ArmConstants {
     public static final boolean LEFT_PIV_MOTOR_INVERTED = true;
     public static final boolean RIGHT_PIV_MOTOR_INVERTED = false;
 
+    //Tolerances
+    public static final double RESTING_PIV_TOLERANCE_DEG = Units.degreesToRadians(0);
+    public static final double RESTING_EXT_TOLERANCE_IN = .2;
 }

@@ -70,18 +70,18 @@ public class ArmControlSubsystem extends SubsystemBase {
   public ArmControlSubsystem() {
 
     pivotPID = new PIDController(1.4, 0, 0);
-    pivotPID.setTolerance(Units.degreesToRadians(0));
+    pivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_DEG);
 
     extensionPID = new PIDController(0.19, 0, 0);
-    extensionPID.setTolerance(.2);
+    extensionPID.setTolerance(ArmConstants.RESTING_EXT_TOLERANCE_IN);
 
     pivotRateLimiter = new SlewRateLimiter(ArmConstants.MAX_PIV_RATE_RAD_SEC);
 
-    absPivEncoder.setConnectedFrequencyThreshold(975); //do not change this number pls or else 
+    absPivEncoder.setConnectedFrequencyThreshold(ArmConstants.CONNECTION_THRESH_HZ);
    
     this.pivotRelEncoderOffsetRot = -absPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION + ArmConstants.PIV_INIT_OFFSET_ROT;
    
-    setConfig();
+    setDefaultConfig();
 
     SmartDashboard.putNumber("kG", ArmConstants.KG);
     
@@ -93,7 +93,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     
   }
 
-  public void setConfig(){
+  public void setDefaultConfig(){
     rightPivotController.configFactoryDefault();
     leftPivotController.configFactoryDefault();
 
@@ -115,7 +115,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionEncoder.setPosition(0);
 
     extensionController.burnFlash();
-    
   }
 
   @Override

@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.constants.ArmConstants;
+import frc.robot.constants.JoystickConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 
@@ -29,15 +30,15 @@ public class DefaultArmCommand extends CommandBase {
 
   void handleInput(){
 
-    if(Input.getLeftStickY() > 0.15){
+    if(Input.getLeftStickY() > JoystickConstants.PIVOT_INPUT_DEADZONE){
       armControlSubsystem.changeDesiredPivotRotation(.05 * (Input.getLeftStickY()-0.15));
-    }else if(Input.getLeftStickY() < -0.15){
+    }else if(Input.getLeftStickY() < -JoystickConstants.PIVOT_INPUT_DEADZONE){
       armControlSubsystem.changeDesiredPivotRotation(.05 * (Input.getLeftStickY()+0.15));
     }
 
-    if(Input.getRightStickY() > 0.05){
+    if(Input.getRightStickY() > JoystickConstants.EXT_INPUT_DEADZONE){
       armControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() - 0.05));
-    }else if(Input.getRightStickY() < -0.05){
+    }else if(Input.getRightStickY() < -JoystickConstants.EXT_INPUT_DEADZONE){
       armControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() + 0.05));
     }
     
