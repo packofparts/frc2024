@@ -12,8 +12,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class DefaultIntakeCommand extends CommandBase {
 
   private IntakeSubsystem intake;
-  public DefaultIntakeCommand(IntakeSubsystem intake) {
-    this.intake = intake;
+  public DefaultIntakeCommand(IntakeSubsystem tmpIntake) {
+    intake = tmpIntake;
     addRequirements(this.intake);
   }
 

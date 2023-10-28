@@ -16,8 +16,8 @@ public class DefaultArmCommand extends CommandBase {
   
   private ArmControlSubsystem armControlSubsystem;
 
-  public DefaultArmCommand(ArmControlSubsystem armControlSubsystem) {
-    this.armControlSubsystem = armControlSubsystem;
+  public DefaultArmCommand(ArmControlSubsystem tmpArmControlSubsystem) {
+    armControlSubsystem = tmpArmControlSubsystem;
     addRequirements(armControlSubsystem);
   }
 
