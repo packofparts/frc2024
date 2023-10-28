@@ -25,8 +25,8 @@ import frc.robot.constants.ArmConstants.ArmState;
  */
 public class Robot extends TimedRobot {
 
-  private Command _autonomousCommand;
-  private SendableChooser<Command> _pathSelector = new SendableChooser<>();
+  private Command autonomousCommand;
+  private SendableChooser<Command> pathSelector = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,54 +38,54 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     RobotContainer _robotContainer = new RobotContainer();
-    _pathSelector.addOption("NONE", null);
-    _pathSelector.addOption("Station2PieceBlue", 
+    pathSelector.addOption("NONE", null);
+    pathSelector.addOption("Station2PieceBlue", 
         new SequentialCommandGroup(
-        new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
         new FollowPath(
-          _robotContainer.m_swerveSubsystem, 
+          _robotContainer.swerveSubsystem, 
           AutoConstants.kStation2PieceBlue,
           AutoConstants.eventMap,
-          _robotContainer.m_pose
+          _robotContainer.pose
         )
         
       )
     );
 
-    _pathSelector.addOption("Station2PieceRed", 
+    pathSelector.addOption("Station2PieceRed", 
     new SequentialCommandGroup(
-    new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE),
+    new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
     new FollowPath(
-      _robotContainer.m_swerveSubsystem, 
+      _robotContainer.swerveSubsystem, 
       AutoConstants.kStation2PieceRed,
       AutoConstants.eventMap,
-      _robotContainer.m_pose
+      _robotContainer.pose
     )
     
     )
   );
     
-    _pathSelector.addOption("ScoreHybridMobility", 
+    pathSelector.addOption("ScoreHybridMobility", 
       new SequentialCommandGroup(
-        new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE),
-        new Mobility(_robotContainer.m_swerveSubsystem)));
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new Mobility(_robotContainer.swerveSubsystem)));
 
-    _pathSelector.addOption("ScoreHybrid", 
+    pathSelector.addOption("ScoreHybrid", 
       new SequentialCommandGroup(
-        new ScoreCone(_robotContainer.m_armControlSubsystem, _robotContainer.m_intakeSubsystem, ArmState.LOWER_NODE_CONE)
+        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE)
       )
     );
 
-    _pathSelector.addOption("OneMeter", new FollowPath(
-      _robotContainer.m_swerveSubsystem, 
+    pathSelector.addOption("OneMeter", new FollowPath(
+      _robotContainer.swerveSubsystem, 
       AutoConstants.kMoveOneMeter,
       AutoConstants.emptyMap,
-      _robotContainer.m_pose
+      _robotContainer.pose
     ));
 
-    _pathSelector.addOption("MobilityOnly", new Mobility(_robotContainer.m_swerveSubsystem));
+    pathSelector.addOption("MobilityOnly", new Mobility(_robotContainer.swerveSubsystem));
     
-    SmartDashboard.putData("PP Autos", _pathSelector);
+    SmartDashboard.putData("PP Autos", pathSelector);
   }
 
   /**
@@ -114,12 +114,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    if(_pathSelector.getSelected() != null){
-      _autonomousCommand = _pathSelector.getSelected();
+    if(pathSelector.getSelected() != null){
+      autonomousCommand = pathSelector.getSelected();
     }
     // schedule the autonomous command (example)
-    if (_autonomousCommand != null) {
-      _autonomousCommand.schedule();
+    if (autonomousCommand != null) {
+      autonomousCommand.schedule();
     }
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
@@ -136,8 +136,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (_autonomousCommand != null) {
-      _autonomousCommand.cancel();
+    if (autonomousCommand != null) {
+      autonomousCommand.cancel();
     }
   }
 

@@ -12,12 +12,12 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCommand extends CommandBase {
   
-  private SwerveSubsystem _swerve;
-  private boolean _isPrecisionToggle = false;
+  private SwerveSubsystem swerve;
+  private boolean isPrecisionToggle = false;
   
   public DefaultDriveCommand(SwerveSubsystem swerve) {
     addRequirements(swerve);
-    this._swerve = swerve;
+    this.swerve = swerve;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -29,9 +29,9 @@ public class DefaultDriveCommand extends CommandBase {
     double y = -Input.getJoystickX();
     double rot = -Input.getRot();
 
-    if (Input.getPrecisionToggle()){_isPrecisionToggle = !_isPrecisionToggle;}
+    if (Input.getPrecisionToggle()){isPrecisionToggle = !isPrecisionToggle;}
 
-    if (_isPrecisionToggle){
+    if (isPrecisionToggle){
       x = x/3;
       y = y/3;
       rot = rot/6;
@@ -53,7 +53,7 @@ public class DefaultDriveCommand extends CommandBase {
 
     SmartDashboard.putNumber("Rotation Janked", rot);
     
-    _swerve.setMotors(x, y, rot, true);
+    swerve.setMotors(x, y, rot, true);
   }
 
   // Called once the command ends or is interrupted.

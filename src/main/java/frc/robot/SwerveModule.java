@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
@@ -14,60 +14,62 @@ import frc.robot.constants.SwerveConstants;
 
 public class SwerveModule {
     // Parameters
-    private int _rotID;
-    private int _transID;
-    private int _rotEncoderID;
-    private boolean _rotInverse;
-    private boolean _transInverse;
-    private PIDController _rotPID;
+    private int rotID;
+    private int transID;
+    private int rotEncoderID;
+    private boolean rotInverse;
+    private boolean transInverse;
+    private PIDController rotPID;
 
     // Hardware
     // Motor Controllers
-    private CANSparkMax _rotMotor;
-    private CANSparkMax _transMotor;
+    private CANSparkMax rotMotor;
+    private CANSparkMax transMotor;
     // Encoders
-    private CANCoder _rotEncoder;
-    private RelativeEncoder _transEncoder;
-    private RelativeEncoder _rotRelativeEncoder;
+    private CANCoder rotEncoder;
+    private RelativeEncoder transEncoder;
+    private RelativeEncoder rotRelativeEncoder;
 
+    //Public Debugging Values
     public double PIDOutput = 0.0;
     public double desiredRadians = 0.0;
-    public SwerveModule(int rotID, int transID, int rotEncoderID,
-            boolean rotInverse, boolean transInverse, PIDController rotPID) {
+
+    public SwerveModule(int tmpRotID, int tmpTransID, int tmpRotEncoderID,
+            boolean tmpRotInverse, boolean tmpTransInverse, PIDController tmpRotPID) {
         // Setting Parameters
-        _rotID = rotID;
-        _transID = transID;
-        _rotEncoderID = rotEncoderID;
-        _rotInverse = rotInverse;
-        _transInverse = transInverse;
+        rotID = tmpRotID;
+        transID = tmpTransID;
+        rotEncoderID = tmpRotEncoderID;
+        rotInverse = tmpRotInverse;
+        transInverse = tmpTransInverse;
 
         // ----Setting Hardware
         // Motor Controllers
-        _rotMotor = new CANSparkMax(_rotID, MotorType.kBrushless);
-        _transMotor = new CANSparkMax(_transID, MotorType.kBrushless);
+        rotMotor = new CANSparkMax(rotID, MotorType.kBrushless);
+        transMotor = new CANSparkMax(transID, MotorType.kBrushless);
         
 
         // Encoders
-        _rotEncoder = new CANCoder(_rotEncoderID);
-        _transEncoder = _transMotor.getEncoder();
-        _rotRelativeEncoder = _rotMotor.getEncoder();
-        _rotRelativeEncoder.setPosition(0);
+        rotEncoder = new CANCoder(rotEncoderID);
+        transEncoder = transMotor.getEncoder();
+        rotRelativeEncoder = rotMotor.getEncoder();
+        rotRelativeEncoder.setPosition(0);
         // Sets measurement to radians
 
         // ----Setting PID
-        _rotPID = rotPID;
+        rotPID = tmpRotPID;
 
         // ----Setting PID Parameters
-        _rotPID.enableContinuousInput(-Math.PI, Math.PI);
+        tmpRotPID.enableContinuousInput(-Math.PI, Math.PI);
 
         // ----Setting Inversion
-        _rotMotor.setInverted(_rotInverse);
-        _transMotor.setInverted(_transInverse);
+        rotMotor.setInverted(rotInverse);
+        transMotor.setInverted(transInverse);
 
-        _transMotor.setIdleMode(IdleMode.kBrake);
-        _rotMotor.setIdleMode(IdleMode.kBrake);
+        transMotor.setIdleMode(IdleMode.kBrake);
+        rotMotor.setIdleMode(IdleMode.kBrake);
 
-        _transEncoder.setPosition(0);
+        transEncoder.setPosition(0);
     }
     
     // ------------------- State Settings
@@ -83,15 +85,15 @@ public class SwerveModule {
     }
 
     public double getAppliedOutput(){
-        return _rotMotor.getAppliedOutput();
+        return rotMotor.getAppliedOutput();
     }
 
     public void setTransMotorRaw(double speed){
-        _transMotor.set(speed);
+        transMotor.set(speed);
     }
 
     public void setRotMotorRaw(double speed){
-        _rotMotor.set(speed);
+        rotMotor.set(speed);
 
     }
 
@@ -113,18 +115,18 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
-        _transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
+        transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
         desiredRadians = desiredState.angle.getRadians();
-        PIDOutput = _rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
+        PIDOutput = rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
-        _rotMotor.set(PIDOutput);
+        rotMotor.set(PIDOutput);
 
 
     }
 
     public void setPID(double degrees){
-        PIDOutput = _rotPID.calculate(getRotPosition(),Math.toRadians(degrees));
-        _rotMotor.set(PIDOutput);
+        PIDOutput = rotPID.calculate(getRotPosition(),Math.toRadians(degrees));
+        rotMotor.set(PIDOutput);
 
     }
 
@@ -147,7 +149,7 @@ public class SwerveModule {
      * @return Returns number rotations of translation motor BEFORE GEAR RATIO
      */
     public double getTransPositionRaw() {
-        return _transEncoder.getPosition();
+        return transEncoder.getPosition();
     }
 
     /**
@@ -155,7 +157,7 @@ public class SwerveModule {
      * @return Returns rotation position in radians
      */
     public double getRotPositionRaw() {
-        return _rotEncoder.getAbsolutePosition();
+        return rotEncoder.getAbsolutePosition();
     }
 
     /**
@@ -163,7 +165,7 @@ public class SwerveModule {
      * @return Returns velocity of translation motor BEFORE GEAR RATIO
      */
     public double getTransVelocityRaw() {
-        return _transEncoder.getVelocity();
+        return transEncoder.getVelocity();
     }
 
     // -------------------- Applying Conversions/Rollover
@@ -186,7 +188,7 @@ public class SwerveModule {
     }
 
     public double getRotRelativePosition(){
-        return _rotRelativeEncoder.getPosition()/12.8;
+        return rotRelativeEncoder.getPosition()/12.8;
     }
 
     /**
@@ -202,15 +204,15 @@ public class SwerveModule {
      * Reset ONLY the translation encoder
      */
     public void resetEncoders() {
-        _transEncoder.setPosition(0);
+        transEncoder.setPosition(0);
     }
 
     /**
      * Stops the both motors
      */
     public void stop() {
-        _transMotor.set(0);
-        _rotMotor.set(0);
+        transMotor.set(0);
+        rotMotor.set(0);
     }
 
     /**
@@ -218,7 +220,7 @@ public class SwerveModule {
      * @return steering PID controller.
      */
     public PIDController getPIDController() {
-        return this._rotPID;
+        return this.rotPID;
     }
 
     /**
@@ -228,7 +230,7 @@ public class SwerveModule {
      * @see IdleMode
      */
     public void setModeTrans(IdleMode mode) {
-        _transMotor.setIdleMode(mode);
+        transMotor.setIdleMode(mode);
     }
 
     /**
@@ -238,8 +240,8 @@ public class SwerveModule {
      * @see setModeTrans
      */
     public void burnSparks() {
-        _rotMotor.burnFlash();
-        _transMotor.burnFlash();
+        rotMotor.burnFlash();
+        transMotor.burnFlash();
     }
 
     /**
@@ -249,6 +251,6 @@ public class SwerveModule {
      * @see IdleMode
      */
     public void setModeRot(IdleMode mode) {
-        _rotMotor.setIdleMode(mode);
+        rotMotor.setIdleMode(mode);
     }
 }

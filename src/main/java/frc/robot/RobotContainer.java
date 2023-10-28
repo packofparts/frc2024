@@ -24,24 +24,24 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  SwerveSubsystem m_swerveSubsystem = new SwerveSubsystem();
+  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-  ArmControlSubsystem m_armControlSubsystem = new ArmControlSubsystem();
-  IntakeSubsystem m_intakeSubsystem = new IntakeSubsystem();
-  Limelight m_limelight = new Limelight();
-  PoseEstimation m_pose = new PoseEstimation(m_limelight, m_swerveSubsystem);
+  ArmControlSubsystem armControlSubsystem = new ArmControlSubsystem();
+  IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  Limelight limelight = new Limelight();
+  PoseEstimation pose = new PoseEstimation(limelight, swerveSubsystem);
 
-  DefaultDriveCommand m_driveCommand = new DefaultDriveCommand(m_swerveSubsystem);
+  DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    AutoConstants.populateHashMaps(m_armControlSubsystem, m_intakeSubsystem);
-    m_armControlSubsystem.setDefaultCommand(new DefaultArmCommand(m_armControlSubsystem));
-    m_intakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(m_intakeSubsystem));
+    AutoConstants.populateHashMaps(armControlSubsystem, intakeSubsystem);
+    armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
+    intakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(intakeSubsystem));
 
     if(SwerveConstants.kPIDTuneMode)
-      m_swerveSubsystem.setDefaultCommand(new PIDTuning(0, m_swerveSubsystem));
+      swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
     else
-      m_swerveSubsystem.setDefaultCommand(m_driveCommand);
+      swerveSubsystem.setDefaultCommand(driveCommand);
   }
 
 

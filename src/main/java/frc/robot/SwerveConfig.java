@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.constants.SwerveConstants;
-import frc.robot.subsystems.SwerveModule;
 
 /** Add your docs here. */
 public class SwerveConfig {

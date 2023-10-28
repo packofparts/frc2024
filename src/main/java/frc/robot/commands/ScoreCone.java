@@ -14,14 +14,13 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class ScoreCone extends CommandBase {
   /** Creates a new ScoreConeHighNode. */
-  private ArmControlSubsystem _arm;
-  private SequentialCommandGroup _path;
+
+  private SequentialCommandGroup path;
   
   public ScoreCone(ArmControlSubsystem arm, IntakeSubsystem intake, ArmState state) {
-    this._arm = arm;
-    _path = new SequentialCommandGroup(
-      this._arm.waitUntilSpPivot(state.pivotAngleRad),
-      this._arm.waitUntilSpTelescope(state.extentionDistIn),
+    path = new SequentialCommandGroup(
+      arm.waitUntilSpPivot(state.pivotAngleRad),
+      arm.waitUntilSpTelescope(state.extentionDistIn),
       new RunCommand(() -> intake.runIntake(-1)).withTimeout(3),
       new InstantCommand(()-> intake.runIntake(0))
       );
@@ -30,13 +29,13 @@ public class ScoreCone extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    _path.schedule();
+    path.schedule();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return _path.isFinished();
+    return path.isFinished();
     
   }
 }

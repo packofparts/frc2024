@@ -16,28 +16,29 @@ import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveConfig;
+import frc.robot.SwerveModule;
 import frc.robot.constants.SwerveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
-  private SwerveDriveKinematics _kinematics;
-  private SwerveDriveOdometry _odometry;
+  private SwerveDriveKinematics kinematics;
+  private SwerveDriveOdometry odometry;
 
-  private AHRS _navx;
+  private AHRS navx;
 
-  private SwerveModule[] _modules;
+  private SwerveModule[] modules;
   public static final double tuningOutput = 0;
   public static double autoGyroInitValue = 0;
 
 
   public SwerveSubsystem() {
     // Populating Instance Variables
-    _kinematics = SwerveConfig.swerveKinematics;
-    _navx = new AHRS(Port.kMXP);
-    _modules = SwerveConfig.swerveModules;
+    kinematics = SwerveConfig.swerveKinematics;
+    navx = new AHRS(Port.kMXP);
+    modules = SwerveConfig.swerveModules;
 
 
-    _odometry = new SwerveDriveOdometry(_kinematics, getRotation2d(), getModulePositions());
+    odometry = new SwerveDriveOdometry(kinematics, getRotation2d(), getModulePositions());
     resetGyro();
     resetRobotPose(new Pose2d());
 
@@ -46,30 +47,30 @@ public class SwerveSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    _odometry.update(getRotation2d(), getModulePositions());
+    odometry.update(getRotation2d(), getModulePositions());
     if (SwerveConstants.kDebugMode){
 
 
-      SmartDashboard.putNumber("FLPIDOutput", _modules[0].PIDOutput);
-      SmartDashboard.putNumber("FRPIDOutput", _modules[1].PIDOutput);
-      SmartDashboard.putNumber("BLPIDOutput", _modules[2].PIDOutput);
-      SmartDashboard.putNumber("BRPIDOutput", _modules[3].PIDOutput);
+      SmartDashboard.putNumber("FLPIDOutput", modules[0].PIDOutput);
+      SmartDashboard.putNumber("FRPIDOutput", modules[1].PIDOutput);
+      SmartDashboard.putNumber("BLPIDOutput", modules[2].PIDOutput);
+      SmartDashboard.putNumber("BRPIDOutput", modules[3].PIDOutput);
 
-      SmartDashboard.putNumber("XPos", _odometry.getPoseMeters().getX());
-      SmartDashboard.putNumber("YPos", _odometry.getPoseMeters().getY());
+      SmartDashboard.putNumber("XPos", odometry.getPoseMeters().getX());
+      SmartDashboard.putNumber("YPos", odometry.getPoseMeters().getY());
       SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
 
 
 
     }
 
-    for (int i = 0; i < _modules.length; i++){
-      SmartDashboard.putNumber("AppliedOutput"+i, _modules[i].getAppliedOutput());
-      SmartDashboard.putNumber("DesiredStateAngleDeg"+i, _modules[i].desiredRadians/Math.PI*180);
-      SmartDashboard.putNumber("RotRelativePosDeg"+i, _modules[i].getRotRelativePosition()*360);
-      SmartDashboard.putNumber("AbsEncoderDeg"+i, _modules[i].getRotPosition()/Math.PI*180);
-      SmartDashboard.putNumber("SpeedMeters"+i, _modules[i].getTransVelocity());
-      SmartDashboard.putNumber("PosMeters"+i, _modules[i].getTransPosition());
+    for (int i = 0; i < modules.length; i++){
+      SmartDashboard.putNumber("AppliedOutput"+i, modules[i].getAppliedOutput());
+      SmartDashboard.putNumber("DesiredStateAngleDeg"+i, modules[i].desiredRadians/Math.PI*180);
+      SmartDashboard.putNumber("RotRelativePosDeg"+i, modules[i].getRotRelativePosition()*360);
+      SmartDashboard.putNumber("AbsEncoderDeg"+i, modules[i].getRotPosition()/Math.PI*180);
+      SmartDashboard.putNumber("SpeedMeters"+i, modules[i].getTransVelocity());
+      SmartDashboard.putNumber("PosMeters"+i, modules[i].getTransPosition());
     }
 
 
@@ -77,7 +78,7 @@ public class SwerveSubsystem extends SubsystemBase {
       resetGyro();
     }
     if(Input.resetOdo()){
-      _odometry.resetPosition(getRotation2d(), getModulePositions(), new Pose2d());
+      odometry.resetPosition(getRotation2d(), getModulePositions(), new Pose2d());
     }
   }
 
@@ -85,7 +86,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * Sets the current YAW heading as the 0'd heading
    */
   public void resetGyro() {
-    _navx.reset();
+    navx.reset();
   }
 
   /**
@@ -94,7 +95,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return the degrees at which the gyro is at
    */
   public double getHeading() {
-    return -_navx.getAngle();
+    return -navx.getAngle();
   }
 
   /**
@@ -120,7 +121,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.kTeleMaxSpeedMPS);
 
     for (int i = 0; i < desiredStates.length; i++) {
-      _modules[i].setDesiredState(desiredStates[i]);
+      modules[i].setDesiredState(desiredStates[i]);
     }
 
   }
@@ -132,10 +133,10 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see SwerveModulePosition
    */
   public SwerveModulePosition[] getModulePositions() {
-    SwerveModulePosition[] positions = new SwerveModulePosition[_modules.length];
+    SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
 
-    for (int i = 0; i < _modules.length; i++) {
-      positions[i] = _modules[i].getModulePos();
+    for (int i = 0; i < modules.length; i++) {
+      positions[i] = modules[i].getModulePos();
     }
 
     return positions;
@@ -159,7 +160,7 @@ public class SwerveSubsystem extends SubsystemBase {
     } else {
       chassisSpeeds = new ChassisSpeeds(x, y, rot);
     }
-    SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
 
     this.setModuleStates(moduleStates);
@@ -168,7 +169,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
   public void setMotors(double x, double y, double rot) {
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(x, y, rot);
-    SwerveModuleState[] moduleStates = _kinematics.toSwerveModuleStates(chassisSpeeds);
+    SwerveModuleState[] moduleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
 
     this.setModuleStates(moduleStates);
@@ -181,7 +182,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @see Pose2d
    */
   public void resetRobotPose(Pose2d pose) {
-    _odometry.resetPosition(pose.getRotation(), getModulePositions(), pose);
+    odometry.resetPosition(pose.getRotation(), getModulePositions(), pose);
   }
 
 
@@ -189,7 +190,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @return provide the pose of the robot in meters
    */
   public Pose2d getRobotPose() {
-    return _odometry.getPoseMeters();
+    return odometry.getPoseMeters();
   }
 
 
