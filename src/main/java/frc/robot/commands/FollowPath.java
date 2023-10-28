@@ -20,23 +20,23 @@ public class FollowPath extends CommandBase {
   private Map<String,Command> eventMap;
   private PoseEstimation pose;
   
-  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj, Map<String,Command> eventMap, PoseEstimation pose) {
+  public FollowPath(SwerveSubsystem tmpSwerve, PathPlannerTrajectory tmpTraj, Map<String,Command> tmpEventMap, PoseEstimation tmpPose) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.swerve = swerve;
-    this.eventMap = eventMap;
-    this.traj = traj;
-    this.pose = pose;
+    swerve = tmpSwerve;
+    eventMap = tmpEventMap;
+    traj = tmpTraj;
+    pose = tmpPose;
     
-    addRequirements(this.swerve);
+    addRequirements(swerve);
 
   }
   @Override
   public void initialize() {
 
-    SwerveAutoBuilder cmd = new SwerveAutoBuilder(this.pose::getRobotPose, this.pose::resetPose, SwerveConfig.SWERVE_KINEMATICS,
+    SwerveAutoBuilder cmd = new SwerveAutoBuilder(pose::getRobotPose, pose::resetPose, SwerveConfig.SWERVE_KINEMATICS,
             new PIDConstants(7, 0.5, 0), //old .4
             new PIDConstants(9, 0.5, 0), //old .5
-            this.swerve::setModuleStates, this.eventMap, true, this.swerve
+            swerve::setModuleStates, eventMap, true, swerve
         );
     
     finalCMD = cmd.fullAuto(traj);

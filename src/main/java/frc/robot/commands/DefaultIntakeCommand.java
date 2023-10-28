@@ -14,7 +14,7 @@ public class DefaultIntakeCommand extends CommandBase {
   private IntakeSubsystem intake;
   public DefaultIntakeCommand(IntakeSubsystem tmpIntake) {
     intake = tmpIntake;
-    addRequirements(this.intake);
+    addRequirements(intake);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

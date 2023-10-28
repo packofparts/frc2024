@@ -14,9 +14,9 @@ public class DefaultDriveCommand extends CommandBase {
   private final SwerveSubsystem swerve;
   private boolean isPrecisionToggle = false;
   
-  public DefaultDriveCommand(SwerveSubsystem swerve) {
+  public DefaultDriveCommand(SwerveSubsystem tmpSwerve) {
+    swerve = tmpSwerve;
     addRequirements(swerve);
-    this.swerve = swerve;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
