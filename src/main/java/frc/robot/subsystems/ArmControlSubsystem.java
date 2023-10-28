@@ -64,7 +64,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   private boolean isInitialized = false;
 
-  public SendableChooser<ArmMotorMode> chooser = new SendableChooser<>();
+  private final SendableChooser<ArmMotorMode> chooser = new SendableChooser<>();
 
 
   public ArmControlSubsystem() {
