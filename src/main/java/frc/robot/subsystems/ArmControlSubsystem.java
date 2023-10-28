@@ -51,7 +51,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   // This is called Ultra Instinct because setting this boolean to true removes the clamps
   // so that if the belt skips, the operator can still run manually without the bad offsets
-  public static boolean ultraInstinct = false;
+  private boolean ultraInstinct = false;
 
   private double pivotRelEncoderOffsetRot;
   private double currentPivotRotation;
@@ -273,6 +273,13 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public void changeDesiredExtension(double i){
     this.desiredExtensionDistance += i;
+  }
+
+  public boolean getUltraInstinct(){
+    return ultraInstinct;
+  }
+  public void setUltraInstinct(boolean toggle){
+    ultraInstinct = toggle;
   }
 
 

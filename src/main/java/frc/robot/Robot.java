@@ -37,16 +37,16 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our
     // autonomous chooser on the dashboard.
-    RobotContainer _robotContainer = new RobotContainer();
+    RobotContainer robotContainer = new RobotContainer();
     pathSelector.addOption("NONE", null);
     pathSelector.addOption("Station2PieceBlue", 
         new SequentialCommandGroup(
-        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
         new FollowPath(
-          _robotContainer.swerveSubsystem, 
+          robotContainer.swerveSubsystem, 
           AutoConstants.kStation2PieceBlue,
           AutoConstants.eventMap,
-          _robotContainer.pose
+          robotContainer.pose
         )
         
       )
@@ -54,12 +54,12 @@ public class Robot extends TimedRobot {
 
     pathSelector.addOption("Station2PieceRed", 
     new SequentialCommandGroup(
-    new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+    new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
     new FollowPath(
-      _robotContainer.swerveSubsystem, 
+      robotContainer.swerveSubsystem, 
       AutoConstants.kStation2PieceRed,
       AutoConstants.eventMap,
-      _robotContainer.pose
+      robotContainer.pose
     )
     
     )
@@ -67,23 +67,23 @@ public class Robot extends TimedRobot {
     
     pathSelector.addOption("ScoreHybridMobility", 
       new SequentialCommandGroup(
-        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
-        new Mobility(_robotContainer.swerveSubsystem)));
+        new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new Mobility(robotContainer.swerveSubsystem)));
 
     pathSelector.addOption("ScoreHybrid", 
       new SequentialCommandGroup(
-        new ScoreCone(_robotContainer.armControlSubsystem, _robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE)
+        new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE)
       )
     );
 
     pathSelector.addOption("OneMeter", new FollowPath(
-      _robotContainer.swerveSubsystem, 
+      robotContainer.swerveSubsystem, 
       AutoConstants.kMoveOneMeter,
       AutoConstants.emptyMap,
-      _robotContainer.pose
+      robotContainer.pose
     ));
 
-    pathSelector.addOption("MobilityOnly", new Mobility(_robotContainer.swerveSubsystem));
+    pathSelector.addOption("MobilityOnly", new Mobility(robotContainer.swerveSubsystem));
     
     SmartDashboard.putData("PP Autos", pathSelector);
   }

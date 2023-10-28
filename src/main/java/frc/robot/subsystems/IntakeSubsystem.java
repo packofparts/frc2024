@@ -12,16 +12,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final CANSparkMax _intakeMotor = new CANSparkMax(29,MotorType.kBrushless);
+  private final CANSparkMax intakeMotor = new CANSparkMax(29,MotorType.kBrushless);
 
   public IntakeSubsystem() {
-    _intakeMotor.setIdleMode(IdleMode.kBrake);
-    _intakeMotor.burnFlash();
+    intakeMotor.setIdleMode(IdleMode.kBrake);
+    intakeMotor.burnFlash();
   
   }
   public void runIntake(double percentOutput){
     
-   _intakeMotor.set(percentOutput);
+   intakeMotor.set(percentOutput);
 
   }
 

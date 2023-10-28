@@ -85,7 +85,7 @@ public class DefaultArmCommand extends CommandBase {
     }
 
     if (Input.isUltraInstinct()) {
-      ArmControlSubsystem.ultraInstinct = !ArmControlSubsystem.ultraInstinct;
+      armControlSubsystem.setUltraInstinct(!armControlSubsystem.getUltraInstinct());
     }
 
   }

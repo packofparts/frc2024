@@ -79,7 +79,7 @@ public class PoseEstimation extends SubsystemBase{
   public boolean isValidPose(EstimatedRobotPose pose) {
     List<PhotonTrackedTarget> targets = pose.targetsUsed;
     if (targets.size() == 1){
-      return targets.get(0).getPoseAmbiguity() < VisionConstants.kSingleTagAmbiguityThreshold;
+      return targets.get(0).getPoseAmbiguity() < VisionConstants.SINGLE_TAG_AMBIGUITY_THRESH;
     }
 
     return true;
