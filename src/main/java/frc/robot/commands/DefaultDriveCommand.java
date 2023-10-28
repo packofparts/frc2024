@@ -11,7 +11,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCommand extends CommandBase {
   
-  private SwerveSubsystem swerve;
+  private final SwerveSubsystem swerve;
   private boolean isPrecisionToggle = false;
   
   public DefaultDriveCommand(SwerveSubsystem swerve) {
@@ -28,7 +28,7 @@ public class DefaultDriveCommand extends CommandBase {
     double rot = -Input.getRot();
 
     if (Input.resetGyro()){swerve.resetGyro();}
-    
+
     if(Input.resetOdo()){swerve.resetOdometry();}
 
     if (Input.getPrecisionToggle()){isPrecisionToggle = !isPrecisionToggle;}
