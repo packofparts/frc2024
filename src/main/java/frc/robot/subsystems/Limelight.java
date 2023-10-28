@@ -17,7 +17,7 @@ import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 public class Limelight {
-    private PhotonCamera photonCamera;
+    private final PhotonCamera photonCamera;
     private PhotonPoseEstimator photonPoseEstimator;
 
     public Limelight() {

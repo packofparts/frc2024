@@ -14,7 +14,7 @@ import frc.robot.subsystems.Input;
 
 public class DefaultArmCommand extends CommandBase {
   
-  private ArmControlSubsystem armControlSubsystem;
+  private final ArmControlSubsystem armControlSubsystem;
 
   public DefaultArmCommand(ArmControlSubsystem tmpArmControlSubsystem) {
     armControlSubsystem = tmpArmControlSubsystem;

@@ -22,12 +22,12 @@ import frc.robot.constants.SwerveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
-  private SwerveDriveKinematics kinematics;
-  private SwerveDriveOdometry odometry;
+  private final SwerveDriveKinematics kinematics;
+  private final SwerveDriveOdometry odometry;
 
-  private AHRS navx;
+  private final AHRS navx;
 
-  private SwerveModule[] modules;
+  private final SwerveModule[] modules;
   public static double autoGyroInitValue = 0;
 
 
