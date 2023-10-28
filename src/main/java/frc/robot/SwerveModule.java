@@ -115,7 +115,7 @@ public class SwerveModule {
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
         // PID Controller for both translation and rotation
-        transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.kPhysicalMaxSpeedMPS);
+        transMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.PHYSICAL_MAX_SPEED_MPS);
         desiredRadians = desiredState.angle.getRadians();
         PIDOutput = rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
@@ -175,8 +175,8 @@ public class SwerveModule {
      * @return Returns translation motor AFTER GEAR RATIO and Meters
      */
     public double getTransPosition() {
-        return getTransPositionRaw() * SwerveConstants.kTransGearRatio
-                * SwerveConstants.kWheelCircumference;
+        return getTransPositionRaw() * SwerveConstants.TRANS_GEAR_RATIO_ROT
+                * SwerveConstants.WHEEL_CIRCUMFERENCE_METERS;
     }
 
     /**
@@ -196,7 +196,7 @@ public class SwerveModule {
      * @return Returns velocity of translation motor with conversion
      */
     public double getTransVelocity() {
-        return getTransVelocityRaw() * SwerveConstants.kTransRPMtoMPS;
+        return getTransVelocityRaw() * SwerveConstants.TRANS_RPM_TO_MPS;
     }
 
 

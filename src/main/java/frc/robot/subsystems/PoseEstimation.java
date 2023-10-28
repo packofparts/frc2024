@@ -32,7 +32,7 @@ public class PoseEstimation extends SubsystemBase{
     swerve = swerveSubsystem;
     
 
-    poseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.swerveKinematics,
+    poseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.SWERVE_KINEMATICS,
         swerve.getRotation2d(),
         swerve.getModulePositions(),
         swerve.getRobotPose(),
@@ -51,7 +51,7 @@ public class PoseEstimation extends SubsystemBase{
     field.setRobotPose(pose);
     SmartDashboard.putData("Field", field);
 
-    if (CompConstants.kDebugMode) {
+    if (CompConstants.DEBUG_MODE) {
       SmartDashboard.putNumber("PoseEst X", pose.getX());
       SmartDashboard.putNumber("PoseEst Y", pose.getY());
       SmartDashboard.putNumber("PoseEst Rot", pose.getRotation().getDegrees());

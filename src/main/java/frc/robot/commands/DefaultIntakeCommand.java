@@ -21,13 +21,13 @@ public class DefaultIntakeCommand extends CommandBase {
   @Override
   public void execute() {
         // Intake Cone Outtake Cube
-        if (Input.getRightTrigger() > IntakeConstants.kIntakeDeadZone) {this.intake.runIntake(Input.getRightTrigger()/1.75);}
+        if (Input.getRightTrigger() > IntakeConstants.INPUT_DEADZONE) {this.intake.runIntake(Input.getRightTrigger()/1.75);}
     
         // Intake Cube Outtake Cone
-        if (Input.getLeftTrigger()>IntakeConstants.kIntakeDeadZone){this.intake.runIntake(-Input.getLeftTrigger()/1.2);}
+        if (Input.getLeftTrigger()>IntakeConstants.INPUT_DEADZONE){this.intake.runIntake(-Input.getLeftTrigger()/1.2);}
     
         //Set Intake to Stall Speed if Neither
-        if (Input.getLeftTrigger()<IntakeConstants.kIntakeDeadZone && Input.getRightTrigger()<IntakeConstants.kIntakeDeadZone){this.intake.runIntake(IntakeConstants.kIntakeStallSpeed);}
+        if (Input.getLeftTrigger()<IntakeConstants.INPUT_DEADZONE && Input.getRightTrigger()<IntakeConstants.INPUT_DEADZONE){this.intake.runIntake(IntakeConstants.STALL_SPEED);}
   }
 
   // Returns true when the command should end.

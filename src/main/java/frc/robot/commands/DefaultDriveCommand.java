@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Input;
@@ -23,11 +22,14 @@ public class DefaultDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
     // x, y, and rot are inverted because of the Joystick configurations
     double x = -Input.getJoystickY();
     double y = -Input.getJoystickX();
     double rot = -Input.getRot();
+
+    if (Input.resetGyro()){swerve.resetGyro();}
+    
+    if(Input.resetOdo()){swerve.resetOdometry();}
 
     if (Input.getPrecisionToggle()){isPrecisionToggle = !isPrecisionToggle;}
 
@@ -39,19 +41,15 @@ public class DefaultDriveCommand extends CommandBase {
       x = Math.abs(x) > 0.04 ? x : 0.0;
       y = Math.abs(y) > 0.04 ? y :0.0;
       rot = Math.abs(rot) > 0.02 ? rot : 0.0;
-
     } else{
       x = Math.abs(x) > 0.10 ? x : 0.0;
       y = Math.abs(y) > 0.10 ? y : 0.0;
       rot = Math.abs(rot) > 0.15 ? rot : 0.0;
     }
     
-    x *= SwerveConstants.kTeleMaxSpeedMPS;
-    y *= SwerveConstants.kTeleMaxSpeedMPS;
-    rot *= SwerveConstants.kTeleMaxRotSpeedRadPerSeconds;
-
-
-    SmartDashboard.putNumber("Rotation Janked", rot);
+    x *= SwerveConstants.TELE_MAX_SPEED_MPS;
+    y *= SwerveConstants.TELE_MAX_SPEED_MPS;
+    rot *= SwerveConstants.TELE_MAX_ROT_SPEED_RAD_SEC;
     
     swerve.setMotors(x, y, rot, true);
   }

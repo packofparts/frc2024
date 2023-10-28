@@ -23,8 +23,8 @@ public class PIDTuning extends CommandBase {
   /** Creates a new PIDTuning. */
   public PIDTuning(int modID, SwerveSubsystem swerve) {
     driveBase = swerve;
-    curModule = SwerveConfig.swerveModules[modID];
-    curModPID = SwerveConfig.swerveModulePIDs[modID];
+    curModule = SwerveConfig.SWERVE_MODULES[modID];
+    curModPID = SwerveConfig.SWERVE_MODULE_PIDs[modID];
 
     addRequirements(driveBase);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -45,7 +45,7 @@ public class PIDTuning extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double _increment = 0;
+    double increment = 0;
 
     if(Input.togglePIDTuning()){
       toggled = !toggled;
@@ -59,12 +59,12 @@ public class PIDTuning extends CommandBase {
     curModPID.setI(SmartDashboard.getNumber("kI", 0));
     curModPID.setD(SmartDashboard.getNumber("kD", 0));
     
-    _increment = SmartDashboard.getNumber("increment", 2);
+    increment = SmartDashboard.getNumber("increment", 2);
     
     if(Input.getIncPID()){
-      setPoint += _increment;
+      setPoint += increment;
     }else if(Input.getDecPID()){
-      setPoint -= _increment;
+      setPoint -= increment;
     }
     SmartDashboard.putNumber("setpoint", setPoint);
     SmartDashboard.putNumber("measurement", curModule.getRotPosition()/Math.PI*180);

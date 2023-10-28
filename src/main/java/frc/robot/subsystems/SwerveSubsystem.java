@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveConfig;
 import frc.robot.SwerveModule;
+import frc.robot.constants.CompConstants;
 import frc.robot.constants.SwerveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
@@ -27,15 +28,14 @@ public class SwerveSubsystem extends SubsystemBase {
   private AHRS navx;
 
   private SwerveModule[] modules;
-  public static final double tuningOutput = 0;
   public static double autoGyroInitValue = 0;
 
 
   public SwerveSubsystem() {
     // Populating Instance Variables
-    kinematics = SwerveConfig.swerveKinematics;
+    kinematics = SwerveConfig.SWERVE_KINEMATICS;
     navx = new AHRS(Port.kMXP);
-    modules = SwerveConfig.swerveModules;
+    modules = SwerveConfig.SWERVE_MODULES;
 
 
     odometry = new SwerveDriveOdometry(kinematics, getRotation2d(), getModulePositions());
@@ -48,7 +48,7 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     odometry.update(getRotation2d(), getModulePositions());
-    if (SwerveConstants.kDebugMode){
+    if (CompConstants.DEBUG_MODE){
 
 
       SmartDashboard.putNumber("FLPIDOutput", modules[0].PIDOutput);
@@ -74,12 +74,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
 
-    if (Input.resetGyro()){
-      resetGyro();
-    }
-    if(Input.resetOdo()){
-      odometry.resetPosition(getRotation2d(), getModulePositions(), new Pose2d());
-    }
+
   }
 
   /**
@@ -87,6 +82,14 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public void resetGyro() {
     navx.reset();
+  }
+  
+  /**
+   * Resets pose to origin, keeps heading from gyro, keeps current module positions
+   */
+
+  public void resetOdometry(){
+    odometry.resetPosition(getRotation2d(), getModulePositions(), new Pose2d());
   }
 
   /**
@@ -118,7 +121,7 @@ public class SwerveSubsystem extends SubsystemBase {
    */
 
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.kTeleMaxSpeedMPS);
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, SwerveConstants.TELE_MAX_SPEED_MPS);
 
     for (int i = 0; i < desiredStates.length; i++) {
       modules[i].setDesiredState(desiredStates[i]);

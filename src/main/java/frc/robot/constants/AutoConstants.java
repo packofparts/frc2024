@@ -32,14 +32,14 @@ public class AutoConstants {
     public static Map<String, Command> eventMap = new HashMap<>();
 
     //Determines if event map should be populated
-    public static final boolean kDoAction = true;
+    public static final boolean DO_ACTION = true;
 
     //If not populated determines the wait times of former events
-    public static final double kWaitTime = 1;
+    public static final double WAIT_TIME = 1;
 
     public static void populateHashMaps(ArmControlSubsystem arm, IntakeSubsystem intake){
         
-        if (kDoAction){  
+        if (DO_ACTION){  
             eventMap.put("stow_arm",new SequentialCommandGroup(
                 arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
                 arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)
@@ -58,25 +58,25 @@ public class AutoConstants {
             eventMap.put("score_cone_low", new ScoreCone(arm, intake, ArmState.LOWER_NODE_CONE));
 
         }else{
-            emptyMap.put("angle_N3", new WaitCommand(kWaitTime));
-            emptyMap.put("angle_N2", new WaitCommand(kWaitTime));
-            eventMap.put("angle_N1", new WaitCommand(kWaitTime));
-            eventMap.put("angle_N0", new WaitCommand(kWaitTime));
-            eventMap.put("angle_neutral",new WaitCommand(kWaitTime));
+            emptyMap.put("angle_N3", new WaitCommand(WAIT_TIME));
+            emptyMap.put("angle_N2", new WaitCommand(WAIT_TIME));
+            eventMap.put("angle_N1", new WaitCommand(WAIT_TIME));
+            eventMap.put("angle_N0", new WaitCommand(WAIT_TIME));
+            eventMap.put("angle_neutral",new WaitCommand(WAIT_TIME));
 
-            eventMap.put("telescope_N3", new WaitCommand(kWaitTime));
-            eventMap.put("telescope_N2", new WaitCommand(kWaitTime));
-            eventMap.put("telescope_N1", new WaitCommand(kWaitTime));
-            eventMap.put("telescope_N0", new WaitCommand(kWaitTime));
-            eventMap.put("telescope_neutral", new WaitCommand(kWaitTime));
+            eventMap.put("telescope_N3", new WaitCommand(WAIT_TIME));
+            eventMap.put("telescope_N2", new WaitCommand(WAIT_TIME));
+            eventMap.put("telescope_N1", new WaitCommand(WAIT_TIME));
+            eventMap.put("telescope_N0", new WaitCommand(WAIT_TIME));
+            eventMap.put("telescope_neutral", new WaitCommand(WAIT_TIME));
 
-            eventMap.put("score_cone",  new WaitCommand(kWaitTime));
-            eventMap.put("drop_cube",  new WaitCommand(kWaitTime));
-            eventMap.put("intake_cube",  new WaitCommand(kWaitTime));
+            eventMap.put("score_cone",  new WaitCommand(WAIT_TIME));
+            eventMap.put("drop_cube",  new WaitCommand(WAIT_TIME));
+            eventMap.put("intake_cube",  new WaitCommand(WAIT_TIME));
 
-            eventMap.put("auto_balance", new WaitCommand(kWaitTime));
-            eventMap.put("align_cube",  new WaitCommand(kWaitTime));
-            eventMap.put("align_tag", new WaitCommand(kWaitTime));
+            eventMap.put("auto_balance", new WaitCommand(WAIT_TIME));
+            eventMap.put("align_cube",  new WaitCommand(WAIT_TIME));
+            eventMap.put("align_tag", new WaitCommand(WAIT_TIME));
         }
     }
 

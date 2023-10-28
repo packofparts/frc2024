@@ -14,10 +14,10 @@ public class Input {
         throw new IllegalStateException("Input Class");
       }
 
-    private static Joystick rJoystick = new Joystick (JoystickConstants.kRotJoystickPort);
-    private static Joystick tJoystick = new Joystick (JoystickConstants.kTransJoystickPort);
+    private static Joystick rJoystick = new Joystick (JoystickConstants.ROT_JOYSTICK_PORT);
+    private static Joystick tJoystick = new Joystick (JoystickConstants.TRANS_JOY_PORT);
     
-    private static XboxController xboxController = new XboxController(JoystickConstants.kXboxControllerPort);
+    private static XboxController xboxController = new XboxController(JoystickConstants.XBOX_PORT);
 
     public static final int DPADUP = 0;
     public static final int DPADRIGHT = 90;

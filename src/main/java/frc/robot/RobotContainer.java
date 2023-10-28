@@ -9,7 +9,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DefaultIntakeCommand;
 import frc.robot.commands.PIDTuning;
 import frc.robot.constants.AutoConstants;
-import frc.robot.constants.SwerveConstants;
+import frc.robot.constants.CompConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
@@ -38,7 +38,7 @@ public class RobotContainer {
     armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
     intakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(intakeSubsystem));
 
-    if(SwerveConstants.kPIDTuneMode)
+    if(CompConstants.PID_TUNE_MODE)
       swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
     else
       swerveSubsystem.setDefaultCommand(driveCommand);
