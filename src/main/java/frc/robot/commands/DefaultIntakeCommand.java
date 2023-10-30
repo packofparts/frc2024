@@ -11,23 +11,23 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class DefaultIntakeCommand extends CommandBase {
 
-  private IntakeSubsystem intake;
-  public DefaultIntakeCommand(IntakeSubsystem tmpIntake) {
-    intake = tmpIntake;
-    addRequirements(intake);
+  private IntakeSubsystem mIntake;
+  public DefaultIntakeCommand(IntakeSubsystem intake) {
+    mIntake = intake;
+    addRequirements(mIntake);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
         // Intake Cone Outtake Cube
-        if (Input.getRightTrigger() > IntakeConstants.INPUT_DEADZONE) {this.intake.runIntake(Input.getRightTrigger()/1.75);}
+        if (Input.getRightTrigger() > IntakeConstants.INPUT_DEADZONE) {this.mIntake.runIntake(Input.getRightTrigger()/1.75);}
     
         // Intake Cube Outtake Cone
-        if (Input.getLeftTrigger()>IntakeConstants.INPUT_DEADZONE){this.intake.runIntake(-Input.getLeftTrigger()/1.2);}
+        if (Input.getLeftTrigger()>IntakeConstants.INPUT_DEADZONE){this.mIntake.runIntake(-Input.getLeftTrigger()/1.2);}
     
         //Set Intake to Stall Speed if Neither
-        if (Input.getLeftTrigger()<IntakeConstants.INPUT_DEADZONE && Input.getRightTrigger()<IntakeConstants.INPUT_DEADZONE){this.intake.runIntake(IntakeConstants.STALL_SPEED);}
+        if (Input.getLeftTrigger()<IntakeConstants.INPUT_DEADZONE && Input.getRightTrigger()<IntakeConstants.INPUT_DEADZONE){this.mIntake.runIntake(IntakeConstants.STALL_SPEED);}
   }
 
   // Returns true when the command should end.

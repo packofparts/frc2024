@@ -25,8 +25,8 @@ import frc.robot.constants.ArmConstants.ArmState;
  */
 public class Robot extends TimedRobot {
 
-  private Command autonomousCommand;
-  private SendableChooser<Command> pathSelector = new SendableChooser<>();
+  private Command mAutonomousCommand;
+  private SendableChooser<Command> mPathSelector = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,54 +38,54 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     RobotContainer robotContainer = new RobotContainer();
-    pathSelector.addOption("NONE", null);
-    pathSelector.addOption("Station2PieceBlue", 
+    mPathSelector.addOption("NONE", null);
+    mPathSelector.addOption("Station2PieceBlue", 
         new SequentialCommandGroup(
-        new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE),
         new FollowPath(
           robotContainer.swerveSubsystem, 
           AutoConstants.kStation2PieceBlue,
           AutoConstants.eventMap,
-          robotContainer.pose
+          robotContainer.mPoseEstimator
         )
         
       )
     );
 
-    pathSelector.addOption("Station2PieceRed", 
+    mPathSelector.addOption("Station2PieceRed", 
     new SequentialCommandGroup(
-    new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+    new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE),
     new FollowPath(
       robotContainer.swerveSubsystem, 
       AutoConstants.kStation2PieceRed,
       AutoConstants.eventMap,
-      robotContainer.pose
+      robotContainer.mPoseEstimator
     )
     
     )
   );
     
-    pathSelector.addOption("ScoreHybridMobility", 
+    mPathSelector.addOption("ScoreHybridMobility", 
       new SequentialCommandGroup(
-        new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE),
         new Mobility(robotContainer.swerveSubsystem)));
 
-    pathSelector.addOption("ScoreHybrid", 
+    mPathSelector.addOption("ScoreHybrid", 
       new SequentialCommandGroup(
-        new ScoreCone(robotContainer.armControlSubsystem, robotContainer.intakeSubsystem, ArmState.LOWER_NODE_CONE)
+        new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE)
       )
     );
 
-    pathSelector.addOption("OneMeter", new FollowPath(
+    mPathSelector.addOption("OneMeter", new FollowPath(
       robotContainer.swerveSubsystem, 
       AutoConstants.kMoveOneMeter,
       AutoConstants.emptyMap,
-      robotContainer.pose
+      robotContainer.mPoseEstimator
     ));
 
-    pathSelector.addOption("MobilityOnly", new Mobility(robotContainer.swerveSubsystem));
+    mPathSelector.addOption("MobilityOnly", new Mobility(robotContainer.swerveSubsystem));
     
-    SmartDashboard.putData("PP Autos", pathSelector);
+    SmartDashboard.putData("PP Autos", mPathSelector);
   }
 
   /**
@@ -114,12 +114,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
 
-    if(pathSelector.getSelected() != null){
-      autonomousCommand = pathSelector.getSelected();
+    if(mPathSelector.getSelected() != null){
+      mAutonomousCommand = mPathSelector.getSelected();
     }
     // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
+    if (mAutonomousCommand != null) {
+      mAutonomousCommand.schedule();
     }
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
@@ -136,8 +136,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
+    if (mAutonomousCommand != null) {
+      mAutonomousCommand.cancel();
     }
   }
 

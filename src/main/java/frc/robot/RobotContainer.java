@@ -26,22 +26,22 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-  ArmControlSubsystem armControlSubsystem = new ArmControlSubsystem();
-  IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-  Limelight limelight = new Limelight();
-  PoseEstimation pose = new PoseEstimation(limelight, swerveSubsystem);
+  ArmControlSubsystem mArmControlSubsystem = new ArmControlSubsystem();
+  IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  Limelight mLimelight = new Limelight();
+  PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, swerveSubsystem);
 
-  DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
+  DefaultDriveCommand mDriveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    AutoConstants.populateHashMaps(armControlSubsystem, intakeSubsystem);
-    armControlSubsystem.setDefaultCommand(new DefaultArmCommand(armControlSubsystem));
-    intakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(intakeSubsystem));
+    AutoConstants.populateHashMaps(mArmControlSubsystem, mIntakeSubsystem);
+    mArmControlSubsystem.setDefaultCommand(new DefaultArmCommand(mArmControlSubsystem));
+    mIntakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(mIntakeSubsystem));
 
     if(CompConstants.PID_TUNE_MODE)
       swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
     else
-      swerveSubsystem.setDefaultCommand(driveCommand);
+      swerveSubsystem.setDefaultCommand(mDriveCommand);
   }
 
 

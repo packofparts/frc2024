@@ -11,12 +11,12 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCommand extends CommandBase {
   
-  private final SwerveSubsystem swerve;
-  private boolean isPrecisionToggle = false;
+  private final SwerveSubsystem mSwerve;
+  private boolean mIsPrecisionToggle = false;
   
-  public DefaultDriveCommand(SwerveSubsystem tmpSwerve) {
-    swerve = tmpSwerve;
-    addRequirements(swerve);
+  public DefaultDriveCommand(SwerveSubsystem swerve) {
+    mSwerve = swerve;
+    addRequirements(mSwerve);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -27,13 +27,13 @@ public class DefaultDriveCommand extends CommandBase {
     double y = -Input.getJoystickX();
     double rot = -Input.getRot();
 
-    if (Input.resetGyro()){swerve.resetGyro();}
+    if (Input.resetGyro()){mSwerve.resetGyro();}
 
-    if(Input.resetOdo()){swerve.resetOdometry();}
+    if(Input.resetOdo()){mSwerve.resetOdometry();}
 
-    if (Input.getPrecisionToggle()){isPrecisionToggle = !isPrecisionToggle;}
+    if (Input.getPrecisionToggle()){mIsPrecisionToggle = !mIsPrecisionToggle;}
 
-    if (isPrecisionToggle){
+    if (mIsPrecisionToggle){
       x = x/3;
       y = y/3;
       rot = rot/6;
@@ -51,7 +51,7 @@ public class DefaultDriveCommand extends CommandBase {
     y *= SwerveConstants.TELE_MAX_SPEED_MPS;
     rot *= SwerveConstants.TELE_MAX_ROT_SPEED_RAD_SEC;
     
-    swerve.setMotors(x, y, rot, true);
+    mSwerve.setMotors(x, y, rot, true);
   }
 
   // Called once the command ends or is interrupted.

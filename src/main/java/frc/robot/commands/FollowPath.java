@@ -14,38 +14,38 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 public class FollowPath extends CommandBase {
   /** Creates a new TGWithPPlib. */
-  private final SwerveSubsystem swerve;
-  private final Command finalCMD;
-  private final PathPlannerTrajectory traj;
-  private final Map<String,Command> eventMap;
-  private final PoseEstimation pose;
+  private final SwerveSubsystem mSwerve;
+  private final Command mFinalCMD;
+  private final PathPlannerTrajectory mTraj;
+  private final Map<String,Command> mEventMap;
+  private final PoseEstimation mPoseEstimator;
   
-  public FollowPath(SwerveSubsystem tmpSwerve, PathPlannerTrajectory tmpTraj, Map<String,Command> tmpEventMap, PoseEstimation tmpPose) {
+  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj, Map<String,Command> eventMap, PoseEstimation poseEstimator) {
     // Use addRequirements() here to declare subsystem dependencies.
-    swerve = tmpSwerve;
-    eventMap = tmpEventMap;
-    traj = tmpTraj;
-    pose = tmpPose;
-    
-    SwerveAutoBuilder cmd = new SwerveAutoBuilder(pose::getRobotPose, pose::resetPose, SwerveConfig.SWERVE_KINEMATICS,
+    mSwerve = swerve;
+    mEventMap = eventMap;
+    mTraj = traj;
+    mPoseEstimator = poseEstimator;
+
+    SwerveAutoBuilder cmd = new SwerveAutoBuilder(mPoseEstimator::getRobotPose, mPoseEstimator::resetPose, SwerveConfig.SWERVE_KINEMATICS,
       new PIDConstants(7, 0.5, 0),
       new PIDConstants(9, 0.5, 0),
-      swerve::setModuleStates, eventMap, true, swerve
+      mSwerve::setModuleStates, mEventMap, true, mSwerve
     );
 
-    finalCMD = cmd.fullAuto(traj);
+    mFinalCMD = cmd.fullAuto(mTraj);
     
-    addRequirements(swerve);
+    addRequirements(mSwerve);
 
   }
   @Override
   public void initialize() {
 
-    SwerveSubsystem.autoGyroInitValue = traj.getInitialHolonomicPose().getRotation().getDegrees();
+    SwerveSubsystem.mAutoGyroInitValue = mTraj.getInitialHolonomicPose().getRotation().getDegrees();
 
-    finalCMD.schedule();
-    SmartDashboard.putBoolean("pathFinished", finalCMD.isFinished());
-    SmartDashboard.putBoolean("pathSchedules", finalCMD.isScheduled());
+    mFinalCMD.schedule();
+    SmartDashboard.putBoolean("pathFinished", mFinalCMD.isFinished());
+    SmartDashboard.putBoolean("pathSchedules", mFinalCMD.isScheduled());
   }
   @Override
   public void execute(){
@@ -64,6 +64,6 @@ public class FollowPath extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished(){
-    return finalCMD.isFinished();
+    return mFinalCMD.isFinished();
   }
 }

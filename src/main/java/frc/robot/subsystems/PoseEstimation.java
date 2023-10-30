@@ -20,36 +20,35 @@ import frc.robot.constants.VisionConstants;
 
 
 public class PoseEstimation extends SubsystemBase{
-  private  Limelight limelight;
-  private  SwerveSubsystem swerve;
-  private  SwerveDrivePoseEstimator poseEstimator;
-  private  Field2d field = new Field2d();
+  private  Limelight mLimelight;
+  private  SwerveSubsystem mSwerve;
+  private  SwerveDrivePoseEstimator mPoseEstimator;
+  private  Field2d mField = new Field2d();
 
-  private boolean hasUpdated = false; 
+  private boolean mHasUpdated = false; 
 
-  public PoseEstimation(Limelight lime, SwerveSubsystem swerveSubsystem) {
-    limelight = lime;
-    swerve = swerveSubsystem;
-    
+  public PoseEstimation(Limelight lime, SwerveSubsystem swerve) {
+    mLimelight = lime;
+    mSwerve = swerve;
 
-    poseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.SWERVE_KINEMATICS,
-        swerve.getRotation2d(),
-        swerve.getModulePositions(),
-        swerve.getRobotPose(),
+    mPoseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.SWERVE_KINEMATICS,
+        mSwerve.getRotation2d(),
+        mSwerve.getModulePositions(),
+        mSwerve.getRobotPose(),
         VisionConstants.kStateStdDevs,
         VisionConstants.kVisionMeasurementStdDevs);
-    field = new Field2d();
-    SmartDashboard.putData("Field", field);
+    mField = new Field2d();
+    SmartDashboard.putData("Field", mField);
   }
   
   @Override
   public void periodic() {
-    poseEstimator.update(swerve.getRotation2d(), swerve.getModulePositions());
+    mPoseEstimator.update(mSwerve.getRotation2d(), mSwerve.getModulePositions());
     updateVision();
 
-    Pose2d pose = poseEstimator.getEstimatedPosition();
-    field.setRobotPose(pose);
-    SmartDashboard.putData("Field", field);
+    Pose2d pose = mPoseEstimator.getEstimatedPosition();
+    mField.setRobotPose(pose);
+    SmartDashboard.putData("Field", mField);
 
     if (CompConstants.DEBUG_MODE) {
       SmartDashboard.putNumber("PoseEst X", pose.getX());
@@ -60,18 +59,18 @@ public class PoseEstimation extends SubsystemBase{
   }
 
   public void updateVision() {
-    Optional<EstimatedRobotPose> pose = limelight.getEstimatedGlobalPose(poseEstimator.getEstimatedPosition());
+    Optional<EstimatedRobotPose> pose = mLimelight.getEstimatedGlobalPose(mPoseEstimator.getEstimatedPosition());
     if (pose.isPresent()) {
       EstimatedRobotPose camPose = pose.get();
       if (isValidPose(camPose)) {
-        poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
+        mPoseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
                                             camPose.timestampSeconds);
         SmartDashboard.putBoolean("isUpdatingVision", true);
-        hasUpdated = true;
+        mHasUpdated = true;
         return;
       }
     }
-    SmartDashboard.putBoolean("hasUpdatedVision", hasUpdated);
+    SmartDashboard.putBoolean("hasUpdatedVision", mHasUpdated);
     SmartDashboard.putBoolean("isUpdatingVision", false);
 
   }
@@ -86,15 +85,15 @@ public class PoseEstimation extends SubsystemBase{
   }
 
   public Pose2d getRobotPose() {
-    return poseEstimator.getEstimatedPosition();
+    return mPoseEstimator.getEstimatedPosition();
     
   }
 
   public void resetPose() {
-    poseEstimator.resetPosition(swerve.getRotation2d(), swerve.getModulePositions(), new Pose2d());
+    mPoseEstimator.resetPosition(mSwerve.getRotation2d(), mSwerve.getModulePositions(), new Pose2d());
   }
   public void resetPose(Pose2d pose) {
-    poseEstimator.resetPosition(swerve.getRotation2d(), swerve.getModulePositions(), pose);
+    mPoseEstimator.resetPosition(mSwerve.getRotation2d(), mSwerve.getModulePositions(), pose);
   }
 
 }

@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.IntakeConstants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -12,16 +13,17 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final CANSparkMax intakeMotor = new CANSparkMax(29,MotorType.kBrushless);
+  private final CANSparkMax mIntakeMotor;
 
   public IntakeSubsystem() {
-    intakeMotor.setIdleMode(IdleMode.kBrake);
-    intakeMotor.burnFlash();
+    mIntakeMotor = new CANSparkMax(IntakeConstants.INTAKE_ID,MotorType.kBrushless);
+    mIntakeMotor.setIdleMode(IdleMode.kBrake);
+    mIntakeMotor.burnFlash();
   
   }
   public void runIntake(double percentOutput){
     
-   intakeMotor.set(percentOutput);
+   mIntakeMotor.set(percentOutput);
 
   }
 

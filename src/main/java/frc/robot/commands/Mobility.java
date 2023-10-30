@@ -13,10 +13,10 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 public class Mobility extends CommandBase {
   /** Creates a new ScoreMobility. */
-  private final SequentialCommandGroup commands;
+  private final SequentialCommandGroup mCommands;
   public Mobility(SwerveSubsystem swerve) {
     addRequirements(swerve);
-    commands = new SequentialCommandGroup(
+    mCommands = new SequentialCommandGroup(
       new RunCommand(() -> swerve.setMotors(-1, 0, 0)).withTimeout(4.2),
       new RunCommand(() -> swerve.setMotors(0, 0, 0))
     );
@@ -26,12 +26,12 @@ public class Mobility extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    commands.schedule();
+    mCommands.schedule();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return commands.isFinished();
+    return mCommands.isFinished();
   }
 }

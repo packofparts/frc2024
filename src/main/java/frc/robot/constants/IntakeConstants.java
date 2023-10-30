@@ -11,7 +11,7 @@ public class IntakeConstants {
     private IntakeConstants(){
         throw new IllegalStateException("Constants Class");
       }
-    public static final int INTAKE_ID = 6;
+    public static final int INTAKE_ID = 29;
     public static final TalonFXInvertType kIntakeInverted = TalonFXInvertType.Clockwise;
     
     public static final double INPUT_DEADZONE = 0.05;
