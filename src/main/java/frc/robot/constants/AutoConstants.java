@@ -26,7 +26,7 @@ public class AutoConstants {
     public static final PathPlannerTrajectory kStation2PieceBlue = PathPlanner.loadPath("Station2PieceBlue", kDefaultSpeedConstraints);
     public static final PathPlannerTrajectory kStation2PieceRed = PathPlanner.loadPath("Station2PieceRed", kDefaultSpeedConstraints);
 
-    public static final PathPlannerTrajectory kMoveOneMeter = PathPlanner.loadPath("MoveOneMeters", kDefaultSpeedConstraints);
+    public static final PathPlannerTrajectory kMoveOneMeter = PathPlanner.loadPath("MoveOneMeter", kDefaultSpeedConstraints);
 
     public static Map<String, Command> emptyMap = new HashMap<>();
     public static Map<String, Command> eventMap = new HashMap<>();
