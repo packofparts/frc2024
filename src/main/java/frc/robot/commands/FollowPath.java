@@ -14,11 +14,11 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
 public class FollowPath extends CommandBase {
   /** Creates a new TGWithPPlib. */
-  private SwerveSubsystem swerve;
-  private Command finalCMD;
-  private PathPlannerTrajectory traj;
-  private Map<String,Command> eventMap;
-  private PoseEstimation pose;
+  private final SwerveSubsystem swerve;
+  private final Command finalCMD;
+  private final PathPlannerTrajectory traj;
+  private final Map<String,Command> eventMap;
+  private final PoseEstimation pose;
   
   public FollowPath(SwerveSubsystem tmpSwerve, PathPlannerTrajectory tmpTraj, Map<String,Command> tmpEventMap, PoseEstimation tmpPose) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -27,19 +27,19 @@ public class FollowPath extends CommandBase {
     traj = tmpTraj;
     pose = tmpPose;
     
+    SwerveAutoBuilder cmd = new SwerveAutoBuilder(pose::getRobotPose, pose::resetPose, SwerveConfig.SWERVE_KINEMATICS,
+      new PIDConstants(7, 0.5, 0),
+      new PIDConstants(9, 0.5, 0),
+      swerve::setModuleStates, eventMap, true, swerve
+    );
+
+    finalCMD = cmd.fullAuto(traj);
+    
     addRequirements(swerve);
 
   }
   @Override
   public void initialize() {
-
-    SwerveAutoBuilder cmd = new SwerveAutoBuilder(pose::getRobotPose, pose::resetPose, SwerveConfig.SWERVE_KINEMATICS,
-            new PIDConstants(7, 0.5, 0), //old .4
-            new PIDConstants(9, 0.5, 0), //old .5
-            swerve::setModuleStates, eventMap, true, swerve
-        );
-    
-    finalCMD = cmd.fullAuto(traj);
 
     SwerveSubsystem.autoGyroInitValue = traj.getInitialHolonomicPose().getRotation().getDegrees();
 
