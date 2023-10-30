@@ -16,4 +16,8 @@ public class IntakeConstants {
     
     public static final double INPUT_DEADZONE = 0.05;
     public static final double STALL_SPEED = 0.0;
+
+    public static final double TELE_MAX_IN_SPEED_PERCENT = 0.75;
+    public static final double TELE_MAX_OUT_SPEED_PERCENT = 0.9;
+
 }

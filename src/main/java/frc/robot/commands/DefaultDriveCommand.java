@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.constants.JoystickConstants;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -34,17 +35,17 @@ public class DefaultDriveCommand extends CommandBase {
     if (Input.getPrecisionToggle()){mIsPrecisionToggle = !mIsPrecisionToggle;}
 
     if (mIsPrecisionToggle){
-      x = x/3;
-      y = y/3;
-      rot = rot/6;
+      x = x/JoystickConstants.DRIVE_PRECISION_X_DESATURATION_FACTOR;
+      y = y/JoystickConstants.DRIVE_PRECISION_Y_DESATURATION_FACTOR;
+      rot = rot/JoystickConstants.DRIVE_PRECISION_ROT_DESATURATION_FACTOR;
 
-      x = Math.abs(x) > 0.04 ? x : 0.0;
-      y = Math.abs(y) > 0.04 ? y :0.0;
-      rot = Math.abs(rot) > 0.02 ? rot : 0.0;
+      x = Math.abs(x) > JoystickConstants.DRIVE_PRECISION_X_DEADZONE ? x : 0.0;
+      y = Math.abs(y) > JoystickConstants.DRIVE_PRECISION_Y_DEADZONE ? y :0.0;
+      rot = Math.abs(rot) > JoystickConstants.DRIVE_PRECISION_ROT_DEADZONE ? rot : 0.0;
     } else{
-      x = Math.abs(x) > 0.10 ? x : 0.0;
-      y = Math.abs(y) > 0.10 ? y : 0.0;
-      rot = Math.abs(rot) > 0.15 ? rot : 0.0;
+      x = Math.abs(x) > JoystickConstants.DRIVE_REG_X_DEADZONE ? x : 0.0;
+      y = Math.abs(y) > JoystickConstants.DRIVE_REG_Y_DEADZONE ? y : 0.0;
+      rot = Math.abs(rot) > JoystickConstants.DRIVE_REG_ROT_DEADZONE ? rot : 0.0;
     }
     
     x *= SwerveConstants.TELE_MAX_SPEED_MPS;
@@ -52,12 +53,6 @@ public class DefaultDriveCommand extends CommandBase {
     rot *= SwerveConstants.TELE_MAX_ROT_SPEED_RAD_SEC;
     
     mSwerve.setMotors(x, y, rot, true);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    // For now we are keeping this empty to handle interruptions in the future
   }
 
   // Returns true when the command should end.

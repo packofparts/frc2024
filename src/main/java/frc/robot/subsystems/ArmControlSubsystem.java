@@ -70,7 +70,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   public ArmControlSubsystem() {
 
     mPivotPID = new PIDController(1.4, 0, 0);
-    mPivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_DEG);
+    mPivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_RAD);
 
     mExtensionPID = new PIDController(0.19, 0, 0);
     mExtensionPID.setTolerance(ArmConstants.RESTING_EXT_TOLERANCE_IN);
@@ -228,12 +228,12 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
   public boolean atAngleSetpoint(){
-    return Math.abs(mDesiredPivotRotation - mCurrentPivotRotation) < Units.degreesToRadians(4);
+    return Math.abs(mDesiredPivotRotation - mCurrentPivotRotation) < ArmConstants.ACTIVE_PIV_TOLERANCE_RAD;
   }
 
 
   public boolean atTelescopeSetpoint(){
-    return Math.abs(mDesiredExtensionDistance - mCurrentExtensionDistance) < 0.5;
+    return Math.abs(mDesiredExtensionDistance - mCurrentExtensionDistance) < ArmConstants.ACTIVE_EXT_TOLERANCE_IN;
   }
 
 

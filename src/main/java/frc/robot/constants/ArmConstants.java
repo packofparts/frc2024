@@ -89,6 +89,12 @@ public class ArmConstants {
     public static final boolean RIGHT_PIV_MOTOR_INVERTED = false;
 
     //Tolerances
-    public static final double RESTING_PIV_TOLERANCE_DEG = Units.degreesToRadians(0);
-    public static final double RESTING_EXT_TOLERANCE_IN = .2;
+    public static final double RESTING_PIV_TOLERANCE_RAD = Units.degreesToRadians(0);
+    public static final double RESTING_EXT_TOLERANCE_IN = 0.2;
+
+    public static final double ACTIVE_PIV_TOLERANCE_RAD = Units.degreesToRadians(4);
+    public static final double ACTIVE_EXT_TOLERANCE_IN = 0.5;
+
+    public static final double MAX_PIV_OUTPUT_PERCENT = 0.55;
+
 }
