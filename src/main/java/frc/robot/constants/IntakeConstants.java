@@ -20,4 +20,7 @@ public class IntakeConstants {
     public static final double TELE_MAX_IN_SPEED_PERCENT = 0.75;
     public static final double TELE_MAX_OUT_SPEED_PERCENT = 0.9;
 
+    public static final double OUTTAKE_TIME_SCORE_CONE_SEC = 3;
+    public static final double OUTTAKE_VEL_SCORE_CONE_PERCENT = -1;
+
 }

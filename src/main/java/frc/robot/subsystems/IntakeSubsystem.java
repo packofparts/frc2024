@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.IntakeConstants;
 import com.revrobotics.CANSparkMax;
@@ -21,9 +25,13 @@ public class IntakeSubsystem extends SubsystemBase {
   
   }
   public void runIntake(double percentOutput){
-    
    mIntakeMotor.set(percentOutput);
-
   }
+
+  public Command timedIntake(double percentOutput,double timeSec){
+    return(new SequentialCommandGroup(
+      new RunCommand(()->runIntake(percentOutput)).withTimeout(timeSec), 
+      new InstantCommand(()->runIntake(0))));
+    }
 
 }
