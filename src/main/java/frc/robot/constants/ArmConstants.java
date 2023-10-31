@@ -94,6 +94,14 @@ public class ArmConstants {
     public static final double ACTIVE_PIV_TOLERANCE_RAD = Units.degreesToRadians(4);
     public static final double ACTIVE_EXT_TOLERANCE_IN = 0.5;
 
-    public static final double MAX_PIV_OUTPUT_PERCENT = 0.55;
+    public static final double EXT_FRICTION_COEFF = .005;
+    public static final double EXT_FRICTION_ACTIVATION_THRESH = .14;
 
+    public static final double EXT_MAX_SPEED_CLAMP_PERCENT = 0.8;
+    public static final double PIV_MAX_SPEED_CLAMP_PERCENT = 0.8;
+
+    public static final double EXT_MAX_PID_CONTRIBUTION_PERCENT = 0.5;
+    public static final double PIV_MAX_PID_CONTRIBUTION_PERCENT = 0.55;
+
+    public static final double PIV_MAX_KG_CONTRIBUTION_PERCENT = 0.3;
 }

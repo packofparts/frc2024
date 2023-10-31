@@ -175,11 +175,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     double pivotPIDOutput = mPivotPID.calculate(mCurrentPivotRotation, mDesiredPivotRotation);
 
     //Desaturating PID output
-    if(pivotPIDOutput > 0.55){
-      pivotPIDOutput = 0.55;
-    }else if(pivotPIDOutput < -0.55){
-      pivotPIDOutput = -0.55;
-    }
+    pivotPIDOutput = MathUtil.clamp(pivotPIDOutput, -ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT, ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT);
 
     if (CompConstants.DEBUG_MODE) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
     
@@ -187,11 +183,13 @@ public class ArmControlSubsystem extends SubsystemBase {
       pivotPIDOutput = mPivotRateLimiter.calculate(pivotPIDOutput);
     }
     if(ArmConstants.ENABLE_FEEDFORWARD){
-      pivotPIDOutput += ArmConstants.KG*Math.cos(getCurrentPivotRotation(true)-(Math.PI/2));
+      double kgOutPut = ArmConstants.KG*Math.cos(getCurrentPivotRotation(true)-(Math.PI/2));
+      //Desaturating kG output
+      pivotPIDOutput += MathUtil.clamp(kgOutPut, -ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT, ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
     }
 
-    mLeftPivotController.set(pivotPIDOutput);
-    mRightPivotController.set(pivotPIDOutput);
+    mLeftPivotController.set(MathUtil.clamp(pivotPIDOutput,0,ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
+    mRightPivotController.set(MathUtil.clamp(pivotPIDOutput,0,ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
   }
 
   private void extensionPeriodic(){
@@ -200,16 +198,12 @@ public class ArmControlSubsystem extends SubsystemBase {
     double difference = mDesiredExtensionDistance - mCurrentExtensionDistance;
 
     //Desaturating PID output
-    if(extensionPIDOutput > .5){
-      extensionPIDOutput = .5;
-    }else if (extensionPIDOutput < -0.5){
-      extensionPIDOutput = -.5;
-    }
+    extensionPIDOutput = MathUtil.clamp(extensionPIDOutput, -ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT, ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT);
 
     //This is for handling the friction in the extension
-    double offset = .005 * (difference > 0 ? 1 : -1);
-    if (Math.abs(difference) > .14){
-      mExtensionController.set(offset + extensionPIDOutput);
+    double offset = ArmConstants.EXT_FRICTION_COEFF * (difference > 0 ? 1 : -1);
+    if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH){
+      mExtensionController.set(MathUtil.clamp(offset + extensionPIDOutput, 0, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
     }else{
       mExtensionController.set(0);
     }
