@@ -26,7 +26,6 @@ import frc.robot.constants.ArmConstants.ArmState;
  */
 public class Robot extends TimedRobot {
 
-  private Command mAutonomousCommand;
   private final SendableChooser<Command> mPathSelector = new SendableChooser<>();
 
   /**
@@ -115,8 +114,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    mAutonomousCommand = mPathSelector.getSelected();
-    mAutonomousCommand.schedule();
+    mPathSelector.getSelected().schedule();
 
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
@@ -133,8 +131,8 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (mAutonomousCommand != null) {
-      mAutonomousCommand.cancel();
+    if (mPathSelector.getSelected() != null) {
+      mPathSelector.getSelected().cancel();
     }
   }
 
