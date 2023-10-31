@@ -43,8 +43,8 @@ public class Robot extends TimedRobot {
         new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
         new FollowPath(
           robotContainer.getSwerveSubsystem(), 
-          AutoConstants.kStation2PieceBlue,
-          AutoConstants.eventMap,
+          AutoConstants.STATION_2_PIECE_BLUE_PATH,
+          AutoConstants.EVENT_MAP,
           robotContainer.getPoseEstimator()
         )
         
@@ -56,8 +56,8 @@ public class Robot extends TimedRobot {
     new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
     new FollowPath(
       robotContainer.getSwerveSubsystem(), 
-      AutoConstants.kStation2PieceRed,
-      AutoConstants.eventMap,
+      AutoConstants.STATION_2_PIECE_RED_PATH,
+      AutoConstants.EVENT_MAP,
       robotContainer.getPoseEstimator()
     )
     
@@ -77,8 +77,8 @@ public class Robot extends TimedRobot {
 
     mPathSelector.addOption("OneMeter", new FollowPath(
       robotContainer.getSwerveSubsystem(), 
-      AutoConstants.kMoveOneMeter,
-      AutoConstants.emptyMap,
+      AutoConstants.MOVE_ONE_METER,
+      AutoConstants.EMPTY_MAP,
       robotContainer.getPoseEstimator()
     ));
 

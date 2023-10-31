@@ -21,15 +21,15 @@ public class AutoConstants {
         throw new IllegalStateException("Constants Class");
     }
 
-    public static final PathConstraints kDefaultSpeedConstraints = new PathConstraints(3, .75);
+    public static final PathConstraints DEFAULT_SPEED_CONSTRAINTS = new PathConstraints(3, .75);
 
-    public static final PathPlannerTrajectory kStation2PieceBlue = PathPlanner.loadPath("Station2PieceBlue", kDefaultSpeedConstraints);
-    public static final PathPlannerTrajectory kStation2PieceRed = PathPlanner.loadPath("Station2PieceRed", kDefaultSpeedConstraints);
+    public static final PathPlannerTrajectory STATION_2_PIECE_BLUE_PATH = PathPlanner.loadPath("Station2PieceBlue", DEFAULT_SPEED_CONSTRAINTS);
+    public static final PathPlannerTrajectory STATION_2_PIECE_RED_PATH = PathPlanner.loadPath("Station2PieceRed", DEFAULT_SPEED_CONSTRAINTS);
 
-    public static final PathPlannerTrajectory kMoveOneMeter = PathPlanner.loadPath("MoveOneMeter", kDefaultSpeedConstraints);
+    public static final PathPlannerTrajectory MOVE_ONE_METER = PathPlanner.loadPath("MoveOneMeter", DEFAULT_SPEED_CONSTRAINTS);
 
-    public static Map<String, Command> emptyMap = new HashMap<>();
-    public static Map<String, Command> eventMap = new HashMap<>();
+    public static final Map<String, Command> EMPTY_MAP = new HashMap<>();
+    public static final Map<String, Command> EVENT_MAP = new HashMap<>();
 
     //Determines if event map should be populated
     public static final boolean DO_ACTION = true;
@@ -40,43 +40,26 @@ public class AutoConstants {
     public static void populateHashMaps(ArmControlSubsystem arm, IntakeSubsystem intake){
         
         if (DO_ACTION){  
-            eventMap.put("stow_arm",new SequentialCommandGroup(
+            EVENT_MAP.put("stow_arm",new SequentialCommandGroup(
                 arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
                 arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)
               ));
-
-            eventMap.put("stow_cone",new SequentialCommandGroup(
+            EVENT_MAP.put("stow_cone",new SequentialCommandGroup(
                 arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
                 arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)
               ));
-
-            eventMap.put("ground_pickup_cone", new SequentialCommandGroup(
+            EVENT_MAP.put("ground_pickup_cone", new SequentialCommandGroup(
                arm.waitUntilSpPivot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),
                arm.waitUntilSpTelescope(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),
                 new RunCommand(()->intake.runIntake(1)).withTimeout(3)
             ));
-            eventMap.put("score_cone_low", new ScoreCone(arm, intake, ArmState.LOWER_NODE_CONE));
+            EVENT_MAP.put("score_cone_low", new ScoreCone(arm, intake, ArmState.LOWER_NODE_CONE));
 
         }else{
-            emptyMap.put("angle_N3", new WaitCommand(WAIT_TIME));
-            emptyMap.put("angle_N2", new WaitCommand(WAIT_TIME));
-            eventMap.put("angle_N1", new WaitCommand(WAIT_TIME));
-            eventMap.put("angle_N0", new WaitCommand(WAIT_TIME));
-            eventMap.put("angle_neutral",new WaitCommand(WAIT_TIME));
-
-            eventMap.put("telescope_N3", new WaitCommand(WAIT_TIME));
-            eventMap.put("telescope_N2", new WaitCommand(WAIT_TIME));
-            eventMap.put("telescope_N1", new WaitCommand(WAIT_TIME));
-            eventMap.put("telescope_N0", new WaitCommand(WAIT_TIME));
-            eventMap.put("telescope_neutral", new WaitCommand(WAIT_TIME));
-
-            eventMap.put("score_cone",  new WaitCommand(WAIT_TIME));
-            eventMap.put("drop_cube",  new WaitCommand(WAIT_TIME));
-            eventMap.put("intake_cube",  new WaitCommand(WAIT_TIME));
-
-            eventMap.put("auto_balance", new WaitCommand(WAIT_TIME));
-            eventMap.put("align_cube",  new WaitCommand(WAIT_TIME));
-            eventMap.put("align_tag", new WaitCommand(WAIT_TIME));
+            EVENT_MAP.put("stow_arm",new WaitCommand(WAIT_TIME));
+            EVENT_MAP.put("stow_cone",new WaitCommand(WAIT_TIME));
+            EVENT_MAP.put("ground_pickup_cone", new WaitCommand(WAIT_TIME));
+            EVENT_MAP.put("score_cone_low", new WaitCommand(WAIT_TIME));
         }
     }
 
