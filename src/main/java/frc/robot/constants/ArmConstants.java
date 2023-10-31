@@ -49,7 +49,6 @@ public class ArmConstants {
     public static final double EXTENSION_ROTATION_TO_INCHES =  18.5/7.01;
     
 
-
     // Offset For Pivot
     public static final double PIV_INIT_OFFSET_ROT = .032;
     
