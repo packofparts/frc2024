@@ -220,7 +220,7 @@ public class SwerveModule {
      * @return steering PID controller.
      */
     public PIDController getPIDController() {
-        return this.mRotPID;
+        return mRotPID;
     }
 
     /**

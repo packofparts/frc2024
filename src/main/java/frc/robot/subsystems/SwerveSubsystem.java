@@ -166,7 +166,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveModuleState[] moduleStates = mKinematics.toSwerveModuleStates(chassisSpeeds);
 
 
-    this.setModuleStates(moduleStates);
+    setModuleStates(moduleStates);
 
   }
 
@@ -175,7 +175,7 @@ public class SwerveSubsystem extends SubsystemBase {
     SwerveModuleState[] moduleStates = mKinematics.toSwerveModuleStates(chassisSpeeds);
 
 
-    this.setModuleStates(moduleStates);
+    setModuleStates(moduleStates);
   }
 
   /**

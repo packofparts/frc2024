@@ -21,13 +21,13 @@ public class DefaultIntakeCommand extends CommandBase {
   @Override
   public void execute() {
         // Intake Cone Outtake Cube
-        if (Input.getRightTrigger() > IntakeConstants.INPUT_DEADZONE) {this.mIntake.runIntake(Input.getRightTrigger()*IntakeConstants.TELE_MAX_IN_SPEED_PERCENT);}
+        if (Input.getRightTrigger() > IntakeConstants.INPUT_DEADZONE) {mIntake.runIntake(Input.getRightTrigger()*IntakeConstants.TELE_MAX_IN_SPEED_PERCENT);}
     
         // Intake Cube Outtake Cone
-        if (Input.getLeftTrigger()>IntakeConstants.INPUT_DEADZONE){this.mIntake.runIntake(-Input.getLeftTrigger()*IntakeConstants.TELE_MAX_OUT_SPEED_PERCENT);}
+        if (Input.getLeftTrigger()>IntakeConstants.INPUT_DEADZONE){mIntake.runIntake(-Input.getLeftTrigger()*IntakeConstants.TELE_MAX_OUT_SPEED_PERCENT);}
     
         //Set Intake to Stall Speed if Neither
-        if (Input.getLeftTrigger()<IntakeConstants.INPUT_DEADZONE && Input.getRightTrigger()<IntakeConstants.INPUT_DEADZONE){this.mIntake.runIntake(IntakeConstants.STALL_SPEED);}
+        if (Input.getLeftTrigger()<IntakeConstants.INPUT_DEADZONE && Input.getRightTrigger()<IntakeConstants.INPUT_DEADZONE){mIntake.runIntake(IntakeConstants.STALL_SPEED);}
   }
 
   // Returns true when the command should end.
