@@ -20,10 +20,10 @@ import frc.robot.constants.VisionConstants;
 
 
 public class PoseEstimation extends SubsystemBase{
-  private  Limelight mLimelight;
-  private  SwerveSubsystem mSwerve;
-  private  SwerveDrivePoseEstimator mPoseEstimator;
-  private  Field2d mField = new Field2d();
+  private final Limelight mLimelight;
+  private final SwerveSubsystem mSwerve;
+  private final SwerveDrivePoseEstimator mPoseEstimator;
+  private final Field2d mField = new Field2d();
 
   private boolean mHasUpdated = false; 
 
@@ -37,7 +37,6 @@ public class PoseEstimation extends SubsystemBase{
         mSwerve.getRobotPose(),
         VisionConstants.kStateStdDevs,
         VisionConstants.kVisionMeasurementStdDevs);
-    mField = new Field2d();
     SmartDashboard.putData("Field", mField);
   }
   
