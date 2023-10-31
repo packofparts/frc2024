@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.FollowPath;
 import frc.robot.commands.Mobility;
@@ -26,7 +27,7 @@ import frc.robot.constants.ArmConstants.ArmState;
 public class Robot extends TimedRobot {
 
   private Command mAutonomousCommand;
-  private SendableChooser<Command> mPathSelector = new SendableChooser<>();
+  private final SendableChooser<Command> mPathSelector = new SendableChooser<>();
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,7 +39,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     RobotContainer robotContainer = new RobotContainer();
-    mPathSelector.addOption("NONE", null);
     mPathSelector.addOption("Station2PieceBlue", 
         new SequentialCommandGroup(
         new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE),
@@ -85,6 +85,8 @@ public class Robot extends TimedRobot {
 
     mPathSelector.addOption("MobilityOnly", new Mobility(robotContainer.swerveSubsystem));
     
+    mPathSelector.setDefaultOption("None", new PrintCommand("No Auto :( "));
+    
     SmartDashboard.putData("PP Autos", mPathSelector);
   }
 
@@ -113,14 +115,9 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    mAutonomousCommand = mPathSelector.getSelected();
+    mAutonomousCommand.schedule();
 
-    if(mPathSelector.getSelected() != null){
-      mAutonomousCommand = mPathSelector.getSelected();
-    }
-    // schedule the autonomous command (example)
-    if (mAutonomousCommand != null) {
-      mAutonomousCommand.schedule();
-    }
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 
