@@ -15,7 +15,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class ScoreCone extends CommandBase {
   /** Creates a new ScoreConeHighNode. */
 
-  private SequentialCommandGroup mPath;
+  private final SequentialCommandGroup mPath;
   
   public ScoreCone(ArmControlSubsystem arm, IntakeSubsystem intake, ArmState state) {
     mPath = new SequentialCommandGroup(
