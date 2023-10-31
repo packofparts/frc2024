@@ -13,9 +13,9 @@ import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class PIDTuning extends CommandBase {
-  private SwerveSubsystem mSwerve;
-  private SwerveModule mCurModule;
-  private PIDController mCurModPID;
+  private final SwerveSubsystem mSwerve;
+  private final SwerveModule mCurModule;
+  private final PIDController mCurModPID;
   
   private double mSetPoint = 0;
   private boolean mToggled = false;
