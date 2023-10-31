@@ -31,15 +31,15 @@ public class DefaultArmCommand extends CommandBase {
   void handleInput(){
 
     if(Input.getLeftStickY() > JoystickConstants.PIVOT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredPivotRotation(.05 * (Input.getLeftStickY()-0.15));
+      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DESATURATION * (Input.getLeftStickY()-JoystickConstants.PIVOT_INPUT_DEADZONE));
     }else if(Input.getLeftStickY() < -JoystickConstants.PIVOT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredPivotRotation(.05 * (Input.getLeftStickY()+0.15));
+      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DEADZONE * (Input.getLeftStickY()+JoystickConstants.PIVOT_INPUT_DEADZONE));
     }
 
     if(Input.getRightStickY() > JoystickConstants.EXT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() - 0.05));
+      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION * (Input.getRightStickY() - JoystickConstants.EXT_INPUT_DEADZONE));
     }else if(Input.getRightStickY() < -JoystickConstants.EXT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredExtension(.17 * (Input.getRightStickY() + 0.05));
+      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION * (Input.getRightStickY() + JoystickConstants.EXT_INPUT_DEADZONE));
     }
     
     

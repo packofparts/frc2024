@@ -35,9 +35,9 @@ public class DefaultDriveCommand extends CommandBase {
     if (Input.getPrecisionToggle()){mIsPrecisionToggle = !mIsPrecisionToggle;}
 
     if (mIsPrecisionToggle){
-      x = x/JoystickConstants.DRIVE_PRECISION_X_DESATURATION_FACTOR;
-      y = y/JoystickConstants.DRIVE_PRECISION_Y_DESATURATION_FACTOR;
-      rot = rot/JoystickConstants.DRIVE_PRECISION_ROT_DESATURATION_FACTOR;
+      x = x/JoystickConstants.DRIVE_PRECISION_X_DESATURATION;
+      y = y/JoystickConstants.DRIVE_PRECISION_Y_DESATURATION;
+      rot = rot/JoystickConstants.DRIVE_PRECISION_ROT_DESATURATION;
 
       x = Math.abs(x) > JoystickConstants.DRIVE_PRECISION_X_DEADZONE ? x : 0.0;
       y = Math.abs(y) > JoystickConstants.DRIVE_PRECISION_Y_DEADZONE ? y :0.0;
