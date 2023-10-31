@@ -32,14 +32,14 @@ public class AutoConstants {
     public static final Map<String, Command> EVENT_MAP = new HashMap<>();
 
     //Determines if event map should be populated
-    public static final boolean DO_ACTION = true;
+    public static final boolean DO_SUBSYSTEM_COMMANDS = true;
 
     //If not populated determines the wait times of former events
-    public static final double WAIT_TIME = 1;
+    public static final double TIME_BETWEEN_EVENTS_SEC = 1;
 
     public static void populateHashMaps(ArmControlSubsystem arm, IntakeSubsystem intake){
         
-        if (DO_ACTION){  
+        if (DO_SUBSYSTEM_COMMANDS){  
             EVENT_MAP.put("stow_arm",new SequentialCommandGroup(
                 arm.waitUntilSpTelescope(ArmConstants.ArmState.STOW.extentionDistIn),
                 arm.waitUntilSpPivot(ArmConstants.ArmState.STOW.pivotAngleRad)
@@ -56,10 +56,10 @@ public class AutoConstants {
             EVENT_MAP.put("score_cone_low", new ScoreCone(arm, intake, ArmState.LOWER_NODE_CONE));
 
         }else{
-            EVENT_MAP.put("stow_arm",new WaitCommand(WAIT_TIME));
-            EVENT_MAP.put("stow_cone",new WaitCommand(WAIT_TIME));
-            EVENT_MAP.put("ground_pickup_cone", new WaitCommand(WAIT_TIME));
-            EVENT_MAP.put("score_cone_low", new WaitCommand(WAIT_TIME));
+            EVENT_MAP.put("stow_arm",new WaitCommand(TIME_BETWEEN_EVENTS_SEC));
+            EVENT_MAP.put("stow_cone",new WaitCommand(TIME_BETWEEN_EVENTS_SEC));
+            EVENT_MAP.put("ground_pickup_cone", new WaitCommand(TIME_BETWEEN_EVENTS_SEC));
+            EVENT_MAP.put("score_cone_low", new WaitCommand(TIME_BETWEEN_EVENTS_SEC));
         }
     }
 
