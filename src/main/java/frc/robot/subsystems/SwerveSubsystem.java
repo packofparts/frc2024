@@ -28,8 +28,6 @@ public class SwerveSubsystem extends SubsystemBase {
   private final AHRS mNavX;
 
   private final SwerveModule[] mModules;
-  public static double mAutoGyroInitValue = 0;
-
 
   public SwerveSubsystem() {
     // Populating Instance Variables
@@ -49,32 +47,24 @@ public class SwerveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     mOdometry.update(getRotation2d(), getModulePositions());
     if (CompConstants.DEBUG_MODE){
-
-
-      SmartDashboard.putNumber("FLPIDOutput", mModules[0].mPIDOutput);
-      SmartDashboard.putNumber("FRPIDOutput", mModules[1].mPIDOutput);
-      SmartDashboard.putNumber("BLPIDOutput", mModules[2].mPIDOutput);
-      SmartDashboard.putNumber("BRPIDOutput", mModules[3].mPIDOutput);
+      SmartDashboard.putNumber("FLPIDOutput", mModules[0].getPIDOutputRot());
+      SmartDashboard.putNumber("FRPIDOutput", mModules[1].getPIDOutputRot());
+      SmartDashboard.putNumber("BLPIDOutput", mModules[2].getPIDOutputRot());
+      SmartDashboard.putNumber("BRPIDOutput", mModules[3].getPIDOutputRot());
 
       SmartDashboard.putNumber("XPos", mOdometry.getPoseMeters().getX());
       SmartDashboard.putNumber("YPos", mOdometry.getPoseMeters().getY());
       SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
 
-
-
+      for (int i = 0; i < mModules.length; i++){
+        SmartDashboard.putNumber("AppliedOutput"+i, mModules[i].getAppliedOutput());
+        SmartDashboard.putNumber("DesiredStateAngleDeg"+i, mModules[i].getDesiredRadiansRot()/Math.PI*180);
+        SmartDashboard.putNumber("RotRelativePosDeg"+i, mModules[i].getRotRelativePosition()*360);
+        SmartDashboard.putNumber("AbsEncoderDeg"+i, mModules[i].getRotPosition()/Math.PI*180);
+        SmartDashboard.putNumber("SpeedMeters"+i, mModules[i].getTransVelocity());
+        SmartDashboard.putNumber("PosMeters"+i, mModules[i].getTransPosition());
+      }
     }
-
-    for (int i = 0; i < mModules.length; i++){
-      SmartDashboard.putNumber("AppliedOutput"+i, mModules[i].getAppliedOutput());
-      SmartDashboard.putNumber("DesiredStateAngleDeg"+i, mModules[i].mDesiredRadians/Math.PI*180);
-      SmartDashboard.putNumber("RotRelativePosDeg"+i, mModules[i].getRotRelativePosition()*360);
-      SmartDashboard.putNumber("AbsEncoderDeg"+i, mModules[i].getRotPosition()/Math.PI*180);
-      SmartDashboard.putNumber("SpeedMeters"+i, mModules[i].getTransVelocity());
-      SmartDashboard.putNumber("PosMeters"+i, mModules[i].getTransPosition());
-    }
-
-
-
   }
 
   /**

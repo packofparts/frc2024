@@ -31,8 +31,8 @@ public class SwerveModule {
     private final RelativeEncoder mRotRelativeEncoder;
 
     //Public Debugging Values
-    public double mPIDOutput = 0.0;
-    public double mDesiredRadians = 0.0;
+    private double mPIDOutput = 0.0;
+    private double mDesiredRadians = 0.0;
 
     public SwerveModule(int rotID, int transID, int rotEncoderID,
             boolean rotInverse, boolean transInverse, PIDController rotPID) {
@@ -252,5 +252,18 @@ public class SwerveModule {
      */
     public void setModeRot(IdleMode mode) {
         mRotMotor.setIdleMode(mode);
+    }
+    
+    /**
+     * Retrives the rotation PID output provided to the motors after desaturation and optimization
+     */
+    public double getPIDOutputRot(){
+        return mPIDOutput;
+    }
+    /**
+     * Retrives the desired radian setpoint of rotation of the motors after desaturation and optimization.
+     */
+    public double getDesiredRadiansRot(){
+        return mDesiredRadians;
     }
 }
