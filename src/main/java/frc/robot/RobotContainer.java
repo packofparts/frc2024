@@ -24,14 +24,12 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final SwerveSubsystem mSwerveSubsystem = new SwerveSubsystem();
+  private final ArmControlSubsystem mArmControlSubsystem = new ArmControlSubsystem();
+  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  private final Limelight mLimelight = new Limelight();
+  private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, mSwerveSubsystem);
 
-  ArmControlSubsystem mArmControlSubsystem = new ArmControlSubsystem();
-  IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
-  Limelight mLimelight = new Limelight();
-  PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, swerveSubsystem);
-
-  DefaultDriveCommand mDriveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     AutoConstants.populateHashMaps(mArmControlSubsystem, mIntakeSubsystem);
@@ -39,8 +37,23 @@ public class RobotContainer {
     mIntakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(mIntakeSubsystem));
 
     if(CompConstants.PID_TUNE_MODE)
-      swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
+      mSwerveSubsystem.setDefaultCommand(new PIDTuning(0, mSwerveSubsystem));
     else
-      swerveSubsystem.setDefaultCommand(mDriveCommand);
+      mSwerveSubsystem.setDefaultCommand(new DefaultDriveCommand(mSwerveSubsystem));
+  }
+  public SwerveSubsystem getSwerveSubsystem(){
+    return mSwerveSubsystem;
+  }
+  public ArmControlSubsystem getArmSubsystem(){
+    return mArmControlSubsystem;
+  }
+  public IntakeSubsystem getIntakeSubsystem(){
+    return mIntakeSubsystem;
+  }
+  public Limelight getLimelight(){
+    return mLimelight;
+  }
+  public PoseEstimation getPoseEstimator(){
+    return mPoseEstimator;
   }
 }

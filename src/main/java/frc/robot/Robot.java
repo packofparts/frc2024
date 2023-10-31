@@ -40,12 +40,12 @@ public class Robot extends TimedRobot {
     RobotContainer robotContainer = new RobotContainer();
     mPathSelector.addOption("Station2PieceBlue", 
         new SequentialCommandGroup(
-        new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE),
+        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
         new FollowPath(
-          robotContainer.swerveSubsystem, 
+          robotContainer.getSwerveSubsystem(), 
           AutoConstants.kStation2PieceBlue,
           AutoConstants.eventMap,
-          robotContainer.mPoseEstimator
+          robotContainer.getPoseEstimator()
         )
         
       )
@@ -53,12 +53,12 @@ public class Robot extends TimedRobot {
 
     mPathSelector.addOption("Station2PieceRed", 
     new SequentialCommandGroup(
-    new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE),
+    new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
     new FollowPath(
-      robotContainer.swerveSubsystem, 
+      robotContainer.getSwerveSubsystem(), 
       AutoConstants.kStation2PieceRed,
       AutoConstants.eventMap,
-      robotContainer.mPoseEstimator
+      robotContainer.getPoseEstimator()
     )
     
     )
@@ -66,23 +66,23 @@ public class Robot extends TimedRobot {
     
     mPathSelector.addOption("ScoreHybridMobility", 
       new SequentialCommandGroup(
-        new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE),
-        new Mobility(robotContainer.swerveSubsystem)));
+        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
+        new Mobility(robotContainer.getSwerveSubsystem())));
 
     mPathSelector.addOption("ScoreHybrid", 
       new SequentialCommandGroup(
-        new ScoreCone(robotContainer.mArmControlSubsystem, robotContainer.mIntakeSubsystem, ArmState.LOWER_NODE_CONE)
+        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE)
       )
     );
 
     mPathSelector.addOption("OneMeter", new FollowPath(
-      robotContainer.swerveSubsystem, 
+      robotContainer.getSwerveSubsystem(), 
       AutoConstants.kMoveOneMeter,
       AutoConstants.emptyMap,
-      robotContainer.mPoseEstimator
+      robotContainer.getPoseEstimator()
     ));
 
-    mPathSelector.addOption("MobilityOnly", new Mobility(robotContainer.swerveSubsystem));
+    mPathSelector.addOption("MobilityOnly", new Mobility(robotContainer.getSwerveSubsystem()));
     
     mPathSelector.setDefaultOption("None", new PrintCommand("No Auto :( "));
     
