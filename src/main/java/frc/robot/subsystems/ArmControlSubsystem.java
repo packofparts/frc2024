@@ -31,13 +31,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     OFF
   }
 
-  public enum MoveArmConfig {
-    SIMULTANEOUS,
-    SEQ_EXTEND_THEN_PIVOT,
-    SEQ_PIVOT_THEN_EXTEND
-  }
-  
-  
   private final WPI_TalonFX mLeftPivotController = new WPI_TalonFX(ArmConstants.LEFT_PIV_MOTOR_ID);
   private final WPI_TalonFX mRightPivotController = new WPI_TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID);
   private final CANSparkMax mExtensionController = new CANSparkMax(ArmConstants.EXT_SPARK_ID, MotorType.kBrushless);
