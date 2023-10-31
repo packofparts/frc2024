@@ -40,9 +40,6 @@ public class FollowPath extends CommandBase {
   }
   @Override
   public void initialize() {
-
-    SwerveSubsystem.mAutoGyroInitValue = mTraj.getInitialHolonomicPose().getRotation().getDegrees();
-
     mFinalCMD.schedule();
     SmartDashboard.putBoolean("pathFinished", mFinalCMD.isFinished());
     SmartDashboard.putBoolean("pathSchedules", mFinalCMD.isScheduled());
