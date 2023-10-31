@@ -14,21 +14,21 @@ import frc.robot.constants.SwerveConstants;
 
 public class SwerveModule {
     // Parameters
-    private int mRotID;
-    private int mTransID;
-    private int mRotEncoderID;
-    private boolean mRotInverse;
-    private boolean mTransInverse;
-    private PIDController mRotPID;
+    private final int mRotID;
+    private final int mTransID;
+    private final int mRotEncoderID;
+    private final boolean mRotInverse;
+    private final boolean mTransInverse;
+    private final PIDController mRotPID;
 
     // Hardware
     // Motor Controllers
-    private CANSparkMax mRotMotor;
-    private CANSparkMax mTransMotor;
+    private final CANSparkMax mRotMotor;
+    private final CANSparkMax mTransMotor;
     // Encoders
-    private CANCoder mRotEncoder;
-    private RelativeEncoder mTransEncoder;
-    private RelativeEncoder mRotRelativeEncoder;
+    private final CANCoder mRotEncoder;
+    private final RelativeEncoder mTransEncoder;
+    private final RelativeEncoder mRotRelativeEncoder;
 
     //Public Debugging Values
     public double mPIDOutput = 0.0;
