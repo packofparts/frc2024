@@ -17,35 +17,36 @@ public class FollowPath extends CommandBase {
   private final SwerveSubsystem mSwerve;
   private final Command mFinalCMD;
   private final PathPlannerTrajectory mTraj;
-  private final Map<String,Command> mEventMap;
+  private final Map<String, Command> mEventMap;
   private final PoseEstimation mPoseEstimator;
-  
-  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj, Map<String,Command> eventMap, PoseEstimation poseEstimator) {
+
+  public FollowPath(SwerveSubsystem swerve, PathPlannerTrajectory traj,
+      Map<String, Command> eventMap, PoseEstimation poseEstimator) {
     // Use addRequirements() here to declare subsystem dependencies.
     mSwerve = swerve;
     mEventMap = eventMap;
     mTraj = traj;
     mPoseEstimator = poseEstimator;
 
-    SwerveAutoBuilder cmd = new SwerveAutoBuilder(mPoseEstimator::getRobotPose, mPoseEstimator::resetPose, SwerveConfig.SWERVE_KINEMATICS,
-      new PIDConstants(7, 0.5, 0),
-      new PIDConstants(9, 0.5, 0),
-      mSwerve::setModuleStates, mEventMap, true, mSwerve
-    );
+    SwerveAutoBuilder cmd = new SwerveAutoBuilder(mPoseEstimator::getRobotPose,
+        mPoseEstimator::resetPose, SwerveConfig.SWERVE_KINEMATICS, new PIDConstants(7, 0.5, 0),
+        new PIDConstants(9, 0.5, 0), mSwerve::setModuleStates, mEventMap, true, mSwerve);
 
     mFinalCMD = cmd.fullAuto(mTraj);
-    
+
     addRequirements(mSwerve);
 
   }
+
   @Override
   public void initialize() {
     mFinalCMD.schedule();
     SmartDashboard.putBoolean("pathFinished", mFinalCMD.isFinished());
     SmartDashboard.putBoolean("pathSchedules", mFinalCMD.isScheduled());
   }
+
   @Override
-  public void execute(){
+  public void execute() {
     SmartDashboard.updateValues();
   }
 
@@ -60,7 +61,7 @@ public class FollowPath extends CommandBase {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished(){
+  public boolean isFinished() {
     return mFinalCMD.isFinished();
   }
 }

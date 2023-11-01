@@ -11,10 +11,10 @@ import frc.robot.subsystems.Input;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DefaultDriveCommand extends CommandBase {
-  
+
   private final SwerveSubsystem mSwerve;
   private boolean mIsPrecisionToggle = false;
-  
+
   public DefaultDriveCommand(SwerveSubsystem swerve) {
     mSwerve = swerve;
     addRequirements(mSwerve);
@@ -28,30 +28,36 @@ public class DefaultDriveCommand extends CommandBase {
     double y = -Input.getJoystickX();
     double rot = -Input.getRot();
 
-    if (Input.resetGyro()){mSwerve.resetGyro();}
+    if (Input.resetGyro()) {
+      mSwerve.resetGyro();
+    }
 
-    if(Input.resetOdo()){mSwerve.resetOdometry();}
+    if (Input.resetOdo()) {
+      mSwerve.resetOdometry();
+    }
 
-    if (Input.getPrecisionToggle()){mIsPrecisionToggle = !mIsPrecisionToggle;}
+    if (Input.getPrecisionToggle()) {
+      mIsPrecisionToggle = !mIsPrecisionToggle;
+    }
 
-    if (mIsPrecisionToggle){
-      x = x/JoystickConstants.DRIVE_PRECISION_X_DESATURATION;
-      y = y/JoystickConstants.DRIVE_PRECISION_Y_DESATURATION;
-      rot = rot/JoystickConstants.DRIVE_PRECISION_ROT_DESATURATION;
+    if (mIsPrecisionToggle) {
+      x = x / JoystickConstants.DRIVE_PRECISION_X_DESATURATION;
+      y = y / JoystickConstants.DRIVE_PRECISION_Y_DESATURATION;
+      rot = rot / JoystickConstants.DRIVE_PRECISION_ROT_DESATURATION;
 
       x = Math.abs(x) > JoystickConstants.DRIVE_PRECISION_X_DEADZONE ? x : 0.0;
-      y = Math.abs(y) > JoystickConstants.DRIVE_PRECISION_Y_DEADZONE ? y :0.0;
+      y = Math.abs(y) > JoystickConstants.DRIVE_PRECISION_Y_DEADZONE ? y : 0.0;
       rot = Math.abs(rot) > JoystickConstants.DRIVE_PRECISION_ROT_DEADZONE ? rot : 0.0;
-    } else{
+    } else {
       x = Math.abs(x) > JoystickConstants.DRIVE_REG_X_DEADZONE ? x : 0.0;
       y = Math.abs(y) > JoystickConstants.DRIVE_REG_Y_DEADZONE ? y : 0.0;
       rot = Math.abs(rot) > JoystickConstants.DRIVE_REG_ROT_DEADZONE ? rot : 0.0;
     }
-    
+
     x *= SwerveConstants.TELE_MAX_SPEED_MPS;
     y *= SwerveConstants.TELE_MAX_SPEED_MPS;
     rot *= SwerveConstants.TELE_MAX_ROT_SPEED_RAD_SEC;
-    
+
     mSwerve.setMotors(x, y, rot, true);
   }
 

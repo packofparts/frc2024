@@ -15,17 +15,21 @@ import edu.wpi.first.math.util.Units;
 
 /** Add your docs here. */
 public class VisionConstants {
-    private VisionConstants(){
-        throw new IllegalStateException("Constants Class");
-      }
-      
-    public static final String CAMERA_NAME = "OV5647";
+  private VisionConstants() {
+    throw new IllegalStateException("Constants Class");
+  }
 
-    // These are tunable constants for the reliability of odometry and vision measurements in the form of a vector of (x, y, theta), in meters, meters, and radians respectively
-    public static final Matrix<N3, N1> kStateStdDevs = VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(1));
-    public static final Matrix<N3, N1> kVisionMeasurementStdDevs = VecBuilder.fill(0.15, 0.15, Units.degreesToRadians(7)); 
+  public static final String CAMERA_NAME = "OV5647";
 
-    public static final Transform3d kRobotToCam = new Transform3d(new Translation3d(.0496, .0626872, 1.28), new Rotation3d(0,-Math.toRadians(15),0));
+  // These are tunable constants for the reliability of odometry and vision measurements in the form
+  // of a vector of (x, y, theta), in meters, meters, and radians respectively
+  public static final Matrix<N3, N1> STATE_STD_DEVS =
+      VecBuilder.fill(0.1, 0.1, Units.degreesToRadians(1));
+  public static final Matrix<N3, N1> VISION_MEASUREMENTS_STD_DEVS =
+      VecBuilder.fill(0.15, 0.15, Units.degreesToRadians(7));
 
-    public static final double SINGLE_TAG_AMBIGUITY_THRESH = 0.15;
+  public static final Transform3d ROBOT_TO_CAM_VEC = new Transform3d(
+      new Translation3d(.0496, .0626872, 1.28), new Rotation3d(0, -Math.toRadians(15), 0));
+
+  public static final double SINGLE_TAG_AMBIGUITY_THRESH = 0.15;
 }

@@ -36,24 +36,29 @@ public class RobotContainer {
     mArmControlSubsystem.setDefaultCommand(new DefaultArmCommand(mArmControlSubsystem));
     mIntakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(mIntakeSubsystem));
 
-    if(CompConstants.PID_TUNE_MODE)
+    if (CompConstants.PID_TUNE_MODE)
       mSwerveSubsystem.setDefaultCommand(new PIDTuning(0, mSwerveSubsystem));
     else
       mSwerveSubsystem.setDefaultCommand(new DefaultDriveCommand(mSwerveSubsystem));
   }
-  public SwerveSubsystem getSwerveSubsystem(){
+
+  public SwerveSubsystem getSwerveSubsystem() {
     return mSwerveSubsystem;
   }
-  public ArmControlSubsystem getArmSubsystem(){
+
+  public ArmControlSubsystem getArmSubsystem() {
     return mArmControlSubsystem;
   }
-  public IntakeSubsystem getIntakeSubsystem(){
+
+  public IntakeSubsystem getIntakeSubsystem() {
     return mIntakeSubsystem;
   }
-  public Limelight getLimelight(){
+
+  public Limelight getLimelight() {
     return mLimelight;
   }
-  public PoseEstimation getPoseEstimator(){
+
+  public PoseEstimation getPoseEstimator() {
     return mPoseEstimator;
   }
 }

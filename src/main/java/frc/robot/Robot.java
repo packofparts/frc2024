@@ -38,54 +38,38 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     RobotContainer robotContainer = new RobotContainer();
-    mPathSelector.addOption("Station2PieceBlue", 
-        new SequentialCommandGroup(
-        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
-        new FollowPath(
-          robotContainer.getSwerveSubsystem(), 
-          AutoConstants.STATION_2_PIECE_BLUE_PATH,
-          AutoConstants.EVENT_MAP,
-          robotContainer.getPoseEstimator()
-        )
-        
-      )
-    );
+    mPathSelector.addOption("Station2PieceBlue", new SequentialCommandGroup(
+        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(),
+            ArmState.LOWER_NODE_CONE),
+        new FollowPath(robotContainer.getSwerveSubsystem(), AutoConstants.STATION_2_PIECE_BLUE_PATH,
+            AutoConstants.EVENT_MAP, robotContainer.getPoseEstimator())
 
-    mPathSelector.addOption("Station2PieceRed", 
-    new SequentialCommandGroup(
-    new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
-    new FollowPath(
-      robotContainer.getSwerveSubsystem(), 
-      AutoConstants.STATION_2_PIECE_RED_PATH,
-      AutoConstants.EVENT_MAP,
-      robotContainer.getPoseEstimator()
-    )
-    
-    )
-  );
-    
-    mPathSelector.addOption("ScoreHybridMobility", 
-      new SequentialCommandGroup(
-        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
-        new Mobility(robotContainer.getSwerveSubsystem())));
-
-    mPathSelector.addOption("ScoreHybrid", 
-      new SequentialCommandGroup(
-        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE)
-      )
-    );
-
-    mPathSelector.addOption("OneMeter", new FollowPath(
-      robotContainer.getSwerveSubsystem(), 
-      AutoConstants.MOVE_ONE_METER,
-      AutoConstants.EMPTY_MAP,
-      robotContainer.getPoseEstimator()
     ));
 
+    mPathSelector.addOption("Station2PieceRed", new SequentialCommandGroup(
+        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(),
+            ArmState.LOWER_NODE_CONE),
+        new FollowPath(robotContainer.getSwerveSubsystem(), AutoConstants.STATION_2_PIECE_RED_PATH,
+            AutoConstants.EVENT_MAP, robotContainer.getPoseEstimator())
+
+    ));
+
+    mPathSelector.addOption("ScoreHybridMobility",
+        new SequentialCommandGroup(new ScoreCone(robotContainer.getArmSubsystem(),
+            robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
+            new Mobility(robotContainer.getSwerveSubsystem())));
+
+    mPathSelector.addOption("ScoreHybrid",
+        new SequentialCommandGroup(new ScoreCone(robotContainer.getArmSubsystem(),
+            robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE)));
+
+    mPathSelector.addOption("OneMeter", new FollowPath(robotContainer.getSwerveSubsystem(),
+        AutoConstants.MOVE_ONE_METER, AutoConstants.EMPTY_MAP, robotContainer.getPoseEstimator()));
+
     mPathSelector.addOption("MobilityOnly", new Mobility(robotContainer.getSwerveSubsystem()));
-    
+
     mPathSelector.setDefaultOption("None", new PrintCommand("No Auto :( "));
-    
+
     SmartDashboard.putData("PP Autos", mPathSelector);
   }
 
@@ -122,7 +106,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //empty for now but will add auton paths here
+    // empty for now but will add auton paths here
   }
 
   @Override
@@ -139,7 +123,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //We will add things to here shortly
+    // We will add things to here shortly
   }
 
   @Override

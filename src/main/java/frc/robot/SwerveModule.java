@@ -30,12 +30,12 @@ public class SwerveModule {
     private final RelativeEncoder mTransEncoder;
     private final RelativeEncoder mRotRelativeEncoder;
 
-    //Public Debugging Values
+    // Public Debugging Values
     private double mPIDOutput = 0.0;
     private double mDesiredRadians = 0.0;
 
-    public SwerveModule(int rotID, int transID, int rotEncoderID,
-            boolean rotInverse, boolean transInverse, PIDController rotPID) {
+    public SwerveModule(int rotID, int transID, int rotEncoderID, boolean rotInverse,
+            boolean transInverse, PIDController rotPID) {
         // Setting Parameters
         mRotID = rotID;
         mTransID = transID;
@@ -47,7 +47,7 @@ public class SwerveModule {
         // Motor Controllers
         mRotMotor = new CANSparkMax(mRotID, MotorType.kBrushless);
         mTransMotor = new CANSparkMax(mTransID, MotorType.kBrushless);
-        
+
 
         // Encoders
         mRotEncoder = new CANCoder(mRotEncoderID);
@@ -71,7 +71,7 @@ public class SwerveModule {
 
         mTransEncoder.setPosition(0);
     }
-    
+
     // ------------------- State Settings
 
     /**
@@ -84,15 +84,15 @@ public class SwerveModule {
         return new SwerveModuleState(getTransVelocity(), Rotation2d.fromRadians(getRotPosition()));
     }
 
-    public double getAppliedOutput(){
+    public double getAppliedOutput() {
         return mRotMotor.getAppliedOutput();
     }
 
-    public void setTransMotorRaw(double speed){
+    public void setTransMotorRaw(double speed) {
         mTransMotor.set(speed);
     }
 
-    public void setRotMotorRaw(double speed){
+    public void setRotMotorRaw(double speed) {
         mRotMotor.set(speed);
 
     }
@@ -124,8 +124,8 @@ public class SwerveModule {
 
     }
 
-    public void setPID(double degrees){
-        mPIDOutput = mRotPID.calculate(getRotPosition(),Math.toRadians(degrees));
+    public void setPID(double degrees) {
+        mPIDOutput = mRotPID.calculate(getRotPosition(), Math.toRadians(degrees));
         mRotMotor.set(mPIDOutput);
 
     }
@@ -187,8 +187,8 @@ public class SwerveModule {
         return getRotPositionRaw();
     }
 
-    public double getRotRelativePosition(){
-        return mRotRelativeEncoder.getPosition()/12.8;
+    public double getRotRelativePosition() {
+        return mRotRelativeEncoder.getPosition() / 12.8;
     }
 
     /**
@@ -253,17 +253,19 @@ public class SwerveModule {
     public void setModeRot(IdleMode mode) {
         mRotMotor.setIdleMode(mode);
     }
-    
+
     /**
      * Retrives the rotation PID output provided to the motors after desaturation and optimization
      */
-    public double getPIDOutputRot(){
+    public double getPIDOutputRot() {
         return mPIDOutput;
     }
+
     /**
-     * Retrives the desired radian setpoint of rotation of the motors after desaturation and optimization.
+     * Retrives the desired radian setpoint of rotation of the motors after desaturation and
+     * optimization.
      */
-    public double getDesiredRadiansRot(){
+    public double getDesiredRadiansRot() {
         return mDesiredRadians;
     }
 }

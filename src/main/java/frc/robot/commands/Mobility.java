@@ -14,12 +14,12 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class Mobility extends CommandBase {
   /** Creates a new ScoreMobility. */
   private final SequentialCommandGroup mCommands;
+
   public Mobility(SwerveSubsystem swerve) {
     addRequirements(swerve);
     mCommands = new SequentialCommandGroup(
-      new RunCommand(() -> swerve.setMotors(-1, 0, 0)).withTimeout(4.2),
-      new RunCommand(() -> swerve.setMotors(0, 0, 0))
-    );
+        new RunCommand(() -> swerve.setMotors(-1, 0, 0)).withTimeout(4.2),
+        new RunCommand(() -> swerve.setMotors(0, 0, 0)));
 
   }
 

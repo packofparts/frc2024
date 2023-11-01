@@ -17,21 +17,23 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 public class IntakeSubsystem extends SubsystemBase {
-  private final CANSparkMax mIntakeMotor = new CANSparkMax(IntakeConstants.INTAKE_ID,MotorType.kBrushless);
+  private final CANSparkMax mIntakeMotor =
+      new CANSparkMax(IntakeConstants.INTAKE_ID, MotorType.kBrushless);
 
   public IntakeSubsystem() {
     mIntakeMotor.setIdleMode(IdleMode.kBrake);
     mIntakeMotor.burnFlash();
-  
-  }
-  public void runIntake(double percentOutput){
-   mIntakeMotor.set(percentOutput);
+
   }
 
-  public Command timedIntake(double percentOutput,double timeSec){
-    return(new SequentialCommandGroup(
-      new RunCommand(()->runIntake(percentOutput)).withTimeout(timeSec), 
-      new InstantCommand(()->runIntake(0))));
-    }
+  public void runIntake(double percentOutput) {
+    mIntakeMotor.set(percentOutput);
+  }
+
+  public Command timedIntake(double percentOutput, double timeSec) {
+    return (new SequentialCommandGroup(
+        new RunCommand(() -> runIntake(percentOutput)).withTimeout(timeSec),
+        new InstantCommand(() -> runIntake(0))));
+  }
 
 }

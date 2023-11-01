@@ -15,13 +15,12 @@ public class ScoreCone extends CommandBase {
   /** Creates a new ScoreConeHighNode. */
 
   private final SequentialCommandGroup mPath;
-  
+
   public ScoreCone(ArmControlSubsystem arm, IntakeSubsystem intake, ArmState state) {
-    mPath = new SequentialCommandGroup(
-      arm.waitUntilSpPivot(state.pivotAngleRad),
-      arm.waitUntilSpTelescope(state.extentionDistIn),
-      intake.timedIntake(IntakeConstants.OUTTAKE_VEL_SCORE_CONE_PERCENT, IntakeConstants.OUTTAKE_TIME_SCORE_CONE_SEC)
-      );
+    mPath = new SequentialCommandGroup(arm.waitUntilSpPivot(state.pivotAngleRad),
+        arm.waitUntilSpTelescope(state.extentionDistIn),
+        intake.timedIntake(IntakeConstants.OUTTAKE_VEL_SCORE_CONE_PERCENT,
+            IntakeConstants.OUTTAKE_TIME_SCORE_CONE_SEC));
   }
 
   // Called when the command is initially scheduled.
@@ -34,6 +33,6 @@ public class ScoreCone extends CommandBase {
   @Override
   public boolean isFinished() {
     return mPath.isFinished();
-    
+
   }
 }

@@ -14,7 +14,7 @@ import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 
 public class DefaultArmCommand extends CommandBase {
-  
+
   private final ArmControlSubsystem mArmControlSubsystem;
 
   public DefaultArmCommand(ArmControlSubsystem armControlSubsystem) {
@@ -28,60 +28,84 @@ public class DefaultArmCommand extends CommandBase {
     handleInput();
   }
 
-  void handleInput(){
+  void handleInput() {
 
-    if(Input.getLeftStickY() > JoystickConstants.PIVOT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DESATURATION * (Input.getLeftStickY()-JoystickConstants.PIVOT_INPUT_DEADZONE));
-    }else if(Input.getLeftStickY() < -JoystickConstants.PIVOT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DEADZONE * (Input.getLeftStickY()+JoystickConstants.PIVOT_INPUT_DEADZONE));
+    if (Input.getLeftStickY() > JoystickConstants.PIVOT_INPUT_DEADZONE) {
+      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DESATURATION
+          * (Input.getLeftStickY() - JoystickConstants.PIVOT_INPUT_DEADZONE));
+    } else if (Input.getLeftStickY() < -JoystickConstants.PIVOT_INPUT_DEADZONE) {
+      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DEADZONE
+          * (Input.getLeftStickY() + JoystickConstants.PIVOT_INPUT_DEADZONE));
     }
 
-    if(Input.getRightStickY() > JoystickConstants.EXT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION * (Input.getRightStickY() - JoystickConstants.EXT_INPUT_DEADZONE));
-    }else if(Input.getRightStickY() < -JoystickConstants.EXT_INPUT_DEADZONE){
-      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION * (Input.getRightStickY() + JoystickConstants.EXT_INPUT_DEADZONE));
+    if (Input.getRightStickY() > JoystickConstants.EXT_INPUT_DEADZONE) {
+      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION
+          * (Input.getRightStickY() - JoystickConstants.EXT_INPUT_DEADZONE));
+    } else if (Input.getRightStickY() < -JoystickConstants.EXT_INPUT_DEADZONE) {
+      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION
+          * (Input.getRightStickY() + JoystickConstants.EXT_INPUT_DEADZONE));
     }
-    
-    
-    else if(Input.getA()){
+
+
+    else if (Input.getA()) {
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->mArmControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.STOW.pivotAngleRad),mArmControlSubsystem),
-        new InstantCommand(()->mArmControlSubsystem.setDesiredExtension(ArmConstants.ArmState.STOW.extentionDistIn),mArmControlSubsystem)
+          new InstantCommand(
+              () -> mArmControlSubsystem
+                  .setDesiredPivotRot(ArmConstants.ArmState.STOW.pivotAngleRad),
+              mArmControlSubsystem),
+          new InstantCommand(
+              () -> mArmControlSubsystem
+                  .setDesiredExtension(ArmConstants.ArmState.STOW.extentionDistIn),
+              mArmControlSubsystem)
 
       );
       command.schedule();
-    }
-    else if(Input.getB()){
+    } else if (Input.getB()) {
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->mArmControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.MID_NODE_CONE.pivotAngleRad),mArmControlSubsystem),
-        new InstantCommand(()->mArmControlSubsystem.setDesiredExtension(ArmConstants.ArmState.MID_NODE_CONE.extentionDistIn),mArmControlSubsystem)
+          new InstantCommand(
+              () -> mArmControlSubsystem
+                  .setDesiredPivotRot(ArmConstants.ArmState.MID_NODE_CONE.pivotAngleRad),
+              mArmControlSubsystem),
+          new InstantCommand(
+              () -> mArmControlSubsystem
+                  .setDesiredExtension(ArmConstants.ArmState.MID_NODE_CONE.extentionDistIn),
+              mArmControlSubsystem)
 
       );
       command.schedule();
-    }
-    else if(Input.getX()){
+    } else if (Input.getX()) {
       SequentialCommandGroup command = new SequentialCommandGroup(
-        mArmControlSubsystem.waitUntilSpPivot(ArmConstants.ArmState.UPPER_NODE_CONE.pivotAngleRad),
-        mArmControlSubsystem.waitUntilSpTelescope(ArmConstants.ArmState.UPPER_NODE_CONE.extentionDistIn)
-      );
+          mArmControlSubsystem
+              .waitUntilSpPivot(ArmConstants.ArmState.UPPER_NODE_CONE.pivotAngleRad),
+          mArmControlSubsystem
+              .waitUntilSpTelescope(ArmConstants.ArmState.UPPER_NODE_CONE.extentionDistIn));
       command.schedule();
-    }
-    else if(Input.getY()){
+    } else if (Input.getY()) {
       SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->mArmControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.SUBSTATION_CONE.pivotAngleRad),mArmControlSubsystem),
-        new WaitCommand(1),
-        new InstantCommand(()->mArmControlSubsystem.setDesiredExtension(ArmConstants.ArmState.SUBSTATION_CONE.extentionDistIn),mArmControlSubsystem)
+          new InstantCommand(() -> mArmControlSubsystem.setDesiredPivotRot(
+              ArmConstants.ArmState.SUBSTATION_CONE.pivotAngleRad), mArmControlSubsystem),
+          new WaitCommand(1),
+          new InstantCommand(
+              () -> mArmControlSubsystem
+                  .setDesiredExtension(ArmConstants.ArmState.SUBSTATION_CONE.extentionDistIn),
+              mArmControlSubsystem)
 
       );
       command.schedule();
-    }
-    else if(Input.getDPad() == Input.DPADUP){
-      SequentialCommandGroup command = new SequentialCommandGroup(
-        new InstantCommand(()->mArmControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),mArmControlSubsystem),
-        new WaitCommand(0.5),
-        new InstantCommand(()->mArmControlSubsystem.setDesiredExtension(ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),mArmControlSubsystem)
+    } else if (Input.getDPad() == Input.DPADUP) {
+      SequentialCommandGroup command =
+          new SequentialCommandGroup(
+              new InstantCommand(
+                  () -> mArmControlSubsystem
+                      .setDesiredPivotRot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),
+                  mArmControlSubsystem),
+              new WaitCommand(0.5),
+              new InstantCommand(
+                  () -> mArmControlSubsystem.setDesiredExtension(
+                      ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),
+                  mArmControlSubsystem)
 
-      );
+          );
       command.schedule();
     }
 

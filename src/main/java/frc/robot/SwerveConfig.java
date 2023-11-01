@@ -13,11 +13,12 @@ import frc.robot.constants.SwerveConstants;
 
 /** Add your docs here. */
 public class SwerveConfig {
-        private SwerveConfig(){
+        private SwerveConfig() {
                 throw new IllegalStateException("Static Config Class");
         }
+
         // ID's
-        //Encoder IDs have been set
+        // Encoder IDs have been set
         private static final int FRONT_RIGHT_TRANS_ID = 7;
         private static final int FRONT_RIGHT_ROT_ID = 3;
         private static final int FRONT_RIGHT_ROT_ENC_ID = 23;
@@ -72,29 +73,25 @@ public class SwerveConfig {
         public static final AHRS NAVX = new AHRS(Port.kMXP);
 
         public static final SwerveModule FRONT_RIGHT_MODULE = new SwerveModule(FRONT_RIGHT_ROT_ID,
-                        FRONT_RIGHT_TRANS_ID, FRONT_RIGHT_ROT_ENC_ID,
-                        FRONT_RIGHT_ROT_INVERSE,
+                        FRONT_RIGHT_TRANS_ID, FRONT_RIGHT_ROT_ENC_ID, FRONT_RIGHT_ROT_INVERSE,
                         FRONT_RIGHT_TRANS_INVERSE, FRONT_RIGHT_ROT_PID);
 
         public static final SwerveModule FRONT_LEFT_MODULE = new SwerveModule(FRONT_LEFT_ROT_ID,
-                        FRONT_LEFT_TRANS_ID, FRONT_LEFT_ROT_ENC_ID,
-                        FRONT_LEFT_ROT_INVERSE,
+                        FRONT_LEFT_TRANS_ID, FRONT_LEFT_ROT_ENC_ID, FRONT_LEFT_ROT_INVERSE,
                         FRONT_LEFT_TRANS_INVERSE, FRONT_LEFT_ROT_PID);
 
         public static final SwerveModule BACK_RIGHT_MODULE = new SwerveModule(BACK_RIGHT_ROT_ID,
-                        BACK_RIGHT_TRANS_ID, BACK_RIGHT_ROT_ENC_ID,
-                        BACK_RIGHT_ROT_INVERSE,
+                        BACK_RIGHT_TRANS_ID, BACK_RIGHT_ROT_ENC_ID, BACK_RIGHT_ROT_INVERSE,
                         BACK_RIGHT_TRANS_INVERSE, BACK_RIGHT_ROT_PID);
 
         public static final SwerveModule BACK_LEFT_MODULE = new SwerveModule(BACK_LEFT_ROT_ID,
-                        BACK_LEFT_TRANS_ID, BACK_LEFT_ROT_ENC_ID,
-                        BACK_LEFT_ROT_INVERSE, 
+                        BACK_LEFT_TRANS_ID, BACK_LEFT_ROT_ENC_ID, BACK_LEFT_ROT_INVERSE,
                         BACK_LEFT_TRANS_INVERSE, BACK_LEFT_ROT_PID);
 
-        public static final SwerveModule[] SWERVE_MODULES =
-                        {FRONT_LEFT_MODULE, FRONT_RIGHT_MODULE, BACK_LEFT_MODULE, BACK_RIGHT_MODULE};
+        public static final SwerveModule[] SWERVE_MODULES = {FRONT_LEFT_MODULE, FRONT_RIGHT_MODULE,
+                        BACK_LEFT_MODULE, BACK_RIGHT_MODULE};
 
-        public static final PIDController[] SWERVE_MODULE_PIDs =
-                        {FRONT_LEFT_ROT_PID, FRONT_RIGHT_ROT_PID, BACK_LEFT_ROT_PID, BACK_LEFT_ROT_PID};
+        public static final PIDController[] SWERVE_MODULE_PIDs = {FRONT_LEFT_ROT_PID,
+                        FRONT_RIGHT_ROT_PID, BACK_LEFT_ROT_PID, BACK_LEFT_ROT_PID};
 
 }

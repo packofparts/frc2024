@@ -25,15 +25,18 @@ public class Limelight {
         mPhotonCamera = new PhotonCamera(VisionConstants.CAMERA_NAME);
 
         try {
-            // Attempt to load the AprilTagFieldLayout that will tell us where the tags are on the field.
-            AprilTagFieldLayout fieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
+            // Attempt to load the AprilTagFieldLayout that will tell us where the tags are on the
+            // field.
+            AprilTagFieldLayout fieldLayout =
+                    AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
             // Create pose estimator
-            mPhotonPoseEstimator =
-                    new PhotonPoseEstimator(
-                            fieldLayout, PoseStrategy.MULTI_TAG_PNP, mPhotonCamera, VisionConstants.kRobotToCam);
-            mPhotonPoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
+            mPhotonPoseEstimator = new PhotonPoseEstimator(fieldLayout, PoseStrategy.MULTI_TAG_PNP,
+                    mPhotonCamera, VisionConstants.ROBOT_TO_CAM_VEC);
+            mPhotonPoseEstimator
+                    .setMultiTagFallbackStrategy(PoseStrategy.CLOSEST_TO_REFERENCE_POSE);
         } catch (IOException e) {
-            // The AprilTagFieldLayout failed to load. We won't be able to estimate poses if we don't know
+            // The AprilTagFieldLayout failed to load. We won't be able to estimate poses if we
+            // don't know
             // where the tags are.
             DriverStation.reportError("Failed to load AprilTagFieldLayout", e.getStackTrace());
             mPhotonPoseEstimator = null;
@@ -42,8 +45,8 @@ public class Limelight {
 
     /**
      * @param estimatedRobotPose The current best guess at robot pose
-     * @return an EstimatedRobotPose with an estimated pose, the timestamp, and targets used to create
-     *     the estimate
+     * @return an EstimatedRobotPose with an estimated pose, the timestamp, and targets used to
+     *         create the estimate
      */
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
         if (mPhotonPoseEstimator == null) {

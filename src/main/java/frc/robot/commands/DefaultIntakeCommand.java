@@ -12,6 +12,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class DefaultIntakeCommand extends CommandBase {
 
   private IntakeSubsystem mIntake;
+
   public DefaultIntakeCommand(IntakeSubsystem intake) {
     mIntake = intake;
     addRequirements(mIntake);
@@ -20,14 +21,21 @@ public class DefaultIntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-        // Intake Cone Outtake Cube
-        if (Input.getRightTrigger() > IntakeConstants.INPUT_DEADZONE) {mIntake.runIntake(Input.getRightTrigger()*IntakeConstants.TELE_MAX_IN_SPEED_PERCENT);}
-    
-        // Intake Cube Outtake Cone
-        if (Input.getLeftTrigger()>IntakeConstants.INPUT_DEADZONE){mIntake.runIntake(-Input.getLeftTrigger()*IntakeConstants.TELE_MAX_OUT_SPEED_PERCENT);}
-    
-        //Set Intake to Stall Speed if Neither
-        if (Input.getLeftTrigger()<IntakeConstants.INPUT_DEADZONE && Input.getRightTrigger()<IntakeConstants.INPUT_DEADZONE){mIntake.runIntake(IntakeConstants.STALL_SPEED);}
+    // Intake Cone Outtake Cube
+    if (Input.getRightTrigger() > IntakeConstants.INPUT_DEADZONE) {
+      mIntake.runIntake(Input.getRightTrigger() * IntakeConstants.TELE_MAX_IN_SPEED_PERCENT);
+    }
+
+    // Intake Cube Outtake Cone
+    if (Input.getLeftTrigger() > IntakeConstants.INPUT_DEADZONE) {
+      mIntake.runIntake(-Input.getLeftTrigger() * IntakeConstants.TELE_MAX_OUT_SPEED_PERCENT);
+    }
+
+    // Set Intake to Stall Speed if Neither
+    if (Input.getLeftTrigger() < IntakeConstants.INPUT_DEADZONE
+        && Input.getRightTrigger() < IntakeConstants.INPUT_DEADZONE) {
+      mIntake.runIntake(IntakeConstants.STALL_SPEED);
+    }
   }
 
   // Returns true when the command should end.

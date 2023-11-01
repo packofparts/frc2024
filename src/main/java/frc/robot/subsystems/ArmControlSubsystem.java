@@ -26,14 +26,14 @@ import frc.robot.constants.CompConstants;
 public class ArmControlSubsystem extends SubsystemBase {
 
   public enum ArmMotorMode {
-    COAST,
-    BRAKE,
-    OFF
+    COAST, BRAKE, OFF
   }
 
   private final WPI_TalonFX mLeftPivotController = new WPI_TalonFX(ArmConstants.LEFT_PIV_MOTOR_ID);
-  private final WPI_TalonFX mRightPivotController = new WPI_TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID);
-  private final CANSparkMax mExtensionController = new CANSparkMax(ArmConstants.EXT_SPARK_ID, MotorType.kBrushless);
+  private final WPI_TalonFX mRightPivotController =
+      new WPI_TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID);
+  private final CANSparkMax mExtensionController =
+      new CANSparkMax(ArmConstants.EXT_SPARK_ID, MotorType.kBrushless);
 
   private final DutyCycleEncoder mAbsPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPORTPIV);
   private final RelativeEncoder mExtensionEncoder = mExtensionController.getEncoder();
@@ -71,22 +71,24 @@ public class ArmControlSubsystem extends SubsystemBase {
     mPivotRateLimiter = new SlewRateLimiter(ArmConstants.MAX_PIV_RATE_RAD_SEC);
 
     mAbsPivEncoder.setConnectedFrequencyThreshold(ArmConstants.CONNECTION_THRESH_HZ);
-   
-    mPivotRelEncoderOffsetRot = -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION + ArmConstants.PIV_INIT_OFFSET_ROT;
-   
+
+    mPivotRelEncoderOffsetRot =
+        -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION
+            + ArmConstants.PIV_INIT_OFFSET_ROT;
+
     setDefaultConfig();
 
     SmartDashboard.putNumber("kG", ArmConstants.KG);
-    
+
     mChooser.addOption("Brake", ArmMotorMode.BRAKE);
-    mChooser.addOption("Coast", ArmMotorMode.COAST); 
+    mChooser.addOption("Coast", ArmMotorMode.COAST);
     mChooser.setDefaultOption("Brake", ArmMotorMode.BRAKE);
 
     SmartDashboard.putData("ArmMotorMode", mChooser);
-    
+
   }
 
-  public void setDefaultConfig(){
+  public void setDefaultConfig() {
     mRightPivotController.configFactoryDefault();
     mLeftPivotController.configFactoryDefault();
 
@@ -102,7 +104,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     mLeftPivotController.setSelectedSensorPosition(0);
     mRightPivotController.setSelectedSensorPosition(0);
-    
+
     mExtensionController.setInverted(false);
 
     mExtensionEncoder.setPosition(0);
@@ -111,42 +113,46 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
   @Override
-  public void periodic() { 
-    if(mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized){
+  public void periodic() {
+    if (mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized) {
       pivotPeriodic();
       extensionPeriodic();
-    }else if(mChooser.getSelected() == ArmMotorMode.COAST){
+    } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
       mDesiredPivotRotation = mCurrentPivotRotation;
       mDesiredExtensionDistance = mCurrentExtensionDistance;
     }
 
-    if(!mIsInitialized && -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION != 0 && mAbsPivEncoder.isConnected()){
-      resetEncoders();   
+    if (!mIsInitialized
+        && -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION != 0
+        && mAbsPivEncoder.isConnected()) {
+      resetEncoders();
       mIsInitialized = true;
     }
-    
+
     updateModes();
-  
+
 
     // Getting Current And Desired Distances
     SmartDashboard.putNumber("CurrentExtension", getCurrentExtensionIn());
     SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(mCurrentPivotRotation));
 
     if (CompConstants.DEBUG_MODE) {
-      //Encoder Positions
+      // Encoder Positions
       SmartDashboard.putNumber("PivotPos", getCurrentPivotRotation(false));
       SmartDashboard.putNumber("InitialAbsPivot", mPivotRelEncoderOffsetRot);
 
       SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
-      SmartDashboard.putNumber("extensionEncoderPos", mExtensionEncoder.getPosition()*ArmConstants.EXTENSION_ROTATION_TO_INCHES);
-    
-      //Abs Encoder Debugging
+      SmartDashboard.putNumber("extensionEncoderPos",
+          mExtensionEncoder.getPosition() * ArmConstants.EXTENSION_ROTATION_TO_INCHES);
+
+      // Abs Encoder Debugging
       SmartDashboard.putNumber("pivotfreq", mAbsPivEncoder.getFrequency());
       SmartDashboard.putBoolean("IsInititilized", mIsInitialized);
       SmartDashboard.putBoolean("absreconnectioned", mAbsPivEncoder.isConnected());
-      SmartDashboard.putNumber("AbsPivot", -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION);
+      SmartDashboard.putNumber("AbsPivot",
+          -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION);
 
-      //Setpoint Debugging
+      // Setpoint Debugging
       SmartDashboard.putBoolean("AtAnglePoint", atAngleSetpoint());
       SmartDashboard.putBoolean("AtExtensionPoint", atTelescopeSetpoint());
       SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(mDesiredPivotRotation));
@@ -154,140 +160,158 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
     }
-    
-    mDesiredPivotRotation = MathUtil.clamp(mDesiredPivotRotation, ArmConstants.MIN_PIV_ANGLE_RAD, ArmConstants.MAX_PIV_ANGLE_RAD);
+
+    mDesiredPivotRotation = MathUtil.clamp(mDesiredPivotRotation, ArmConstants.MIN_PIV_ANGLE_RAD,
+        ArmConstants.MAX_PIV_ANGLE_RAD);
     mCurrentPivotRotation = getCurrentPivotRotation(true);
 
     if (!mUltraInstinct) {
-      mDesiredExtensionDistance = MathUtil.clamp(mDesiredExtensionDistance, ArmConstants.MIN_EXT_LEN_IN, ArmConstants.MAX_EXT_LEN_IN);
+      mDesiredExtensionDistance = MathUtil.clamp(mDesiredExtensionDistance,
+          ArmConstants.MIN_EXT_LEN_IN, ArmConstants.MAX_EXT_LEN_IN);
     }
     mCurrentExtensionDistance = getCurrentExtensionIn();
   }
 
-  private void pivotPeriodic(){    
+  private void pivotPeriodic() {
     double pivotPIDOutput = mPivotPID.calculate(mCurrentPivotRotation, mDesiredPivotRotation);
 
-    //Desaturating PID output
-    pivotPIDOutput = MathUtil.clamp(pivotPIDOutput, -ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT, ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT);
+    // Desaturating PID output
+    pivotPIDOutput = MathUtil.clamp(pivotPIDOutput, -ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT,
+        ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT);
 
-    if (CompConstants.DEBUG_MODE) {SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);}
-    
+    if (CompConstants.DEBUG_MODE) {
+      SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
+    }
+
     if (ArmConstants.RATE_LIMIT_ARM) {
       pivotPIDOutput = mPivotRateLimiter.calculate(pivotPIDOutput);
     }
-    if(ArmConstants.ENABLE_FEEDFORWARD){
-      double kgOutPut = ArmConstants.KG*Math.cos(getCurrentPivotRotation(true)-(Math.PI/2));
-      //Desaturating kG output
-      pivotPIDOutput += MathUtil.clamp(kgOutPut, -ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT, ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
+    if (ArmConstants.ENABLE_FEEDFORWARD) {
+      double kgOutPut = ArmConstants.KG * Math.cos(getCurrentPivotRotation(true) - (Math.PI / 2));
+      // Desaturating kG output
+      pivotPIDOutput += MathUtil.clamp(kgOutPut, -ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT,
+          ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
     }
 
-    mLeftPivotController.set(MathUtil.clamp(pivotPIDOutput,0,ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
-    mRightPivotController.set(MathUtil.clamp(pivotPIDOutput,0,ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
+    mLeftPivotController
+        .set(MathUtil.clamp(pivotPIDOutput, 0, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
+    mRightPivotController
+        .set(MathUtil.clamp(pivotPIDOutput, 0, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
   }
 
-  private void extensionPeriodic(){
-    double extensionPIDOutput = mExtensionPID.calculate(mCurrentExtensionDistance, mDesiredExtensionDistance);
+  private void extensionPeriodic() {
+    double extensionPIDOutput =
+        mExtensionPID.calculate(mCurrentExtensionDistance, mDesiredExtensionDistance);
     SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
     double difference = mDesiredExtensionDistance - mCurrentExtensionDistance;
 
-    //Desaturating PID output
-    extensionPIDOutput = MathUtil.clamp(extensionPIDOutput, -ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT, ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT);
+    // Desaturating PID output
+    extensionPIDOutput =
+        MathUtil.clamp(extensionPIDOutput, -ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT,
+            ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT);
 
-    //This is for handling the friction in the extension
+    // This is for handling the friction in the extension
     double offset = ArmConstants.EXT_FRICTION_COEFF * (difference > 0 ? 1 : -1);
-    if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH){
-      mExtensionController.set(MathUtil.clamp(offset + extensionPIDOutput, 0, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
-    }else{
+    if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH) {
+      mExtensionController.set(
+          MathUtil.clamp(offset + extensionPIDOutput, 0, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
+    } else {
       mExtensionController.set(0);
     }
   }
 
 
-  public void setDesiredPivotRot(double desiredRotation){
+  public void setDesiredPivotRot(double desiredRotation) {
     mDesiredPivotRotation = desiredRotation;
   }
 
 
-  //in inches
-  public void setDesiredExtension(double extension){
+  // in inches
+  public void setDesiredExtension(double extension) {
     mDesiredExtensionDistance = extension;
   }
 
 
-  public boolean atAngleSetpoint(){
-    return Math.abs(mDesiredPivotRotation - mCurrentPivotRotation) < ArmConstants.ACTIVE_PIV_TOLERANCE_RAD;
+  public boolean atAngleSetpoint() {
+    return Math
+        .abs(mDesiredPivotRotation - mCurrentPivotRotation) < ArmConstants.ACTIVE_PIV_TOLERANCE_RAD;
   }
 
 
-  public boolean atTelescopeSetpoint(){
-    return Math.abs(mDesiredExtensionDistance - mCurrentExtensionDistance) < ArmConstants.ACTIVE_EXT_TOLERANCE_IN;
+  public boolean atTelescopeSetpoint() {
+    return Math.abs(mDesiredExtensionDistance
+        - mCurrentExtensionDistance) < ArmConstants.ACTIVE_EXT_TOLERANCE_IN;
   }
 
 
-  public Command waitUntilSpPivot(double sp){
-    return new FunctionalCommand(()->setDesiredPivotRot(sp), ()->new PrintCommand("getName()"), (Boolean bool)->new PrintCommand("Finished Pivot"), this::atAngleSetpoint, this);
+  public Command waitUntilSpPivot(double sp) {
+    return new FunctionalCommand(() -> setDesiredPivotRot(sp), () -> new PrintCommand("getName()"),
+        (Boolean bool) -> new PrintCommand("Finished Pivot"), this::atAngleSetpoint, this);
   }
 
 
-  public Command waitUntilSpTelescope(double sp){
-    return new FunctionalCommand(()->setDesiredExtension(sp), ()->new PrintCommand("finished"), (Boolean bool)-> new PrintCommand("getName()"), this::atTelescopeSetpoint, this);
+  public Command waitUntilSpTelescope(double sp) {
+    return new FunctionalCommand(() -> setDesiredExtension(sp), () -> new PrintCommand("finished"),
+        (Boolean bool) -> new PrintCommand("getName()"), this::atTelescopeSetpoint, this);
   }
-  
 
-  public double getCurrentPivotRotation(boolean inRadians){
+
+  public double getCurrentPivotRotation(boolean inRadians) {
     double rotation;
 
-    rotation = (mLeftPivotController.getSelectedSensorPosition()) * ArmConstants.ENCODER_RES * ArmConstants.PIV_MOTOR_TO_GEAR_ROT + mPivotRelEncoderOffsetRot;
-    
-    if(inRadians){
+    rotation = (mLeftPivotController.getSelectedSensorPosition()) * ArmConstants.ENCODER_RES
+        * ArmConstants.PIV_MOTOR_TO_GEAR_ROT + mPivotRelEncoderOffsetRot;
+
+    if (inRadians) {
       return rotation * 2 * Math.PI;
     }
     return rotation;
   }
 
 
-  //convert encoder rotations to distance inches
-  public double getCurrentExtensionIn(){
-    return mExtensionEncoder.getPosition()*ArmConstants.GEAR_RATIO_EXTENSION_IN;
+  // convert encoder rotations to distance inches
+  public double getCurrentExtensionIn() {
+    return mExtensionEncoder.getPosition() * ArmConstants.GEAR_RATIO_EXTENSION_IN;
   }
 
-  
-  public void changeDesiredPivotRotation(double i){
+
+  public void changeDesiredPivotRotation(double i) {
     mDesiredPivotRotation += i;
   }
 
 
-  public void changeDesiredExtension(double i){
+  public void changeDesiredExtension(double i) {
     mDesiredExtensionDistance += i;
   }
 
-  public boolean getmUltraInstinct(){
+  public boolean getmUltraInstinct() {
     return mUltraInstinct;
   }
-  public void setmUltraInstinct(boolean toggle){
+
+  public void setmUltraInstinct(boolean toggle) {
     mUltraInstinct = toggle;
   }
 
 
-  private double getPivotAbsEncoderAngleRot(){
-    return -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION + mPivotRelEncoderOffsetRot;
+  private double getPivotAbsEncoderAngleRot() {
+    return -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION
+        + mPivotRelEncoderOffsetRot;
   }
 
-  private void updateModes(){
+  private void updateModes() {
     SmartDashboard.updateValues();
-    if(mChooser.getSelected() == ArmMotorMode.BRAKE){
+    if (mChooser.getSelected() == ArmMotorMode.BRAKE) {
       mRightPivotController.setNeutralMode(NeutralMode.Brake);
       mLeftPivotController.setNeutralMode(NeutralMode.Brake);
       mExtensionController.setIdleMode(IdleMode.kBrake);
-    }
-    else if(mChooser.getSelected() == ArmMotorMode.COAST){
+    } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
       mRightPivotController.setNeutralMode(NeutralMode.Coast);
       mLeftPivotController.setNeutralMode(NeutralMode.Coast);
       mExtensionController.setIdleMode(IdleMode.kCoast);
     }
-  } 
+  }
 
-  private void resetEncoders(){
+  private void resetEncoders() {
     mRightPivotController.setSelectedSensorPosition(0);
     mLeftPivotController.setSelectedSensorPosition(0);
     mExtensionEncoder.setPosition(0);

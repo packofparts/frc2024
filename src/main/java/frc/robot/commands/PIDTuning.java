@@ -16,7 +16,7 @@ public class PIDTuning extends CommandBase {
   private final SwerveSubsystem mSwerve;
   private final SwerveModule mCurModule;
   private final PIDController mCurModPID;
-  
+
   private double mSetPoint = 0;
   private boolean mToggled = false;
 
@@ -34,11 +34,11 @@ public class PIDTuning extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putNumber("kP", 0);
-    SmartDashboard.putNumber("kI",0);
-    SmartDashboard.putNumber("kD",0);
-    SmartDashboard.putNumber("increment",2);
-    SmartDashboard.putNumber("measurement", mCurModule.getRotPosition()/Math.PI*180);
-    SmartDashboard.putNumber("setpoint",mSetPoint);
+    SmartDashboard.putNumber("kI", 0);
+    SmartDashboard.putNumber("kD", 0);
+    SmartDashboard.putNumber("increment", 2);
+    SmartDashboard.putNumber("measurement", mCurModule.getRotPosition() / Math.PI * 180);
+    SmartDashboard.putNumber("setpoint", mSetPoint);
     SmartDashboard.putBoolean("toggled", mToggled);
   }
 
@@ -47,27 +47,27 @@ public class PIDTuning extends CommandBase {
   public void execute() {
     double increment = 0;
 
-    if(Input.togglePIDTuning()){
+    if (Input.togglePIDTuning()) {
       mToggled = !mToggled;
     }
 
-    if (mToggled){
+    if (mToggled) {
       mCurModule.setPID(mSetPoint);
     }
     SmartDashboard.putBoolean("toggled", mToggled);
     mCurModPID.setP(SmartDashboard.getNumber("kP", 0));
     mCurModPID.setI(SmartDashboard.getNumber("kI", 0));
     mCurModPID.setD(SmartDashboard.getNumber("kD", 0));
-    
+
     increment = SmartDashboard.getNumber("increment", 2);
-    
-    if(Input.getIncPID()){
+
+    if (Input.getIncPID()) {
       mSetPoint += increment;
-    }else if(Input.getDecPID()){
+    } else if (Input.getDecPID()) {
       mSetPoint -= increment;
     }
     SmartDashboard.putNumber("setpoint", mSetPoint);
-    SmartDashboard.putNumber("measurement", mCurModule.getRotPosition()/Math.PI*180);
+    SmartDashboard.putNumber("measurement", mCurModule.getRotPosition() / Math.PI * 180);
     SmartDashboard.updateValues();
   }
 
@@ -76,7 +76,7 @@ public class PIDTuning extends CommandBase {
   public void end(boolean interrupted) {
     // For now we are keeping this empty to handle interruptions
   }
-  
+
 
   // Returns true when the command should end.
   @Override

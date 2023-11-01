@@ -19,27 +19,24 @@ import frc.robot.constants.VisionConstants;
 
 
 
-public class PoseEstimation extends SubsystemBase{
+public class PoseEstimation extends SubsystemBase {
   private final Limelight mLimelight;
   private final SwerveSubsystem mSwerve;
   private final SwerveDrivePoseEstimator mPoseEstimator;
   private final Field2d mField = new Field2d();
 
-  private boolean mHasUpdated = false; 
+  private boolean mHasUpdated = false;
 
   public PoseEstimation(Limelight lime, SwerveSubsystem swerve) {
     mLimelight = lime;
     mSwerve = swerve;
 
     mPoseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.SWERVE_KINEMATICS,
-        mSwerve.getRotation2d(),
-        mSwerve.getModulePositions(),
-        mSwerve.getRobotPose(),
-        VisionConstants.kStateStdDevs,
-        VisionConstants.kVisionMeasurementStdDevs);
+        mSwerve.getRotation2d(), mSwerve.getModulePositions(), mSwerve.getRobotPose(),
+        VisionConstants.STATE_STD_DEVS, VisionConstants.VISION_MEASUREMENTS_STD_DEVS);
     SmartDashboard.putData("Field", mField);
   }
-  
+
   @Override
   public void periodic() {
     mPoseEstimator.update(mSwerve.getRotation2d(), mSwerve.getModulePositions());
@@ -58,12 +55,13 @@ public class PoseEstimation extends SubsystemBase{
   }
 
   public void updateVision() {
-    Optional<EstimatedRobotPose> pose = mLimelight.getEstimatedGlobalPose(mPoseEstimator.getEstimatedPosition());
+    Optional<EstimatedRobotPose> pose =
+        mLimelight.getEstimatedGlobalPose(mPoseEstimator.getEstimatedPosition());
     if (pose.isPresent()) {
       EstimatedRobotPose camPose = pose.get();
       if (isValidPose(camPose)) {
         mPoseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
-                                            camPose.timestampSeconds);
+            camPose.timestampSeconds);
         SmartDashboard.putBoolean("isUpdatingVision", true);
         mHasUpdated = true;
         return;
@@ -76,7 +74,7 @@ public class PoseEstimation extends SubsystemBase{
 
   public boolean isValidPose(EstimatedRobotPose pose) {
     List<PhotonTrackedTarget> targets = pose.targetsUsed;
-    if (targets.size() == 1){
+    if (targets.size() == 1) {
       return targets.get(0).getPoseAmbiguity() < VisionConstants.SINGLE_TAG_AMBIGUITY_THRESH;
     }
 
@@ -85,12 +83,14 @@ public class PoseEstimation extends SubsystemBase{
 
   public Pose2d getRobotPose() {
     return mPoseEstimator.getEstimatedPosition();
-    
+
   }
 
   public void resetPose() {
-    mPoseEstimator.resetPosition(mSwerve.getRotation2d(), mSwerve.getModulePositions(), new Pose2d());
+    mPoseEstimator.resetPosition(mSwerve.getRotation2d(), mSwerve.getModulePositions(),
+        new Pose2d());
   }
+
   public void resetPose(Pose2d pose) {
     mPoseEstimator.resetPosition(mSwerve.getRotation2d(), mSwerve.getModulePositions(), pose);
   }
