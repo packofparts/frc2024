@@ -34,7 +34,7 @@ public class DefaultArmCommand extends CommandBase {
       mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DESATURATION
           * (Input.getLeftStickY() - JoystickConstants.PIVOT_INPUT_DEADZONE));
     } else if (Input.getLeftStickY() < -JoystickConstants.PIVOT_INPUT_DEADZONE) {
-      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DEADZONE
+      mArmControlSubsystem.changeDesiredPivotRotation(JoystickConstants.PIVOT_INPUT_DESATURATION
           * (Input.getLeftStickY() + JoystickConstants.PIVOT_INPUT_DEADZONE));
     }
 

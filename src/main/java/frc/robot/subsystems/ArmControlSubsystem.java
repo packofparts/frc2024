@@ -193,28 +193,30 @@ public class ArmControlSubsystem extends SubsystemBase {
           ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
     }
 
-    mLeftPivotController
-        .set(MathUtil.clamp(pivotPIDOutput, 0, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
-    mRightPivotController
-        .set(MathUtil.clamp(pivotPIDOutput, 0, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
+    mLeftPivotController.set(MathUtil.clamp(pivotPIDOutput,
+        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
+    mRightPivotController.set(MathUtil.clamp(pivotPIDOutput,
+        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
   }
 
   private void extensionPeriodic() {
     double extensionPIDOutput =
         mExtensionPID.calculate(mCurrentExtensionDistance, mDesiredExtensionDistance);
-    SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
     double difference = mDesiredExtensionDistance - mCurrentExtensionDistance;
 
     // Desaturating PID output
     extensionPIDOutput =
         MathUtil.clamp(extensionPIDOutput, -ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT,
             ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT);
+    SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
 
     // This is for handling the friction in the extension
     double offset = ArmConstants.EXT_FRICTION_COEFF * (difference > 0 ? 1 : -1);
+    SmartDashboard.putNumber("difference", offset);
+
     if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH) {
-      mExtensionController.set(
-          MathUtil.clamp(offset + extensionPIDOutput, 0, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
+      mExtensionController.set(MathUtil.clamp(offset + extensionPIDOutput,
+          -ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
     } else {
       mExtensionController.set(0);
     }

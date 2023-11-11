@@ -39,7 +39,7 @@ public class ArmConstants {
 
   // Common Configurables
   public static final boolean RATE_LIMIT_ARM = false;
-  public static final boolean ENABLE_FEEDFORWARD = true;
+  public static final boolean ENABLE_FEEDFORWARD = false;
   public static final double KG = 0.03;
 
   // channel on dio port
@@ -52,7 +52,7 @@ public class ArmConstants {
 
 
   // Offset For Pivot
-  public static final double PIV_INIT_OFFSET_ROT = .032;
+  public static final double PIV_INIT_OFFSET_ROT = .032 + 0.0633;
 
   // Initial Value
   public static final double ZERO_EXTENSION_IN = 0.0;
