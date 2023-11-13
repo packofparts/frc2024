@@ -163,12 +163,8 @@ public class SwerveSubsystem extends SubsystemBase {
 
   }
 
-  public void setMotors(double x, double y, double rot) {
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(x, y, rot);
-    SwerveModuleState[] moduleStates = mKinematics.toSwerveModuleStates(chassisSpeeds);
-
-
-    setModuleStates(moduleStates);
+  public void setChassisSpeed(double x, double y, double rot) {
+    setChassisSpeed(x, y, rot, false);
   }
 
   /**

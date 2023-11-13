@@ -18,8 +18,8 @@ public class Mobility extends CommandBase {
   public Mobility(SwerveSubsystem swerve) {
     addRequirements(swerve);
     mCommands = new SequentialCommandGroup(
-        new RunCommand(() -> swerve.setMotors(-1, 0, 0)).withTimeout(4.2),
-        new RunCommand(() -> swerve.setMotors(0, 0, 0)));
+        new RunCommand(() -> swerve.setChassisSpeed(-1, 0, 0)).withTimeout(4.2),
+        new RunCommand(() -> swerve.setChassisSpeed(0, 0, 0)));
 
   }
 
