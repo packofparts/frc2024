@@ -19,13 +19,13 @@ public class SwerveConfig {
 
         // ID's
         // Encoder IDs have been set
-        private static final int FRONT_RIGHT_TRANS_ID = 7;
-        private static final int FRONT_RIGHT_ROT_ID = 3;
-        private static final int FRONT_RIGHT_ROT_ENC_ID = 23;
-
         private static final int FRONT_LEFT_TRANS_ID = 1;
         private static final int FRONT_LEFT_ROT_ID = 8;
         private static final int FRONT_LEFT_ROT_ENC_ID = 22;
+
+        private static final int FRONT_RIGHT_TRANS_ID = 7;
+        private static final int FRONT_RIGHT_ROT_ID = 3;
+        private static final int FRONT_RIGHT_ROT_ENC_ID = 23;
 
         private static final int BACK_RIGHT_TRANS_ID = 9;
         private static final int BACK_RIGHT_ROT_ID = 6;
@@ -39,20 +39,23 @@ public class SwerveConfig {
         // Offsets
 
         // Inverse Booleans
-        private static final boolean FRONT_RIGHT_ROT_INVERSE = false;
-        private static final boolean FRONT_RIGHT_TRANS_INVERSE = false;
         private static final boolean FRONT_LEFT_ROT_INVERSE = false;
         private static final boolean FRONT_LEFT_TRANS_INVERSE = true;
 
-        private static final boolean BACK_RIGHT_ROT_INVERSE = false;
-        private static final boolean BACK_RIGHT_TRANS_INVERSE = false;
+        private static final boolean FRONT_RIGHT_ROT_INVERSE = false;
+        private static final boolean FRONT_RIGHT_TRANS_INVERSE = false;
+
         private static final boolean BACK_LEFT_ROT_INVERSE = false;
         private static final boolean BACK_LEFT_TRANS_INVERSE = true;
 
+        private static final boolean BACK_RIGHT_ROT_INVERSE = false;
+        private static final boolean BACK_RIGHT_TRANS_INVERSE = false;
+
+
 
         // PID Controllers
-        public static final PIDController FRONT_RIGHT_ROT_PID = new PIDController(0.35, 0.0, 0.);
         public static final PIDController FRONT_LEFT_ROT_PID = new PIDController(0.35, 0., 0.);
+        public static final PIDController FRONT_RIGHT_ROT_PID = new PIDController(0.35, 0.0, 0.);
         public static final PIDController BACK_RIGHT_ROT_PID = new PIDController(0.35, 0, 0.);
         public static final PIDController BACK_LEFT_ROT_PID = new PIDController(0.35, 0, 0);
 
@@ -72,13 +75,13 @@ public class SwerveConfig {
 
         public static final AHRS NAVX = new AHRS(Port.kMXP);
 
-        public static final SwerveModule FRONT_RIGHT_MODULE = new SwerveModule(FRONT_RIGHT_ROT_ID,
-                        FRONT_RIGHT_TRANS_ID, FRONT_RIGHT_ROT_ENC_ID, FRONT_RIGHT_ROT_INVERSE,
-                        FRONT_RIGHT_TRANS_INVERSE, FRONT_RIGHT_ROT_PID);
-
         public static final SwerveModule FRONT_LEFT_MODULE = new SwerveModule(FRONT_LEFT_ROT_ID,
                         FRONT_LEFT_TRANS_ID, FRONT_LEFT_ROT_ENC_ID, FRONT_LEFT_ROT_INVERSE,
                         FRONT_LEFT_TRANS_INVERSE, FRONT_LEFT_ROT_PID);
+
+        public static final SwerveModule FRONT_RIGHT_MODULE = new SwerveModule(FRONT_RIGHT_ROT_ID,
+                        FRONT_RIGHT_TRANS_ID, FRONT_RIGHT_ROT_ENC_ID, FRONT_RIGHT_ROT_INVERSE,
+                        FRONT_RIGHT_TRANS_INVERSE, FRONT_RIGHT_ROT_PID);
 
         public static final SwerveModule BACK_RIGHT_MODULE = new SwerveModule(BACK_RIGHT_ROT_ID,
                         BACK_RIGHT_TRANS_ID, BACK_RIGHT_ROT_ENC_ID, BACK_RIGHT_ROT_INVERSE,
