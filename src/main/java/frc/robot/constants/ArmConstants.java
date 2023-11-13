@@ -73,9 +73,6 @@ public class ArmConstants {
   public static final double MAX_PIV_RATE_PERCENT_SEC =
       MAX_PIV_RATE_RAD_SEC / PHYSICAL_MAX_PIV_RAD_SEC;
 
-  // Setpoints
-  public static final double GEAR_RATIO_EXTENSION_IN = 8.333 / 8.113;
-  public static final double Y_PIVOT_POS_METERS = Units.inchesToMeters(45.75);
 
   // IDs
   public static final int RIGHT_PIV_MOTOR_ID = 16;
@@ -85,7 +82,10 @@ public class ArmConstants {
 
   // Gear Ratios
   public static final double PIV_MOTOR_TO_GEAR_ROT = 1.0 / 240;
-  public static final double ENCODER_RES = 1.0 / 2048;
+  public static final double PIVOT_ENCODER_RES = 1.0 / 2048;
+  public static final double EXT_MOTOR_TO_BELT_IN = 8.333 / 8.113;
+  public static final double EXT_ENCODER_RES = 1.0 / 2048;
+
 
   // Inversions
   public static final boolean LEFT_PIV_MOTOR_INVERTED = true;

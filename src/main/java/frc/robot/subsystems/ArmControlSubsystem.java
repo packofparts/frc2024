@@ -258,7 +258,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   public double getCurrentPivotRotation(boolean inRadians) {
     double rotation;
 
-    rotation = (mLeftPivotController.getSelectedSensorPosition()) * ArmConstants.ENCODER_RES
+    rotation = (mLeftPivotController.getSelectedSensorPosition()) * ArmConstants.PIVOT_ENCODER_RES
         * ArmConstants.PIV_MOTOR_TO_GEAR_ROT + mPivotRelEncoderOffsetRot;
 
     if (inRadians) {
@@ -270,7 +270,8 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   // convert encoder rotations to distance inches
   public double getCurrentExtensionIn() {
-    return mExtensionEncoder.getPosition() * ArmConstants.GEAR_RATIO_EXTENSION_IN;
+    return mExtensionEncoder.getPosition() * ArmConstants.EXT_MOTOR_TO_BELT_IN
+        * ArmConstants.EXT_ENCODER_RES;
   }
 
 
