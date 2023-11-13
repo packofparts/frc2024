@@ -115,8 +115,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       mDesiredExtensionDistance = mCurrentExtensionDistance;
     }
 
-    if (!mIsInitialized
-        && -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION != 0
+    if (!mIsInitialized && Double.compare(mCurrentPivotRotation, mCurrentExtensionDistance) == 0
         && mAbsPivEncoder.isConnected()) {
       resetEncoders();
       mIsInitialized = true;
