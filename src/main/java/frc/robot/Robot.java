@@ -5,7 +5,9 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +29,7 @@ import frc.robot.constants.ArmConstants.ArmState;
 public class Robot extends TimedRobot {
 
   private final SendableChooser<Command> mPathSelector = new SendableChooser<>();
+  private Alliance mCurAlliance;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -98,6 +101,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    mCurAlliance = DriverStation.getAlliance();
     mPathSelector.getSelected().schedule();
 
     CANSparkMaxLowLevel.enableExternalUSBControl(true);
