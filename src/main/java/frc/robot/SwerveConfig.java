@@ -36,8 +36,6 @@ public class SwerveConfig {
         private static final int BACK_LEFT_ROT_ENC_ID = 21;
 
 
-        // Offsets
-
         // Inverse Booleans
         private static final boolean FRONT_LEFT_ROT_INVERSE = false;
         private static final boolean FRONT_LEFT_TRANS_INVERSE = true;
@@ -51,7 +49,19 @@ public class SwerveConfig {
         private static final boolean BACK_RIGHT_ROT_INVERSE = false;
         private static final boolean BACK_RIGHT_TRANS_INVERSE = false;
 
-
+        // Swerve Module Locations
+        public static final Translation2d FRONT_LEFT_COORDS_METERS =
+                        new Translation2d(SwerveConstants.TRACK_LENGTH_METERS / 2,
+                                        SwerveConstants.TRACK_WIDTH_METERS / 2);
+        public static final Translation2d FRONT_RIGHT_COORDS_METERS =
+                        new Translation2d(SwerveConstants.TRACK_LENGTH_METERS / 2,
+                                        -SwerveConstants.TRACK_WIDTH_METERS / 2);
+        public static final Translation2d BACK_LEFT_COORDS_METERS =
+                        new Translation2d(-SwerveConstants.TRACK_LENGTH_METERS / 2,
+                                        SwerveConstants.TRACK_WIDTH_METERS / 2);
+        public static final Translation2d BACK_RIGHT_COORDS_METERS =
+                        new Translation2d(-SwerveConstants.TRACK_LENGTH_METERS / 2,
+                                        -SwerveConstants.TRACK_WIDTH_METERS / 2);
 
         // PID Controllers
         public static final PIDController FRONT_LEFT_ROT_PID = new PIDController(0.35, 0., 0.);
@@ -61,18 +71,11 @@ public class SwerveConfig {
 
 
         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
-                        new Translation2d(SwerveConstants.TRACK_LENGTH_METERS / 2,
-                                        SwerveConstants.TRACK_WIDTH_METERS / 2),
-                        new Translation2d(SwerveConstants.TRACK_LENGTH_METERS / 2,
-                                        -SwerveConstants.TRACK_WIDTH_METERS / 2),
-                        new Translation2d(-SwerveConstants.TRACK_LENGTH_METERS / 2,
-                                        SwerveConstants.TRACK_WIDTH_METERS / 2),
-                        new Translation2d(-SwerveConstants.TRACK_LENGTH_METERS / 2,
-                                        -SwerveConstants.TRACK_WIDTH_METERS / 2));
+                        FRONT_LEFT_COORDS_METERS, FRONT_RIGHT_COORDS_METERS,
+                        BACK_LEFT_COORDS_METERS, BACK_RIGHT_COORDS_METERS);
 
 
         // Swerve Modules and Other Hardware
-
         public static final AHRS NAVX = new AHRS(Port.kMXP);
 
         public static final SwerveModule FRONT_LEFT_MODULE = new SwerveModule(FRONT_LEFT_ROT_ID,
