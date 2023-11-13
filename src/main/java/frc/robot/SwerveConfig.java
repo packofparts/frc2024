@@ -4,11 +4,9 @@
 
 package frc.robot;
 
-import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.I2C.Port;
 import frc.robot.constants.SwerveConstants;
 
 /** Add your docs here. */
@@ -76,8 +74,6 @@ public class SwerveConfig {
 
 
         // Swerve Modules and Other Hardware
-        public static final AHRS NAVX = new AHRS(Port.kMXP);
-
         public static final SwerveModule FRONT_LEFT_MODULE = new SwerveModule(FRONT_LEFT_ROT_ID,
                         FRONT_LEFT_TRANS_ID, FRONT_LEFT_ROT_ENC_ID, FRONT_LEFT_ROT_INVERSE,
                         FRONT_LEFT_TRANS_INVERSE, FRONT_LEFT_ROT_PID);

@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveConfig;
@@ -31,10 +32,8 @@ public class SwerveSubsystem extends SubsystemBase {
   public SwerveSubsystem() {
     // Populating Instance Variables
     mKinematics = SwerveConfig.SWERVE_KINEMATICS;
-    mNavX = SwerveConfig.NAVX;
+    mNavX = new AHRS(Port.kMXP);
     mModules = SwerveConfig.SWERVE_MODULES;
-
-
     mOdometry = new SwerveDriveOdometry(mKinematics, getRotation2d(), getModulePositions());
     resetGyro();
     resetRobotPose(new Pose2d());
