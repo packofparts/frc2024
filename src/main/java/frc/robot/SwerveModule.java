@@ -60,7 +60,7 @@ public class SwerveModule {
         mRotPID = rotPID;
 
         // ----Setting PID Parameters
-        rotPID.enableContinuousInput(-Math.PI, Math.PI);
+        mRotPID.enableContinuousInput(-Math.PI, Math.PI);
 
         // ----Setting Inversion
         mRotMotor.setInverted(mRotInverse);
@@ -120,7 +120,6 @@ public class SwerveModule {
         mPIDOutput = mRotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
         mRotMotor.set(mPIDOutput);
-
 
     }
 
