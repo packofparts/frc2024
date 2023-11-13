@@ -139,20 +139,22 @@ public class SwerveSubsystem extends SubsystemBase {
 
   /**
    * 
-   * @param x this is the forward velocity in meters/second
-   * @param y this is the sideways velocity in meter/second (left is positive)
-   * @param rot this is in radians/second counterclockwise
+   * @param vxMPS this is the forward velocity in meters/second
+   * @param vyMPS this is the sideways velocity in meter/second (left is positive)
+   * @param angleSpeedRADPS this is in radians/second counterclockwise
    * @param fieldOriented this is a boolean that determines if the robot is field oriented or not
    * 
    * @apiNote Keep in mind all of this is field relative so resetting the gyro midmatch will also
    *          reset these params
    */
-  public void setMotors(double x, double y, double rot, boolean fieldOriented) {
+  public void setChassisSpeed(double vxMPS, double vyMPS, double angleSpeedRADPS,
+      boolean fieldOriented) {
     ChassisSpeeds chassisSpeeds;
     if (fieldOriented) {
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(x, y, rot, getRotation2d());
+      chassisSpeeds =
+          ChassisSpeeds.fromFieldRelativeSpeeds(vxMPS, vyMPS, angleSpeedRADPS, getRotation2d());
     } else {
-      chassisSpeeds = new ChassisSpeeds(x, y, rot);
+      chassisSpeeds = new ChassisSpeeds(vxMPS, vyMPS, angleSpeedRADPS);
     }
     SwerveModuleState[] moduleStates = mKinematics.toSwerveModuleStates(chassisSpeeds);
 
