@@ -188,7 +188,7 @@ public class SwerveModule {
     }
 
     public double getRotRelativePosition() {
-        return mRotRelativeEncoder.getPosition() / 12.8;
+        return mRotRelativeEncoder.getPosition() * SwerveConstants.ROT_GEAR_RATIO_ROT;
     }
 
     /**

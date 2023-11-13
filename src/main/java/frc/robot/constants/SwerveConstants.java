@@ -5,19 +5,20 @@ public class SwerveConstants {
     throw new IllegalStateException("Constants Class");
   }
 
-  public static final double TRANS_GEAR_RATIO_ROT = 1 / 6.75;
-
   // Gear Conversions
-  public static final double WHEEL_DIAMETER_METERS = .1016;
-  public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI * WHEEL_DIAMETER_METERS;
+  public static final double TRANS_GEAR_RATIO_ROT = 1 / 6.75;
+  public static final double ROT_GEAR_RATIO_ROT = 1 / 12.8;
 
   // Conversion Factors
+  public static final double WHEEL_DIAMETER_METERS = .1016;
+  public static final double WHEEL_CIRCUMFERENCE_METERS = Math.PI * WHEEL_DIAMETER_METERS;
   public static final double TRANS_RPM_TO_MPS =
       (TRANS_GEAR_RATIO_ROT * WHEEL_CIRCUMFERENCE_METERS) / 60;
 
   // Track dimensions in meters
   public static final double TRACK_WIDTH_METERS = .54;
   public static final double TRACK_LENGTH_METERS = .54;
+
 
 
   // Physical Max
