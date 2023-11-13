@@ -1,6 +1,7 @@
 package frc.robot.constants;
 
 import edu.wpi.first.math.util.Units;
+import frc.robot.subsystems.ArmControlSubsystem.ArmMotorMode;
 
 /** Add your docs here. */
 public class ArmConstants {
@@ -107,4 +108,6 @@ public class ArmConstants {
   public static final double PIV_MAX_PID_CONTRIBUTION_PERCENT = 0.55;
 
   public static final double PIV_MAX_KG_CONTRIBUTION_PERCENT = 0.3;
+
+  public static final ArmMotorMode INITIAL_ARM_MOTOR_MODES = ArmMotorMode.BRAKE;
 }
