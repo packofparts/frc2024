@@ -53,14 +53,16 @@ public class ArmControlSubsystem extends SubsystemBase {
   private double mCurrentExtensionDistance = ArmConstants.ZERO_EXTENSION_IN;
   private double mDesiredExtensionDistance = ArmConstants.MIN_EXT_LEN_IN;
 
-
-  private ArmMotorMode mCurMotorMode = ArmConstants.INITIAL_ARM_MOTOR_MODES;
   private boolean mIsInitialized = false;
 
   private final SendableChooser<ArmMotorMode> mChooser = new SendableChooser<>();
 
 
   public ArmControlSubsystem() {
+
+    mChooser.addOption("Brake", ArmMotorMode.BRAKE);
+    mChooser.addOption("Coast", ArmMotorMode.COAST);
+    mChooser.setDefaultOption("Brake", ArmConstants.INITIAL_ARM_MOTOR_MODE);
 
     mPivotPID = new PIDController(1.4, 0, 0);
     mPivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_RAD);
@@ -76,10 +78,10 @@ public class ArmControlSubsystem extends SubsystemBase {
         -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION
             + ArmConstants.PIV_INIT_OFFSET_ROT;
 
-    setDefaultConfig();
+    setDefaultMotorConfig();
   }
 
-  public void setDefaultConfig() {
+  public void setDefaultMotorConfig() {
     mRightPivotController.configFactoryDefault();
     mLeftPivotController.configFactoryDefault();
 
@@ -128,10 +130,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(mCurrentPivotRotation));
 
     if (CompConstants.DEBUG_MODE) {
-
-      mChooser.addOption("Brake", ArmMotorMode.BRAKE);
-      mChooser.addOption("Coast", ArmMotorMode.COAST);
-      mChooser.setDefaultOption("Brake", ArmMotorMode.BRAKE);
 
       SmartDashboard.putData("ArmMotorMode", mChooser);
       // Encoder Positions
@@ -300,21 +298,16 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   private void updateModes() {
     SmartDashboard.updateValues();
-    if (CompConstants.DEBUG_MODE) {
-      mCurMotorMode = mChooser.getSelected();
-    }
 
-    if (mCurMotorMode == ArmMotorMode.BRAKE) {
+    if (mChooser.getSelected() == ArmMotorMode.BRAKE) {
       mRightPivotController.setNeutralMode(NeutralMode.Brake);
       mLeftPivotController.setNeutralMode(NeutralMode.Brake);
       mExtensionController.setIdleMode(IdleMode.kBrake);
-    } else if (mCurMotorMode == ArmMotorMode.COAST) {
+    } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
       mRightPivotController.setNeutralMode(NeutralMode.Coast);
       mLeftPivotController.setNeutralMode(NeutralMode.Coast);
       mExtensionController.setIdleMode(IdleMode.kCoast);
     }
-
-
   }
 
   private void resetEncoders() {

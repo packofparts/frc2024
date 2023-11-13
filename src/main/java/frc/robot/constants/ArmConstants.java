@@ -109,5 +109,5 @@ public class ArmConstants {
 
   public static final double PIV_MAX_KG_CONTRIBUTION_PERCENT = 0.3;
 
-  public static final ArmMotorMode INITIAL_ARM_MOTOR_MODES = ArmMotorMode.BRAKE;
+  public static final ArmMotorMode INITIAL_ARM_MOTOR_MODE = ArmMotorMode.BRAKE;
 }
