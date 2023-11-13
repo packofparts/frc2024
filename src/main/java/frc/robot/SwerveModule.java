@@ -147,7 +147,7 @@ public class SwerveModule {
      * 
      * @return Returns number rotations of translation motor BEFORE GEAR RATIO
      */
-    public double getTransPositionRaw() {
+    private double getTransPositionRaw() {
         return mTransEncoder.getPosition();
     }
 
@@ -155,7 +155,7 @@ public class SwerveModule {
      * 
      * @return Returns rotation position in radians
      */
-    public double getRotPositionRaw() {
+    private double getRotPositionRaw() {
         return mRotEncoder.getAbsolutePosition();
     }
 
@@ -163,7 +163,7 @@ public class SwerveModule {
      * 
      * @return Returns velocity of translation motor BEFORE GEAR RATIO
      */
-    public double getTransVelocityRaw() {
+    private double getTransVelocityRaw() {
         return mTransEncoder.getVelocity();
     }
 
@@ -183,11 +183,11 @@ public class SwerveModule {
      * @return Returns rotation in RADIANS of rotation motor AFTER GEAR RATIO
      */
     public double getRotPosition() {
-        return getRotPositionRaw();
+        return getRotPositionRaw() * SwerveConstants.ABS_ENC_GEAR_RATIO_ROT;
     }
 
     public double getRotRelativePosition() {
-        return mRotRelativeEncoder.getPosition() * SwerveConstants.ROT_GEAR_RATIO_ROT;
+        return mRotRelativeEncoder.getPosition() * SwerveConstants.REL_ENC_GEAR_RATIO_ROT;
     }
 
     /**

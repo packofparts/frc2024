@@ -7,7 +7,8 @@ public class SwerveConstants {
 
   // Gear Conversions
   public static final double TRANS_GEAR_RATIO_ROT = 1 / 6.75;
-  public static final double ROT_GEAR_RATIO_ROT = 1 / 12.8;
+  public static final double REL_ENC_GEAR_RATIO_ROT = 1 / 12.8;
+  public static final double ABS_ENC_GEAR_RATIO_ROT = 1;
 
   // Conversion Factors
   public static final double WHEEL_DIAMETER_METERS = .1016;
