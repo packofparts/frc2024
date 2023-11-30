@@ -39,8 +39,9 @@ public class SwerveModule {
 
     public double PIDOutput = 0.0;
     public double desiredRadians = 0.0;
-    public SwerveModule(int rotID, int transID, int rotEncoderID,
-            boolean rotInverse, boolean transInverse, PIDController rotPID) {
+
+    public SwerveModule(int rotID, int transID, int rotEncoderID, boolean rotInverse,
+            boolean transInverse, PIDController rotPID) {
         // Setting Parameters
         _rotID = rotID;
         _transID = transID;
@@ -52,7 +53,7 @@ public class SwerveModule {
         // Motor Controllers
         _rotMotor = new CANSparkMax(_rotID, MotorType.kBrushless);
         _transMotor = new CANSparkMax(_transID, MotorType.kBrushless);
-        
+
 
         // Encoders
         _rotEncoder = new CANCoder(_rotEncoderID);
@@ -76,7 +77,7 @@ public class SwerveModule {
 
         _transEncoder.setPosition(0);
     }
-    
+
     // ------------------- State Settings
 
     /**
@@ -89,15 +90,15 @@ public class SwerveModule {
         return new SwerveModuleState(getTransVelocity(), Rotation2d.fromRadians(getRotPosition()));
     }
 
-    public double getAppliedOutput(){
+    public double getAppliedOutput() {
         return _rotMotor.getAppliedOutput();
     }
 
-    public void setTransMotorRaw(double speed){
+    public void setTransMotorRaw(double speed) {
         _transMotor.set(speed);
     }
 
-    public void setRotMotorRaw(double speed){
+    public void setRotMotorRaw(double speed) {
         _rotMotor.set(speed);
 
     }
@@ -125,12 +126,12 @@ public class SwerveModule {
         PIDOutput = _rotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
         _rotMotor.set(PIDOutput);
-        
+
 
     }
 
-    public void setPID(double degrees){
-        PIDOutput = _rotPID.calculate(getRotPosition(),Math.toRadians(degrees));
+    public void setPID(double degrees) {
+        PIDOutput = _rotPID.calculate(getRotPosition(), Math.toRadians(degrees));
         _rotMotor.set(PIDOutput);
     }
 
@@ -190,8 +191,8 @@ public class SwerveModule {
         return getRotPositionRaw();
     }
 
-    public double getRotRelativePosition(){
-        return _rotRelativeEncoder.getPosition()/12.8;
+    public double getRotRelativePosition() {
+        return _rotRelativeEncoder.getPosition() / 12.8;
     }
 
     /**
