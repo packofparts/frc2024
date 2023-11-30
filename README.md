@@ -1,2 +1,3 @@
-# frc2024
-Robot control software and engineering material for the 2024 build season.
+# Second Order Kinematics Swerve Implementation
+
+Attempted implentation on a whitepaper created by 449
