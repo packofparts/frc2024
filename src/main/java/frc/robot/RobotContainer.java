@@ -4,15 +4,14 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.DefaultArmCommand;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DefaultIntakeCommand;
 import frc.robot.commands.PIDTuning;
-import frc.robot.constants.SwerveConstants;
-import frc.robot.constants.VisionConstants;
+import frc.robot.constants.AutoConstants;
+import frc.robot.constants.CompConstants;
+import frc.robot.subsystems.ArmControlSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -25,50 +24,41 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //Physical Systems
-  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  private final SwerveSubsystem mSwerveSubsystem = new SwerveSubsystem();
+  private final ArmControlSubsystem mArmControlSubsystem = new ArmControlSubsystem();
+  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
+  private final Limelight mLimelight = new Limelight();
+  private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, mSwerveSubsystem);
 
-  //Vision
-  private final Limelight limelight = new Limelight(VisionConstants.kLimelightName);
-  private final PoseEstimation poseEstimation = new PoseEstimation(swerveSubsystem, limelight);
-
-  private final DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    AutoConstants.populateHashMaps(mArmControlSubsystem, mIntakeSubsystem);
+    mArmControlSubsystem.setDefaultCommand(new DefaultArmCommand(mArmControlSubsystem));
+    mIntakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(mIntakeSubsystem));
 
-    if(SwerveConstants.kPIDTuneMode)
-      swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
+    if (CompConstants.PID_TUNE_MODE)
+      mSwerveSubsystem.setDefaultCommand(new PIDTuning(0, mSwerveSubsystem));
     else
-      swerveSubsystem.setDefaultCommand(driveCommand);
-    // Configure the trigger bindings
-    configureBindings();
+      mSwerveSubsystem.setDefaultCommand(new DefaultDriveCommand(mSwerveSubsystem));
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for
-   * {@link CommandXboxController
-   * Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller PS4} controllers or
-   * {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is
-    // pressed,
-    // cancelling on release.
+  public SwerveSubsystem getSwerveSubsystem() {
+    return mSwerveSubsystem;
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+  public ArmControlSubsystem getArmSubsystem() {
+    return mArmControlSubsystem;
+  }
+
+  public IntakeSubsystem getIntakeSubsystem() {
+    return mIntakeSubsystem;
+  }
+
+  public Limelight getLimelight() {
+    return mLimelight;
+  }
+
+  public PoseEstimation getPoseEstimator() {
+    return mPoseEstimator;
   }
 }
