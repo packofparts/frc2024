@@ -126,7 +126,6 @@ public class SwerveModule {
     public void setPID(double degrees) {
         mPIDOutput = mRotPID.calculate(getRotPosition(), Math.toRadians(degrees));
         mRotMotor.set(mPIDOutput);
-
     }
 
 
