@@ -22,13 +22,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class wcModule {
     // Parameters
-    private int _leftMotorID;
     private int _motorID;
     private int _encoderID;
-    private double PIDOutput;
 
     private static PIDController pid;
-    public CANSparkMax _motor;
+    private CANSparkMax _motor;
     private static CANCoder _encoder;
 
     public wcModule(int motorID, int encoderID) {
@@ -44,18 +42,43 @@ public class wcModule {
     }
 
     // method that moves the robot forward a certain distance
-    public void move(double inches) {
-        PIDOutput = pid.calculate(calculateInches(_encoder.getAbsolutePosition()), inches);
+    public boolean move(double inches) {
+        // Stop moving once robot is within 0.1 in. of target
+        if (calculateInches(_encoder.getPosition()) + 0.1 >= inches) {
+            _motor.stopMotor();
+            return true;
+        }
+
+        double PIDOutput = pid.calculate(calculateInches(_encoder.getPosition()), inches);
         _motor.set(PIDOutput);
-        if (calculateInches(_encoder.getAbsolutePosition()) >= inches) {
-            _motor.stopMotor();
-            _motor.stopMotor();
+        return false;
+    }
+
+    // Not used for now
+    public void maintainVelocity(double velocity) {
+        if ((getVelocityInches() < velocity) && (velocity != 0)) {
+            double PIDOutput = pid.calculate(getVelocityInches(), velocity);
+            _motor.set(PIDOutput);
+        } else {
+            _motor.set(0);
         }
     }
 
     public static double calculateInches(double degrees) {
         double inches = (WcConstants.WcCircumference / 360) * degrees;
         return inches;
+    }
+
+    public double getVelocityInches() {
+        return _encoder.getVelocity() / 360 * WcConstants.WcCircumference;
+    }
+
+    public void invert() {
+        _motor.setInverted(!(_motor.getInverted()));
+    }
+
+    public void reset() {
+        _encoder.setPosition(0);
     }
 }
 

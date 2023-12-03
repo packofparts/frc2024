@@ -8,26 +8,37 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.subsystems.wcModule;
 
-public class WCSubsystem {
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class WCSubsystem extends SubsystemBase {
   private wcModule leftModule;
   private wcModule rightModule;
 
-
-  private double PIDOutput;
-
-  private static PIDController pid;
+  private static final double DEFAULT_SPEED = 1; // In inches per second
 
   /** Creates a new WCSubsystem. */
   public WCSubsystem(int leftMotorID, int leftEncoderID, int rightMotorID, int rightEncoderID) {
     leftModule = new wcModule(leftMotorID, leftEncoderID);
     rightModule = new wcModule(rightMotorID, rightEncoderID);
-    leftModule._motor.setInverted(true);
-
+    leftModule.invert();
   }
 
   // method that moves the robot forward a certain distance
-  public void moveRobot(double inches) {
-    leftModule.move(inches);
-    rightModule.move(inches);
+  public boolean moveRobot(double inches) {
+    boolean leftFinished = leftModule.move(inches);
+    boolean rightFinished = rightModule.move(inches);
+
+    return (leftFinished || rightFinished);
+  }
+
+  public void reset() {
+    leftModule.reset();
+    rightModule.reset();
+  }
+
+  // Not used for now
+  public void setRobotVelocity(double velocity) {
+    leftModule.maintainVelocity(DEFAULT_SPEED);
+    rightModule.maintainVelocity(DEFAULT_SPEED);
   }
 }
