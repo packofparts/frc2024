@@ -44,6 +44,9 @@ public class SwerveSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     mOdometry.update(getRotation2d(), getModulePositions());
+
+    SmartDashboard.putNumber("Gyro rotation position", getHeading());
+
     if (CompConstants.DEBUG_MODE) {
       SmartDashboard.putNumber("FLPIDOutput", mModules[0].getPIDOutputRot());
       SmartDashboard.putNumber("FRPIDOutput", mModules[1].getPIDOutputRot());
@@ -148,7 +151,16 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public void setChassisSpeed(double vxMPS, double vyMPS, double angleSpeedRADPS,
       boolean fieldOriented) {
+
     ChassisSpeeds chassisSpeeds;
+
+    SmartDashboard.putNumber("SIGN ODJSDOIJFDS", Math.signum(getHeading()));
+
+    int rotating = getHeading() != 0 ? -1 * (int) Math.signum(getHeading()) : 0;
+
+    angleSpeedRADPS =
+        angleSpeedRADPS + rotating * Math.toRadians(SwerveConstants.GYRO_ANGLE_OFFSET);
+
     if (fieldOriented) {
       chassisSpeeds =
           ChassisSpeeds.fromFieldRelativeSpeeds(vxMPS, vyMPS, angleSpeedRADPS, getRotation2d());

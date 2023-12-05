@@ -32,7 +32,5 @@ public class SwerveConstants {
   public static final double TELE_MAX_ROT_ACC_RAD_SEC2 = 4 * Math.PI;
 
 
-  //
-
-  public static final double GYRO_ANGLE_OFFSET = 0.0;
+  public static final double GYRO_ANGLE_OFFSET = 20; // 7.31; // Degrees per Second
 }
