@@ -12,7 +12,7 @@ import frc.robot.constants.AutoConstants;
 import frc.robot.constants.CompConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.PhotonCameras;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -27,7 +27,7 @@ public class RobotContainer {
   private final SwerveSubsystem mSwerveSubsystem = new SwerveSubsystem();
   private final ArmControlSubsystem mArmControlSubsystem = new ArmControlSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
-  private final Limelight mLimelight = new Limelight();
+  private final PhotonCameras mLimelight = new PhotonCameras();
   private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, mSwerveSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -54,7 +54,7 @@ public class RobotContainer {
     return mIntakeSubsystem;
   }
 
-  public Limelight getLimelight() {
+  public PhotonCameras getLimelight() {
     return mLimelight;
   }
 

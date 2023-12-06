@@ -20,15 +20,14 @@ import frc.robot.constants.VisionConstants;
 
 
 public class PoseEstimation extends SubsystemBase {
-  private final Limelight mLimelight;
+  private final PhotonCameras mCameras;
   private final SwerveSubsystem mSwerve;
   private final SwerveDrivePoseEstimator mPoseEstimator;
   private final Field2d mField = new Field2d();
 
-  private boolean mHasUpdated = false;
 
-  public PoseEstimation(Limelight lime, SwerveSubsystem swerve) {
-    mLimelight = lime;
+  public PoseEstimation(PhotonCameras lime, SwerveSubsystem swerve) {
+    mCameras = lime;
     mSwerve = swerve;
 
     mPoseEstimator = new SwerveDrivePoseEstimator(SwerveConfig.SWERVE_KINEMATICS,
@@ -51,25 +50,47 @@ public class PoseEstimation extends SubsystemBase {
       SmartDashboard.putNumber("PoseEst Y", pose.getY());
       SmartDashboard.putNumber("PoseEst Rot", pose.getRotation().getDegrees());
     }
-
   }
 
   public void updateVision() {
+    boolean updatedFront = updateVisionBack();
+    boolean updatedBack = updateVisionFront();
+
+    if (CompConstants.DEBUG_MODE) {
+      SmartDashboard.putBoolean("Updating Front", updatedFront);
+      SmartDashboard.putBoolean("Updating Back", updatedBack);
+    }
+  }
+
+  // Get Pose From Back Camera
+  public boolean updateVisionBack() {
     Optional<EstimatedRobotPose> pose =
-        mLimelight.getEstimatedGlobalPose(mPoseEstimator.getEstimatedPosition());
+        mCameras.getEstimatedGlobalPoseBack(mPoseEstimator.getEstimatedPosition());
     if (pose.isPresent()) {
       EstimatedRobotPose camPose = pose.get();
       if (isValidPose(camPose)) {
         mPoseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
             camPose.timestampSeconds);
-        SmartDashboard.putBoolean("isUpdatingVision", true);
-        mHasUpdated = true;
-        return;
+        return true;
       }
     }
-    SmartDashboard.putBoolean("hasUpdatedVision", mHasUpdated);
-    SmartDashboard.putBoolean("isUpdatingVision", false);
+    return false;
+  }
 
+  // Get Pose From Front Camera
+  public boolean updateVisionFront() {
+    Optional<EstimatedRobotPose> pose =
+        mCameras.getEstimatedGlobalPoseFront(mPoseEstimator.getEstimatedPosition());
+    if (pose.isPresent()) {
+      EstimatedRobotPose camPose = pose.get();
+      if (isValidPose(camPose)) {
+        mPoseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(),
+            camPose.timestampSeconds);
+        return true;
+      }
+    }
+
+    return false;
   }
 
   public boolean isValidPose(EstimatedRobotPose pose) {
