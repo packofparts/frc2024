@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -24,6 +25,7 @@ public class SwerveSubsystem extends SubsystemBase {
   /** Creates a new SwerveSubsystem. */
   private final SwerveDriveKinematics mKinematics;
   private final SwerveDriveOdometry mOdometry;
+  PIDController skewPidController;
 
   private final AHRS mNavX;
 
@@ -38,6 +40,9 @@ public class SwerveSubsystem extends SubsystemBase {
     resetGyro();
     resetRobotPose(new Pose2d());
 
+    skewPidController =
+        new PIDController(SwerveConstants.skewkP, SwerveConstants.skewkI, SwerveConstants.skewkD);
+    skewPidController.setSetpoint(0);
   }
 
   @Override
@@ -149,9 +154,14 @@ public class SwerveSubsystem extends SubsystemBase {
   public void setChassisSpeed(double vxMPS, double vyMPS, double angleSpeedRADPS,
       boolean fieldOriented) {
     ChassisSpeeds chassisSpeeds;
+
+
+
+    double result = skewPidController.calculate(getHeading() * vxMPS == 0 ? 0 : 1);
+
     if (fieldOriented) {
-      chassisSpeeds =
-          ChassisSpeeds.fromFieldRelativeSpeeds(vxMPS, vyMPS, angleSpeedRADPS, getRotation2d());
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vxMPS, vyMPS, angleSpeedRADPS + result,
+          getRotation2d());
     } else {
       chassisSpeeds = new ChassisSpeeds(vxMPS, vyMPS, angleSpeedRADPS);
     }

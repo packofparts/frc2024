@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+
 public class SwerveConstants {
   private SwerveConstants() {
     throw new IllegalStateException("Constants Class");
@@ -21,7 +23,6 @@ public class SwerveConstants {
   public static final double TRACK_LENGTH_METERS = .54;
 
 
-
   // Physical Max
   public static final double PHYSICAL_MAX_SPEED_MPS = 4.3;
 
@@ -32,7 +33,7 @@ public class SwerveConstants {
   public static final double TELE_MAX_ROT_ACC_RAD_SEC2 = 4 * Math.PI;
 
 
-  //
-
-  public static final double GYRO_ANGLE_OFFSET = 0.0;
+  public static final double skewkP = 0.01;
+  public static final double skewkI = 0.0;
+  public static final double skewkD = 0.0;
 }
