@@ -33,6 +33,13 @@ public class DriveForward extends CommandBase {
     finished = wc.moveRobot(DISTANCE);
   }
 
+  @Override
+  public boolean isFinished() {
+    return finished;
+  }
+  // Evaluate boolean ifDistance to check if the robot has reached distance.
+
+
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
@@ -41,8 +48,5 @@ public class DriveForward extends CommandBase {
   }
 
   // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return finished;
-  }
+
 }
