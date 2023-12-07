@@ -28,4 +28,8 @@ public class Shooter {
         double PIDOutputBack = _velocityPIDBack.calculate(velocitySP);
         backMotor.set(PIDOutputBack);
     }
+
+    public double get_pos(){
+        
+    }
 }
