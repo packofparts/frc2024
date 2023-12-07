@@ -17,6 +17,13 @@ public class WCSubsystem extends SubsystemBase {
   private static final double DEFAULT_SPEED = 1; // In inches per second
 
   /** Creates a new WCSubsystem. */
+  /**
+   * 
+   * @param leftMotorID
+   * @param leftEncoderID
+   * @param rightMotorID
+   * @param rightEncoderID
+   */
   public WCSubsystem(int leftMotorID, int leftEncoderID, int rightMotorID, int rightEncoderID) {
     leftModule = new wcModule(leftMotorID, leftEncoderID);
     rightModule = new wcModule(rightMotorID, rightEncoderID);
