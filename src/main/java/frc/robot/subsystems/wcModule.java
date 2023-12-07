@@ -58,7 +58,8 @@ public class wcModule {
     public void maintainVelocity(double velocity) {
         if ((getVelocityInches() < velocity) && (velocity != 0)) {
             double PIDOutput = pid.calculate(getVelocityInches(), velocity);
-            _motor.set(PIDOutput);
+            _motor.set(Math.min(0.2, PIDOutput)); // Cap the motor output at 0.2 to avoid
+                                                  // involuntary manslaughter
         } else {
             _motor.set(0);
         }

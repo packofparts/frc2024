@@ -14,7 +14,8 @@ public class WCSubsystem extends SubsystemBase {
   private wcModule leftModule;
   private wcModule rightModule;
 
-  private static final double DEFAULT_SPEED = 1; // In inches per second
+  // private static final double DEFAULT_SPEED = 1; // Inches per second
+  // Do not use for now.
 
   /** Creates a new WCSubsystem. */
   public WCSubsystem(int leftMotorID, int leftEncoderID, int rightMotorID, int rightEncoderID) {
@@ -30,6 +31,7 @@ public class WCSubsystem extends SubsystemBase {
 
     return (leftFinished || rightFinished);
   }
+  // :/
 
   public void reset() {
     leftModule.reset();
@@ -37,8 +39,10 @@ public class WCSubsystem extends SubsystemBase {
   }
 
   // Not used for now
-  public void setRobotVelocity(double velocity) {
-    leftModule.maintainVelocity(DEFAULT_SPEED);
-    rightModule.maintainVelocity(DEFAULT_SPEED);
-  }
+  // public void setRobotVelocity(double velocity) {
+  // leftModule.maintainVelocity(DEFAULT_SPEED);
+  // rightModule.maintainVelocity(DEFAULT_SPEED);
+  // }
+
+  // USE CTRL + / ON HIGHLIGHTED TEXT TO COMMENT (DISABLE SELECTED CODE)
 }
