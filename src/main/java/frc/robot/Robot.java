@@ -38,15 +38,6 @@ public class Robot extends TimedRobot {
     _robotContainer = new RobotContainer();
 
 
-    pathSelector.addOption("NONE", null);
-    pathSelector.addOption("Station2PieceNOEVENT", new FollowPath(
-      _robotContainer.swerveSubsystem, 
-      AutoConstants.station2Piece,
-      AutoConstants.emptyMap
-    ));
-
-
-    SmartDashboard.putData("PP Autos", pathSelector);
   }
 
   /**
@@ -80,7 +71,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //empty for now but will add auton paths here
+    // empty for now but will add auton paths here
   }
 
   @Override
@@ -97,7 +88,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //We will add things to here shortly
+    // We will add things to here shortly
   }
 
   @Override

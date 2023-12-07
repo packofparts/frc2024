@@ -38,6 +38,7 @@ public class wcModule {
 
         // Encoders
         _encoder = new CANCoder(_encoderID);
+        pid.setPID(0.1, 0.01, 0.001);
 
     }
 
@@ -50,7 +51,7 @@ public class wcModule {
         }
 
         double PIDOutput = pid.calculate(calculateInches(_encoder.getPosition()), inches);
-        _motor.set(PIDOutput);
+        _motor.set(Math.min(0.2, PIDOutput));
         return false;
     }
 

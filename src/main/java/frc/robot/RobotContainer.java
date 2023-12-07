@@ -24,16 +24,12 @@ public class RobotContainer {
   // Physical Systems
   public final WCSubsystem westCoastSubsystem = new WCSubsystem(0, 0, 0, 0);
 
-  private final DefaultDriveCommand driveCommand = new DefaultDriveCommand(WCSubsystem);
+  private final DriveForward driveForward = new DriveForward(westCoastSubsystem);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    if (SwerveConstants.kPIDTuneMode)
-      swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
-    else
-      swerveSubsystem.setDefaultCommand(driveCommand);
-    // Configure the trigger bindings
     configureBindings();
   }
 
@@ -61,7 +57,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    return driveForward;
   }
 }
