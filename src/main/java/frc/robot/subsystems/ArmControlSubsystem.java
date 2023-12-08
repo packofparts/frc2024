@@ -267,8 +267,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   // convert encoder rotations to distance inches
   public double getCurrentExtensionIn() {
-    return mExtensionEncoder.getPosition() * ArmConstants.EXT_MOTOR_TO_BELT_IN
-        * ArmConstants.EXT_ENCODER_RES;
+    return mExtensionEncoder.getPosition() * ArmConstants.EXT_MOTOR_TO_BELT_IN;
   }
 
 
