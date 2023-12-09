@@ -107,6 +107,11 @@ public class DefaultArmCommand extends CommandBase {
 
           );
       command.schedule();
+    } else if (Input.getLeftBumper()) {
+      // toggling off override of arm coast
+      ArmControlSubsystem.setPivOverride(false);
+    } else if (Input.getRightBumper()) {
+      ArmControlSubsystem.setExtOverride(false);
     }
 
     if (Input.isUltraInstinct()) {
