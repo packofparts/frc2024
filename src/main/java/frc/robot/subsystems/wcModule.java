@@ -1,24 +1,14 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.led.CANdleConfiguration;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorTimeBase;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
+
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.*;
-import com.kauailabs.navx.*;
-import com.kauailabs.navx.frc.*;
+
 import frc.robot.constants.WcConstants;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class wcModule {
     // Parameters
@@ -27,6 +17,8 @@ public class wcModule {
 
     private static PIDController pid;
     private CANSparkMax _motor;
+    // You should not use a CANCoder object, instead you need to use the getEncoder to get a
+    // relative encoder object from the _motor object
     private static CANCoder _encoder;
 
     public wcModule(int motorID, int encoderID) {
@@ -55,9 +47,11 @@ public class wcModule {
         return false;
     }
 
+
     // Not used for now
     public void maintainVelocity(double velocity) {
         if ((getVelocityInches() < velocity) && (velocity != 0)) {
+            // Use a different PID controller for this
             double PIDOutput = pid.calculate(getVelocityInches(), velocity);
             _motor.set(Math.min(0.2, PIDOutput)); // Cap the motor output at 0.2 to avoid
                                                   // involuntary manslaughter
