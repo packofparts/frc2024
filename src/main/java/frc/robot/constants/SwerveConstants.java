@@ -33,7 +33,7 @@ public class SwerveConstants {
   public static final double TELE_MAX_ROT_ACC_RAD_SEC2 = 4 * Math.PI;
 
 
-  public static final double skewkP = 0.01;
+  public static final double skewkP = 0.0;
   public static final double skewkI = 0.0;
   public static final double skewkD = 0.0;
 }

@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.SwerveConfig;
@@ -43,6 +44,7 @@ public class SwerveSubsystem extends SubsystemBase {
     skewPidController =
         new PIDController(SwerveConstants.skewkP, SwerveConstants.skewkI, SwerveConstants.skewkD);
     skewPidController.setSetpoint(0);
+    skewPidController.enableContinuousInput(-360, 360);
   }
 
   @Override
@@ -98,6 +100,11 @@ public class SwerveSubsystem extends SubsystemBase {
   public double getHeading() {
     return -mNavX.getAngle();
   }
+
+  public double getAngularVelocity() {
+    return -mNavX.getRate();
+  }
+
 
   /**
    * This gets the Rotation2d of the gyro (which is in continuous input)
@@ -156,13 +163,15 @@ public class SwerveSubsystem extends SubsystemBase {
    */
   public void setChassisSpeed(double vxMPS, double vyMPS, double angleSpeedRADPS,
       boolean fieldOriented) {
-
     ChassisSpeeds chassisSpeeds;
+    skewPidController.setSetpoint(angleSpeedRADPS);
 
+    double result = skewPidController.calculate(getAngularVelocity());
+    SmartDashboard.putNumber("aditya's favorite number", getAngularVelocity());
+    SmartDashboard.putNumber("my favorite number", result);
 
-
-    double result = skewPidController.calculate(getHeading() * vxMPS == 0 ? 0 : 1);
-
+    result = Math.toRadians(result);
+    // 32
     if (fieldOriented) {
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vxMPS, vyMPS, angleSpeedRADPS + result,
           getRotation2d());
