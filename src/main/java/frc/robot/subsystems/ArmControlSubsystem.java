@@ -295,6 +295,20 @@ public class ArmControlSubsystem extends SubsystemBase {
         (Boolean bool) -> new PrintCommand("getName()"), this::atTelescopeSetpoint, this);
   }
 
+  /*
+   * Returns current pivot velocity in radians per second
+   */
+  public double getCurrentPivotVelocity() {
+    return mLeftPivotController.getSelectedSensorVelocity() * ArmConstants.PIVOT_ENCODER_RES
+        * ArmConstants.PIV_MOTOR_TO_GEAR_ROT * 100 * 2 * Math.PI;
+  }
+
+  /*
+   * Returns extension velocity in inches per second
+   */
+  public double getCurrentExtVelocity() {
+    return mExtensionEncoder.getVelocity() * ArmConstants.EXT_MOTOR_TO_BELT_IN / 60;
+  }
 
   public double getCurrentPivotRotation(boolean inRadians) {
     double rotation;
