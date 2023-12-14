@@ -7,11 +7,9 @@ package frc.robot;
 import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.FollowPath;
-import frc.robot.constants.AutoConstants;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -38,15 +36,6 @@ public class Robot extends TimedRobot {
     _robotContainer = new RobotContainer();
 
 
-    pathSelector.addOption("NONE", null);
-    pathSelector.addOption("Station2PieceNOEVENT", new FollowPath(
-      _robotContainer.swerveSubsystem, 
-      AutoConstants.station2Piece,
-      AutoConstants.emptyMap
-    ));
-
-
-    SmartDashboard.putData("PP Autos", pathSelector);
   }
 
   /**
@@ -80,7 +69,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    //empty for now but will add auton paths here
+    // empty for now but will add auton paths here
   }
 
   @Override
@@ -97,7 +86,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //We will add things to here shortly
+    // We will add things to here shortly
   }
 
   @Override

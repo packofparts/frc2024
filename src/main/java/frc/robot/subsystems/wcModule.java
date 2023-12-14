@@ -1,32 +1,26 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.led.CANdleConfiguration;
-import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorTimeBase;
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
+
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.*;
-import com.kauailabs.navx.*;
-import com.kauailabs.navx.frc.*;
+
 import frc.robot.constants.WcConstants;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+
 
 public class wcModule {
     // Parameters
     private int _motorID;
     private int _encoderID;
 
-    private static PIDController pid;
+    private static PIDController positionPid;
+    private static PIDController velocityPid;
     private CANSparkMax _motor;
+    // You should not use a CANCoder object, instead you need to use the getEncoder to get a
+    // relative encoder object from the _motor object
     private static CANCoder _encoder;
 
     public wcModule(int motorID, int encoderID) {
@@ -38,7 +32,8 @@ public class wcModule {
 
         // Encoders
         _encoder = new CANCoder(_encoderID);
-
+        positionPid.setPID(0.1, 0.01, 0.001);
+        velocityPid.setPID(0.1, 0.01, 0.001);
     }
 
     // method that moves the robot forward a certain distance
@@ -49,18 +44,29 @@ public class wcModule {
             return true;
         }
 
-        double PIDOutput = pid.calculate(calculateInches(_encoder.getPosition()), inches);
-        _motor.set(PIDOutput);
+        double PIDOutput = positionPid.calculate(calculateInches(_encoder.getPosition()), inches);
+        _motor.set(Math.min(0.2, PIDOutput));
         return false;
     }
+
+    public void setVelocity(double speed) {
+        // Change this if this method is not called periodically
+        double pidOutput = velocityPid.calculate(getVelocityInches(), speed);
+        _motor.set(Math.max(0.2, pidOutput)); // Cap the motor output at 0.2 to avoid involuntary
+                                              // manslaughter
+    }
+
+    public double getDistance() {
+        return _encoder.getPosition() / 360 * WcConstants.WcCircumference;
+    }
+
 
     // Not used for now
     public void maintainVelocity(double velocity) {
         if ((getVelocityInches() < velocity) && (velocity != 0)) {
-            double PIDOutput = pid.calculate(getVelocityInches(), velocity);
-            _motor.set(Math.min(0.2, PIDOutput)); // Cap the motor output at 0.2 to avoid
-                                                  // involuntary manslaughter
-        } else {
+            // Use a different PID controller for this
+            double PIDOutput = positionPid.calculate(getVelocityInches(), velocity);
+            _motor.set(Math.min(0.2, PIDOutput));
             _motor.set(0);
         }
     }
@@ -72,6 +78,10 @@ public class wcModule {
 
     public double getVelocityInches() {
         return _encoder.getVelocity() / 360 * WcConstants.WcCircumference;
+    }
+
+    public CANSparkMax getMotor() {
+        return this._motor;
     }
 
     public void invert() {

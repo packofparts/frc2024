@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import frc.robot.subsystems.wcModule;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -14,14 +15,22 @@ public class WCSubsystem extends SubsystemBase {
   private wcModule leftModule;
   private wcModule rightModule;
 
-  // private static final double DEFAULT_SPEED = 1; // Inches per second
-  // Do not use for now.
+  private static final double DEFAULT_SPEED = 1; // In inches per second
 
   /** Creates a new WCSubsystem. */
+  /**
+   * 
+   * @param leftMotorID
+   * @param leftEncoderID
+   * @param rightMotorID
+   * @param rightEncoderID
+   */
   public WCSubsystem(int leftMotorID, int leftEncoderID, int rightMotorID, int rightEncoderID) {
     leftModule = new wcModule(leftMotorID, leftEncoderID);
     rightModule = new wcModule(rightMotorID, rightEncoderID);
     leftModule.invert();
+
+
   }
 
   // method that moves the robot forward a certain distance
@@ -31,7 +40,6 @@ public class WCSubsystem extends SubsystemBase {
 
     return (leftFinished || rightFinished);
   }
-  // :/
 
   public void reset() {
     leftModule.reset();
@@ -39,10 +47,8 @@ public class WCSubsystem extends SubsystemBase {
   }
 
   // Not used for now
-  // public void setRobotVelocity(double velocity) {
-  // leftModule.maintainVelocity(DEFAULT_SPEED);
-  // rightModule.maintainVelocity(DEFAULT_SPEED);
-  // }
-
-  // USE CTRL + / ON HIGHLIGHTED TEXT TO COMMENT (DISABLE SELECTED CODE)
+  public void setRobotVelocity(double velocity) {
+    leftModule.maintainVelocity(DEFAULT_SPEED);
+    rightModule.maintainVelocity(DEFAULT_SPEED);
+  }
 }
