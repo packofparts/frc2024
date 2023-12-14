@@ -37,7 +37,6 @@ public class SwerveSubsystem extends SubsystemBase {
     mOdometry = new SwerveDriveOdometry(mKinematics, getRotation2d(), getModulePositions());
     resetGyro();
     resetRobotPose(new Pose2d());
-
   }
 
   @Override
@@ -146,6 +145,7 @@ public class SwerveSubsystem extends SubsystemBase {
    * @apiNote Keep in mind all of this is field relative so resetting the gyro midmatch will also
    *          reset these params
    */
+
   public void setChassisSpeed(double vxMPS, double vyMPS, double angleSpeedRADPS,
       boolean fieldOriented) {
     ChassisSpeeds chassisSpeeds;
@@ -160,6 +160,11 @@ public class SwerveSubsystem extends SubsystemBase {
 
     setModuleStates(moduleStates);
 
+  }
+
+  public void setChassisSpeed(ChassisSpeeds a) {
+    SwerveModuleState[] moduleStates = mKinematics.toSwerveModuleStates(a);
+    setModuleStates(moduleStates);
   }
 
   public void setChassisSpeed(double x, double y, double rot) {
@@ -184,5 +189,12 @@ public class SwerveSubsystem extends SubsystemBase {
     return mOdometry.getPoseMeters();
   }
 
-
+  public ChassisSpeeds getChassisSpeeds() {
+    SwerveModuleState[] a = new SwerveModuleState[4];
+    a[0] = SwerveConfig.FRONT_LEFT_MODULE.getState();
+    a[1] = SwerveConfig.FRONT_RIGHT_MODULE.getState();
+    a[2] = SwerveConfig.BACK_RIGHT_MODULE.getState();
+    a[3] = SwerveConfig.BACK_LEFT_MODULE.getState();
+    return mKinematics.toChassisSpeeds(a[0], a[1], a[2], a[3]);
+  }
 }
