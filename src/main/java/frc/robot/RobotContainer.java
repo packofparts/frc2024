@@ -9,15 +9,9 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DriveForward;
-import frc.robot.commands.PIDTuning;
-import frc.robot.constants.SwerveConstants;
-import frc.robot.constants.VisionConstants;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.PoseEstimation;
-import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.constants.*;
 import frc.robot.subsystems.WCSubsystem;
+import frc.robot.commands.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,23 +22,14 @@ import frc.robot.subsystems.WCSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // Physical Systems
-  public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
+  public final WCSubsystem westCoastSubsystem = new WCSubsystem(0, 0, 0, 0);
 
-  // Vision
-  private final Limelight limelight = new Limelight(VisionConstants.kLimelightName);
-  private final PoseEstimation poseEstimation = new PoseEstimation(swerveSubsystem, limelight);
+  private final DriveForward driveForward = new DriveForward(westCoastSubsystem);
 
-  private final DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
-  private final DriveForward autoCommand = new DriveForward(new WCSubsystem(0, 0, 0, 0));
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    if (SwerveConstants.kPIDTuneMode)
-      swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
-    else
-      swerveSubsystem.setDefaultCommand(driveCommand);
-    // Configure the trigger bindings
     configureBindings();
   }
 
@@ -72,7 +57,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
+    return driveForward;
   }
 }
