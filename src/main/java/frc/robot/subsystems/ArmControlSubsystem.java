@@ -236,11 +236,21 @@ public class ArmControlSubsystem extends SubsystemBase {
     extensionPIDOutput =
         MathUtil.clamp(extensionPIDOutput, -ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT,
             ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT);
-    SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
 
     // This is for handling the friction in the extension
     double offset = ArmConstants.EXT_FRICTION_COEFF * (difference > 0 ? 1 : -1);
-    SmartDashboard.putNumber("difference", offset);
+
+    if (CompConstants.DEBUG_MODE) {
+      SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
+      SmartDashboard.putNumber("difference", offset);
+    }
+
+    if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH) {
+      extensionPIDOutput = MathUtil.clamp(offset + extensionPIDOutput,
+          -ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT);
+    } else {
+      extensionPIDOutput = 0;
+    }
 
     double expectedDistance = mExtensionController.getEncoder().getVelocity() * 0.02; // 20 ms
 
@@ -251,12 +261,7 @@ public class ArmControlSubsystem extends SubsystemBase {
       mExtensionController.setIdleMode(IdleMode.kCoast); // set motors to coast
       setExtOverride(true); // cancelling ability to move unless override cancel button is pressed
     } else { // inside tolerance value
-      if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH) {
-        mExtensionController.set(MathUtil.clamp(offset + extensionPIDOutput,
-            -ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
-      } else {
-        mExtensionController.set(0);
-      }
+      mExtensionController.set(extensionPIDOutput);
     }
   }
 
