@@ -57,6 +57,15 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   private final SendableChooser<ArmMotorMode> mChooser = new SendableChooser<>();
 
+  private double mCurrentPivPID = 0.0;
+  private double mPreviousPivotAngleRad = 0.0;
+
+  private double mPreviousExtIn = 0.0;
+
+  // if true, prevent movement in future periodic calls
+  private static boolean mPivCoastOverride = false;
+  private static boolean mExtCoastOverride = false;
+
 
   public ArmControlSubsystem() {
 
@@ -108,8 +117,12 @@ public class ArmControlSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized) {
-      pivotPeriodic();
-      extensionPeriodic();
+      if (!mPivCoastOverride) {
+        pivotPeriodic();
+      }
+      if (!mExtCoastOverride) {
+        extensionPeriodic();
+      }
     } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
       mDesiredPivotRotation = mCurrentPivotRotation;
       mDesiredExtensionDistance = mCurrentExtensionDistance;
@@ -162,6 +175,14 @@ public class ArmControlSubsystem extends SubsystemBase {
     if (!mUltraInstinct) {
       mDesiredExtensionDistance = MathUtil.clamp(mDesiredExtensionDistance,
           ArmConstants.MIN_EXT_LEN_IN, ArmConstants.MAX_EXT_LEN_IN);
+      if (mDesiredPivotRotation < ArmConstants.MAX_EXT_TOUCHES_GROUND_ANGLE_RAD) {
+        mDesiredExtensionDistance =
+            MathUtil.clamp(mDesiredExtensionDistance, ArmConstants.MIN_EXT_LEN_IN,
+                ArmConstants.PIV_POS_Y_IN / Math.cos(mCurrentPivotRotation));
+      } else {
+        mDesiredExtensionDistance = MathUtil.clamp(mDesiredExtensionDistance,
+            ArmConstants.MIN_EXT_LEN_IN, ArmConstants.MAX_EXT_LEN_IN);
+      }
     }
     mCurrentExtensionDistance = getCurrentExtensionIn();
   }
@@ -186,11 +207,24 @@ public class ArmControlSubsystem extends SubsystemBase {
       pivotPIDOutput += MathUtil.clamp(kgOutPut, -ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT,
           ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
     }
+    double expectedDistance = ArmConstants.MAX_PIV_RATE_RAD_SEC * mCurrentPivPID * 0.02; // 0.02 =
+    // 20 ms
 
-    mLeftPivotController.set(MathUtil.clamp(pivotPIDOutput,
-        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
-    mRightPivotController.set(MathUtil.clamp(pivotPIDOutput,
-        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
+    // comparing the difference (between predicted distance traveled and the actual distance
+    // traveled) with the tolerance
+    if ((Math.abs(mCurrentPivotRotation - mPreviousPivotAngleRad)
+        - expectedDistance) > ArmConstants.ACTIVE_PIV_TOLERANCE_RAD) { // outside tolerance value
+      // turn off motors
+      mLeftPivotController.setNeutralMode(NeutralMode.Coast);
+      mRightPivotController.setNeutralMode(NeutralMode.Coast); // set motors to coast
+      setExtOverride(true); // cancelling ability to move unless override cancel button is pressed
+    } else { // inside tolerance value
+      mPreviousPivotAngleRad = mCurrentPivotRotation;
+      mCurrentPivPID = MathUtil.clamp(pivotPIDOutput, -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT,
+          ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT);
+      mLeftPivotController.set(mCurrentPivPID);
+      mRightPivotController.set(mCurrentPivPID);
+    }
   }
 
   private void extensionPeriodic() {
@@ -208,11 +242,21 @@ public class ArmControlSubsystem extends SubsystemBase {
     double offset = ArmConstants.EXT_FRICTION_COEFF * (difference > 0 ? 1 : -1);
     SmartDashboard.putNumber("difference", offset);
 
-    if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH) {
-      mExtensionController.set(MathUtil.clamp(offset + extensionPIDOutput,
-          -ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
-    } else {
-      mExtensionController.set(0);
+    double expectedDistance = mExtensionController.getEncoder().getVelocity() * 0.02; // 20 ms
+
+    // comparing the difference (between predicted distance traveled and the actual distance
+    // traveled) with the tolerance
+    if (Math.abs((mCurrentExtensionDistance - mPreviousExtIn) // outside tolerance value
+        - expectedDistance) > ArmConstants.ACTIVE_EXT_TOLERANCE_IN) {
+      mExtensionController.setIdleMode(IdleMode.kCoast); // set motors to coast
+      setExtOverride(true); // cancelling ability to move unless override cancel button is pressed
+    } else { // inside tolerance value
+      if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH) {
+        mExtensionController.set(MathUtil.clamp(offset + extensionPIDOutput,
+            -ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
+      } else {
+        mExtensionController.set(0);
+      }
     }
   }
 
@@ -286,6 +330,16 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public void setmUltraInstinct(boolean toggle) {
     mUltraInstinct = toggle;
+  }
+
+  // pivot is set to coast when true
+  public static void setPivOverride(boolean override) {
+    mPivCoastOverride = override;
+  }
+
+  // extension is set to coast when true
+  public static void setExtOverride(boolean override) {
+    mExtCoastOverride = override;
   }
 
 
