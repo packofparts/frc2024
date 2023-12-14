@@ -10,12 +10,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DriveForward;
 import frc.robot.commands.PIDTuning;
 import frc.robot.constants.SwerveConstants;
 import frc.robot.constants.VisionConstants;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.PoseEstimation;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.WCSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -25,18 +27,20 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //Physical Systems
+  // Physical Systems
   public final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
 
-  //Vision
+  // Vision
   private final Limelight limelight = new Limelight(VisionConstants.kLimelightName);
   private final PoseEstimation poseEstimation = new PoseEstimation(swerveSubsystem, limelight);
 
   private final DefaultDriveCommand driveCommand = new DefaultDriveCommand(swerveSubsystem);
+  private final DriveForward autoCommand = new DriveForward(new WCSubsystem(0, 0, 0, 0));
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    if(SwerveConstants.kPIDTuneMode)
+    if (SwerveConstants.kPIDTuneMode)
       swerveSubsystem.setDefaultCommand(new PIDTuning(0, swerveSubsystem));
     else
       swerveSubsystem.setDefaultCommand(driveCommand);
