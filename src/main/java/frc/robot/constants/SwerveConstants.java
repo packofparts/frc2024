@@ -32,8 +32,13 @@ public class SwerveConstants {
   public static final double TELE_MAX_ACC_MPS2 = 5.0;
   public static final double TELE_MAX_ROT_ACC_RAD_SEC2 = 4 * Math.PI;
 
-
-  public static final double skewkP = 0.0;
+  // swerve constants
+  public static final double skewkP = 0.2;
   public static final double skewkI = 0.0;
   public static final double skewkD = 0.0;
+
+  // swerve constants precisionToggle
+  public static final double precisionskewkP = 0.1; // less P so less change per sec
+  public static final double precisionskewkI = 0.0;
+  public static final double precisionskewkD = 0.0;
 }

@@ -36,15 +36,14 @@ public class DefaultDriveCommand extends CommandBase {
       mSwerve.resetOdometry();
     }
 
+
     if (Input.getPrecisionToggle()) {
       mIsPrecisionToggle = !mIsPrecisionToggle;
     }
-
     if (mIsPrecisionToggle) {
       x = x / JoystickConstants.DRIVE_PRECISION_X_DESATURATION;
       y = y / JoystickConstants.DRIVE_PRECISION_Y_DESATURATION;
       rot = rot / JoystickConstants.DRIVE_PRECISION_ROT_DESATURATION;
-
       x = Math.abs(x) > JoystickConstants.DRIVE_PRECISION_X_DEADZONE ? x : 0.0;
       y = Math.abs(y) > JoystickConstants.DRIVE_PRECISION_Y_DEADZONE ? y : 0.0;
       rot = Math.abs(rot) > JoystickConstants.DRIVE_PRECISION_ROT_DEADZONE ? rot : 0.0;
@@ -59,7 +58,7 @@ public class DefaultDriveCommand extends CommandBase {
     rot *= SwerveConstants.TELE_MAX_ROT_SPEED_RAD_SEC;
 
 
-    mSwerve.setChassisSpeed(x, y, rot, true);
+    mSwerve.setChassisSpeed(x, y, rot, true, mIsPrecisionToggle);
   }
 
   // Returns true when the command should end.

@@ -27,6 +27,7 @@ public class SwerveSubsystem extends SubsystemBase {
   private final SwerveDriveKinematics mKinematics;
   private final SwerveDriveOdometry mOdometry;
   PIDController skewPidController;
+  PIDController precisionPidController;
 
   private final AHRS mNavX;
 
@@ -43,15 +44,17 @@ public class SwerveSubsystem extends SubsystemBase {
 
     skewPidController =
         new PIDController(SwerveConstants.skewkP, SwerveConstants.skewkI, SwerveConstants.skewkD);
-    skewPidController.setSetpoint(0);
     skewPidController.enableContinuousInput(-360, 360);
+
+    precisionPidController = new PIDController(SwerveConstants.precisionskewkP,
+        SwerveConstants.precisionskewkI, SwerveConstants.precisionskewkD);
+    skewPidController.enableContinuousInput(-360, 360);k
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     mOdometry.update(getRotation2d(), getModulePositions());
-
     SmartDashboard.putNumber("Gyro rotation position", getHeading());
 
     if (CompConstants.DEBUG_MODE) {
@@ -102,7 +105,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public double getAngularVelocity() {
-    return -mNavX.getRate();
+    return -mNavX.getRawGyroZ(); // DPS
   }
 
 
@@ -162,19 +165,26 @@ public class SwerveSubsystem extends SubsystemBase {
    *          reset these params
    */
   public void setChassisSpeed(double vxMPS, double vyMPS, double angleSpeedRADPS,
-      boolean fieldOriented) {
-    ChassisSpeeds chassisSpeeds;
-    skewPidController.setSetpoint(angleSpeedRADPS);
+      boolean fieldOriented, boolean mIsPrecisionToggle) {
 
-    double result = skewPidController.calculate(getAngularVelocity());
-    SmartDashboard.putNumber("aditya's favorite number", getAngularVelocity());
-    SmartDashboard.putNumber("my favorite number", result);
+    double result;
+    ChassisSpeeds chassisSpeeds;
+
+    if (mIsPrecisionToggle) {
+      precisionPidController.setSetpoint(angleSpeedRADPS);
+      result = precisionPidController.calculate(getAngularVelocity());
+    } else {
+      skewPidController.setSetpoint(angleSpeedRADPS);
+      result = skewPidController.calculate(getAngularVelocity());
+    }
+
+    SmartDashboard.putNumber("Current Angular Velocity:", getAngularVelocity());
+    SmartDashboard.putNumber("PID Velocity:", result);
 
     result = Math.toRadians(result);
-    // 32
+
     if (fieldOriented) {
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vxMPS, vyMPS, angleSpeedRADPS + result,
-          getRotation2d());
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(vxMPS, vyMPS, result, getRotation2d());
     } else {
       chassisSpeeds = new ChassisSpeeds(vxMPS, vyMPS, angleSpeedRADPS);
     }
@@ -186,7 +196,7 @@ public class SwerveSubsystem extends SubsystemBase {
   }
 
   public void setChassisSpeed(double x, double y, double rot) {
-    setChassisSpeed(x, y, rot, false);
+    setChassisSpeed(x, y, rot, false, false);
   }
 
   /**
