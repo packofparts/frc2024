@@ -52,7 +52,7 @@ public class FollowPath extends CommandBase {
                                    // here
         ), swerve);
 
-    PathPlannerPath path = PathPlannerPath.fromPathFile("NewPath");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("MoveOneMeter");
     mFinalCMD = AutoBuilder.followPathWithEvents(path);
     addRequirements(mSwerve);
 

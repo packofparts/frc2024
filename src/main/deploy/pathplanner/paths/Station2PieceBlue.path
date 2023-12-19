@@ -1,0 +1,99 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.7050353177902453,
+        "y": 5.0
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.7506556096479593,
+        "y": 5.0
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 5.9372201796754975,
+        "y": 4.673185637409429
+      },
+      "prevControl": {
+        "x": 3.836873597860559,
+        "y": 4.673185637409429
+      },
+      "nextControl": {
+        "x": 7.744026788006888,
+        "y": 4.673185637409429
+      },
+      "isLocked": false
+    },
+    {
+      "anchor": {
+        "x": 1.7050353177902453,
+        "y": 4.345991513633427
+      },
+      "prevControl": {
+        "x": 1.6825423032651312,
+        "y": 4.345991513633427
+      },
+      "nextControl": null,
+      "isLocked": false
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.05,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.65,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  }
+}
