@@ -40,20 +40,16 @@ public class ArmConstants {
 
   // Common Configurables
   public static final boolean RATE_LIMIT_ARM = false;
-  public static final boolean ENABLE_FEEDFORWARD = false;
+  public static final boolean ENABLE_FEEDFORWARD = true;
   public static final double KG = 0.03;
 
   // channel on dio port
   public static final int DIOPORTPIV = 0;
   public static final int CONNECTION_THRESH_HZ = 975;
 
-
-  public static final double PIVOT_ABS_ENC_TO_ROTATION = 1.0 / 3.7142857;
-  public static final double EXTENSION_ROTATION_TO_INCHES = 18.5 / 7.01;
-
-
   // Offset For Pivot
   public static final double PIV_INIT_OFFSET_ROT = .032 + 0.0633;
+  public static final double PIV_INIT_OFFSET_ROT_FALCON = 0.0536202;
 
   // Initial Value
   public static final double ZERO_EXTENSION_IN = 0.0;
@@ -81,7 +77,9 @@ public class ArmConstants {
   public static final int PIV_ABSENC_PORT = 17;
 
   // Gear Ratios
-  public static final double PIV_MOTOR_TO_GEAR_ROT = 1.0 / 240;
+  public static final double EXTENSION_ROTATION_TO_INCHES = 18.5 / 7.01;
+  public static final double FALCON_TO_ABS_ENC = 1.0 / 60;
+  public static final double ABS_ENC_TO_FINAL_SPROCKET = 14.0 / 52;
   public static final double PIVOT_ENCODER_RES = 1.0 / 2048;
   public static final double EXT_MOTOR_TO_BELT_IN = 8.333 / 8.113;
   public static final double EXT_ENCODER_RES = 1.0 / 2048;

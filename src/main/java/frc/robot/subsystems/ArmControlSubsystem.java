@@ -4,6 +4,16 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.StaticBrake;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -12,7 +22,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,15 +41,15 @@ public class ArmControlSubsystem extends SubsystemBase {
     COAST, BRAKE, OFF
   }
 
-  private final WPI_TalonFX mLeftPivotController = new WPI_TalonFX(ArmConstants.LEFT_PIV_MOTOR_ID);
-  private final WPI_TalonFX mRightPivotController =
-      new WPI_TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID);
+  private final TalonFX mLeftPivotController = new TalonFX(ArmConstants.LEFT_PIV_MOTOR_ID);
+  private final TalonFX mRightPivotController = new TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID);
   private final CANSparkMax mExtensionController =
       new CANSparkMax(ArmConstants.EXT_SPARK_ID, MotorType.kBrushless);
 
   private final DutyCycleEncoder mAbsPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPORTPIV);
   private final RelativeEncoder mExtensionEncoder = mExtensionController.getEncoder();
-
+  private final TalonFXConfiguration mLeftTalonFXConfiguration = new TalonFXConfiguration();
+  private final TalonFXConfiguration mRighTalonFXConfiguration = new TalonFXConfiguration();
   private final SlewRateLimiter mPivotRateLimiter;
   private final PIDController mExtensionPID;
   private final PIDController mPivotPID;
@@ -54,6 +66,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   private double mDesiredExtensionDistance = ArmConstants.MIN_EXT_LEN_IN;
 
   private boolean mIsInitialized = false;
+  private final DutyCycleOut mDutyCycleCommand = new DutyCycleOut(0).withUpdateFreqHz(50);
 
   private final SendableChooser<ArmMotorMode> mChooser = new SendableChooser<>();
 
@@ -64,7 +77,7 @@ public class ArmControlSubsystem extends SubsystemBase {
     mChooser.addOption("Coast", ArmMotorMode.COAST);
     mChooser.setDefaultOption("Brake", ArmConstants.INITIAL_ARM_MOTOR_MODE);
 
-    mPivotPID = new PIDController(1.4, 0, 0);
+    mPivotPID = new PIDController(0.8, 0, 0);
     mPivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_RAD);
 
     mExtensionPID = new PIDController(0.19, 0, 0);
@@ -75,33 +88,21 @@ public class ArmControlSubsystem extends SubsystemBase {
     mAbsPivEncoder.setConnectedFrequencyThreshold(ArmConstants.CONNECTION_THRESH_HZ);
 
     mPivotRelEncoderOffsetRot =
-        -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION
+        -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.ABS_ENC_TO_FINAL_SPROCKET
             + ArmConstants.PIV_INIT_OFFSET_ROT;
 
     setDefaultMotorConfig();
   }
 
   public void setDefaultMotorConfig() {
-    mRightPivotController.configFactoryDefault();
-    mLeftPivotController.configFactoryDefault();
 
-    mRightPivotController.follow(mLeftPivotController);
-
-    mRightPivotController.setInverted(TalonFXInvertType.OpposeMaster);
+    mRightPivotController.setControl(new Follower(mLeftPivotController.getDeviceID(), true));
     mLeftPivotController.setInverted(ArmConstants.LEFT_PIV_MOTOR_INVERTED);
 
     updateModes();
 
-    mRightPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-    mLeftPivotController.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
-    mLeftPivotController.setSelectedSensorPosition(0);
-    mRightPivotController.setSelectedSensorPosition(0);
-
     mExtensionController.setInverted(false);
-
     mExtensionEncoder.setPosition(0);
-
     mExtensionController.burnFlash();
   }
 
@@ -144,13 +145,15 @@ public class ArmControlSubsystem extends SubsystemBase {
       SmartDashboard.putBoolean("IsInititilized", mIsInitialized);
       SmartDashboard.putBoolean("absreconnectioned", mAbsPivEncoder.isConnected());
       SmartDashboard.putNumber("AbsPivot",
-          -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION);
+          -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.ABS_ENC_TO_FINAL_SPROCKET);
 
       // Setpoint Debugging
       SmartDashboard.putBoolean("AtAnglePoint", atAngleSetpoint());
       SmartDashboard.putBoolean("AtExtensionPoint", atTelescopeSetpoint());
       SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(mDesiredPivotRotation));
       SmartDashboard.putNumber("DesiredExtension", mDesiredExtensionDistance);
+
+      SmartDashboard.putNumber("pivot error", mDesiredPivotRotation - mCurrentPivotRotation);
 
 
     }
@@ -173,24 +176,27 @@ public class ArmControlSubsystem extends SubsystemBase {
     pivotPIDOutput = MathUtil.clamp(pivotPIDOutput, -ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT,
         ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT);
 
-    if (CompConstants.DEBUG_MODE) {
-      SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
-    }
+
 
     if (ArmConstants.RATE_LIMIT_ARM) {
       pivotPIDOutput = mPivotRateLimiter.calculate(pivotPIDOutput);
     }
     if (ArmConstants.ENABLE_FEEDFORWARD) {
-      double kgOutPut = ArmConstants.KG * Math.cos(getCurrentPivotRotation(true) - (Math.PI / 2));
+      double kgOutPut = ArmConstants.KG * Math.cos(mCurrentPivotRotation - (Math.PI / 2));
       // Desaturating kG output
       pivotPIDOutput += MathUtil.clamp(kgOutPut, -ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT,
           ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
     }
 
-    mLeftPivotController.set(MathUtil.clamp(pivotPIDOutput,
-        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
-    mRightPivotController.set(MathUtil.clamp(pivotPIDOutput,
-        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT));
+    if (CompConstants.DEBUG_MODE) {
+      SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
+    }
+
+    mLeftPivotController.setControl(mDutyCycleCommand.withOutput(MathUtil.clamp(pivotPIDOutput,
+        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT)));
+
+    mRightPivotController.setControl(mDutyCycleCommand.withOutput(MathUtil.clamp(pivotPIDOutput,
+        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT)));
   }
 
   private void extensionPeriodic() {
@@ -254,9 +260,8 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   public double getCurrentPivotRotation(boolean inRadians) {
     double rotation;
-
-    rotation = (mLeftPivotController.getSelectedSensorPosition()) * ArmConstants.PIVOT_ENCODER_RES
-        * ArmConstants.PIV_MOTOR_TO_GEAR_ROT + mPivotRelEncoderOffsetRot;
+    rotation = mLeftPivotController.getRotorPosition().getValue() * ArmConstants.FALCON_TO_ABS_ENC
+        * ArmConstants.ABS_ENC_TO_FINAL_SPROCKET;
 
     if (inRadians) {
       return rotation * 2 * Math.PI;
@@ -290,27 +295,28 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
   private double getPivotAbsEncoderAngleRot() {
-    return -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION
+    return -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.ABS_ENC_TO_FINAL_SPROCKET
         + mPivotRelEncoderOffsetRot;
   }
 
   private void updateModes() {
-    SmartDashboard.updateValues();
 
+    MotorOutputConfigs motorConfigs = new MotorOutputConfigs();
     if (mChooser.getSelected() == ArmMotorMode.BRAKE) {
-      mRightPivotController.setNeutralMode(NeutralMode.Brake);
-      mLeftPivotController.setNeutralMode(NeutralMode.Brake);
+
+      motorConfigs.NeutralMode = NeutralModeValue.Brake;
       mExtensionController.setIdleMode(IdleMode.kBrake);
+
     } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
-      mRightPivotController.setNeutralMode(NeutralMode.Coast);
-      mLeftPivotController.setNeutralMode(NeutralMode.Coast);
+
+      motorConfigs.NeutralMode = NeutralModeValue.Coast;
       mExtensionController.setIdleMode(IdleMode.kCoast);
     }
+    mLeftPivotController.getConfigurator().refresh(motorConfigs);
+
   }
 
   private void resetEncoders() {
-    mRightPivotController.setSelectedSensorPosition(0);
-    mLeftPivotController.setSelectedSensorPosition(0);
     mExtensionEncoder.setPosition(0);
 
     mPivotRelEncoderOffsetRot = getPivotAbsEncoderAngleRot();
