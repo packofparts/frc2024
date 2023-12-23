@@ -12,7 +12,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.SwerveConstants;
 
 public class SwerveModule {
@@ -37,7 +36,7 @@ public class SwerveModule {
     // Public Debugging Values
     private double mPIDOutput = 0.0;
     private double mDesiredRadians = 0.0;
-    public double mDesiredVel = 0.0;
+    private double mDesiredVel = 0.0;
 
     public SwerveModule(int rotID, int transID, int rotEncoderID, boolean rotInverse,
             boolean transInverse, PIDController rotPID) {
@@ -132,7 +131,6 @@ public class SwerveModule {
         mDesiredVel = desiredState.speedMetersPerSecond;
         // PID Controller for both translation and rotation
         mTransPID.setReference(mDesiredVel, ControlType.kVelocity, 0);
-        // mTransMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.TELE_MAX_SPEED_MPS);
         mDesiredRadians = desiredState.angle.getRadians();
         mPIDOutput = mRotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
@@ -226,6 +224,16 @@ public class SwerveModule {
      */
     public void resetEncoders() {
         mTransEncoder.setPosition(0);
+    }
+
+    /**
+     * 
+     * @return the translation attribute of the module state object which is the setpoint of the
+     *         translation PID In Meters/Sec
+     * 
+     */
+    public double getDesiredTransVel() {
+        return mDesiredVel;
     }
 
     /**

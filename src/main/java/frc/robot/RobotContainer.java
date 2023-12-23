@@ -28,7 +28,7 @@ public class RobotContainer {
   private final ArmControlSubsystem mArmControlSubsystem = new ArmControlSubsystem();
   private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
   private final PhotonCameras mLimelight = new PhotonCameras();
-  // private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, mSwerveSubsystem);
+  private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, mSwerveSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -58,7 +58,7 @@ public class RobotContainer {
     return mLimelight;
   }
 
-  // public PoseEstimation getPoseEstimator() {
-  // return mPoseEstimator;
-  // }
+  public PoseEstimation getPoseEstimator() {
+    return mPoseEstimator;
+  }
 }

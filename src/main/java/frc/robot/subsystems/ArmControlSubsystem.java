@@ -108,8 +108,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized) {
-      // pivotPeriodic();
-      // extensionPeriodic();
+      pivotPeriodic();
+      extensionPeriodic();
     } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
       mDesiredPivotRotation = mCurrentPivotRotation;
       mDesiredExtensionDistance = mCurrentExtensionDistance;
