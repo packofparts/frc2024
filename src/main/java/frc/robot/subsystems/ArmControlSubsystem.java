@@ -78,7 +78,7 @@ public class ArmControlSubsystem extends SubsystemBase {
         -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION
             + ArmConstants.PIV_INIT_OFFSET_ROT;
 
-    setDefaultMotorConfig();
+    // setDefaultMotorConfig();
   }
 
   public void setDefaultMotorConfig() {
@@ -108,8 +108,8 @@ public class ArmControlSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized) {
-      pivotPeriodic();
-      extensionPeriodic();
+      // pivotPeriodic();
+      // extensionPeriodic();
     } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
       mDesiredPivotRotation = mCurrentPivotRotation;
       mDesiredExtensionDistance = mCurrentExtensionDistance;

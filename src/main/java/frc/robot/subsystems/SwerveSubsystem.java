@@ -55,14 +55,19 @@ public class SwerveSubsystem extends SubsystemBase {
       SmartDashboard.putNumber("Heading", getRotation2d().getDegrees());
 
       for (int i = 0; i < mModules.length; i++) {
-        SmartDashboard.putNumber("AppliedOutput" + i, mModules[i].getAppliedOutput());
-        SmartDashboard.putNumber("DesiredStateAngleDeg" + i,
-            mModules[i].getDesiredRadiansRot() / Math.PI * 180);
-        SmartDashboard.putNumber("RotRelativePosDeg" + i,
-            mModules[i].getRotRelativePosition() * 360);
-        SmartDashboard.putNumber("AbsEncoderDeg" + i, mModules[i].getRotPosition() / Math.PI * 180);
+        SmartDashboard.putNumber("TransAppliedOutput" + i, mModules[i].getTransAppliedVolts());
+        // SmartDashboard.putNumber("DesiredStateAngleDeg" + i,
+        // mModules[i].getDesiredRadiansRot() / Math.PI * 180);
+        // SmartDashboard.putNumber("RotRelativePosDeg" + i,
+        // mModules[i].getRotRelativePosition() * 360);
+        // SmartDashboard.putNumber("AbsEncoderDeg" + i, mModules[i].getRotPosition() / Math.PI *
+        // 180);
         SmartDashboard.putNumber("SpeedMeters" + i, mModules[i].getTransVelocity());
-        SmartDashboard.putNumber("PosMeters" + i, mModules[i].getTransPosition());
+        // SmartDashboard.putNumber("PosMeters" + i, mModules[i].getTransPosition());
+        SmartDashboard.putNumber("DesiredVel" + i, mModules[i].mDesiredVel);
+        // SmartDashboard.putNumber("GreatestPIDout" + i, mModules[i].mTransPID.getOutputMax());
+        // SmartDashboard.putNumber("SmallestPIDout" + i, mModules[i].mTransPID.getOutputMin());
+
       }
     }
   }

@@ -20,8 +20,6 @@ public class SwerveConstants {
   public static final double TRACK_WIDTH_METERS = .54;
   public static final double TRACK_LENGTH_METERS = .54;
 
-
-
   // Physical Max
   public static final double PHYSICAL_MAX_SPEED_MPS = 4.3;
 

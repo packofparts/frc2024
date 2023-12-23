@@ -68,6 +68,12 @@ public class SwerveConfig {
         public static final PIDController BACK_LEFT_ROT_PID = new PIDController(0.35, 0, 0);
 
 
+        public static final double TRANS_P = 0.1;
+        public static final double TRANS_I = 0.0;
+        public static final double TRANS_D = 0.0;
+        public static final double TRANS_FF = 0.238;
+
+
         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
                         FRONT_LEFT_COORDS_METERS, FRONT_RIGHT_COORDS_METERS,
                         BACK_LEFT_COORDS_METERS, BACK_RIGHT_COORDS_METERS);

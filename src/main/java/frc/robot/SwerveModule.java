@@ -3,6 +3,8 @@ package frc.robot;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -10,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.constants.SwerveConstants;
 
 public class SwerveModule {
@@ -20,6 +23,7 @@ public class SwerveModule {
     private final boolean mRotInverse;
     private final boolean mTransInverse;
     private final PIDController mRotPID;
+    public final SparkMaxPIDController mTransPID;
 
     // Hardware
     // Motor Controllers
@@ -33,6 +37,7 @@ public class SwerveModule {
     // Public Debugging Values
     private double mPIDOutput = 0.0;
     private double mDesiredRadians = 0.0;
+    public double mDesiredVel = 0.0;
 
     public SwerveModule(int rotID, int transID, int rotEncoderID, boolean rotInverse,
             boolean transInverse, PIDController rotPID) {
@@ -63,13 +68,25 @@ public class SwerveModule {
         mRotPID.enableContinuousInput(-Math.PI, Math.PI);
 
         // ----Setting Inversion
+        mRotMotor.restoreFactoryDefaults();
+        mTransMotor.restoreFactoryDefaults();
+
         mRotMotor.setInverted(mRotInverse);
         mTransMotor.setInverted(mTransInverse);
 
         mTransMotor.setIdleMode(IdleMode.kBrake);
         mRotMotor.setIdleMode(IdleMode.kBrake);
 
+        mTransPID = mTransMotor.getPIDController();
+        mTransPID.setP(SwerveConfig.TRANS_P, 0);
+        mTransPID.setI(SwerveConfig.TRANS_I, 0);
+        mTransPID.setD(SwerveConfig.TRANS_D, 0);
+        mTransPID.setFF(SwerveConfig.TRANS_FF, 0);
+        mTransMotor.enableVoltageCompensation(12);
+        mTransEncoder.setPositionConversionFactor(SwerveConstants.TRANS_RPM_TO_MPS * 60);
+        mTransEncoder.setVelocityConversionFactor(SwerveConstants.TRANS_RPM_TO_MPS);
         mTransEncoder.setPosition(0);
+        burnSparks();
     }
 
     // ------------------- State Settings
@@ -94,7 +111,6 @@ public class SwerveModule {
 
     public void setRotMotorRaw(double speed) {
         mRotMotor.set(speed);
-
     }
 
     /**
@@ -113,22 +129,20 @@ public class SwerveModule {
 
         // No turning motors over 90 degrees
         desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
-
+        mDesiredVel = desiredState.speedMetersPerSecond;
         // PID Controller for both translation and rotation
-        mTransMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.PHYSICAL_MAX_SPEED_MPS);
+        mTransPID.setReference(mDesiredVel, ControlType.kVelocity, 0);
+        // mTransMotor.set(desiredState.speedMetersPerSecond / SwerveConstants.TELE_MAX_SPEED_MPS);
         mDesiredRadians = desiredState.angle.getRadians();
         mPIDOutput = mRotPID.calculate(getRotPosition(), desiredState.angle.getRadians());
 
         mRotMotor.set(mPIDOutput);
-
     }
 
     public void setPID(double degrees) {
         mPIDOutput = mRotPID.calculate(getRotPosition(), Math.toRadians(degrees));
         mRotMotor.set(mPIDOutput);
-
     }
-
 
     /**
      * 
@@ -195,9 +209,17 @@ public class SwerveModule {
      * @return Returns velocity of translation motor with conversion
      */
     public double getTransVelocity() {
-        return getTransVelocityRaw() * SwerveConstants.TRANS_RPM_TO_MPS;
+        return getTransVelocityRaw();
     }
 
+    /**
+     * 
+     * @return Returns the applied voltage to the translation motor after nominal voltage
+     *         compensation
+     */
+    public double getTransAppliedVolts() {
+        return mTransMotor.getAppliedOutput() * mTransMotor.getBusVoltage();
+    }
 
     /**
      * Reset ONLY the translation encoder
