@@ -62,16 +62,20 @@ public class SwerveConfig {
                                         -SwerveConstants.TRACK_WIDTH_METERS / 2);
 
         // PID Controllers
-        public static final PIDController FRONT_LEFT_ROT_PID = new PIDController(0.35, 0., 0.);
-        public static final PIDController FRONT_RIGHT_ROT_PID = new PIDController(0.35, 0.0, 0.);
-        public static final PIDController BACK_RIGHT_ROT_PID = new PIDController(0.35, 0, 0.);
-        public static final PIDController BACK_LEFT_ROT_PID = new PIDController(0.35, 0, 0);
+        public static final Gains FRONT_LEFT_ROT_PID = new Gains(0.4, 0, 0);
+        public static final Gains FRONT_RIGHT_ROT_PID = new Gains(0.4, 0, 0);
+        public static final Gains BACK_RIGHT_ROT_PID = new Gains(0.4, 0, 0);
+        public static final Gains BACK_LEFT_ROT_PID = new Gains(0.4, 0, 0);
 
 
-        public static final double TRANS_P = 0.1;
-        public static final double TRANS_I = 0.0;
-        public static final double TRANS_D = 0.0;
-        public static final double TRANS_FF = 0.238;
+        public static final Gains FRONT_LEFT_TRANS_PID =
+                        new Gains(0.1, 0., 0, 0.23558 * 1.22 * 0.97);
+        public static final Gains FRONT_RIGHT_TRANS_PID =
+                        new Gains(0.1, 0.0, 0, 0.232558 * 1.22 * 0.97);
+        public static final Gains BACK_LEFT_TRANS_PID = new Gains(0.1, 0, 0, 0.30558 * 1.22 * 0.97);
+        public static final Gains BACK_RIGHT_TRANS_PID =
+                        new Gains(0.1, 0, 0, 0.232558 * 1.22 * 0.97);
+
 
 
         public static final SwerveDriveKinematics SWERVE_KINEMATICS = new SwerveDriveKinematics(
@@ -82,24 +86,25 @@ public class SwerveConfig {
         // Swerve Modules and Other Hardware
         public static final SwerveModule FRONT_LEFT_MODULE = new SwerveModule(FRONT_LEFT_ROT_ID,
                         FRONT_LEFT_TRANS_ID, FRONT_LEFT_ROT_ENC_ID, FRONT_LEFT_ROT_INVERSE,
-                        FRONT_LEFT_TRANS_INVERSE, FRONT_LEFT_ROT_PID);
+                        FRONT_LEFT_TRANS_INVERSE, FRONT_LEFT_ROT_PID, FRONT_LEFT_TRANS_PID);
 
         public static final SwerveModule FRONT_RIGHT_MODULE = new SwerveModule(FRONT_RIGHT_ROT_ID,
                         FRONT_RIGHT_TRANS_ID, FRONT_RIGHT_ROT_ENC_ID, FRONT_RIGHT_ROT_INVERSE,
-                        FRONT_RIGHT_TRANS_INVERSE, FRONT_RIGHT_ROT_PID);
+                        FRONT_RIGHT_TRANS_INVERSE, FRONT_RIGHT_ROT_PID, FRONT_RIGHT_TRANS_PID);
 
         public static final SwerveModule BACK_RIGHT_MODULE = new SwerveModule(BACK_RIGHT_ROT_ID,
                         BACK_RIGHT_TRANS_ID, BACK_RIGHT_ROT_ENC_ID, BACK_RIGHT_ROT_INVERSE,
-                        BACK_RIGHT_TRANS_INVERSE, BACK_RIGHT_ROT_PID);
+                        BACK_RIGHT_TRANS_INVERSE, BACK_RIGHT_ROT_PID, BACK_RIGHT_TRANS_PID);
 
         public static final SwerveModule BACK_LEFT_MODULE = new SwerveModule(BACK_LEFT_ROT_ID,
                         BACK_LEFT_TRANS_ID, BACK_LEFT_ROT_ENC_ID, BACK_LEFT_ROT_INVERSE,
-                        BACK_LEFT_TRANS_INVERSE, BACK_LEFT_ROT_PID);
+                        BACK_LEFT_TRANS_INVERSE, BACK_LEFT_ROT_PID, BACK_LEFT_TRANS_PID);
 
         public static final SwerveModule[] SWERVE_MODULES = {FRONT_LEFT_MODULE, FRONT_RIGHT_MODULE,
                         BACK_LEFT_MODULE, BACK_RIGHT_MODULE};
 
-        public static final PIDController[] SWERVE_MODULE_PIDs = {FRONT_LEFT_ROT_PID,
-                        FRONT_RIGHT_ROT_PID, BACK_LEFT_ROT_PID, BACK_LEFT_ROT_PID};
+        public static final PIDController[] SWERVE_MODULE_PIDs =
+                        {FRONT_LEFT_ROT_PID.toWpiPID(), FRONT_RIGHT_ROT_PID.toWpiPID(),
+                                        BACK_LEFT_ROT_PID.toWpiPID(), BACK_LEFT_ROT_PID.toWpiPID()};
 
 }

@@ -39,7 +39,7 @@ public class SwerveModule {
     private double mDesiredVel = 0.0;
 
     public SwerveModule(int rotID, int transID, int rotEncoderID, boolean rotInverse,
-            boolean transInverse, PIDController rotPID) {
+            boolean transInverse, Gains rotPID, Gains transPID) {
         // Setting Parameters
         mRotID = rotID;
         mTransID = transID;
@@ -61,7 +61,7 @@ public class SwerveModule {
         // Sets measurement to radians
 
         // ----Setting PID
-        mRotPID = rotPID;
+        mRotPID = rotPID.toWpiPID();
 
         // ----Setting PID Parameters
         mRotPID.enableContinuousInput(-Math.PI, Math.PI);
@@ -77,10 +77,11 @@ public class SwerveModule {
         mRotMotor.setIdleMode(IdleMode.kBrake);
 
         mTransPID = mTransMotor.getPIDController();
-        mTransPID.setP(SwerveConfig.TRANS_P, 0);
-        mTransPID.setI(SwerveConfig.TRANS_I, 0);
-        mTransPID.setD(SwerveConfig.TRANS_D, 0);
-        mTransPID.setFF(SwerveConfig.TRANS_FF, 0);
+
+        mTransPID.setP(transPID.kP, 0);
+        mTransPID.setI(transPID.kI, 0);
+        mTransPID.setD(transPID.kD, 0);
+        mTransPID.setFF(transPID.kFF, 0);
         mTransMotor.enableVoltageCompensation(12);
         mTransEncoder.setPositionConversionFactor(SwerveConstants.TRANS_RPM_TO_MPS * 60);
         mTransEncoder.setVelocityConversionFactor(SwerveConstants.TRANS_RPM_TO_MPS);

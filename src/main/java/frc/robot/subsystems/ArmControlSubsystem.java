@@ -78,7 +78,7 @@ public class ArmControlSubsystem extends SubsystemBase {
         -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.PIVOT_ABS_ENC_TO_ROTATION
             + ArmConstants.PIV_INIT_OFFSET_ROT;
 
-    // setDefaultMotorConfig();
+    setDefaultMotorConfig();
   }
 
   public void setDefaultMotorConfig() {
