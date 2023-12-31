@@ -62,6 +62,7 @@ public class ArmConstants {
   // Limits To Angles
   public static final double MIN_PIV_ANGLE_RAD = Units.degreesToRadians(14); // 33
   public static final double MAX_PIV_ANGLE_RAD = Units.degreesToRadians(115.0);
+  public static final double MAX_EXT_TOUCHES_GROUND_ANGLE_RAD = Units.degreesToRadians(33);
 
   // Limit to Extension
   public static final double MIN_EXT_LEN_IN = 0;
@@ -72,6 +73,8 @@ public class ArmConstants {
   public static final double PHYSICAL_MAX_PIV_RAD_SEC = Units.degreesToRadians(142);
   public static final double MAX_PIV_RATE_PERCENT_SEC =
       MAX_PIV_RATE_RAD_SEC / PHYSICAL_MAX_PIV_RAD_SEC;
+
+  public static final double PIV_POS_Y_IN = 45.75; // distance between pivot point and ground
 
 
   // IDs
