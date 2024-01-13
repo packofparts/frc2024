@@ -1,9 +1,12 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.MathUtil;
@@ -33,7 +36,7 @@ public class ArmControlSubsystem extends SubsystemBase {
   private final TalonFXConfiguration mLeftTalonFXConfiguration = new TalonFXConfiguration();
   private final TalonFXConfiguration mRighTalonFXConfiguration = new TalonFXConfiguration();
   private final SlewRateLimiter mPivotRateLimiter;
-  private final PIDController mPivotPID;
+  // private final PIDController mPivotPID;
 
   // This is called Ultra Instinct because setting this boolean to true removes the clamps
   // so that if the belt skips, the operator can still run manually without the bad offsets
@@ -55,8 +58,8 @@ public class ArmControlSubsystem extends SubsystemBase {
     mChooser.addOption("Coast", ArmMotorMode.COAST);
     mChooser.setDefaultOption("Brake", ArmConstants.INITIAL_ARM_MOTOR_MODE);
 
-    mPivotPID = new PIDController(0.8, 0, 0);
-    mPivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_RAD);
+    // mPivotPID = new PIDController(0.8, 0, 0);
+    // mPivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_RAD);
 
     mPivotRateLimiter = new SlewRateLimiter(ArmConstants.MAX_PIV_RATE_RAD_SEC);
 
@@ -67,6 +70,27 @@ public class ArmControlSubsystem extends SubsystemBase {
             + ArmConstants.PIV_INIT_OFFSET_ROT;
 
     setDefaultMotorConfig();
+
+    // class member variable
+    final PositionVoltage m_position = new PositionVoltage(0);
+
+    // robot init, set slot 0 gains
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kV = 0.00;
+    slot0Configs.kP = 0.00;
+    slot0Configs.kI = 0.00;
+    slot0Configs.kD = 0.00;
+    DutyCycleOut dutyCycleOut = new DutyCycleOut(mCurrentPivotRotation);
+
+    m_position.Slot = 0;
+
+    mLeftPivotController.getConfigurator().apply(slot0Configs, 0.050);
+    mRightPivotController.getConfigurator().apply(slot0Configs, 0.050);
+
+    // periodic, run position control with slot 0 configs,
+
+    mLeftPivotController.setControl(m_position.withPosition(mDesiredPivotRotation));
+    mRightPivotController.setControl(m_position.withPosition(mDesiredPivotRotation));
   }
 
   public void setDefaultMotorConfig() {
@@ -77,82 +101,82 @@ public class ArmControlSubsystem extends SubsystemBase {
     updateModes();
   }
 
-  @Override
-  public void periodic() {
-    if (mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized) {
-      pivotPeriodic();
-    } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
-      mDesiredPivotRotation = mCurrentPivotRotation;
-    }
+  // @Override
+  // public void periodic() {
+  // if (mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized) {
+  // pivotPeriodic();
+  // } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
+  // mDesiredPivotRotation = mCurrentPivotRotation;
+  // }
 
-    if (!mIsInitialized && mAbsPivEncoder.isConnected()) {
-      resetEncoders();
-      mIsInitialized = true;
-    }
+  // if (!mIsInitialized && mAbsPivEncoder.isConnected()) {
+  // resetEncoders();
+  // mIsInitialized = true;
+  // }
 
-    updateModes();
-
-
-    // Getting Current And Desired Distances
-    SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(mCurrentPivotRotation));
-
-    if (CompConstants.DEBUG_MODE) {
-
-      SmartDashboard.putData("ArmMotorMode", mChooser);
-      // Encoder Positions
-      SmartDashboard.putNumber("PivotPos", getCurrentPivotRotation(false));
-      SmartDashboard.putNumber("InitialAbsPivot", mPivotRelEncoderOffsetRot);
-
-      // Abs Encoder Debugging
-      SmartDashboard.putNumber("pivotfreq", mAbsPivEncoder.getFrequency());
-      SmartDashboard.putBoolean("IsInititilized", mIsInitialized);
-      SmartDashboard.putBoolean("absreconnectioned", mAbsPivEncoder.isConnected());
-      SmartDashboard.putNumber("AbsPivot",
-          -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.ABS_ENC_TO_FINAL_SPROCKET);
-
-      // Setpoint Debugging
-      SmartDashboard.putBoolean("AtAnglePoint", atAngleSetpoint());
-      SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(mDesiredPivotRotation));
-
-      SmartDashboard.putNumber("pivot error", mDesiredPivotRotation - mCurrentPivotRotation);
+  // updateModes();
 
 
-    }
+  // // Getting Current And Desired Distances
+  // SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(mCurrentPivotRotation));
 
-    mDesiredPivotRotation = MathUtil.clamp(mDesiredPivotRotation, ArmConstants.MIN_PIV_ANGLE_RAD,
-        ArmConstants.MAX_PIV_ANGLE_RAD);
-    mCurrentPivotRotation = getCurrentPivotRotation(true);
-  }
+  // if (CompConstants.DEBUG_MODE) {
 
-  private void pivotPeriodic() {
-    double pivotPIDOutput = mPivotPID.calculate(mCurrentPivotRotation, mDesiredPivotRotation);
+  // SmartDashboard.putData("ArmMotorMode", mChooser);
+  // // Encoder Positions
+  // SmartDashboard.putNumber("PivotPos", getCurrentPivotRotation(false));
+  // SmartDashboard.putNumber("InitialAbsPivot", mPivotRelEncoderOffsetRot);
 
-    // Desaturating PID output
-    pivotPIDOutput = MathUtil.clamp(pivotPIDOutput, -ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT,
-        ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT);
+  // // Abs Encoder Debugging
+  // SmartDashboard.putNumber("pivotfreq", mAbsPivEncoder.getFrequency());
+  // SmartDashboard.putBoolean("IsInititilized", mIsInitialized);
+  // SmartDashboard.putBoolean("absreconnectioned", mAbsPivEncoder.isConnected());
+  // SmartDashboard.putNumber("AbsPivot",
+  // -mAbsPivEncoder.getAbsolutePosition() * ArmConstants.ABS_ENC_TO_FINAL_SPROCKET);
+
+  // // Setpoint Debugging
+  // SmartDashboard.putBoolean("AtAnglePoint", atAngleSetpoint());
+  // SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(mDesiredPivotRotation));
+
+  // SmartDashboard.putNumber("pivot error", mDesiredPivotRotation - mCurrentPivotRotation);
+
+
+  // }
+
+  // mDesiredPivotRotation = MathUtil.clamp(mDesiredPivotRotation, ArmConstants.MIN_PIV_ANGLE_RAD,
+  // ArmConstants.MAX_PIV_ANGLE_RAD);
+  // mCurrentPivotRotation = getCurrentPivotRotation(true);
+  // }
+
+  // private void pivotPeriodic() {
+  // double pivotPIDOutput = mPivotPID.calculate(mCurrentPivotRotation, mDesiredPivotRotation);
+
+  // // Desaturating PID output
+  // pivotPIDOutput = MathUtil.clamp(pivotPIDOutput, -ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT,
+  // ArmConstants.PIV_MAX_PID_CONTRIBUTION_PERCENT);
 
 
 
-    if (ArmConstants.RATE_LIMIT_ARM) {
-      pivotPIDOutput = mPivotRateLimiter.calculate(pivotPIDOutput);
-    }
-    if (ArmConstants.ENABLE_FEEDFORWARD) {
-      double kgOutPut = ArmConstants.KG * Math.cos(mCurrentPivotRotation - (Math.PI / 2));
-      // Desaturating kG output
-      pivotPIDOutput += MathUtil.clamp(kgOutPut, -ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT,
-          ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
-    }
+  // if (ArmConstants.RATE_LIMIT_ARM) {
+  // pivotPIDOutput = mPivotRateLimiter.calculate(pivotPIDOutput);
+  // }
+  // if (ArmConstants.ENABLE_FEEDFORWARD) {
+  // double kgOutPut = ArmConstants.KG * Math.cos(mCurrentPivotRotation - (Math.PI / 2));
+  // // Desaturating kG output
+  // pivotPIDOutput += MathUtil.clamp(kgOutPut, -ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT,
+  // ArmConstants.PIV_MAX_KG_CONTRIBUTION_PERCENT);
+  // }
 
-    if (CompConstants.DEBUG_MODE) {
-      SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
-    }
+  // if (CompConstants.DEBUG_MODE) {
+  // SmartDashboard.putNumber("pivotPIDOutput", pivotPIDOutput);
+  // }
 
-    mLeftPivotController.setControl(mDutyCycleCommand.withOutput(MathUtil.clamp(pivotPIDOutput,
-        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT)));
+  // mLeftPivotController.setControl(mDutyCycleCommand.withOutput(MathUtil.clamp(pivotPIDOutput,
+  // -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT)));
 
-    mRightPivotController.setControl(mDutyCycleCommand.withOutput(MathUtil.clamp(pivotPIDOutput,
-        -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT)));
-  }
+  // mRightPivotController.setControl(mDutyCycleCommand.withOutput(MathUtil.clamp(pivotPIDOutput,
+  // -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT)));
+  // }
 
 
   public void setDesiredPivotRot(double desiredRotation) {

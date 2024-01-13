@@ -1,5 +1,7 @@
 package frc.robot.constants;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
 import edu.wpi.first.math.util.Units;
 import frc.robot.subsystems.ArmControlSubsystem.ArmMotorMode;
 
