@@ -5,16 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.DefaultArmCommand;
-import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DefaultIntakeCommand;
-import frc.robot.commands.PIDTuning;
-import frc.robot.constants.AutoConstants;
-import frc.robot.constants.CompConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PhotonCameras;
-import frc.robot.subsystems.PoseEstimation;
-import frc.robot.subsystems.SwerveSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,41 +15,14 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem mSwerveSubsystem = new SwerveSubsystem();
   private final ArmControlSubsystem mArmControlSubsystem = new ArmControlSubsystem();
-  private final IntakeSubsystem mIntakeSubsystem = new IntakeSubsystem();
-  private final PhotonCameras mLimelight = new PhotonCameras();
-  private final PoseEstimation mPoseEstimator = new PoseEstimation(mLimelight, mSwerveSubsystem);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    AutoConstants.populateHashMaps(mArmControlSubsystem, mIntakeSubsystem);
     mArmControlSubsystem.setDefaultCommand(new DefaultArmCommand(mArmControlSubsystem));
-    mIntakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(mIntakeSubsystem));
-
-    if (CompConstants.PID_TUNE_MODE)
-      mSwerveSubsystem.setDefaultCommand(new PIDTuning(0, mSwerveSubsystem));
-    else
-      mSwerveSubsystem.setDefaultCommand(new DefaultDriveCommand(mSwerveSubsystem));
-  }
-
-  public SwerveSubsystem getSwerveSubsystem() {
-    return mSwerveSubsystem;
   }
 
   public ArmControlSubsystem getArmSubsystem() {
     return mArmControlSubsystem;
-  }
-
-  public IntakeSubsystem getIntakeSubsystem() {
-    return mIntakeSubsystem;
-  }
-
-  public PhotonCameras getLimelight() {
-    return mLimelight;
-  }
-
-  public PoseEstimation getPoseEstimator() {
-    return mPoseEstimator;
   }
 }

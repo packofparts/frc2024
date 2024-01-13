@@ -38,79 +38,37 @@ public class DefaultArmCommand extends CommandBase {
           * (Input.getLeftStickY() + JoystickConstants.PIVOT_INPUT_DEADZONE));
     }
 
-    if (Input.getRightStickY() > JoystickConstants.EXT_INPUT_DEADZONE) {
-      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION
-          * (Input.getRightStickY() - JoystickConstants.EXT_INPUT_DEADZONE));
-    } else if (Input.getRightStickY() < -JoystickConstants.EXT_INPUT_DEADZONE) {
-      mArmControlSubsystem.changeDesiredExtension(JoystickConstants.EXT_INPUT_DESATURATION
-          * (Input.getRightStickY() + JoystickConstants.EXT_INPUT_DEADZONE));
-    }
-
-
     else if (Input.getA()) {
-      SequentialCommandGroup command = new SequentialCommandGroup(
-          new InstantCommand(
-              () -> mArmControlSubsystem
-                  .setDesiredPivotRot(ArmConstants.ArmState.STOW.pivotAngleRad),
-              mArmControlSubsystem),
-          new InstantCommand(
-              () -> mArmControlSubsystem
-                  .setDesiredExtension(ArmConstants.ArmState.STOW.extentionDistIn),
-              mArmControlSubsystem)
+      SequentialCommandGroup command = new SequentialCommandGroup(new InstantCommand(
+          () -> mArmControlSubsystem.setDesiredPivotRot(ArmConstants.ArmState.STOW.pivotAngleRad),
+          mArmControlSubsystem)
 
       );
       command.schedule();
     } else if (Input.getB()) {
-      SequentialCommandGroup command = new SequentialCommandGroup(
-          new InstantCommand(
-              () -> mArmControlSubsystem
-                  .setDesiredPivotRot(ArmConstants.ArmState.MID_NODE_CONE.pivotAngleRad),
-              mArmControlSubsystem),
-          new InstantCommand(
-              () -> mArmControlSubsystem
-                  .setDesiredExtension(ArmConstants.ArmState.MID_NODE_CONE.extentionDistIn),
-              mArmControlSubsystem)
+      SequentialCommandGroup command = new SequentialCommandGroup(new InstantCommand(
+          () -> mArmControlSubsystem
+              .setDesiredPivotRot(ArmConstants.ArmState.MID_NODE_CONE.pivotAngleRad),
+          mArmControlSubsystem)
 
       );
       command.schedule();
     } else if (Input.getX()) {
-      SequentialCommandGroup command = new SequentialCommandGroup(
-          mArmControlSubsystem
-              .waitUntilSpPivot(ArmConstants.ArmState.UPPER_NODE_CONE.pivotAngleRad),
-          mArmControlSubsystem
-              .waitUntilSpTelescope(ArmConstants.ArmState.UPPER_NODE_CONE.extentionDistIn));
+      SequentialCommandGroup command = new SequentialCommandGroup(mArmControlSubsystem
+          .waitUntilSpPivot(ArmConstants.ArmState.UPPER_NODE_CONE.pivotAngleRad));
       command.schedule();
     } else if (Input.getY()) {
-      SequentialCommandGroup command = new SequentialCommandGroup(
-          new InstantCommand(() -> mArmControlSubsystem.setDesiredPivotRot(
-              ArmConstants.ArmState.SUBSTATION_CONE.pivotAngleRad), mArmControlSubsystem),
-          new WaitCommand(1),
-          new InstantCommand(
-              () -> mArmControlSubsystem
-                  .setDesiredExtension(ArmConstants.ArmState.SUBSTATION_CONE.extentionDistIn),
-              mArmControlSubsystem)
-
-      );
+      SequentialCommandGroup command = new SequentialCommandGroup(new InstantCommand(
+          () -> mArmControlSubsystem
+              .setDesiredPivotRot(ArmConstants.ArmState.SUBSTATION_CONE.pivotAngleRad),
+          mArmControlSubsystem));
       command.schedule();
     } else if (Input.getDPad() == Input.DPADUP) {
-      SequentialCommandGroup command =
-          new SequentialCommandGroup(
-              new InstantCommand(
-                  () -> mArmControlSubsystem
-                      .setDesiredPivotRot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),
-                  mArmControlSubsystem),
-              new WaitCommand(0.5),
-              new InstantCommand(
-                  () -> mArmControlSubsystem.setDesiredExtension(
-                      ArmConstants.ArmState.GROUND_PICKUP_CONE.extentionDistIn),
-                  mArmControlSubsystem)
-
-          );
+      SequentialCommandGroup command = new SequentialCommandGroup(new InstantCommand(
+          () -> mArmControlSubsystem
+              .setDesiredPivotRot(ArmConstants.ArmState.GROUND_PICKUP_CONE.pivotAngleRad),
+          mArmControlSubsystem));
       command.schedule();
-    }
-
-    if (Input.isUltraInstinct()) {
-      mArmControlSubsystem.setmUltraInstinct(!mArmControlSubsystem.getmUltraInstinct());
     }
 
   }

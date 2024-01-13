@@ -1,30 +1,16 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DutyCycle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -43,15 +29,10 @@ public class ArmControlSubsystem extends SubsystemBase {
 
   private final TalonFX mLeftPivotController = new TalonFX(ArmConstants.LEFT_PIV_MOTOR_ID);
   private final TalonFX mRightPivotController = new TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID);
-  private final CANSparkMax mExtensionController =
-      new CANSparkMax(ArmConstants.EXT_SPARK_ID, MotorType.kBrushless);
-
   private final DutyCycleEncoder mAbsPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPORTPIV);
-  private final RelativeEncoder mExtensionEncoder = mExtensionController.getEncoder();
   private final TalonFXConfiguration mLeftTalonFXConfiguration = new TalonFXConfiguration();
   private final TalonFXConfiguration mRighTalonFXConfiguration = new TalonFXConfiguration();
   private final SlewRateLimiter mPivotRateLimiter;
-  private final PIDController mExtensionPID;
   private final PIDController mPivotPID;
 
   // This is called Ultra Instinct because setting this boolean to true removes the clamps
@@ -61,9 +42,6 @@ public class ArmControlSubsystem extends SubsystemBase {
   private double mPivotRelEncoderOffsetRot;
   private double mCurrentPivotRotation;
   private double mDesiredPivotRotation = ArmConstants.MIN_PIV_ANGLE_RAD;
-
-  private double mCurrentExtensionDistance = ArmConstants.ZERO_EXTENSION_IN;
-  private double mDesiredExtensionDistance = ArmConstants.MIN_EXT_LEN_IN;
 
   private boolean mIsInitialized = false;
   private final DutyCycleOut mDutyCycleCommand = new DutyCycleOut(0).withUpdateFreqHz(50);
@@ -79,9 +57,6 @@ public class ArmControlSubsystem extends SubsystemBase {
 
     mPivotPID = new PIDController(0.8, 0, 0);
     mPivotPID.setTolerance(ArmConstants.RESTING_PIV_TOLERANCE_RAD);
-
-    mExtensionPID = new PIDController(0.19, 0, 0);
-    mExtensionPID.setTolerance(ArmConstants.RESTING_EXT_TOLERANCE_IN);
 
     mPivotRateLimiter = new SlewRateLimiter(ArmConstants.MAX_PIV_RATE_RAD_SEC);
 
@@ -100,24 +75,17 @@ public class ArmControlSubsystem extends SubsystemBase {
     mLeftPivotController.setInverted(ArmConstants.LEFT_PIV_MOTOR_INVERTED);
 
     updateModes();
-
-    mExtensionController.setInverted(false);
-    mExtensionEncoder.setPosition(0);
-    mExtensionController.burnFlash();
   }
 
   @Override
   public void periodic() {
     if (mChooser.getSelected() == ArmMotorMode.BRAKE && mIsInitialized) {
       pivotPeriodic();
-      extensionPeriodic();
     } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
       mDesiredPivotRotation = mCurrentPivotRotation;
-      mDesiredExtensionDistance = mCurrentExtensionDistance;
     }
 
-    if (!mIsInitialized && Double.compare(mCurrentPivotRotation, mCurrentExtensionDistance) == 0
-        && mAbsPivEncoder.isConnected()) {
+    if (!mIsInitialized && mAbsPivEncoder.isConnected()) {
       resetEncoders();
       mIsInitialized = true;
     }
@@ -126,7 +94,6 @@ public class ArmControlSubsystem extends SubsystemBase {
 
 
     // Getting Current And Desired Distances
-    SmartDashboard.putNumber("CurrentExtension", getCurrentExtensionIn());
     SmartDashboard.putNumber("CurrentPivotDeg", Units.radiansToDegrees(mCurrentPivotRotation));
 
     if (CompConstants.DEBUG_MODE) {
@@ -135,10 +102,6 @@ public class ArmControlSubsystem extends SubsystemBase {
       // Encoder Positions
       SmartDashboard.putNumber("PivotPos", getCurrentPivotRotation(false));
       SmartDashboard.putNumber("InitialAbsPivot", mPivotRelEncoderOffsetRot);
-
-      SmartDashboard.putNumber("extensionSensorOutput", getCurrentExtensionIn());
-      SmartDashboard.putNumber("extensionEncoderPos",
-          mExtensionEncoder.getPosition() * ArmConstants.EXTENSION_ROTATION_TO_INCHES);
 
       // Abs Encoder Debugging
       SmartDashboard.putNumber("pivotfreq", mAbsPivEncoder.getFrequency());
@@ -149,9 +112,7 @@ public class ArmControlSubsystem extends SubsystemBase {
 
       // Setpoint Debugging
       SmartDashboard.putBoolean("AtAnglePoint", atAngleSetpoint());
-      SmartDashboard.putBoolean("AtExtensionPoint", atTelescopeSetpoint());
       SmartDashboard.putNumber("DesiredPivotDeg", Units.radiansToDegrees(mDesiredPivotRotation));
-      SmartDashboard.putNumber("DesiredExtension", mDesiredExtensionDistance);
 
       SmartDashboard.putNumber("pivot error", mDesiredPivotRotation - mCurrentPivotRotation);
 
@@ -161,12 +122,6 @@ public class ArmControlSubsystem extends SubsystemBase {
     mDesiredPivotRotation = MathUtil.clamp(mDesiredPivotRotation, ArmConstants.MIN_PIV_ANGLE_RAD,
         ArmConstants.MAX_PIV_ANGLE_RAD);
     mCurrentPivotRotation = getCurrentPivotRotation(true);
-
-    if (!mUltraInstinct) {
-      mDesiredExtensionDistance = MathUtil.clamp(mDesiredExtensionDistance,
-          ArmConstants.MIN_EXT_LEN_IN, ArmConstants.MAX_EXT_LEN_IN);
-    }
-    mCurrentExtensionDistance = getCurrentExtensionIn();
   }
 
   private void pivotPeriodic() {
@@ -199,38 +154,9 @@ public class ArmControlSubsystem extends SubsystemBase {
         -ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT, ArmConstants.PIV_MAX_SPEED_CLAMP_PERCENT)));
   }
 
-  private void extensionPeriodic() {
-    double extensionPIDOutput =
-        mExtensionPID.calculate(mCurrentExtensionDistance, mDesiredExtensionDistance);
-    double difference = mDesiredExtensionDistance - mCurrentExtensionDistance;
-
-    // Desaturating PID output
-    extensionPIDOutput =
-        MathUtil.clamp(extensionPIDOutput, -ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT,
-            ArmConstants.EXT_MAX_PID_CONTRIBUTION_PERCENT);
-    SmartDashboard.putNumber("extensionPIDOutput", extensionPIDOutput);
-
-    // This is for handling the friction in the extension
-    double offset = ArmConstants.EXT_FRICTION_COEFF * (difference > 0 ? 1 : -1);
-    SmartDashboard.putNumber("difference", offset);
-
-    if (Math.abs(difference) > ArmConstants.EXT_FRICTION_ACTIVATION_THRESH) {
-      mExtensionController.set(MathUtil.clamp(offset + extensionPIDOutput,
-          -ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT, ArmConstants.EXT_MAX_SPEED_CLAMP_PERCENT));
-    } else {
-      mExtensionController.set(0);
-    }
-  }
-
 
   public void setDesiredPivotRot(double desiredRotation) {
     mDesiredPivotRotation = desiredRotation;
-  }
-
-
-  // in inches
-  public void setDesiredExtension(double extension) {
-    mDesiredExtensionDistance = extension;
   }
 
 
@@ -240,21 +166,10 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
 
-  public boolean atTelescopeSetpoint() {
-    return Math.abs(mDesiredExtensionDistance
-        - mCurrentExtensionDistance) < ArmConstants.ACTIVE_EXT_TOLERANCE_IN;
-  }
-
 
   public Command waitUntilSpPivot(double sp) {
     return new FunctionalCommand(() -> setDesiredPivotRot(sp), () -> new PrintCommand("getName()"),
         (Boolean bool) -> new PrintCommand("Finished Pivot"), this::atAngleSetpoint, this);
-  }
-
-
-  public Command waitUntilSpTelescope(double sp) {
-    return new FunctionalCommand(() -> setDesiredExtension(sp), () -> new PrintCommand("finished"),
-        (Boolean bool) -> new PrintCommand("getName()"), this::atTelescopeSetpoint, this);
   }
 
 
@@ -270,20 +185,10 @@ public class ArmControlSubsystem extends SubsystemBase {
   }
 
 
-  // convert encoder rotations to distance inches
-  public double getCurrentExtensionIn() {
-    return mExtensionEncoder.getPosition() * ArmConstants.EXT_MOTOR_TO_BELT_IN;
-  }
-
-
   public void changeDesiredPivotRotation(double i) {
     mDesiredPivotRotation += i;
   }
 
-
-  public void changeDesiredExtension(double i) {
-    mDesiredExtensionDistance += i;
-  }
 
   public boolean getmUltraInstinct() {
     return mUltraInstinct;
@@ -305,20 +210,16 @@ public class ArmControlSubsystem extends SubsystemBase {
     if (mChooser.getSelected() == ArmMotorMode.BRAKE) {
 
       motorConfigs.NeutralMode = NeutralModeValue.Brake;
-      mExtensionController.setIdleMode(IdleMode.kBrake);
 
     } else if (mChooser.getSelected() == ArmMotorMode.COAST) {
 
       motorConfigs.NeutralMode = NeutralModeValue.Coast;
-      mExtensionController.setIdleMode(IdleMode.kCoast);
     }
     mLeftPivotController.getConfigurator().refresh(motorConfigs);
 
   }
 
   private void resetEncoders() {
-    mExtensionEncoder.setPosition(0);
-
     mPivotRelEncoderOffsetRot = getPivotAbsEncoderAngleRot();
     mCurrentPivotRotation = Units.rotationsToRadians(mPivotRelEncoderOffsetRot);
     mCurrentPivotRotation = mDesiredPivotRotation;

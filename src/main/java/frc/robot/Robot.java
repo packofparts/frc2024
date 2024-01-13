@@ -14,10 +14,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.FollowPath;
-import frc.robot.commands.Mobility;
-import frc.robot.commands.ScoreCone;
-import frc.robot.constants.AutoConstants;
 import frc.robot.constants.ArmConstants.ArmState;
 
 /**
@@ -41,39 +37,6 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     RobotContainer robotContainer = new RobotContainer();
-    mPathSelector.addOption("Station2PieceBlue", new SequentialCommandGroup(
-        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(),
-            ArmState.LOWER_NODE_CONE),
-        new FollowPath(robotContainer.getSwerveSubsystem(), AutoConstants.STATION_2_PIECE_BLUE_PATH,
-            AutoConstants.EVENT_MAP, robotContainer.getPoseEstimator())
-
-    ));
-
-    mPathSelector.addOption("Station2PieceRed", new SequentialCommandGroup(
-        new ScoreCone(robotContainer.getArmSubsystem(), robotContainer.getIntakeSubsystem(),
-            ArmState.LOWER_NODE_CONE),
-        new FollowPath(robotContainer.getSwerveSubsystem(), AutoConstants.STATION_2_PIECE_RED_PATH,
-            AutoConstants.EVENT_MAP, robotContainer.getPoseEstimator())
-
-    ));
-
-    mPathSelector.addOption("ScoreHybridMobility",
-        new SequentialCommandGroup(new ScoreCone(robotContainer.getArmSubsystem(),
-            robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE),
-            new Mobility(robotContainer.getSwerveSubsystem())));
-
-    mPathSelector.addOption("ScoreHybrid",
-        new SequentialCommandGroup(new ScoreCone(robotContainer.getArmSubsystem(),
-            robotContainer.getIntakeSubsystem(), ArmState.LOWER_NODE_CONE)));
-
-    mPathSelector.addOption("OneMeter", new FollowPath(robotContainer.getSwerveSubsystem(),
-        AutoConstants.MOVE_ONE_METER, AutoConstants.EMPTY_MAP, robotContainer.getPoseEstimator()));
-
-    mPathSelector.addOption("MobilityOnly", new Mobility(robotContainer.getSwerveSubsystem()));
-
-    mPathSelector.setDefaultOption("None", new PrintCommand("No Auto :( "));
-
-    SmartDashboard.putData("PP Autos", mPathSelector);
   }
 
   /**
