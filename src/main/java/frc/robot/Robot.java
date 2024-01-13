@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkMaxLowLevel;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -66,8 +65,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     mCurAlliance = DriverStation.getAlliance();
     mPathSelector.getSelected().schedule();
-
-    CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 
   /** This function is called periodically during autonomous. */
@@ -97,6 +94,5 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    CANSparkMaxLowLevel.enableExternalUSBControl(true);
   }
 }
