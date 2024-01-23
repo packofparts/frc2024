@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -13,7 +13,7 @@ import frc.robot.constants.JoystickConstants;
 import frc.robot.subsystems.ArmControlSubsystem;
 import frc.robot.subsystems.Input;
 
-public class DefaultArmCommand extends CommandBase {
+public class DefaultArmCommand extends Command {
 
   private final ArmControlSubsystem mArmControlSubsystem;
 
