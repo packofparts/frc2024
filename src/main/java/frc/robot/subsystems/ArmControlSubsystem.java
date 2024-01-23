@@ -30,8 +30,16 @@ public class ArmControlSubsystem extends SubsystemBase {
     COAST, BRAKE, OFF
   }
 
-  private final TalonFX mLeftPivotController = new TalonFX(ArmConstants.LEFT_PIV_MOTOR_ID);
-  private final TalonFX mRightPivotController = new TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID);
+  public final TalonFX mLeftPivotController = new TalonFX(ArmConstants.LEFT_PIV_MOTOR_ID); // changed
+                                                                                           // from
+                                                                                           // private
+                                                                                           // to
+                                                                                           // public
+  public final TalonFX mRightPivotController = new TalonFX(ArmConstants.RIGHT_PIV_MOTOR_ID); // changed
+                                                                                             // from
+                                                                                             // private
+                                                                                             // to
+                                                                                             // public
   private final DutyCycleEncoder mAbsPivEncoder = new DutyCycleEncoder(ArmConstants.DIOPORTPIV);
   private final TalonFXConfiguration mLeftTalonFXConfiguration = new TalonFXConfiguration();
   private final TalonFXConfiguration mRighTalonFXConfiguration = new TalonFXConfiguration();

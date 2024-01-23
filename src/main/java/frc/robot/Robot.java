@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.constants.ArmConstants.ArmState;
+import frc.robot.subsystems.ArmControlSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -82,6 +83,7 @@ public class Robot extends TimedRobot {
     if (mPathSelector.getSelected() != null) {
       mPathSelector.getSelected().cancel();
     }
+    // mRightPivotController.setInverted(InvertType.OpposeMaster);
   }
 
   /** This function is called periodically during operator control. */
